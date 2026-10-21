@@ -33,7 +33,7 @@ import {
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { Button } from "@/components/ui/button";
 import { useCompany } from "@/lib/company-context";
-import { COLLEGE_SHORT } from "@/lib/college";
+import { APP_NAME, COLLEGE_SHORT } from "@/lib/college";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/company")({
@@ -94,14 +94,14 @@ function AppSidebar() {
       <SidebarHeader className="border-b border-sidebar-border/80 px-4 py-3.5">
         <Link to="/" className="flex items-center gap-2.5 overflow-hidden focus:outline-none">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-blue-700 font-heading text-xs font-bold text-white shadow-xs">
-            {COLLEGE_SHORT.slice(0, 2)}
+            PI
           </div>
           <div className="min-w-0 group-data-[collapsible=icon]:hidden">
             <p className="truncate font-heading text-sm font-bold tracking-tight text-sidebar-foreground">
-              {COLLEGE_SHORT}
+              {APP_NAME}
             </p>
             <p className="truncate text-[11px] font-medium text-muted-foreground">
-              Placement Intelligence Hub
+              {COLLEGE_SHORT} Placement Hub
             </p>
           </div>
         </Link>

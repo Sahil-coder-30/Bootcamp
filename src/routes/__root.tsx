@@ -81,8 +81,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "JSSATEN Placement Intelligence Hub" },
-      { name: "description", content: "Company research and placement analytics for JSS Academy of Technical Education students." },
+      { title: "PlaceIntel | JSSATEN Placement Intelligence Hub" },
+      { name: "description", content: "PlaceIntel - Company research and placement analytics for JSS Academy of Technical Education students." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
