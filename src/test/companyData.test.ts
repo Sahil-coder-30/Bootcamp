@@ -4,7 +4,7 @@ import { buildIntelligenceSections } from "@/data/intelligenceData";
 
 describe("company data", () => {
   it("loads Accenture from the seed", () => {
-    expect(getCompanySummaries()[0].shortName).toBe("Accenture");
+    expect(getCompanySummaries()[0]?.shortName).toBe("Accenture");
   });
   it("has 22 intelligence sections", () => {
     expect(buildIntelligenceSections()).toHaveLength(22);

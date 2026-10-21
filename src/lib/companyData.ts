@@ -20,7 +20,14 @@ export interface CompanySummary {
   websiteUrl: string;
 }
 
-export interface CompanyProfile extends Record<string, string> {}
+export interface CompanyProfile extends Record<string, string> {
+  name: string;
+  short_name: string;
+  category: string;
+  logo_url: string;
+  website_url: string;
+  linkedin_url: string;
+}
 
 export interface DashboardSkill {
   id: number;
@@ -85,7 +92,7 @@ export function normalizeCompanySummary(shortJson: unknown, id = 0): CompanySumm
 }
 
 export function normalizeCompanyProfile(fullJson: unknown, shortJson: unknown): CompanyProfile {
-  const out: CompanyProfile = {};
+  const out = { name: "", short_name: "", category: "", logo_url: "", website_url: "", linkedin_url: "" } as CompanyProfile;
   for (const [k, v] of Object.entries({ ...asRecord(shortJson), ...asRecord(fullJson) })) {
     out[k] = asString(v);
   }
