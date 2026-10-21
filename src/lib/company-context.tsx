@@ -1,5 +1,4 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
-import { SEED_COMPANIES } from "@/data/seedCompanies";
 
 export interface SelectedCompany {
   companyId: number;
@@ -22,8 +21,12 @@ export function readSelectedCompany(): SelectedCompany | null {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as SelectedCompany;
-    const exists = SEED_COMPANIES.some((c) => c.company_id === parsed.companyId);
-    return exists ? parsed : null;
+    const valid =
+      parsed &&
+      typeof parsed.companyId === "number" &&
+      parsed.companyId > 0 &&
+      typeof parsed.companyName === "string";
+    return valid ? parsed : null;
   } catch {
     return null;
   }

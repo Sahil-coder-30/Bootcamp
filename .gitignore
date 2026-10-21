@@ -15,10 +15,19 @@ dist-ssr
 .tanstack/**
 .nitro
 *.local
+.env
+.env.*
+!.env.example
 
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars
+
+# Vercel
+.vercel
+
+# Scratch
+scratch/
 
 # Editor directories and files
 .vscode/*
@@ -30,3 +39,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.env*
