@@ -57,7 +57,7 @@ export const titleCaseFromCode = (code: string): string =>
   code
     .split(/[_\s-]+/)
     .filter(Boolean)
-    .map((w) => w[0].toUpperCase() + w.slice(1).toLowerCase())
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
     .join(" ");
 
 export const scoreToDifficulty = (n: number): DashboardSkill["difficulty"] =>
@@ -76,18 +76,18 @@ export function normalizeCompanySummary(shortJson: unknown, id = 0): CompanySumm
   const r = asRecord(shortJson);
   return {
     id,
-    name: asString(r.name),
-    shortName: asString(r.short_name) || asString(r.name),
-    logoUrl: asString(r.logo_url),
-    category: asString(r.category),
-    companyType: toType(r.company_type),
-    incorporationYear: asString(r.incorporation_year),
-    employeeSize: asString(r.employee_size),
-    headquarters: asString(r.headquarters_address),
-    operatingCountries: asString(r.operating_countries),
-    officeLocations: asString(r.office_locations),
-    yoyGrowthRate: asString(r.yoy_growth_rate),
-    websiteUrl: asString(r.website_url),
+    name: asString(r["name"]),
+    shortName: asString(r["short_name"]) || asString(r["name"]),
+    logoUrl: asString(r["logo_url"]),
+    category: asString(r["category"]),
+    companyType: toType(r["company_type"]),
+    incorporationYear: asString(r["incorporation_year"]),
+    employeeSize: asString(r["employee_size"]),
+    headquarters: asString(r["headquarters_address"]),
+    operatingCountries: asString(r["operating_countries"]),
+    officeLocations: asString(r["office_locations"]),
+    yoyGrowthRate: asString(r["yoy_growth_rate"]),
+    websiteUrl: asString(r["website_url"]),
   };
 }
 
@@ -104,12 +104,12 @@ export function normalizeDashboardSkills(skillLevels: unknown): DashboardSkill[]
   return skillLevels
     .map((s) => {
       const r = asRecord(s);
-      const level = Number(r.required_level) || 0;
+      const level = Number(r["required_level"]) || 0;
       return {
-        id: Number(r.skill_set_id) || 0,
-        name: asString(r.skill_set_name),
+        id: Number(r["skill_set_id"]) || 0,
+        name: asString(r["skill_set_name"]),
         level,
-        proficiency: asString(r.required_proficiency),
+        proficiency: asString(r["required_proficiency"]),
         difficulty: scoreToDifficulty(level),
       };
     })

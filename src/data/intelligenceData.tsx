@@ -11,7 +11,7 @@ export interface IntelField {
   key: string;
   label: string;
   type: FieldType;
-  value?: string;
+  value?: string | undefined;
 }
 
 export interface IntelSection {
