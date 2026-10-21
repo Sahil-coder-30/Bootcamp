@@ -22,12 +22,11 @@ function getInitials(name: string): string {
 }
 
 const GRADIENTS = [
-  "from-blue-600 to-indigo-600 text-white",
-  "from-violet-600 to-purple-700 text-white",
-  "from-emerald-600 to-teal-700 text-white",
-  "from-amber-500 to-orange-600 text-white",
-  "from-rose-600 to-pink-600 text-white",
-  "from-cyan-600 to-blue-700 text-white",
+  "from-zinc-800 to-zinc-950 text-zinc-100 border border-zinc-700/60",
+  "from-neutral-800 to-neutral-950 text-neutral-100 border border-neutral-700/60",
+  "from-zinc-700 to-zinc-900 text-white border border-zinc-600/50",
+  "from-stone-800 to-stone-950 text-stone-100 border border-stone-700/60",
+  "from-zinc-900 to-black text-zinc-200 border border-zinc-800",
 ];
 
 function pickGradient(name: string): string {
@@ -64,7 +63,7 @@ export function CompanyLogo({
   return (
     <div
       className={cn(
-        "relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border/60 bg-card shadow-xs transition-transform duration-200 group-hover:scale-105",
+        "relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/90 shadow-sm transition-transform duration-200 group-hover:scale-105",
         className,
       )}
     >

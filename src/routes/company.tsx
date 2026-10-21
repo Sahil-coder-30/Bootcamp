@@ -93,7 +93,7 @@ function AppSidebar() {
     <Sidebar collapsible="icon" className="border-r border-sidebar-border bg-sidebar">
       <SidebarHeader className="border-b border-sidebar-border/80 px-4 py-3.5">
         <Link to="/" className="flex items-center gap-2.5 overflow-hidden focus:outline-none">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-blue-700 font-heading text-xs font-bold text-white shadow-xs">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-zinc-700 bg-zinc-900 font-heading text-xs font-bold text-zinc-100 shadow-sm">
             PI
           </div>
           <div className="min-w-0 group-data-[collapsible=icon]:hidden">
