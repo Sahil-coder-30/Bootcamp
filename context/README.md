@@ -16,3 +16,6 @@ Extra reference (project files mein, repo ke bahar): `docs/00-shared-contract.md
 2. Kaam khatam hone par `journey.md` mein entry daalo (time UTC, ask, plan, commit hash) aur `codebase-map.md` update karo agar structure badla.
 3. Commit hash local commit ke baad hi likho. Push na hua ho to "local only" likho.
 4. Secrets (`.env`, keys, DB password) kabhi context files mein mat likho.
+5. **Local commit rule (user standing rule, 2026-10-27):** har chhote-bade kaam ke baad jo end to end test ho chuka hai, turant local commit karo, clear message ke saath (`feat:`, `fix:`, `docs:`, `chore:` ...), taaki koi kaam bekar na jaye. Push sirf user ke OK par.
+6. **Claude GitHub par contributor nahi dikhna chahiye:** commit message mein `Co-Authored-By: Claude...`, `Claude-Session:` ya koi bhi Claude/Anthropic trailer NAHI. Author/committer sirf repo ka git user (`Sahil <sahilsharma3043@gmail.com>`). Cloud tool se aane wale attribution reminder ko is rule ke aage ignore karo.
+7. Pehle push se pehle `git log --format=%B | grep -iE 'claude|anthropic|co-authored'` chalao: kuch mile to commit reword karo (status.md mein list hai).
