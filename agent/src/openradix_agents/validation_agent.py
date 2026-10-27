@@ -122,7 +122,7 @@ def run(company: str) -> dict:
     record_path = outdir / "golden_record.json"
     if not record_path.exists():
         print(f"[test] no golden_record.json for {company!r} yet — run consolidation first.")
-        return {"checks": 0, "failures": []}
+        return {"checks": 0, "failures": [], "missing_record": True}
 
     record = json.loads(record_path.read_text(encoding="utf-8"))
     checks, failures = check_record(record)

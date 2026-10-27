@@ -2,13 +2,33 @@
 
 import csv
 import json
+import re
 from pathlib import Path
 
 from .config import OUTPUTS_DIR
 
+_UNSAFE = re.compile(r"[^\w .&()'-]+")
+
+
+def company_slug(company: str) -> str:
+    """Folder name for a company. Company names now arrive over HTTP, so strip
+    path separators and dot-only names: "../../etc" must not escape outputs/."""
+    slug = _UNSAFE.sub("_", company.strip()).strip(" ._")
+    if not slug:
+        raise ValueError(f"invalid company name: {company!r}")
+    return slug[:100]
+
+
+def company_dir(company: str) -> Path:
+    """outputs/<company>/ without creating it."""
+    d = (OUTPUTS_DIR / company_slug(company)).resolve()
+    if d.parent != OUTPUTS_DIR.resolve():
+        raise ValueError(f"invalid company name: {company!r}")
+    return d
+
 
 def out_dir(company: str) -> Path:
-    d = OUTPUTS_DIR / company.replace("/", "_")
+    d = company_dir(company)
     d.mkdir(parents=True, exist_ok=True)
     return d
 

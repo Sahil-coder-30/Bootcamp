@@ -8,14 +8,17 @@ company and saves the single 12-column row as CSV + JSON.
 from . import prompts, providers, parsing, io_utils
 
 
-def run(company: str, provider: str = "openrouter") -> dict:
+def run(company: str, provider_names=()) -> dict:
     outdir = io_utils.out_dir(company)
     prompt = prompts.render("expectation_matrix", companies=company)
 
-    print(f"[skills] querying {provider} ...")
-    text = providers.invoke(provider, prompt)
+    provider, text = providers.invoke_first(prompt, provider_names, tag="skills")
+    (outdir / "skill_matrix_raw.txt").write_text(text, encoding="utf-8")
     rows = parsing.parse_markdown_table(text)
     row = rows[0] if rows else {}
+    if not row:
+        raise ValueError(f"{provider} returned no parsable skill table "
+                         f"(raw reply saved to skill_matrix_raw.txt)")
 
     io_utils.write_json(outdir / "skill_matrix.json", row)
     if row:

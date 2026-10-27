@@ -28,6 +28,10 @@ OPENROUTER_MODEL_2 = os.getenv("OPENROUTER_MODEL_2", "nvidia/nemotron-nano-9b-v2
 GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
 LLM_TEMPERATURE = float(os.getenv("LLM_TEMPERATURE", "0.2"))
+# Hard ceiling per LLM call (seconds) and SDK-level retries. Without a timeout a
+# hung provider blocks the whole pipeline forever.
+LLM_TIMEOUT = float(os.getenv("LLM_TIMEOUT", "300"))
+LLM_MAX_RETRIES = int(os.getenv("LLM_MAX_RETRIES", "2"))
 
 # Which providers the research fan-out queries, in order. Override in .env to
 # swap a dead provider — e.g. drop "gemini" for "openrouter-alt" (a 2nd
@@ -37,6 +41,11 @@ RESEARCH_PROVIDERS = tuple(
     for p in os.getenv("RESEARCH_PROVIDERS", "openrouter,groq,gemini").split(",")
     if p.strip()
 )
+
+# The single-LLM steps (consolidation, skills, hiring) try this provider first,
+# then fall back through RESEARCH_PROVIDERS. Defaults to the first research one.
+PRIMARY_PROVIDER = os.getenv("PRIMARY_PROVIDER", "").strip() or (
+    RESEARCH_PROVIDERS[0] if RESEARCH_PROVIDERS else "openrouter")
 
 
 def get_env(key: str, required: bool = True, default: str | None = None) -> str | None:

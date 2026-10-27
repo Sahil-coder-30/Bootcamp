@@ -7,3 +7,8 @@ langchain-google-genai==2.0.8
 python-dotenv==1.0.1
 openpyxl==3.1.5
 pytest==8.3.4
+# HTTP API (python -m openradix_agents serve)
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+pydantic-settings==2.7.1
+httpx==0.28.1

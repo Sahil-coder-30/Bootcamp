@@ -13,13 +13,19 @@ _HEADERS = "| ID | Category | A/C | Parameter | Research Output / Data | Source 
 _SEP = "|---|---|---|---|---|---|"
 
 
+def _cell(value) -> str:
+    """A research value must stay inside ONE table cell: a raw '|' or newline
+    would shift every column after it."""
+    return " ".join(str(value or "").split()).replace("|", "/")
+
+
 def _build_dataset(per_provider_rows: dict[str, list[dict]]) -> str:
     lines = [_HEADERS, _SEP]
     for source, rows in per_provider_rows.items():
         for r in rows:
             lines.append(
-                f"| {r.get('ID', '')} | {r.get('Category', '')} | {r.get('A/C', '')} "
-                f"| {r.get('Parameter', '')} | {r.get('Research Output / Data', '')} | {source} |"
+                f"| {_cell(r.get('ID'))} | {_cell(r.get('Category'))} | {_cell(r.get('A/C'))} "
+                f"| {_cell(r.get('Parameter'))} | {_cell(r.get('Research Output / Data'))} | {source} |"
             )
     return "\n".join(lines)
 
@@ -34,16 +40,18 @@ def _rows_to_record(rows: list[dict]) -> dict:
 
 
 def run_consolidation(company: str, per_provider_rows: dict[str, list[dict]],
-                      provider: str = "openrouter") -> dict:
+                      provider_names=()) -> dict:
     outdir = io_utils.out_dir(company)
     dataset = _build_dataset(per_provider_rows)
     prompt = prompts.render("consolidation", dataset=dataset)
 
-    print(f"[consolidate] querying {provider} ...")
-    text = providers.invoke(provider, prompt)
+    provider, text = providers.invoke_first(prompt, provider_names, tag="consolidate")
     (outdir / "consolidation_raw.txt").write_text(text, encoding="utf-8")
     rows = parsing.parse_markdown_table(text)
     record = _rows_to_record(rows)
+    if not record:
+        raise ValueError(f"{provider} returned no parsable consolidation table "
+                         f"(raw reply saved to consolidation_raw.txt)")
 
     io_utils.write_json(outdir / "golden_record.json", record)
     io_utils.write_record_csv(outdir / "golden_record.csv", record)

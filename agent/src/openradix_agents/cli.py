@@ -8,6 +8,7 @@ Command-line entry point for the Level 4 agents.
     python -m openradix_agents run --company "Blinkit" --only research
     python -m openradix_agents run --company "Blinkit" --only test
     python -m openradix_agents run --company "Blinkit" --providers groq gemini
+    python -m openradix_agents serve            # FastAPI on :8000
 
 Run `doctor` first: it pings all three providers so a bad API key is caught in
 seconds instead of mid-pipeline.
@@ -19,38 +20,23 @@ outputs/<company>/ — no database (that's Level 5).
 """
 
 import argparse
+import json
 
-from . import (
-    research_agent,
-    consolidation_agent,
-    skill_matrix_agent,
-    hiring_agent,
-    validation_agent,
-)
-
-STEPS = ["research", "consolidation", "skills", "hiring", "test"]
+from . import config
+from .pipeline import STEPS, PipelineError, run_pipeline
 
 
-def _run(company: str, provider_names: tuple, only: str | None) -> None:
-    per_provider = None
-    if only in (None, "research"):
-        per_provider = research_agent.run_research(company, provider_names)
-    if only == "consolidation":
-        # Reuse the saved research instead of paying for it again.
-        per_provider = research_agent.load_research(company, provider_names)
-        if not per_provider:
-            raise SystemExit(
-                f"No saved research in outputs/{company}/. Run this first:\n"
-                f'  python -m openradix_agents run --company "{company}" --only research')
-    if only in (None, "consolidation"):
-        consolidation_agent.run_consolidation(company, per_provider or {})
-    if only in (None, "skills"):
-        skill_matrix_agent.run(company)
-    if only in (None, "hiring"):
-        hiring_agent.run(company)
-    if only in (None, "test"):
-        validation_agent.run(company)
-    print(f"\nDone. Artifacts written to outputs/{company}/")
+def _run(company: str, provider_names: tuple, only: str | None) -> int:
+    try:
+        summary = run_pipeline(company, provider_names, (only,) if only else None)
+    except PipelineError as exc:
+        raise SystemExit(str(exc))
+    print("\nStep summary:")
+    for step, info in summary["steps"].items():
+        extra = info.get("result") or info.get("error", "")
+        print(f"  {step:<14} {info['status']:<8} {json.dumps(extra) if isinstance(extra, dict) else extra}")
+    print(f"\nArtifacts written to outputs/{company}/")
+    return 0 if summary["ok"] else 1
 
 
 def main(argv=None) -> None:
@@ -60,10 +46,15 @@ def main(argv=None) -> None:
     )
     sub = parser.add_subparsers(dest="command", required=True)
 
+    serve_p = sub.add_parser("serve", help="Start the FastAPI server.")
+    serve_p.add_argument("--host", default=None)
+    serve_p.add_argument("--port", type=int, default=None)
+    serve_p.add_argument("--reload", action="store_true")
+
     run_p = sub.add_parser("run", help="Run the research agents for one company.")
     run_p.add_argument("--company", required=True, help='Target company, e.g. "Blinkit".')
     run_p.add_argument(
-        "--providers", nargs="+", default=list(research_agent.DEFAULT_PROVIDERS),
+        "--providers", nargs="+", default=list(config.RESEARCH_PROVIDERS),
         help="Providers for the research fan-out (default: all three).",
     )
     run_p.add_argument("--only", choices=STEPS, help="Run a single step instead of the full pipeline.")
@@ -72,13 +63,16 @@ def main(argv=None) -> None:
         "doctor", help="Ping each provider to check its API key works (run this first)."
     )
     doctor_p.add_argument(
-        "--providers", nargs="+", default=list(research_agent.DEFAULT_PROVIDERS),
+        "--providers", nargs="+", default=list(config.RESEARCH_PROVIDERS),
         help="Providers to check (default: all three).",
     )
 
     args = parser.parse_args(argv)
     if args.command == "run":
-        _run(args.company, tuple(args.providers), args.only)
+        raise SystemExit(_run(args.company, tuple(args.providers), args.only))
     elif args.command == "doctor":
         from . import doctor
         raise SystemExit(doctor.run(tuple(args.providers)))
+    elif args.command == "serve":
+        from .api.main import serve
+        serve(host=args.host, port=args.port, reload=args.reload)
