@@ -1,6 +1,6 @@
 # Role 3: Profile Builder, implementation plan
 
-_Written 2026-10-27, against the locked [shared contract](../00-shared-contract.md). Deadline Wed 28 Oct. Owner: Role 3. Mostly TypeScript (backend + frontend). LangChain is used only in one optional P2 feature, and only offline._
+_Owner: Raunak Bisht (Role 3) <raunakbisht790@gmail.com>. Written 2026-10-27, against the locked [shared contract](../00-shared-contract.md). Deadline Wed 28 Oct. Mostly TypeScript (backend + frontend). LangChain is used only in one optional P2 feature, and only offline._
 
 ---
 

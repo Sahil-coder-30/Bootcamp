@@ -1,6 +1,6 @@
 # Role 1: JD Analytics, implementation plan
 
-_Owner: Role 1. Written 2026-10-27 against [00-shared-contract.md](../00-shared-contract.md) (locked). Deadline Wed 28 Oct 2026. Any change this plan needs in the contract is listed in section 12, not applied silently._
+_Owner: Sahil Sharma (Role 1) <sahilsharma3043@gmail.com>. Written 2026-10-27 against [00-shared-contract.md](../00-shared-contract.md) (locked). Deadline Wed 28 Oct 2026. Any change this plan needs in the contract is listed in section 12, not applied silently._
 
 ---
 

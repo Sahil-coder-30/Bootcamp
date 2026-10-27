@@ -1,6 +1,6 @@
 # Role 4: Talent Check, implementation plan
 
-_Written 2026-10-27, builds on [00-shared-contract.md](../00-shared-contract.md) (locked). Owner: Role 4. Deadline: Wed 28 Oct 2026._
+_Owner: Aryan Singh (Role 4) <aryansingh9c@gmail.com>. Written 2026-10-27, builds on [00-shared-contract.md](../00-shared-contract.md) (locked). Deadline: Wed 28 Oct 2026._
 
 Every company number in this plan was read from the live Supabase project (`brpacqbtxufuxhpgoohu`) on 27 Oct with read-only queries. Candidate levels for the 4 samples are **assumptions** until Roles 2 and 3 produce real `skill_levels`. They are marked as such wherever they appear.
 

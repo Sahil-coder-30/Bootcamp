@@ -1,6 +1,6 @@
 # Role 5: Skill Matching, implementation plan
 
-_Owner: Role 5. Written 2026-10-27 against [00-shared-contract.md](../00-shared-contract.md) (locked). Deadline Wed 28 Oct 2026. Anything that would change the contract is listed in section 12 and nowhere else is assumed._
+_Owner: Shreyansh (SSD) <shreyanshsd512gb@gmail.com> (Role 5). Written 2026-10-27 against [00-shared-contract.md](../00-shared-contract.md) (locked). Deadline Wed 28 Oct 2026. Anything that would change the contract is listed in section 12 and nowhere else is assumed._
 
 ---
 

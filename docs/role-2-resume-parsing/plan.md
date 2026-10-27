@@ -1,6 +1,6 @@
 # Role 2: Resume Parsing, implementation plan
 
-_Written 2026-10-27. Builds on [00-shared-contract.md](../00-shared-contract.md) (locked). Where this plan needs something the contract does not have yet, it is listed in section 12 and marked "(proposed)" where it is used. Nothing here renames a contract field._
+_Owner: Himanshu Gola (Gola) <himanshu.gola05@gmail.com> (Role 2). Written 2026-10-27. Builds on [00-shared-contract.md](../00-shared-contract.md) (locked). Where this plan needs something the contract does not have yet, it is listed in section 12 and marked "(proposed)" where it is used. Nothing here renames a contract field._
 
 ---
 
