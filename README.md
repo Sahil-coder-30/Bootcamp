@@ -56,25 +56,14 @@ Think of the system as an **Airport Biometric E-Gate**. Traditional resume scree
 
 ```mermaid
 flowchart TD
-    subgraph Client ["Client Layer"]
-        IN["Candidate Resume / Corporate JD Document"]
-    end
-
-    subgraph Ingress ["API Gateway & Ingress"]
-        SHA["SHA-256 Deduplication & Storage Cache Check"]
-    end
-
-    subgraph Cascade ["5-Tier Talent Cascade Engine"]
-        T1["Tier 1: Canonical Exact Match (~1ms)"]
-        T2["Tier 2: Normalized Alias Lookup (~2ms)"]
-        T3["Tier 3: Levenshtein Fuzzy Filter (~8ms)"]
-        T4["Tier 4: pgvector Semantic Cosine Search (~35ms)"]
-        T5["Tier 5: LLM Structured Adjudication (~350ms)"]
-    end
-
-    subgraph Verification ["Deterministic Math Engine"]
-        MATH["Talent Check: 100 * sum(min(c, r) - 1) / sum(r - 1)"]
-    end
+    IN["Input: Candidate Resume / Corporate JD Document"]
+    SHA["SHA-256 Deduplication & Storage Cache Check"]
+    T1["Tier 1: Canonical Exact Match (~1ms)"]
+    T2["Tier 2: Normalized Alias Lookup (~2ms)"]
+    T3["Tier 3: Levenshtein Fuzzy Filter (~8ms)"]
+    T4["Tier 4: pgvector Semantic Cosine Search (~35ms)"]
+    T5["Tier 5: LLM Structured Adjudication (~350ms)"]
+    MATH["Talent Check: 100 * sum(min(c, r) - 1) / sum(r - 1)"]
 
     IN --> SHA
     SHA --> T1
