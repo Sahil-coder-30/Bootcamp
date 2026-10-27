@@ -1,0 +1,758 @@
+-- ============================================================================
+-- NORMALIZED SCHEMA DDL
+-- ============================================================================
+-- Purpose: Full normalized relational schema for company intelligence database
+-- This schema is derived from 163 parameters in the research framework
+-- All tables follow exact specifications - no additions or modifications
+-- ============================================================================
+
+-- ============================================================================
+-- MASTER TABLES (Pre-existing - DO NOT MODIFY)
+-- ============================================================================
+
+-- Countries master table (already exists and is pre-populated)
+CREATE TABLE IF NOT EXISTS countries (
+    countries_id SERIAL PRIMARY KEY,
+    country TEXT NOT NULL
+);
+
+-- Cities master table (already exists and is pre-populated)
+CREATE TABLE IF NOT EXISTS cities (
+    city_id SERIAL PRIMARY KEY,
+    countries_id INTEGER NOT NULL REFERENCES countries(countries_id),
+    city TEXT NOT NULL
+);
+
+-- ============================================================================
+-- CORE COMPANY TABLE
+-- ============================================================================
+
+CREATE TABLE companies (
+    company_id INTEGER PRIMARY KEY,
+    name TEXT,
+    short_name TEXT,
+    category TEXT,
+    incorporation_year TEXT,
+    nature_of_company TEXT,
+    headquarters_address TEXT,
+    office_count TEXT,
+    employee_size TEXT,
+    website_url TEXT,
+    linkedin_url TEXT,
+    twitter_handle TEXT,
+    facebook_url TEXT,
+    instagram_url TEXT,
+    primary_contact_email TEXT,
+    primary_phone_number TEXT,
+    overview_text TEXT,
+    vision_statement TEXT,
+    mission_statement TEXT,
+    legal_issues TEXT,
+    carbon_footprint TEXT
+);
+
+-- ============================================================================
+-- COMPANY LOGO (Composite)
+-- ============================================================================
+
+CREATE TABLE company_logo (
+    company_logo_id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    logo_url TEXT
+);
+
+-- ============================================================================
+-- COMPANY GEOGRAPHY MAPPING TABLES
+-- ============================================================================
+
+CREATE TABLE company_operating_countries_map (
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    countries_id INTEGER NOT NULL REFERENCES countries(countries_id),
+    PRIMARY KEY (company_id, countries_id)
+);
+
+CREATE TABLE company_office_locations_map (
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    city_id INTEGER NOT NULL REFERENCES cities(city_id),
+    PRIMARY KEY (company_id, city_id)
+);
+
+-- ============================================================================
+-- COMPANY CORE VALUES & HISTORY (Composite)
+-- ============================================================================
+
+CREATE TABLE company_core_values (
+    core_values_id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    core_values TEXT
+);
+
+CREATE TABLE company_history (
+    history__id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    history_timeline TEXT
+);
+
+-- ============================================================================
+-- COMPANY MEDIA & COMMUNICATIONS (Composite)
+-- ============================================================================
+
+CREATE TABLE company_marketing_videos (
+    marketing_videos_id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    marketing_video_url TEXT
+);
+
+CREATE TABLE company_recent_news (
+    recent_news_id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    recent_news TEXT
+);
+
+CREATE TABLE company_customer_testimonials (
+    customer_testimonials_id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    customer_testimonials TEXT
+);
+
+-- ============================================================================
+-- COMPANY REGULATORY & RISK (Composite)
+-- ============================================================================
+
+CREATE TABLE company_regulatory_status (
+    regulatory_status_id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    regulatory_status TEXT
+);
+
+CREATE TABLE company_esg_ratings (
+    esg_ratings_id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    esg_ratings TEXT
+);
+
+CREATE TABLE company_geopolitical_risks (
+    geopolitical_risks_id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    geopolitical_risks TEXT
+);
+
+CREATE TABLE company_macro_risks (
+    macro_risks_id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    macro_risks TEXT
+);
+
+CREATE TABLE company_ethical_sourcing (
+    ethical_sourcing_id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    ethical_sourcing TEXT
+);
+
+CREATE TABLE company_supply_chain_dependencies (
+    company_supply_chain_dependencies_id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    supply_chain_dependencies TEXT
+);
+
+-- ============================================================================
+-- COMPANY BRAND REPUTATION (Parent + Children)
+-- ============================================================================
+
+CREATE TABLE company_brand_reputation (
+    brand_reputation_id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    brand_sentiment_score TEXT,
+    website_quality TEXT,
+    website_rating TEXT,
+    social_media_followers TEXT,
+    glassdoor_rating TEXT,
+    indeed_rating TEXT,
+    google_rating TEXT
+);
+
+CREATE TABLE company_awards_recognitions (
+    awards_recognitions_id SERIAL PRIMARY KEY,
+    brand_reputation_id INTEGER NOT NULL REFERENCES company_brand_reputation(brand_reputation_id),
+    awards_recognitions TEXT
+);
+
+CREATE TABLE company_event_participation (
+    event_participation_id SERIAL PRIMARY KEY,
+    brand_reputation_id INTEGER NOT NULL REFERENCES company_brand_reputation(brand_reputation_id),
+    event_participation TEXT
+);
+
+CREATE TABLE company_website_traffic_rank (
+    website_traffic_rank_id SERIAL PRIMARY KEY,
+    brand_reputation_id INTEGER NOT NULL REFERENCES company_brand_reputation(brand_reputation_id),
+    website_traffic_rank TEXT
+);
+
+-- ============================================================================
+-- COMPANY BUSINESS (Parent + Children)
+-- ============================================================================
+
+CREATE TABLE company_business (
+    company_business_id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    sales_motion TEXT,
+    innovation_roadmap TEXT,
+    future_projections TEXT,
+    market_share_percentage TEXT,
+    tam TEXT,
+    sam TEXT,
+    som TEXT,
+    customer_concentration_risk TEXT
+);
+
+CREATE TABLE company_core_value_proposition (
+    company_core_value_proposition_id SERIAL PRIMARY KEY,
+    company_business_id INTEGER NOT NULL REFERENCES company_business(company_business_id),
+    core_value_proposition TEXT
+);
+
+CREATE TABLE company_pain_points_addressed (
+    company_pain_points_addressed_id SERIAL PRIMARY KEY,
+    company_business_id INTEGER NOT NULL REFERENCES company_business(company_business_id),
+    pain_points_addressed TEXT
+);
+
+CREATE TABLE company_unique_differentiators (
+    company_unique_differentiators_id SERIAL PRIMARY KEY,
+    company_business_id INTEGER NOT NULL REFERENCES company_business(company_business_id),
+    unique_differentiators TEXT
+);
+
+CREATE TABLE company_competitive_advantages (
+    company_competitive_advantages_id SERIAL PRIMARY KEY,
+    company_business_id INTEGER NOT NULL REFERENCES company_business(company_business_id),
+    competitive_advantages TEXT
+);
+
+CREATE TABLE company_weaknesses_gaps (
+    company_weaknesses_gaps_id SERIAL PRIMARY KEY,
+    company_business_id INTEGER NOT NULL REFERENCES company_business(company_business_id),
+    weaknesses_gaps TEXT
+);
+
+CREATE TABLE company_key_challenges_needs (
+    company_key_challenges_needs_id SERIAL PRIMARY KEY,
+    company_business_id INTEGER NOT NULL REFERENCES company_business(company_business_id),
+    key_challenges_needs TEXT
+);
+
+CREATE TABLE company_focus_sectors (
+    company_focus_sectors_id SERIAL PRIMARY KEY,
+    company_business_id INTEGER NOT NULL REFERENCES company_business(company_business_id),
+    focus_sectors TEXT
+);
+
+CREATE TABLE company_offerings_description (
+    company_offerings_description_id SERIAL PRIMARY KEY,
+    company_business_id INTEGER NOT NULL REFERENCES company_business(company_business_id),
+    offerings_description TEXT
+);
+
+CREATE TABLE company_go_to_market_strategy (
+    company_go_to_market_strategy_id SERIAL PRIMARY KEY,
+    company_business_id INTEGER NOT NULL REFERENCES company_business(company_business_id),
+    go_to_market_strategy TEXT
+);
+
+CREATE TABLE company_innovation_roadmap (
+    company_innovation_roadmap_id SERIAL PRIMARY KEY,
+    company_business_id INTEGER NOT NULL REFERENCES company_business(company_business_id),
+    innovation_roadmap TEXT
+);
+
+CREATE TABLE company_product_pipeline (
+    company_product_pipeline_id SERIAL PRIMARY KEY,
+    company_business_id INTEGER NOT NULL REFERENCES company_business(company_business_id),
+    product_pipeline TEXT
+);
+
+CREATE TABLE company_strategic_priorities (
+    company_strategic_priorities_id SERIAL PRIMARY KEY,
+    company_business_id INTEGER NOT NULL REFERENCES company_business(company_business_id),
+    strategic_priorities TEXT
+);
+
+CREATE TABLE company_exit_strategy_history (
+    company_exit_strategy_history_id SERIAL PRIMARY KEY,
+    company_business_id INTEGER NOT NULL REFERENCES company_business(company_business_id),
+    exit_strategy_history TEXT
+);
+
+CREATE TABLE company_top_customers (
+    company_top_customers_id SERIAL PRIMARY KEY,
+    company_business_id INTEGER NOT NULL REFERENCES company_business(company_business_id),
+    top_customers TEXT
+);
+
+CREATE TABLE company_key_competitors (
+    company_key_competitors_id SERIAL PRIMARY KEY,
+    company_business_id INTEGER NOT NULL REFERENCES company_business(company_business_id),
+    key_competitors TEXT
+);
+
+CREATE TABLE company_benchmark_vs_peers (
+    company_benchmark_vs_peers_id SERIAL PRIMARY KEY,
+    company_business_id INTEGER NOT NULL REFERENCES company_business(company_business_id),
+    benchmark_vs_peers TEXT
+);
+
+CREATE TABLE company_industry_associations (
+    company_industry_associations_id SERIAL PRIMARY KEY,
+    company_business_id INTEGER NOT NULL REFERENCES company_business(company_business_id),
+    industry_associations TEXT
+);
+
+CREATE TABLE company_case_studies (
+    company_case_studies_id SERIAL PRIMARY KEY,
+    company_business_id INTEGER NOT NULL REFERENCES company_business(company_business_id),
+    case_studies TEXT
+);
+
+-- ============================================================================
+-- COMPANY COMPENSATION (Parent + Children)
+-- ============================================================================
+
+CREATE TABLE company_compensation (
+    company_compensation_id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    fixed_vs_variable_pay TEXT,
+    bonus_predictability TEXT
+);
+
+CREATE TABLE company_relocation_support (
+    company_relocation_support_id SERIAL PRIMARY KEY,
+    company_compensation_id INTEGER NOT NULL REFERENCES company_compensation(company_compensation_id),
+    relocation_support TEXT
+);
+
+CREATE TABLE company_leave_policy (
+    company_leave_policy_id SERIAL PRIMARY KEY,
+    company_compensation_id INTEGER NOT NULL REFERENCES company_compensation(company_compensation_id),
+    leave_policy TEXT
+);
+
+CREATE TABLE company_health_support (
+    company_health_support_id SERIAL PRIMARY KEY,
+    company_compensation_id INTEGER NOT NULL REFERENCES company_compensation(company_compensation_id),
+    health_support TEXT
+);
+
+CREATE TABLE company_family_health_insurance (
+    company_family_health_insurance_id SERIAL PRIMARY KEY,
+    company_compensation_id INTEGER NOT NULL REFERENCES company_compensation(company_compensation_id),
+    family_health_insurance TEXT
+);
+
+CREATE TABLE company_lifestyle_benefits (
+    company_lifestyle_benefits_id SERIAL PRIMARY KEY,
+    company_compensation_id INTEGER NOT NULL REFERENCES company_compensation(company_compensation_id),
+    lifestyle_benefits TEXT
+);
+
+CREATE TABLE company_esops_incentives (
+    company_esops_incentives_id SERIAL PRIMARY KEY,
+    company_compensation_id INTEGER NOT NULL REFERENCES company_compensation(company_compensation_id),
+    esops_incentives TEXT
+);
+
+-- ============================================================================
+-- COMPANY CULTURE (Parent + Children)
+-- ============================================================================
+
+CREATE TABLE company_culture (
+    company_culture_id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    employee_turnover TEXT,
+    avg_retention_tenure TEXT,
+    layoff_history TEXT,
+    manager_quality TEXT,
+    psychological_safety TEXT,
+    mission_clarity TEXT,
+    crisis_behavior TEXT,
+    burnout_risk TEXT
+);
+
+CREATE TABLE company_hiring_velocity (
+    company_hiring_velocity_id SERIAL PRIMARY KEY,
+    company_culture_id INTEGER NOT NULL REFERENCES company_culture(company_culture_id),
+    hiring_velocity TEXT
+);
+
+CREATE TABLE company_diversity_metrics (
+    company_diversity_metrics_id SERIAL PRIMARY KEY,
+    company_culture_id INTEGER NOT NULL REFERENCES company_culture(company_culture_id),
+    diversity_metrics TEXT
+);
+
+CREATE TABLE company_work_culture_summary (
+    company_work_culture_summary_id SERIAL PRIMARY KEY,
+    company_culture_id INTEGER NOT NULL REFERENCES company_culture(company_culture_id),
+    work_culture_summary TEXT
+);
+
+CREATE TABLE company_feedback_culture (
+    company_feedback_culture_id SERIAL PRIMARY KEY,
+    company_culture_id INTEGER NOT NULL REFERENCES company_culture(company_culture_id),
+    feedback_culture TEXT
+);
+
+CREATE TABLE company_diversity_inclusion_score (
+    company_diversity_inclusion_score_id SERIAL PRIMARY KEY,
+    company_culture_id INTEGER NOT NULL REFERENCES company_culture(company_culture_id),
+    diversity_inclusion_score TEXT
+);
+
+CREATE TABLE company_ethical_standards (
+    company_ethical_standards_id SERIAL PRIMARY KEY,
+    company_culture_id INTEGER NOT NULL REFERENCES company_culture(company_culture_id),
+    ethical_standards TEXT
+);
+
+CREATE TABLE company_sustainability_csr (
+    company_sustainability_csr_id SERIAL PRIMARY KEY,
+    company_culture_id INTEGER NOT NULL REFERENCES company_culture(company_culture_id),
+    sustainability_csr TEXT
+);
+
+-- ============================================================================
+-- COMPANY FINANCIALS (Parent + Children)
+-- ============================================================================
+
+CREATE TABLE company_financials (
+    company_financials_id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    annual_revenue TEXT,
+    annual_profit TEXT,
+    valuation TEXT,
+    yoy_growth_rate TEXT,
+    profitability_status TEXT,
+    total_capital_raised TEXT,
+    customer_acquisition_cost TEXT,
+    customer_lifetime_value TEXT,
+    cac_ltv_ratio TEXT,
+    churn_rate TEXT,
+    net_promoter_score TEXT,
+    burn_rate TEXT,
+    runway_months TEXT,
+    burn_multiplier TEXT
+);
+
+CREATE TABLE company_revenue_mix (
+    company_revenue_mix_id SERIAL PRIMARY KEY,
+    company_financials_id INTEGER NOT NULL REFERENCES company_financials(company_financials_id),
+    revenue_mix TEXT
+);
+
+CREATE TABLE company_key_investors (
+    company_key_investors_id SERIAL PRIMARY KEY,
+    company_financials_id INTEGER NOT NULL REFERENCES company_financials(company_financials_id),
+    key_investors TEXT
+);
+
+CREATE TABLE company_recent_funding_rounds (
+    company_recent_funding_rounds_id SERIAL PRIMARY KEY,
+    company_financials_id INTEGER NOT NULL REFERENCES company_financials(company_financials_id),
+    recent_funding_rounds TEXT
+);
+
+-- ============================================================================
+-- COMPANY LOGISTICS (Parent + Children)
+-- ============================================================================
+
+CREATE TABLE company_logistics (
+    company_logistics_id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    typical_hours TEXT,
+    overtime_expectations TEXT,
+    weekend_work TEXT,
+    remote_policy_details TEXT,
+    location_centrality TEXT,
+    airport_commute_time TEXT,
+    office_zone_type TEXT
+);
+
+CREATE TABLE company_flexibility_level (
+    company_flexibility_level_id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    flexibility_level TEXT
+);
+
+CREATE TABLE company_public_transport_access (
+    company_public_transport_access_id SERIAL PRIMARY KEY,
+    company_logistics_id INTEGER NOT NULL REFERENCES company_logistics(company_logistics_id),
+    public_transport_access TEXT
+);
+
+CREATE TABLE company_cab_policy (
+    company_cab_policy_id SERIAL PRIMARY KEY,
+    company_logistics_id INTEGER NOT NULL REFERENCES company_logistics(company_logistics_id),
+    cab_policy TEXT
+);
+
+CREATE TABLE company_area_safety (
+    company_area_safety_id SERIAL PRIMARY KEY,
+    company_logistics_id INTEGER NOT NULL REFERENCES company_logistics(company_logistics_id),
+    area_safety TEXT
+);
+
+CREATE TABLE company_safety_policies (
+    company_safety_policies_id SERIAL PRIMARY KEY,
+    company_logistics_id INTEGER NOT NULL REFERENCES company_logistics(company_logistics_id),
+    safety_policies TEXT
+);
+
+CREATE TABLE company_infrastructure_safety (
+    company_infrastructure_safety_id SERIAL PRIMARY KEY,
+    company_logistics_id INTEGER NOT NULL REFERENCES company_logistics(company_logistics_id),
+    infrastructure_safety TEXT
+);
+
+CREATE TABLE company_emergency_preparedness (
+    company_emergency_preparedness_id SERIAL PRIMARY KEY,
+    company_logistics_id INTEGER NOT NULL REFERENCES company_logistics(company_logistics_id),
+    emergency_preparedness TEXT
+);
+
+-- ============================================================================
+-- COMPANY PEOPLE (Parent + Children)
+-- ============================================================================
+
+CREATE TABLE company_people (
+    company_people_id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    ceo_linkedin_url TEXT,
+    contact_person_name TEXT,
+    contact_person_title TEXT,
+    contact_person_email TEXT,
+    contact_person_phone TEXT,
+    decision_maker_access TEXT,
+    ceo_name TEXT
+);
+
+CREATE TABLE company_key_leaders (
+    company_key_leaders_id SERIAL PRIMARY KEY,
+    company_people_id INTEGER NOT NULL REFERENCES company_people(company_people_id),
+    key_leaders TEXT
+);
+
+CREATE TABLE company_board_members (
+    company_board_members_id SERIAL PRIMARY KEY,
+    company_people_id INTEGER NOT NULL REFERENCES company_people(company_people_id),
+    board_members TEXT
+);
+
+CREATE TABLE company_warm_intro_pathways (
+    company_warm_intro_pathways_id SERIAL PRIMARY KEY,
+    company_people_id INTEGER NOT NULL REFERENCES company_people(company_people_id),
+    warm_intro_pathways TEXT
+);
+
+-- ============================================================================
+-- COMPANY TALENT GROWTH (Parent + Children)
+-- ============================================================================
+
+CREATE TABLE company_talent_growth (
+    company_talent_growth_id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    training_spend TEXT,
+    onboarding_quality TEXT,
+    internal_mobility TEXT,
+    role_clarity TEXT,
+    early_ownership TEXT,
+    execution_thinking_balance TEXT,
+    automation_level TEXT,
+    company_maturity TEXT,
+    brand_value TEXT,
+    skill_relevance TEXT,
+    exposure_quality TEXT,
+    external_recognition TEXT
+);
+
+CREATE TABLE company_learning_culture (
+    company_learning_culture_id SERIAL PRIMARY KEY,
+    company_talent_growth_id INTEGER NOT NULL REFERENCES company_talent_growth(company_talent_growth_id),
+    learning_culture TEXT
+);
+
+CREATE TABLE company_mentorship_availability (
+    company_mentorship_availability_id SERIAL PRIMARY KEY,
+    company_talent_growth_id INTEGER NOT NULL REFERENCES company_talent_growth(company_talent_growth_id),
+    mentorship_availability TEXT
+);
+
+CREATE TABLE company_promotion_clarity (
+    company_promotion_clarity_id SERIAL PRIMARY KEY,
+    company_talent_growth_id INTEGER NOT NULL REFERENCES company_talent_growth(company_talent_growth_id),
+    promotion_clarity TEXT
+);
+
+CREATE TABLE company_tools_access (
+    company_tools_access_id SERIAL PRIMARY KEY,
+    company_talent_growth_id INTEGER NOT NULL REFERENCES company_talent_growth(company_talent_growth_id),
+    tools_access TEXT
+);
+
+CREATE TABLE company_work_impact (
+    company_work_impact_id SERIAL PRIMARY KEY,
+    company_talent_growth_id INTEGER NOT NULL REFERENCES company_talent_growth(company_talent_growth_id),
+    work_impact TEXT
+);
+
+CREATE TABLE company_cross_functional_exposure (
+    company_cross_functional_exposure_id SERIAL PRIMARY KEY,
+    company_talent_growth_id INTEGER NOT NULL REFERENCES company_talent_growth(company_talent_growth_id),
+    cross_functional_exposure TEXT
+);
+
+CREATE TABLE company_client_quality (
+    company_client_quality_id SERIAL PRIMARY KEY,
+    company_talent_growth_id INTEGER NOT NULL REFERENCES company_talent_growth(company_talent_growth_id),
+    client_quality TEXT
+);
+
+CREATE TABLE company_exit_opportunities (
+    company_exit_opportunities_id SERIAL PRIMARY KEY,
+    company_talent_growth_id INTEGER NOT NULL REFERENCES company_talent_growth(company_talent_growth_id),
+    exit_opportunities TEXT
+);
+
+CREATE TABLE company_network_strength (
+    company_network_strength_id SERIAL PRIMARY KEY,
+    company_talent_growth_id INTEGER NOT NULL REFERENCES company_talent_growth(company_talent_growth_id),
+    network_strength TEXT
+);
+
+CREATE TABLE company_global_exposure (
+    company_global_exposure_id SERIAL PRIMARY KEY,
+    company_talent_growth_id INTEGER NOT NULL REFERENCES company_talent_growth(company_talent_growth_id),
+    global_exposure TEXT
+);
+
+-- ============================================================================
+-- COMPANY TECHNOLOGIES (Parent + Children)
+-- ============================================================================
+
+CREATE TABLE company_technologies (
+    company_technologies_id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    r_and_d_investment TEXT,
+    ai_ml_adoption_level TEXT
+);
+
+CREATE TABLE company_tech_stack (
+    company_tech_stack_id SERIAL PRIMARY KEY,
+    company_technologies_id INTEGER NOT NULL REFERENCES company_technologies(company_technologies_id),
+    tech_stack TEXT
+);
+
+CREATE TABLE company_technology_partners (
+    company_technology_partners_id SERIAL PRIMARY KEY,
+    company_technologies_id INTEGER NOT NULL REFERENCES company_technologies(company_technologies_id),
+    technology_partners TEXT
+);
+
+CREATE TABLE company_intellectual_property (
+    company_intellectual_property_id SERIAL PRIMARY KEY,
+    company_technologies_id INTEGER NOT NULL REFERENCES company_technologies(company_technologies_id),
+    intellectual_property TEXT
+);
+
+CREATE TABLE company_tech_adoption_rating (
+    company_tech_adoption_rating_id SERIAL PRIMARY KEY,
+    company_technologies_id INTEGER NOT NULL REFERENCES company_technologies(company_technologies_id),
+    tech_adoption_rating TEXT
+);
+
+CREATE TABLE company_cybersecurity_posture (
+    company_cybersecurity_posture_id SERIAL PRIMARY KEY,
+    company_technologies_id INTEGER NOT NULL REFERENCES company_technologies(company_technologies_id),
+    cybersecurity_posture TEXT
+);
+
+CREATE TABLE company_partnership_ecosystem (
+    company_partnership_ecosystem_id SERIAL PRIMARY KEY,
+    company_technologies_id INTEGER NOT NULL REFERENCES company_technologies(company_technologies_id),
+    partnership_ecosystem TEXT
+);
+
+-- ============================================================================
+-- INDEXES FOR PERFORMANCE
+-- ============================================================================
+
+-- Core company lookups
+CREATE INDEX idx_companies_name ON companies(name);
+CREATE INDEX idx_companies_category ON companies(category);
+
+-- Geography lookups
+CREATE INDEX idx_company_operating_countries_company ON company_operating_countries_map(company_id);
+CREATE INDEX idx_company_operating_countries_country ON company_operating_countries_map(countries_id);
+CREATE INDEX idx_company_office_locations_company ON company_office_locations_map(company_id);
+CREATE INDEX idx_company_office_locations_city ON company_office_locations_map(city_id);
+
+-- Foreign key indexes for common joins
+CREATE INDEX idx_company_logo_company ON company_logo(company_id);
+CREATE INDEX idx_company_core_values_company ON company_core_values(company_id);
+CREATE INDEX idx_company_history_company ON company_history(company_id);
+CREATE INDEX idx_company_brand_reputation_company ON company_brand_reputation(company_id);
+CREATE INDEX idx_company_business_company ON company_business(company_id);
+CREATE INDEX idx_company_compensation_company ON company_compensation(company_id);
+CREATE INDEX idx_company_culture_company ON company_culture(company_id);
+CREATE INDEX idx_company_financials_company ON company_financials(company_id);
+CREATE INDEX idx_company_logistics_company ON company_logistics(company_id);
+CREATE INDEX idx_company_people_company ON company_people(company_id);
+CREATE INDEX idx_company_talent_growth_company ON company_talent_growth(company_id);
+CREATE INDEX idx_company_technologies_company ON company_technologies(company_id);
+
+-- ============================================================================
+-- COMMENTS FOR DOCUMENTATION
+-- ============================================================================
+
+COMMENT ON TABLE companies IS 'Core company master table containing atomic fields';
+COMMENT ON TABLE company_operating_countries_map IS 'Many-to-many mapping of companies to countries they operate in';
+COMMENT ON TABLE company_office_locations_map IS 'Many-to-many mapping of companies to office location cities';
+COMMENT ON TABLE company_brand_reputation IS 'Parent table for brand and reputation metrics';
+COMMENT ON TABLE company_business IS 'Parent table for business strategy and market data';
+COMMENT ON TABLE company_compensation IS 'Parent table for compensation and benefits data';
+COMMENT ON TABLE company_culture IS 'Parent table for company culture metrics';
+COMMENT ON TABLE company_financials IS 'Parent table for financial metrics and performance';
+COMMENT ON TABLE company_logistics IS 'Parent table for workplace logistics and location data';
+COMMENT ON TABLE company_people IS 'Parent table for leadership and contact information';
+COMMENT ON TABLE company_talent_growth IS 'Parent table for employee development and growth metrics';
+COMMENT ON TABLE company_technologies IS 'Parent table for technology adoption and R&D data';
+
+-- ============================================================================
+-- COMPANY_JSON TABLE - NEW ADDITION
+-- ============================================================================
+-- Purpose: Store both short and full JSON representations of company data
+-- This table is added to support JSON-based data access patterns
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS company_json (
+    json_id SERIAL PRIMARY KEY,
+    company_id INTEGER NOT NULL REFERENCES companies(company_id),
+    short_json JSONB,
+    full_json JSONB,
+    UNIQUE(company_id)
+);
+
+-- Index for faster lookups by company_id
+CREATE INDEX IF NOT EXISTS idx_company_json_company_id ON company_json(company_id);
+
+-- Comments for documentation
+COMMENT ON TABLE company_json IS 'Stores JSON representations of company data - both short summary and full details';
+COMMENT ON COLUMN company_json.short_json IS 'Abbreviated JSON with key fields: company_id, name, short_name, logo_url, category, operating_countries, office_locations, employee_size, yoy_growth_rate';
+COMMENT ON COLUMN company_json.full_json IS 'Complete JSON representation of entire staging table row from company_id onwards';
+
+-- ============================================================================
+-- END OF COMPANY_JSON TABLE DDL
+-- ============================================================================
+
+-- ============================================================================
+-- END OF NORMALIZED SCHEMA
+-- ============================================================================

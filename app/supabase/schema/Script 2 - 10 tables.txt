@@ -1,0 +1,213 @@
+-- Companies primary table
+CREATE TABLE IF NOT EXISTS companies (
+  company_id int PRIMARY KEY,
+  name text,
+  short_name text,
+  logo_url text,
+  category text,
+  incorporation_year text,
+  overview_text text,
+  nature_of_company text,
+  headquarters_address text,
+  operating_countries text,
+  office_count text,
+  office_locations text,
+  employee_size text,
+  vision_statement text,
+  mission_statement text,
+  core_values text,
+  history_timeline text,
+  recent_news text,
+  website_url text,
+  linkedin_url text,
+  twitter_handle text,
+  facebook_url text,
+  instagram_url text,
+  primary_contact_email text,
+  primary_phone_number text,
+  regulatory_status text,
+  legal_issues text,
+  esg_ratings text,
+  supply_chain_dependencies text,
+  geopolitical_risks text,
+  macro_risks text,
+  carbon_footprint text,
+  ethical_sourcing text,
+  marketing_video_url text,
+  customer_testimonials text
+);
+
+-- Company brand reputation
+CREATE TABLE IF NOT EXISTS company_brand_reputation (
+  company_id int REFERENCES companies(company_id),
+  website_quality text,
+  website_rating text,
+  website_traffic_rank text,
+  social_media_followers text,
+  glassdoor_rating text,
+  indeed_rating text,
+  google_rating text,
+  awards_recognitions text,
+  brand_sentiment_score text,
+  event_participation text
+);
+
+-- Company business
+CREATE TABLE IF NOT EXISTS company_business (
+  company_id int REFERENCES companies(company_id),
+  pain_points_addressed text,
+  focus_sectors text,
+  offerings_description text,
+  top_customers text,
+  core_value_proposition text,
+  unique_differentiators text,
+  competitive_advantages text,
+  weaknesses_gaps text,
+  key_challenges_needs text,
+  key_competitors text,
+  market_share_percentage text,
+  sales_motion text,
+  customer_concentration_risk text,
+  exit_strategy_history text,
+  benchmark_vs_peers text,
+  future_projections text,
+  strategic_priorities text,
+  industry_associations text,
+  case_studies text,
+  go_to_market_strategy text,
+  innovation_roadmap text,
+  product_pipeline text,
+  tam text,
+  sam text,
+  som text
+);
+
+-- Company compensation
+CREATE TABLE IF NOT EXISTS company_compensation (
+  company_id int REFERENCES companies(company_id),
+  leave_policy text,
+  health_support text,
+  fixed_vs_variable_pay text,
+  bonus_predictability text,
+  esops_incentives text,
+  family_health_insurance text,
+  relocation_support text,
+  lifestyle_benefits text
+);
+
+-- Company culture
+CREATE TABLE IF NOT EXISTS company_culture (
+  company_id int REFERENCES companies(company_id),
+  hiring_velocity text,
+  employee_turnover text,
+  avg_retention_tenure text,
+  diversity_metrics text,
+  work_culture_summary text,
+  manager_quality text,
+  psychological_safety text,
+  feedback_culture text,
+  diversity_inclusion_score text,
+  ethical_standards text,
+  burnout_risk text,
+  layoff_history text,
+  mission_clarity text,
+  sustainability_csr text,
+  crisis_behavior text
+);
+
+-- Company financials
+CREATE TABLE IF NOT EXISTS company_financials (
+  company_id int REFERENCES companies(company_id),
+  annual_revenue text,
+  annual_profit text,
+  revenue_mix text,
+  valuation text,
+  yoy_growth_rate text,
+  profitability_status text,
+  key_investors text,
+  recent_funding_rounds text,
+  total_capital_raised text,
+  customer_acquisition_cost text,
+  customer_lifetime_value text,
+  cac_ltv_ratio text,
+  churn_rate text,
+  net_promoter_score text,
+  burn_rate text,
+  runway_months text,
+  burn_multiplier text
+);
+
+-- Company logistics
+CREATE TABLE IF NOT EXISTS company_logistics (
+  company_id int REFERENCES companies(company_id),
+  remote_policy_details text,
+  typical_hours text,
+  overtime_expectations text,
+  weekend_work text,
+  flexibility_level text,
+  location_centrality text,
+  public_transport_access text,
+  cab_policy text,
+  airport_commute_time text,
+  office_zone_type text,
+  area_safety text,
+  safety_policies text,
+  infrastructure_safety text,
+  emergency_preparedness text
+);
+
+-- Company people
+CREATE TABLE IF NOT EXISTS company_people (
+  company_id int REFERENCES companies(company_id),
+  ceo_name text,
+  ceo_linkedin_url text,
+  key_leaders text,
+  warm_intro_pathways text,
+  decision_maker_access text,
+  contact_person_name text,
+  contact_person_title text,
+  contact_person_email text,
+  contact_person_phone text,
+  board_members text
+);
+
+-- Company talent growth
+CREATE TABLE IF NOT EXISTS company_talent_growth (
+  company_id int REFERENCES companies(company_id),
+  training_spend text,
+  onboarding_quality text,
+  learning_culture text,
+  exposure_quality text,
+  mentorship_availability text,
+  internal_mobility text,
+  promotion_clarity text,
+  tools_access text,
+  role_clarity text,
+  early_ownership text,
+  work_impact text,
+  execution_thinking_balance text,
+  automation_level text,
+  cross_functional_exposure text,
+  company_maturity text,
+  brand_value text,
+  client_quality text,
+  exit_opportunities text,
+  skill_relevance text,
+  external_recognition text,
+  network_strength text,
+  global_exposure text
+);
+
+-- Company technologies
+CREATE TABLE IF NOT EXISTS company_technologies (
+  company_id int REFERENCES companies(company_id),
+  technology_partners text,
+  intellectual_property text,
+  r_and_d_investment text,
+  ai_ml_adoption_level text,
+  tech_stack text,
+  cybersecurity_posture text,
+  partnership_ecosystem text,
+  tech_adoption_rating text
+);
+ 

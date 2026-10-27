@@ -1,12 +1,13 @@
 import json
+import os
 import psycopg
 
 conn = psycopg.connect(
-    host="aws-0-ap-southeast-2.pooler.supabase.com",
-    port=5432,
-    user="postgres.brpacqbtxufuxhpgoohu",
-    password="8126252168@sahil",
-    dbname="postgres",
+    host=os.environ.get("SUPABASE_DB_HOST", "aws-0-ap-southeast-2.pooler.supabase.com"),
+    port=int(os.environ.get("SUPABASE_DB_PORT", "5432")),
+    user=os.environ["SUPABASE_DB_USER"],
+    password=os.environ["SUPABASE_DB_PASSWORD"],
+    dbname=os.environ.get("SUPABASE_DB_NAME", "postgres"),
     autocommit=True
 )
 
