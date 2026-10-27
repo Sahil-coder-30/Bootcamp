@@ -9,7 +9,7 @@ from . import config, prompts, providers, parsing, io_utils
 import json
 
 # Default fan-out comes from .env (RESEARCH_PROVIDERS) so you can swap a dead
-# provider without touching code — e.g. openrouter,groq,openrouter-alt.
+# provider without touching code — e.g. nvidia,groq,nvidia-alt.
 DEFAULT_PROVIDERS = config.RESEARCH_PROVIDERS
 
 

@@ -38,14 +38,14 @@ def test_invoke_first_falls_back(monkeypatch):
 
     def fake(name, prompt):
         calls.append(name)
-        if name == "openrouter":
+        if name == "nvidia":
             raise RuntimeError("401")
         return "hello"
 
     monkeypatch.setattr(providers, "invoke", fake)
-    monkeypatch.setattr(providers.config, "PRIMARY_PROVIDER", "openrouter")
+    monkeypatch.setattr(providers.config, "PRIMARY_PROVIDER", "nvidia")
     assert providers.invoke_first("p", ("groq",)) == ("groq", "hello")
-    assert calls[:2] == ["openrouter", "groq"]
+    assert calls[:2] == ["nvidia", "groq"]
 
 
 def test_invoke_first_all_fail(monkeypatch):

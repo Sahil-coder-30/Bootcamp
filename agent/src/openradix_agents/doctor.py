@@ -19,16 +19,16 @@ from . import config, providers
 
 # Which environment variable holds each provider's key.
 KEY_FOR = {
-    "openrouter": "OPENROUTER_API_KEY",
-    "openrouter-alt": "OPENROUTER_API_KEY",  # same key, different model
+    "nvidia": "NVIDIA_API_KEY",
+    "nvidia-alt": "NVIDIA_API_KEY",  # same key, different model
     "groq": "GROQ_API_KEY",
     "gemini": "GOOGLE_API_KEY",
 }
 
 # The model each provider will actually use (from config / .env).
 MODEL_FOR = {
-    "openrouter": config.OPENROUTER_MODEL,
-    "openrouter-alt": config.OPENROUTER_MODEL_2,
+    "nvidia": config.NVIDIA_MODEL,
+    "nvidia-alt": config.NVIDIA_MODEL_2,
     "groq": config.GROQ_MODEL,
     "gemini": config.GEMINI_MODEL,
 }

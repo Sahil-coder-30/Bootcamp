@@ -20,13 +20,13 @@ load_dotenv(ROOT / ".env", override=True)
 PROMPTS_DIR = ROOT / "prompts"
 OUTPUTS_DIR = ROOT / "outputs"
 
-OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", "anthropic/claude-3.5-sonnet")
-# A SECOND OpenRouter model. OpenRouter is one key in front of many models, so
+NVIDIA_MODEL = (os.getenv("NVIDIA_MODEL") or "meta/llama-3.3-70b-instruct")
+# A SECOND NVIDIA model. One NVIDIA API key serves many models, so
 # this is the easy way to add a third "voice" to the research fan-out without a
 # third vendor account — handy when, say, your Gemini free-tier quota is dead.
-OPENROUTER_MODEL_2 = os.getenv("OPENROUTER_MODEL_2", "nvidia/nemotron-nano-9b-v2:free")
-GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+NVIDIA_MODEL_2 = (os.getenv("NVIDIA_MODEL_2") or "nvidia/llama-3.1-nemotron-70b-instruct")
+GROQ_MODEL = (os.getenv("GROQ_MODEL") or "llama-3.3-70b-versatile")
+GEMINI_MODEL = (os.getenv("GEMINI_MODEL") or "gemini-2.0-flash")
 LLM_TEMPERATURE = float(os.getenv("LLM_TEMPERATURE", "0.2"))
 # Hard ceiling per LLM call (seconds) and SDK-level retries. Without a timeout a
 # hung provider blocks the whole pipeline forever.
@@ -34,18 +34,18 @@ LLM_TIMEOUT = float(os.getenv("LLM_TIMEOUT", "300"))
 LLM_MAX_RETRIES = int(os.getenv("LLM_MAX_RETRIES", "2"))
 
 # Which providers the research fan-out queries, in order. Override in .env to
-# swap a dead provider — e.g. drop "gemini" for "openrouter-alt" (a 2nd
-# OpenRouter model) by setting:  RESEARCH_PROVIDERS=openrouter,groq,openrouter-alt
+# swap a dead provider — e.g. drop "gemini" for "nvidia-alt" (a 2nd
+# NVIDIA model) by setting:  RESEARCH_PROVIDERS=nvidia,groq,nvidia-alt
 RESEARCH_PROVIDERS = tuple(
     p.strip()
-    for p in os.getenv("RESEARCH_PROVIDERS", "openrouter,groq,gemini").split(",")
+    for p in (os.getenv("RESEARCH_PROVIDERS") or "nvidia,groq,gemini").split(",")
     if p.strip()
 )
 
 # The single-LLM steps (consolidation, skills, hiring) try this provider first,
 # then fall back through RESEARCH_PROVIDERS. Defaults to the first research one.
 PRIMARY_PROVIDER = os.getenv("PRIMARY_PROVIDER", "").strip() or (
-    RESEARCH_PROVIDERS[0] if RESEARCH_PROVIDERS else "openrouter")
+    RESEARCH_PROVIDERS[0] if RESEARCH_PROVIDERS else "nvidia")
 
 
 def get_env(key: str, required: bool = True, default: str | None = None) -> str | None:
