@@ -44,6 +44,6 @@ Old-app commits (before monorepo) live in the same git history.
 | 12:49-13:03 | Wrote `docs/00-shared-contract.md` + 5 role plans (Role 1 JD, 2 Resume, 3 Profile, 5 Skill Match done; Role 4 Talent Check still writing) via 5 subagents | user: "plan.md for every role, stand out, scalable" | not committed yet (docs/ untracked at 13:05) |
 | 12:59 | Thread "Build FastAPI service for agent" started: review agent, run end to end, fix, build FastAPI aligned with backend proxy | user: "thread only for my agent, fastapi, scalable, test first" | in progress |
 | 13:04 | This context keeper thread created: `context/` folder | user: "keep context files and journey updated" | see next entry |
-| 13:10 | Created `context/` (README, codebase-map, journey, status) from git log, project memory, project chat/threads | this thread | commit hash below |
+| 13:10 | Created `context/` (README, codebase-map, journey, status) from git log, project memory, project chat/threads | this thread | commit `f661dbc` (local only) |
 
 <!-- NEXT ENTRY HERE: copy a row, add time, event, ask/plan, commit -->
