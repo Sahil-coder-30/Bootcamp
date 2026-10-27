@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend-container
+        image: backend:latest
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 4000
+          initialDelaySeconds: 60
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 4000
+          initialDelaySeconds: 20
+          timeoutSeconds: 5
+        env:
+        - name: PORT
+          value: "4000"
+        - name: SUPABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: SUPABASE_URL
+        - name: SUPABASE_SERVICE_ROLE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: SUPABASE_SERVICE_ROLE_KEY
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: jwt
+              key: JWT_SECRET
+        - name: AUTH_JWKS_URI
+          value: "http://backend-service/.well-known/jwks.json"
+        - name: AGENT_URL
+          value: "http://agent-service"
+        - name: CORS_ORIGINS
+          value: "http://localhost:5173,http://localhost:3000"
+        ports:
+        - name: http
+          containerPort: 4000

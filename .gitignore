@@ -3,6 +3,8 @@
 .env.*
 !.env.example
 *.local
+k8s/secrets.yml
+!k8s/secrets.example.yml
 
 # --- Old bootcamp material, local only ---
 _archive/

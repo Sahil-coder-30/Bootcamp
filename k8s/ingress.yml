@@ -1,0 +1,41 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  labels:
+    app.kubernetes.io/name: app-ingress
+  annotations:
+    # Crucial for LLM streams, agent reasoning, and Server-Sent Events (SSE)
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "10"
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - pathType: Prefix
+            path: "/api/agent"
+            backend:
+              service:
+                name: agent-service
+                port:
+                  number: 80
+          - pathType: Prefix
+            path: "/api"
+            backend:
+              service:
+                name: backend-service
+                port:
+                  number: 80
+    # Wildcard routing for dynamic preview and agent subdomains
+    - host: "*.agent.localhost"
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: agent-service
+                port:
+                  number: 80

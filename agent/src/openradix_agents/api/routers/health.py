@@ -13,6 +13,13 @@ from ..services.jobs import JobManager
 router = APIRouter(tags=["health"])
 
 
+@router.get("/healthz")
+@router.get("/readyz")
+def k8s_probes() -> dict[str, str]:
+    """Kubernetes liveness and readiness probe endpoint."""
+    return {"status": "ok"}
+
+
 @router.get("/health", response_model=HealthResponse)
 def health(jobs: JobManager = Depends(get_jobs)) -> HealthResponse:
     """Cheap liveness check. Makes no LLM calls."""
