@@ -21,7 +21,10 @@ export async function callAgent<T = unknown>(path: string, body?: unknown): Prom
   const data = (await res.json().catch(() => null)) as T | null;
   if (!res.ok) {
     const detail = (data as { detail?: unknown } | null)?.detail;
-    throw new HttpError(res.status, typeof detail === "string" ? detail : `Agent error ${res.status}`);
+    // FastAPI sends a string for HTTPException and a list of issues for 422 validation errors.
+    const message =
+      typeof detail === "string" ? detail : detail ? JSON.stringify(detail) : `Agent error ${res.status}`;
+    throw new HttpError(res.status, message);
   }
   return data as T;
 }

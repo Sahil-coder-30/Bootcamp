@@ -6,10 +6,11 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.test.json",
     "test": "vitest run",
     "seed:sql": "tsx scripts/generate-seed-sql.ts",
-    "seed:db": "tsx scripts/populate-db.ts"
+    "seed:db": "tsx scripts/populate-db.ts",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.1",
@@ -23,6 +24,7 @@
     "@types/express": "^5.0.3",
     "@types/morgan": "^1.9.10",
     "@types/node": "^22.16.5",
+    "@vitest/coverage-v8": "^4.1.12",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3",
     "vitest": "^4.1.10"
