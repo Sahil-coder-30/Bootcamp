@@ -4,7 +4,7 @@ providers.py
 Factories for the three LLM providers, all returning a LangChain chat model with
 the same interface (``.invoke(prompt) -> AIMessage``).
 
-* OpenRouter — via ChatOpenAI pointed at the OpenRouter base URL (one key, many models)
+* NVIDIA NIM — via ChatOpenAI pointed at the NVIDIA OpenAI-compatible endpoint
 * Groq       — via ChatGroq (very fast Llama/Mixtral)
 * Gemini     — via ChatGoogleGenerativeAI
 
@@ -15,12 +15,12 @@ Heavy imports are done lazily inside each factory so the module (and the CLI
 from . import config
 
 
-def _openrouter(model: str):
-    """One OpenRouter chat model. The key is shared; only the model id changes."""
+def _nvidia(model: str):
+    """One NVIDIA chat model. The key is shared; only the model id changes."""
     from langchain_openai import ChatOpenAI
     return ChatOpenAI(
-        base_url="https://openrouter.ai/api/v1",
-        api_key=config.get_env("OPENROUTER_API_KEY"),
+        base_url="https://integrate.api.nvidia.com/v1",
+        api_key=config.get_env("NVIDIA_API_KEY"),
         model=model,
         temperature=config.LLM_TEMPERATURE,
         timeout=config.LLM_TIMEOUT,
@@ -28,14 +28,14 @@ def _openrouter(model: str):
     )
 
 
-def openrouter_llm():
-    return _openrouter(config.OPENROUTER_MODEL)
+def nvidia_llm():
+    return _nvidia(config.NVIDIA_MODEL)
 
 
-def openrouter_alt_llm():
-    """Second OpenRouter model (config.OPENROUTER_MODEL_2) — same key, different
+def nvidia_alt_llm():
+    """Second NVIDIA model (config.NVIDIA_MODEL_2) — same key, different
     model. Use it as a drop-in third voice when another provider is down."""
-    return _openrouter(config.OPENROUTER_MODEL_2)
+    return _nvidia(config.NVIDIA_MODEL_2)
 
 
 def groq_llm():
@@ -61,8 +61,8 @@ def gemini_llm():
 
 
 PROVIDERS = {
-    "openrouter": openrouter_llm,
-    "openrouter-alt": openrouter_alt_llm,
+    "nvidia": nvidia_llm,
+    "nvidia-alt": nvidia_alt_llm,
     "groq": groq_llm,
     "gemini": gemini_llm,
 }

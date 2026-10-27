@@ -1,4 +1,4 @@
-# Level 4 — Agentic Research (LangChain)
+# OpenRADIX Agents (LangChain + FastAPI)
 
 **What this level teaches:** how to automate the manual Level-1/2 research with
 LangChain agents. Each prompt you used to run by hand becomes an **agent**. The
@@ -14,7 +14,7 @@ into a single Golden Record, and a **testing agent** (the Level-3 framework, now
 
 | # | Agent | Prompt | Output | LLMs |
 |---|---|---|---|---|
-| 1 | `research_agent` | research.md (163 params) | `research_openrouter/groq/gemini.json` | all 3 |
+| 1 | `research_agent` | research.md (163 params) | `research_nvidia/groq/gemini.json` | all 3 |
 | 2 | `consolidation_agent` | consolidation.md | `golden_record.json` / `.csv` | 1 |
 | 3 | `skill_matrix_agent` | expectation_matrix.md (12 skills, Bloom) | `skill_matrix.json` / `.csv` | 1 |
 | 4 | `hiring_agent` | hiring.md | `hiring_rounds.json` | 1 |
@@ -58,11 +58,11 @@ python -m openradix_agents run --company "Blinkit" --providers groq gemini
 
 **A provider down?** A dead provider is now logged and skipped (it won't crash the
 run). If a key is permanently unavailable — e.g. Gemini's free-tier quota — swap it
-for a second OpenRouter model (same key, different model id) by adding one line to
+for a second NVIDIA model (same key, different model id) by adding one line to
 `.env`:
 ```bash
-RESEARCH_PROVIDERS=openrouter,groq,openrouter-alt
-# optionally choose the 2nd model:  OPENROUTER_MODEL_2=nvidia/nemotron-nano-9b-v2:free
+RESEARCH_PROVIDERS=nvidia,groq,nvidia-alt
+# optionally choose the 2nd model:  NVIDIA_MODEL_2=nvidia/nemotron-nano-9b-v2:free
 ```
 Re-run `python -m openradix_agents doctor` to confirm three greens.
 
@@ -71,7 +71,7 @@ Outputs land in `outputs/Blinkit/`.
 ## Architecture
 
 ```
-research_agent ──► OpenRouter ┐
+research_agent ──► NVIDIA ┐
                ──► Groq       ├─► 3 raw tables ─► consolidation_agent ─► golden_record.json
                ──► Gemini     ┘                                              │
 skill_matrix_agent ─► skill_matrix.csv                                       │
@@ -112,3 +112,24 @@ Level 3, so the behaviour is identical to the suite students already know.
 - Offline tests: `pytest src/openradix_agents/test_parsing_unit.py -q`.
 - The testing agent runs fully offline (no key needed): `--only test`.
 - If a provider errors, try `--providers` with just the ones whose keys you have.
+
+## HTTP API (FastAPI)
+
+```bash
+uv venv -p 3.12 .venv && uv pip install -r requirements-dev.txt -e .
+python -m openradix_agents serve        # http://localhost:8000/docs
+```
+
+| Method | Path | What it does |
+|---|---|---|
+| GET | `/health` | liveness, providers, key presence (no LLM calls) |
+| POST | `/doctor` | live-ping each provider |
+| POST | `/run` | queue a run, returns 202 + job (`{"company": "Blinkit", "steps": [...]}`) |
+| GET | `/jobs`, `/jobs/{id}` | poll runs; status queued / running / succeeded / partial / failed |
+| POST | `/validate` | re-run data-quality checks on a saved golden record |
+| GET | `/companies/{c}/golden-record`, `skill-matrix`, `hiring`, `artifacts` | read outputs |
+
+Settings (prefix `AGENT_`): `PORT`, `CORS_ORIGINS`, `MAX_CONCURRENT_JOBS`, `JOB_TTL_SECONDS`, `API_KEY` (optional, sent as `X-Agent-Key`).
+Jobs live in memory (one process). The Express backend proxies `/api/agent/*` here.
+
+Tests: `pytest` (all offline). If `python -m openradix_agents` says "No module named", set `PYTHONPATH=src`.

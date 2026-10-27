@@ -6,7 +6,7 @@ them into a single 163-row "Golden Record", and saves it keyed by column name
 (golden_record.json) plus a wide CSV (golden_record.csv) — ready for Level 3.
 """
 
-from . import prompts, providers, parsing, io_utils
+from . import io_utils, parsing, prompts, providers
 from .columns import column_for_id
 
 _HEADERS = "| ID | Category | A/C | Parameter | Research Output / Data | Source |"

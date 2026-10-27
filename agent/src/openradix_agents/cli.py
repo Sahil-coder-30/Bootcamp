@@ -30,7 +30,7 @@ def _run(company: str, provider_names: tuple, only: str | None) -> int:
     try:
         summary = run_pipeline(company, provider_names, (only,) if only else None)
     except PipelineError as exc:
-        raise SystemExit(str(exc))
+        raise SystemExit(str(exc)) from None
     print("\nStep summary:")
     for step, info in summary["steps"].items():
         extra = info.get("result") or info.get("error", "")

@@ -37,8 +37,10 @@ export function useCompanies() {
   const { list, loaded, loading, error } = useAppSelector((s) => s.companies);
 
   const refetch = useCallback(async () => {
-    dispatch(setCompaniesLoading(true));
+    // Clear the error first: setCompaniesError also resets `loading`, and clearing it
+    // after setting loading would let the effect below start a second request.
     dispatch(setCompaniesError(null));
+    dispatch(setCompaniesLoading(true));
     try {
       const data = await getCompaniesAPI();
       dispatch(setCompaniesList(data));

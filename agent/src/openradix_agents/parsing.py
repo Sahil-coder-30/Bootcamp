@@ -13,7 +13,6 @@ Pure standard library — no LangChain, so it is fully unit-testable offline.
 import json
 import re
 
-
 _THINK = re.compile(r"<think>.*?</think>", re.DOTALL | re.IGNORECASE)
 
 

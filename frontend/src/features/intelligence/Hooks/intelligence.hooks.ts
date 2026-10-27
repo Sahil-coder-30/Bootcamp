@@ -8,7 +8,7 @@ import { setProfile, setProfileError, setProfileLoading } from "../slice/intelli
 export function useCompanyProfile(id?: number | null) {
   const dispatch = useAppDispatch();
   const enabled = typeof id === "number" && id > 0;
-  const { profiles, errors } = useAppSelector((s) => s.intelligence);
+  const { profiles, errors, loadingId } = useAppSelector((s) => s.intelligence);
   const cached = enabled && id in profiles;
   const error = enabled ? (errors[id] ?? null) : null;
 
@@ -33,9 +33,12 @@ export function useCompanyProfile(id?: number | null) {
     }
   }, [dispatch, enabled, id]);
 
+  // Skip while a request for this id is in flight, so a retry (which clears the error)
+  // does not trigger a second request from here.
+  const inFlight = enabled && loadingId === id;
   useEffect(() => {
-    if (enabled && !cached && !error) void refetch();
-  }, [enabled, cached, error, refetch]);
+    if (enabled && !cached && !error && !inFlight) void refetch();
+  }, [enabled, cached, error, inFlight, refetch]);
 
   return {
     data: enabled ? (profiles[id] ?? null) : null,

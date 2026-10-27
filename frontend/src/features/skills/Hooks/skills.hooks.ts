@@ -10,7 +10,7 @@ export type { CompanySkillsData, SkillWithTopics } from "../service/skills.api";
 export function useCompanySkills(id?: number | null) {
   const dispatch = useAppDispatch();
   const enabled = typeof id === "number" && id > 0;
-  const { byCompany, errors } = useAppSelector((s) => s.skills);
+  const { byCompany, errors, loadingId } = useAppSelector((s) => s.skills);
   const data = enabled ? byCompany[id] : undefined;
   const error = enabled ? (errors[id] ?? null) : null;
 
@@ -32,9 +32,12 @@ export function useCompanySkills(id?: number | null) {
     }
   }, [dispatch, enabled, id]);
 
+  // Skip while a request for this id is in flight, so a retry (which clears the error)
+  // does not trigger a second request from here.
+  const inFlight = enabled && loadingId === id;
   useEffect(() => {
-    if (enabled && !data && !error) void refetch();
-  }, [enabled, data, error, refetch]);
+    if (enabled && !data && !error && !inFlight) void refetch();
+  }, [enabled, data, error, inFlight, refetch]);
 
   return {
     data,

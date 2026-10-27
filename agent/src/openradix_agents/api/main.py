@@ -16,6 +16,8 @@ The Express backend proxies ``/api/agent/*`` here (see backend/src/services/agen
     GET  /companies/{c}/...      read the artifacts a run wrote
 """
 
+import logging
+import time
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request, status
@@ -25,10 +27,6 @@ from fastapi.responses import JSONResponse
 from .routers import artifacts, health, jobs, pipeline
 from .services.jobs import JobManager
 from .settings import Settings, get_settings
-
-
-import time
-import logging
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("agent.http")

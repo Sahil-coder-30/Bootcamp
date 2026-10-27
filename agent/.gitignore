@@ -9,3 +9,6 @@ outputs/*/
 *.egg-info/
 venv/
 .DS_Store
+.coverage
+coverage.xml
+.ruff_cache/

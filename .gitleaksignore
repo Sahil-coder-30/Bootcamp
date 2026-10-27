@@ -1,0 +1,2 @@
+# Fake key in a test (commit 6d8de12), not a real secret. The test now uses "dummy".
+6d8de12e12059d3e6abe27a7c84704639418a033:agent/tests/test_cli_doctor.py:generic-api-key:26
