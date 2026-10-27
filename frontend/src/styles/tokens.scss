@@ -1,0 +1,89 @@
+// Design tokens (frontend-arch-init). Use these in feature SCSS via:
+//   @use "@/styles/tokens.scss" as *;   (or a relative path)
+
+// Spacing Scale (8px Grid Standard)
+$space-1:   4px;
+$space-2:   8px;
+$space-3:   12px;
+$space-4:   16px;
+$space-5:   20px;
+$space-6:   24px;   // Standard component padding
+$space-8:   32px;
+$space-10:  40px;
+$space-12:  48px;
+$space-16:  64px;
+
+// Surface & Background Mappings
+$color-bg:            var(--bg-canvas);
+$color-bg-sidebar:    var(--bg-surface);
+$color-bg-panel:      var(--bg-overlay);
+$color-bg-element:    var(--bg-element);
+$color-bg-active:     var(--bg-active);
+
+// Border System
+$color-border:        var(--border);
+$color-border-strong: var(--border-strong);
+$color-border-glow:   var(--border-glow);
+
+// Brand & Accent Colors
+$color-primary:       var(--brand-primary);
+$color-primary-hover: var(--brand-hover);
+$color-primary-glow:  var(--brand-subtle);
+$color-accent:        var(--accent-primary);
+$color-accent-hover:  var(--accent-hover);
+
+// Typography Tokens
+$color-text:          var(--text-primary);
+$color-text-muted:    var(--text-secondary);
+$color-text-disabled: var(--text-disabled);
+
+$font-sans:           var(--font-sans);
+$font-mono:           var(--font-mono);
+
+// Alpha Card Helpers
+$color-rgb-text:      var(--color-rgb-text);
+$color-bg-card:       rgba(var(--color-rgb-text), 0.03);
+$color-bg-card-hover: rgba(var(--color-rgb-text), 0.06);
+
+// Layout Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin card {
+  background: var(--bg-surface);
+  border: 1px solid $color-border;
+  border-radius: 12px;
+  padding: $space-6;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+
+  &:hover {
+    background: var(--bg-overlay);
+    border-color: $color-border-strong;
+    transform: translateY(-2px);
+  }
+}
+
+@mixin skeleton {
+  background: linear-gradient(90deg, $color-bg-card 25%, var(--bg-element) 50%, $color-bg-card 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 6px;
+}
+
+@mixin respond-to($bp) {
+  @if $bp == 'mobile' {
+    @media (max-width: 768px) { @content; }
+  } @else if $bp == 'tablet' {
+    @media (max-width: 1024px) { @content; }
+  }
+}
