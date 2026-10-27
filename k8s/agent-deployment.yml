@@ -45,21 +45,21 @@ spec:
             secretKeyRef:
               name: ai-secret
               key: GROQ_API_KEY
-        - name: OPENAI_API_KEY
+        - name: OPENROUTER_API_KEY
           valueFrom:
             secretKeyRef:
               name: ai-secret
-              key: OPENAI_API_KEY
-        - name: ANTHROPIC_API_KEY
+              key: OPENROUTER_API_KEY
+        - name: GOOGLE_API_KEY
           valueFrom:
             secretKeyRef:
               name: ai-secret
-              key: ANTHROPIC_API_KEY
+              key: GOOGLE_API_KEY
         - name: GEMINI_API_KEY
           valueFrom:
             secretKeyRef:
               name: ai-secret
-              key: GEMINI_API_KEY
+              key: GOOGLE_API_KEY
         ports:
         - name: http
           containerPort: 8000

@@ -28,14 +28,3 @@ spec:
                 name: backend-service
                 port:
                   number: 80
-    # Wildcard routing for dynamic preview and agent subdomains
-    - host: "*.agent.localhost"
-      http:
-        paths:
-          - pathType: Prefix
-            path: "/"
-            backend:
-              service:
-                name: agent-service
-                port:
-                  number: 80
