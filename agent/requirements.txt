@@ -1,6 +1,6 @@
 # Python 3.11 or 3.12 required (LangChain wheels are most reliable there).
 # Install with:  uv pip install -r requirements.txt -e .   (see PREWORK.md)
-langchain==0.3.14
+langchain==1.4.7
 langchain-openai==0.2.14
 langchain-groq==0.2.3
 langchain-google-genai==2.0.8
