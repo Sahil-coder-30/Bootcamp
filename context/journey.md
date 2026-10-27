@@ -47,4 +47,5 @@ Old-app commits (before monorepo) live in the same git history.
 | 13:10 | Created `context/` (README, codebase-map, journey, status) from git log, project memory, project chat/threads | this thread | commit `80b8658` (local only) |
 
 | 13:10 | Context files updated with role plans and the Bloom-code finding | coordinator relay | `ad2e3fc` (local only) |
+| 13:21 | Upgraded root README.md using readme-forge (10-pillar showcase standard + 100% validator pass) | user: "use the /readme-forge skill and make the readme of this project" | `8158589` (local only) |
 <!-- NEXT ENTRY HERE: copy a row, add time, event, ask/plan, commit -->
