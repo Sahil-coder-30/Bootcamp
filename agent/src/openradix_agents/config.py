@@ -20,11 +20,11 @@ load_dotenv(ROOT / ".env", override=True)
 PROMPTS_DIR = ROOT / "prompts"
 OUTPUTS_DIR = ROOT / "outputs"
 
-NVIDIA_MODEL = (os.getenv("NVIDIA_MODEL") or "meta/llama-3.3-70b-instruct")
+NVIDIA_MODEL = (os.getenv("NVIDIA_MODEL") or "nvidia/nemotron-3.5-super-vl-120b-a12b")
 # A SECOND NVIDIA model. One NVIDIA API key serves many models, so
 # this is the easy way to add a third "voice" to the research fan-out without a
 # third vendor account — handy when, say, your Gemini free-tier quota is dead.
-NVIDIA_MODEL_2 = (os.getenv("NVIDIA_MODEL_2") or "nvidia/llama-3.1-nemotron-70b-instruct")
+NVIDIA_MODEL_2 = (os.getenv("NVIDIA_MODEL_2") or "nvidia/nemotron-3.5-lightning-30b-a3b")
 GROQ_MODEL = (os.getenv("GROQ_MODEL") or "llama-3.3-70b-versatile")
 GEMINI_MODEL = (os.getenv("GEMINI_MODEL") or "gemini-2.0-flash")
 LLM_TEMPERATURE = float(os.getenv("LLM_TEMPERATURE", "0.2"))

@@ -1,4 +1,4 @@
-# Level 4 — Agentic Research (LangChain)
+# OpenRADIX Agents (LangChain + FastAPI)
 
 **What this level teaches:** how to automate the manual Level-1/2 research with
 LangChain agents. Each prompt you used to run by hand becomes an **agent**. The
@@ -112,3 +112,24 @@ Level 3, so the behaviour is identical to the suite students already know.
 - Offline tests: `pytest src/openradix_agents/test_parsing_unit.py -q`.
 - The testing agent runs fully offline (no key needed): `--only test`.
 - If a provider errors, try `--providers` with just the ones whose keys you have.
+
+## HTTP API (FastAPI)
+
+```bash
+uv venv -p 3.12 .venv && uv pip install -r requirements.txt -e .
+python -m openradix_agents serve        # http://localhost:8000/docs
+```
+
+| Method | Path | What it does |
+|---|---|---|
+| GET | `/health` | liveness, providers, key presence (no LLM calls) |
+| POST | `/doctor` | live-ping each provider |
+| POST | `/run` | queue a run, returns 202 + job (`{"company": "Blinkit", "steps": [...]}`) |
+| GET | `/jobs`, `/jobs/{id}` | poll runs; status queued / running / succeeded / partial / failed |
+| POST | `/validate` | re-run data-quality checks on a saved golden record |
+| GET | `/companies/{c}/golden-record`, `skill-matrix`, `hiring`, `artifacts` | read outputs |
+
+Settings (prefix `AGENT_`): `PORT`, `CORS_ORIGINS`, `MAX_CONCURRENT_JOBS`, `JOB_TTL_SECONDS`, `API_KEY` (optional, sent as `X-Agent-Key`).
+Jobs live in memory (one process). The Express backend proxies `/api/agent/*` here.
+
+Tests: `pytest` (all offline). If `python -m openradix_agents` says "No module named", set `PYTHONPATH=src`.
