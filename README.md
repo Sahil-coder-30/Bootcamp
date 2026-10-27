@@ -79,3 +79,7 @@ scripts/           DB seeding scripts · supabase/ SQL schema + seed
 - Never commit `.env` files; only `.env.example`.
 - `agent/reference/level5/` holds reusable bootcamp code (`db.py`, `schemas.py`, `gate.py`), not wired in yet.
 - `_archive/` (local only, git-ignored) holds old bootcamp material.
+
+## For agents and new teammates
+
+Start with [`context/README.md`](context/README.md): codebase map, coding journey (timestamps + commits) and current status, so you do not have to re-read the code.
