@@ -27,6 +27,12 @@ from .services.jobs import JobManager
 from .settings import Settings, get_settings
 
 
+import time
+import logging
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+logger = logging.getLogger("agent.http")
+
 def create_app(settings: Settings | None = None) -> FastAPI:
     settings = settings or get_settings()
 
@@ -40,6 +46,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.add_middleware(
         CORSMiddleware, allow_origins=settings.cors_origins,
         allow_methods=["GET", "POST"], allow_headers=["*"])
+
+    @app.middleware("http")
+    async def morgan_style_logger(request: Request, call_next):
+        start_time = time.perf_counter()
+        response = await call_next(request)
+        duration_ms = (time.perf_counter() - start_time) * 1000
+        logger.info(f"{request.method} {request.url.path} {response.status_code} - {duration_ms:.2f} ms")
+        return response
 
     @app.exception_handler(ValueError)
     async def value_error(_: Request, exc: ValueError) -> JSONResponse:
