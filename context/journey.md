@@ -41,9 +41,10 @@ Old-app commits (before monorepo) live in the same git history.
 
 | Time | Event | Ask / plan | Commit |
 |---|---|---|---|
-| 12:49-13:03 | Wrote `docs/00-shared-contract.md` + 5 role plans (Role 1 JD, 2 Resume, 3 Profile, 5 Skill Match done; Role 4 Talent Check still writing) via 5 subagents | user: "plan.md for every role, stand out, scalable" | not committed yet (docs/ untracked at 13:05) |
+| 12:49-13:08 | Wrote `docs/` : README index, `00-shared-contract.md` (v1.1 section 9 added accepted changes from the plans) and 5 role plans via 5 subagents. Architecture: frontend → backend (Supabase, caching) → stateless FastAPI agent. Highlights: JD evidence verification + golden-set eval; resume PDF/DOCX with Bloom-rubric 1-10 levels; profile pre-fill with provenance, 12 sliders, JSON import/export; Talent Check = 100×Σ(min(c,r)−1)/Σ(r−1), ready = 80+ and no gap ≥3, what-if, ranking across 115 companies; skill match cascade exact→alias→fuzzy→embeddings→LLM. Finding: 698 of 1,380 `company_skill_levels` rows have a Bloom code that disagrees with the level (e.g. Google Coding "8-CR"), so scoring uses the NUMBER | user: "plan.md for every role, stand out, scalable" | docs/ written at 13:07-13:08, commit `8c72e8a` (local only) |
 | 12:59 | Thread "Build FastAPI service for agent" started: review agent, run end to end, fix, build FastAPI aligned with backend proxy | user: "thread only for my agent, fastapi, scalable, test first" | in progress |
 | 13:04 | This context keeper thread created: `context/` folder | user: "keep context files and journey updated" | see next entry |
 | 13:10 | Created `context/` (README, codebase-map, journey, status) from git log, project memory, project chat/threads | this thread | commit `f661dbc` (local only) |
 
+| 13:10 | Context files updated with role plans and the Bloom-code finding | coordinator relay | `8c72e8a` (local only) |
 <!-- NEXT ENTRY HERE: copy a row, add time, event, ask/plan, commit -->

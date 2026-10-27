@@ -96,9 +96,19 @@ New hackathon features go to `src/features/{jd,resume,profile,talentCheck,skillM
 
 Planned: `src/talent_match/` (contract.py, api.py FastAPI, llm.py, documents.py, taxonomy.py, per-role packages). Check `status.md` for what exists.
 
-## 6. docs/  (hackathon plans, written 2026-10-27)
+## 6. docs/  (hackathon plans, committed? see journey.md)
 
-`README.md` index · `00-shared-contract.md` (architecture, 12 category codes, JSON contract objects, API routes, new Supabase tables, rules, phases) · `role-1-jd-analytics/`, `role-2-resume-parsing/`, `role-3-profile-builder/`, `role-4-talent-check/`, `role-5-skill-matching/` each with `plan.md` (role 4 plan was still being written at time of this update).
+| File | Kaam |
+|---|---|
+| `README.md` | index + flow + service map |
+| `00-shared-contract.md` | architecture, 12 category codes, evidence→level rubric, contract objects (Skill, ExtractedSkillList, ResumeExtraction, CandidateProfile, TalentCheckResult, SkillMatchResult), API routes, new Supabase tables, cross-cutting rules, demo flow, phases, section 9 = v1.1 accepted changes |
+| `role-1-jd-analytics/plan.md` | JD PDF/DOCX → skills; document ingestion, shared LLM layer, evidence verification, golden-set eval |
+| `role-2-resume-parsing/plan.md` | resume → skills + structure + Bloom-rubric 1-10 levels |
+| `role-3-profile-builder/plan.md` | profile form pre-filled from resume with provenance, 12 sliders, JSON import/export, versioned save |
+| `role-4-talent-check/plan.md` | scoring model, company bar data (`v_company_skill_bar`, `v_skill_topics`), what-if, ranking across 115 companies, study plan |
+| `role-5-skill-matching/plan.md` | match cascade exact→alias→fuzzy→embeddings→LLM, gap list, taxonomy |
+
+Planned (not built yet): `agent/src/talent_match/`, `backend/supabase/migrations/`, frontend features `jd resume profile talentCheck skillMatch flow`, `docs/contract/` (JSON schemas, fixtures).
 
 ## 7. Supabase (not in repo)
 
