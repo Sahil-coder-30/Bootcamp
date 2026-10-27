@@ -62,6 +62,6 @@ Old-app commits (before monorepo) live in the same git history.
 | 14:13 | Backend Docker base `node:22-alpine` (native WebSocket for supabase-js) | Sahil | `bd7f0a1` |
 | 14:19-14:21 | Container healthchecks, then replaced by k8s probes; **morgan** request logging in backend, HTTP access logger in agent, backend `GET /healthz` and `/readyz` | Sahil | `ae9a1bb`, `e087300` |
 | 14:42 | Frontend dev proxy `/api` → `http://localhost` (port 80, i.e. the k8s ingress). **Plain `npm run dev` against backend :4000 no longer works** unless `vite.config.ts` is changed back | Sahil | `7722087` |
-| 16:xx | Context re-synced after Sahil's manual changes (this entry) | user: "maine bahut kuch change kiya, context update rakhna" | next commit |
+| 16:10 | Context re-synced after Sahil's manual changes (this entry) | user: "maine bahut kuch change kiya, context update rakhna" | `d836b7f` |
 
 <!-- NEXT ENTRY HERE: copy a row, add time, event, ask/plan, commit -->

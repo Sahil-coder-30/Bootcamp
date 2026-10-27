@@ -37,6 +37,7 @@ _Updated 2026-10-27 (after Sahil's manual k8s/README/agent changes). Sab kuch lo
 7. `companies.logo_url` is not written by the normalize trigger for new companies (manual fill needed).
 8. Vendored rule files drifted between old levels; `agent/data/` copies are the ones to use now.
 9. Supabase connector's destructive-SQL confirmation times out in this setup: give the user SQL to run in the SQL Editor.
+10a. **`.gitignore` now lists `context`** (added by Sahil). The 4 context files are still TRACKED, so they will be pushed unless untracked (`git rm -r --cached context`). New files in `context/` need `git add -f`. Decide: share with team or keep local.
 10. **Dev proxy gotcha:** `frontend/vite.config.ts` proxies `/api` to `http://localhost` (port 80, k8s ingress) since 7722087. For plain local dev use backend on :4000 and change it back (or run via Skaffold).
 11. Install notes: use npm 11 (npm 10 crashes with edgesOut); Python 3.11/3.12 for agent.
 
