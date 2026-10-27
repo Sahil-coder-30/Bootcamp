@@ -3,7 +3,7 @@
 langchain==0.3.14
 langchain-openai==0.2.14
 langchain-groq==0.2.3
-langchain-google-genai==2.0.8
+langchain-google-genai==4.4.2
 python-dotenv==1.0.1
 openpyxl==3.1.5
 # HTTP API (python -m openradix_agents serve)
