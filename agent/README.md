@@ -116,7 +116,7 @@ Level 3, so the behaviour is identical to the suite students already know.
 ## HTTP API (FastAPI)
 
 ```bash
-uv venv -p 3.12 .venv && uv pip install -r requirements.txt -e .
+uv venv -p 3.12 .venv && uv pip install -r requirements-dev.txt -e .
 python -m openradix_agents serve        # http://localhost:8000/docs
 ```
 

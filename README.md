@@ -228,7 +228,7 @@ npm run dev
 # Terminal 3: Python Agent Service (FastAPI on :8000)
 cd agent
 uv venv -p 3.12 .venv
-uv pip install -r requirements.txt -e .
+uv pip install -r requirements-dev.txt -e .   # runtime + test tools
 .venv/bin/python -m openradix_agents doctor   # check provider keys
 .venv/bin/python -m openradix_agents serve    # http://localhost:8000/docs
 ```
