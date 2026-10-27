@@ -5,8 +5,15 @@ import json
 import pytest
 
 from openradix_agents import (
-    consolidation_agent, hiring_agent, io_utils, parsing, pipeline, providers,
-    research_agent, skill_matrix_agent, validation_agent,
+    consolidation_agent,
+    hiring_agent,
+    io_utils,
+    parsing,
+    pipeline,
+    providers,
+    research_agent,
+    skill_matrix_agent,
+    validation_agent,
 )
 
 

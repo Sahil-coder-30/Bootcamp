@@ -4,7 +4,7 @@ hiring_agent.py
 Runs the Hiring Rounds prompt and saves the structured hiring profile as JSON.
 """
 
-from . import prompts, providers, parsing, io_utils
+from . import io_utils, parsing, prompts, providers
 
 
 def run(company: str, provider_names=()) -> dict:

@@ -101,3 +101,84 @@ def test_api_key_enforced(monkeypatch):
         assert c.get("/health").status_code == 200
         assert c.get("/jobs").status_code == 401
         assert c.get("/jobs", headers={"X-Agent-Key": "s3cret"}).status_code == 200
+
+
+# --------------------------------------------------------- more API cases
+def test_doctor_route(client, monkeypatch):
+    from openradix_agents.api.services import providers as provider_service
+    monkeypatch.setattr(provider_service, "check_all", lambda names: [
+        {"provider": "groq", "key_name": "GROQ_API_KEY", "model": "m", "status": "OK", "detail": "pong"}])
+    r = client.post("/doctor", json={"providers": ["groq"]})
+    assert r.status_code == 200 and r.json()["ok"] is True
+    assert client.post("/doctor", json={"providers": ["nope"]}).status_code == 422
+
+
+def test_unsafe_company_name_is_a_400(client):
+    r = client.post("/validate", json={"company": ".."})
+    assert r.status_code == 400 and "invalid company name" in r.json()["detail"]
+
+
+def test_research_files_are_served(client):
+    d = io_utils.out_dir("Acme")
+    (d / "research_groq.json").write_text("{}")
+    names = [a["name"] for a in client.get("/companies/Acme/artifacts").json()["artifacts"]]
+    assert names == ["research_groq.json"]
+    assert client.get("/companies/Acme/artifacts/research_groq.json").status_code == 200
+
+
+def test_skill_matrix_and_hiring_routes(client):
+    d = io_utils.out_dir("Acme")
+    (d / "skill_matrix.json").write_text('{"coding": "5-AP"}')
+    (d / "hiring_rounds.json").write_text('{"job_role_details": []}')
+    assert client.get("/companies/Acme/skill-matrix").json() == {"coding": "5-AP"}
+    assert client.get("/companies/Acme/hiring").json() == {"job_role_details": []}
+    assert client.get("/companies/Nobody/artifacts").json()["artifacts"] == []
+
+
+def _manager_with(monkeypatch, summary_or_exc):
+    def fake(company, providers, steps, on_step):
+        if isinstance(summary_or_exc, Exception):
+            raise summary_or_exc
+        for s, info in summary_or_exc["steps"].items():
+            on_step(s, info["status"], info)
+        return summary_or_exc
+
+    monkeypatch.setattr(jobs_service, "run_pipeline", fake)
+    return jobs_service.JobManager(max_workers=1)
+
+
+def _finish(manager, job_id):
+    deadline = time.time() + 5
+    while manager.get(job_id).status.value in ("queued", "running"):
+        assert time.time() < deadline
+        time.sleep(0.02)
+    return manager.get(job_id)
+
+
+def test_job_partial_when_a_step_fails(monkeypatch):
+    m = _manager_with(monkeypatch, {"ok": False, "steps": {
+        "skills": {"status": "ok"}, "hiring": {"status": "failed", "error": "bad json"}}})
+    job = _finish(m, m.submit("Acme", ("groq",), ("skills", "hiring")).id)
+    assert job.status.value == "partial"
+    assert job.steps["hiring"].error == "bad json"
+
+
+def test_job_failed_when_nothing_succeeds(monkeypatch):
+    m = _manager_with(monkeypatch, {"ok": False, "steps": {"test": {"status": "failed"}}})
+    assert _finish(m, m.submit("Acme", ("groq",), ("test",)).id).status.value == "failed"
+
+
+def test_job_failed_when_pipeline_crashes(monkeypatch):
+    m = _manager_with(monkeypatch, RuntimeError("disk full"))
+    job = _finish(m, m.submit("Acme", ("groq",), None).id)
+    assert job.status.value == "failed" and job.error == "RuntimeError: disk full"
+    assert m.counts()["failed"] == 1
+
+
+def test_finished_jobs_expire(monkeypatch):
+    m = _manager_with(monkeypatch, {"ok": True, "steps": {}})
+    m._ttl = 0
+    job_id = m.submit("Acme", ("groq",), ()).id
+    _finish(m, job_id)
+    time.sleep(0.01)
+    assert m.list() == []

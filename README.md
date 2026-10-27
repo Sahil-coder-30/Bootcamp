@@ -225,13 +225,25 @@ npm install
 npm run dev
 # Vite dev server running at http://localhost:5173
 
-# Terminal 3: Python Agent Service
+# Terminal 3: Python Agent Service (FastAPI on :8000)
 cd agent
-python3 -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-pip install -e .
-python3 -m openradix_agents run --company "Google LLC" --only skills
+uv venv -p 3.12 .venv
+uv pip install -r requirements.txt -e .
+.venv/bin/python -m openradix_agents doctor   # check provider keys
+.venv/bin/python -m openradix_agents serve    # http://localhost:8000/docs
 ```
+
+### 4. Tests and CI
+
+All tests run offline: LLM providers, Supabase and the agent service are faked.
+
+| Service | Command | Covers |
+|---|---|---|
+| frontend | `npm run lint && npm run build && npm run test:coverage` | hooks, slices, API client, pages |
+| backend | `npm run typecheck && npm run test:coverage` | routes, agent proxy, companies service, errors |
+| agent | `.venv/bin/ruff check src tests && .venv/bin/pytest --cov` | pipeline, agents, CLI, doctor, FastAPI |
+
+GitHub Actions (`.github/workflows/ci.yml`) runs the job for each changed service, plus a gitleaks secret scan. Require the **CI passed** check on `main` in branch protection. Dependabot (`.github/dependabot.yml`) opens weekly update PRs.
 
 ---
 

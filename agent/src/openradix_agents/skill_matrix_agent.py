@@ -5,7 +5,7 @@ Runs the Expectation Matrix prompt (12 skills, Bloom-coded "Level-Code") for one
 company and saves the single 12-column row as CSV + JSON.
 """
 
-from . import prompts, providers, parsing, io_utils
+from . import io_utils, parsing, prompts, providers
 
 
 def run(company: str, provider_names=()) -> dict:
