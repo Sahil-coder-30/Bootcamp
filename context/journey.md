@@ -49,4 +49,5 @@ Old-app commits (before monorepo) live in the same git history.
 | 13:10 | Context files updated with role plans and the Bloom-code finding | coordinator relay | `ad2e3fc` (local only) |
 | 13:21 | Upgraded root README.md using readme-forge (10-pillar showcase standard + 100% validator pass) | user: "use the /readme-forge skill and make the readme of this project" | `8158589` (local only) |
 | 13:24 | Updated Mermaid diagram: removed subgraph boxes for transparent background | user: "dont use these light backgroudn behind the architecutre diagram" | `f06fde3` (local only) |
+| 13:28 | Converted LaTeX math blocks to structured Markdown tables and code snippets for clean cross-renderer compatibility | user: "some issue in rendering fix these" | `ff84111` (local only) |
 <!-- NEXT ENTRY HERE: copy a row, add time, event, ask/plan, commit -->
