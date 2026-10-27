@@ -1,6 +1,6 @@
 # Codebase map
 
-_Last updated: 2026-10-27 13:10 UTC, at commit be5b340 (plus uncommitted work by other threads: `docs/`, `agent/` FastAPI)._
+_Last updated: 2026-10-27, synced at commit 7722087 (after Sahil's manual k8s/README/agent changes). Commit hashes changed once when trailers were removed._
 
 Repo root: `/Users/home/Desktop/Bootcamp` (git monorepo, branch `main`, no push yet; old remote `old-app-repo` = jss-academy repo).
 Skipped here: `node_modules/`, `.venv/`, `_archive/` internals, `frontend/src/components/ui` internals.
@@ -19,7 +19,10 @@ browser ──► frontend (React+TS, Vite, :5173) ──/api──► backend (
 
 | Path | Kya hai |
 |---|---|
-| `README.md` | Monorepo overview, run steps, folder conventions |
+| `README.md` | Showcase README v1.1.0 (architecture diagram, benchmarks, formulas, run steps) |
+| `LICENSE` | MIT |
+| `skaffold.yaml` | Skaffold dev loop: builds `backend` and `agent-service` images, applies `k8s/*` |
+| `k8s/` | `backend-deployment/service.yml`, `agent-deployment/service.yml`, `ingress.yml` (`/api/agent`→agent-service:80, `/api`→backend-service:80, 300s timeouts), `secrets.example.yml` (secrets `database`, `ai-secret`; real `secrets.yml` is ignored) |
 | `.gitignore` | ignores `.env*` (not `.env.example`), venv, node_modules, build, caches, `_archive/`, `.agents`, `agent/outputs/*/` |
 | `context/` | Ye knowledge base (README, codebase-map, journey, status) |
 | `docs/` | Hackathon contract + 5 role plans (see section 6) |
@@ -61,6 +64,8 @@ New hackathon features go to `src/features/{jd,resume,profile,talentCheck,skillM
 | `src/server.ts`, `app.ts` | listen on `PORT` (4000); CORS, json 2mb, `/api`, notFound + errorHandler |
 | `src/config/env.ts` | `PORT`, `CORS_ORIGINS`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`/`ANON_KEY`, `AGENT_URL` |
 | `src/routes/index.ts` | `GET /api/health`, mounts `/companies`, `/agent` |
+| `src/app.ts` (added) | morgan logging, `GET /healthz`, `GET /readyz` (k8s probes, outside `/api`) |
+| `Dockerfile`, `.dockerignore` | multi-stage `node:22-alpine`, PORT 4000, runs as `node` user |
 | `src/routes/companies.routes.ts` | `GET /api/companies`, `/:id`, `/:id/skills` |
 | `src/routes/agent.routes.ts` | `GET /api/agent/health`, `POST /api/agent/:task` → proxy to agent `/:task` |
 | `src/controllers/*` | request parsing + response (companies, agent, health) |
@@ -75,7 +80,7 @@ New hackathon features go to `src/features/{jd,resume,profile,talentCheck,skillM
 | `supabase/seed.sql` | old PlaceIntel demo seed (ids 1-6, caused the id clash, DON'T re-run) |
 | `test/` | vitest: API routes, normalizers (`supabase-pipeline.test.ts` skips w/o env) |
 
-## 5. agent/  (Python 3.11-3.12, LangChain 0.3, package `openradix_agents`; FastAPI being built by another thread)
+## 5. agent/  (Python 3.11-3.12, LangChain 0.3, package `openradix_agents`, now with FastAPI service on :8000)
 
 | Path | Kaam |
 |---|---|
@@ -93,6 +98,21 @@ New hackathon features go to `src/features/{jd,resume,profile,talentCheck,skillM
 | `reference/level5/` | `db.py` (psycopg2 staging writers, creates `job_role_details_json` if missing), `schemas.py` (Pydantic gates, "5-AP"), `gate.py`, `create_job_role_details_json.sql`. Reference only, not wired |
 | `outputs/` | per-company run outputs (git-ignored except `.gitkeep`) |
 | `pyproject.toml`, `requirements.txt`, `pytest.ini` | install `pip install -e .` |
+
+**FastAPI layer** (`src/openradix_agents/api/`, run `uvicorn openradix_agents.api.main:app`; `Dockerfile` + `.dockerignore`; tests in `agent/tests/`):
+
+| Path | Kaam |
+|---|---|
+| `api/main.py` | app factory (v0.5.0), CORS, request logger, includes routers |
+| `api/settings.py`, `api/deps.py` | env settings, `require_api_key` dependency |
+| `api/schemas.py` | Pydantic models (Job, JobList, Health, Doctor, Validation, ArtifactList...) |
+| `api/routers/health.py` | `GET /healthz /readyz /health`, `POST /doctor` |
+| `api/routers/pipeline.py` | `POST /run` (202 + `Location: /jobs/{id}`, 409 if company busy), `POST /validate` |
+| `api/routers/jobs.py` | `GET /jobs`, `GET /jobs/{id}` |
+| `api/routers/artifacts.py` | `GET /companies/{c}/artifacts[/{name}]`, `/golden-record`, `/skill-matrix`, `/hiring` |
+| `api/services/{jobs,artifacts,providers}.py` | in-memory job runner, output file reader, provider status |
+| `pipeline.py` | single entry used by CLI and API (steps research→consolidate→skills→hiring→validate) |
+| `tests/` | `test_api.py`, `test_core.py`, `conftest.py` |
 
 Planned: `src/talent_match/` (contract.py, api.py FastAPI, llm.py, documents.py, taxonomy.py, per-role packages). Check `status.md` for what exists.
 
