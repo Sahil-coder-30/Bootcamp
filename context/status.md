@@ -24,7 +24,7 @@ _Updated 2026-10-27 13:10 UTC. Sab kuch GitHub par push nahi hua hai._
 
 ## Known issues / open items
 
-0. **Before first push: reword commits with Claude trailers.** These local commits carry `Co-Authored-By: Claude ...` / `Claude-Session:` and would show Claude as a GitHub contributor: c21d5f5, 87a6c2c, be5b340, f661dbc, 8c72e8a, ad2e3fc, b115241 (and the docs commit after them if any). Authors/committers are all `Sahil`. Older history is by `gpt-engineer-app[bot]` and `Lovable` (not Claude). Fix with a rebase reword or `git filter-repo --message-callback` before pushing; not rewritten yet, waiting for user's go.
+0. **Before first push: reword commits with Claude trailers.** These local commits carry `Co-Authored-By: Claude ...` / `Claude-Session:` and would show Claude as a GitHub contributor: c21d5f5, 87a6c2c, be5b340, f661dbc, 8c72e8a, ad2e3fc, b115241. Authors/committers are all `Sahil`. Older history is by `gpt-engineer-app[bot]` and `Lovable` (not Claude). Fix with a rebase reword or `git filter-repo --message-callback` before pushing; not rewritten yet, waiting for user's go.
 
 1. **Rotate Supabase DB password.** Old one is in git history (`f631864`) and on GitHub in the old repo. Do it before any push or sharing. (Owner: Sahil)
 2. **Push:** need a new empty GitHub repo URL, then push `main`. Vercel for the new repo: frontend only; backend needs its own host (Render/Railway) or run locally for demo.
