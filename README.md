@@ -166,9 +166,9 @@ browser ---> frontend (React 19 + TS, Vite, :5173) ---/api---> backend (Express 
 * **Resume Parsing Engine ([`docs/role-2-resume-parsing/plan.md`](docs/role-2-resume-parsing/plan.md))**: Structured candidate schema extraction with Bloom-calibrated category levels.
 * **Candidate Profile Builder ([`docs/role-3-profile-builder/plan.md`](docs/role-3-profile-builder/plan.md))**: Pre-filled profile state with interactive 12-category slider overrides.
 * **Talent Check Engine ([`docs/role-4-talent-check/plan.md`](docs/role-4-talent-check/plan.md))**: Mathematical gap scoring across 115 company bars:
-  $$\text{Readiness Score} = 100 \times \frac{\sum_{i=1}^{12} (\min(c_i, r_i) - 1)}{\sum_{i=1}^{12} (r_i - 1)}$$
+  `Readiness Score = 100 * sum(min(c, r) - 1) / sum(r - 1)`
 * **Skill Matching Cascade ([`docs/role-5-skill-matching/plan.md`](docs/role-5-skill-matching/plan.md))**: Weighted requirement scoring:
-  $$\text{Match Score} = 100 \times (0.60 \times \text{must\_coverage} + 0.20 \times \text{nice\_coverage} + 0.20 \times \text{level\_fit})$$
+  `Match Score = 100 * (0.60 * must_coverage + 0.20 * nice_coverage + 0.20 * level_fit)`
 
 ---
 
@@ -377,18 +377,25 @@ The frontend communicates strictly through the backend API. All contract schemas
 | **Gemini 2.5 Flash** | Per 1 Million Tokens | `$0.15` | `INR 12.50` |
 | **Supabase Postgres + Vector** | In-Memory Compute | Included in tier | Included in tier |
 
-#### Exact Cost Accounting Formulas
+#### Exact Cost Accounting Breakdown
+
 ##### Fast-Path Verification (Cached SHA-256 Document + Mathematical Scoring)
-$$\text{Ingress Cost} = \$0.00008$$
-$$\text{Extraction Cost} = \$0.00000 \quad (\text{Local Cache Hit})$$
-$$\text{Deterministic Scoring Cost} = \$0.00000 \quad (\text{Pure CPU Function})$$
-$$\mathbf{Total\ Fast\ Path\ Cost} = \mathbf{\$0.00008}\quad (\text{INR } 0.0066)$$
+
+| Step | Mechanism | Cost Formula | Unit Cost (USD) | Cost (INR) |
+|---|---|---|---|---|
+| **Ingress & Checksum** | Gateway validation | Base Ingress | `$0.00008` | `INR 0.0066` |
+| **Document Extraction** | Local SHA-256 cache hit | Local Cache Hit | `$0.00000` | `INR 0.0000` |
+| **Deterministic Scoring** | In-memory algorithm | Pure CPU Function | `$0.00000` | `INR 0.0000` |
+| **Total Fast-Path Cost** | **Cached Verification** | **Ingress + Extraction + Scoring** | **`$0.00008`** | **`INR 0.0066`** |
 
 ##### Cold-Path Verification (Novel Document Extraction + Groq Llama-3 Inference)
-$$\text{Document Ingestion} = 1 \text{ file} \times \$0.0002 = \$0.0002$$
-$$\text{LLM Extraction} = 4,000 \text{ tokens} \times \frac{\$0.59}{1,000,000} = \$0.00236$$
-$$\text{Mathematical Evaluation} = \$0.00000$$
-$$\mathbf{Total\ Cold\ Path\ Cost} = \mathbf{\$0.00256}\quad (\text{INR } 0.21)$$
+
+| Step | Mechanism | Cost Formula | Unit Cost (USD) | Cost (INR) |
+|---|---|---|---|---|
+| **Document Ingestion** | 1 file storage & parsing | `1 file * $0.0002` | `$0.00020` | `INR 0.0166` |
+| **LLM Extraction** | Groq Llama-3.3-70B parse | `4,000 tokens * ($0.59 / 1M)` | `$0.00236` | `INR 0.1960` |
+| **Deterministic Scoring** | Mathematical evaluation | Pure CPU Function | `$0.00000` | `INR 0.0000` |
+| **Total Cold-Path Cost** | **Novel Document Parse** | **Ingestion + LLM + Scoring** | **`$0.00256`** | **`INR 0.2126`** |
 
 ---
 
