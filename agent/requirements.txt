@@ -4,10 +4,10 @@ langchain==0.3.14
 langchain-openai==0.2.14
 langchain-groq==0.2.3
 langchain-google-genai==2.0.8
-python-dotenv==1.0.1
+python-dotenv==1.2.4
 openpyxl==3.1.5
 # HTTP API (python -m openradix_agents serve)
-fastapi==0.115.6
-uvicorn[standard]==0.34.0
-pydantic-settings==2.7.1
+fastapi==0.162.0
+uvicorn[standard]==0.54.0
+pydantic-settings==2.16.1
 httpx==0.28.1
