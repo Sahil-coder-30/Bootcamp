@@ -190,7 +190,7 @@ browser ---> frontend (React 19 + TS, Vite, :5173) ---/api---> backend (Express 
 * **Python**: v3.11 or v3.12
 * **Package Managers**: macOS (`brew`), Linux (`apt`), Windows (`winget`)
 
-### 2. Configure Environment Variables
+### 2. Configure Local Secrets
 
 The repository isolates secrets using local `.env` files. Copy example templates before starting:
 
@@ -205,7 +205,7 @@ cp frontend/.env.example frontend/.env
 cp agent/.env.example agent/.env
 ```
 
-#### Environment Variables Specification
+### Environment Variables
 | Variable | Service | Required | Description | Example / Fallback |
 |---|---|---|---|---|
 | `PORT` | Backend | Yes | Port for Express server | `4000` |
