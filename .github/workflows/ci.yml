@@ -123,14 +123,14 @@ jobs:
           python-version: "3.12"
           enable-cache: true
           cache-dependency-glob: agent/requirements*.txt
+      # setup-uv with python-version creates and activates a venv (VIRTUAL_ENV + PATH),
+      # so install into it and call the tools by name.
       - name: Install
-        run: |
-          uv venv
-          uv pip install -r requirements-dev.txt -e .
+        run: uv pip install -r requirements-dev.txt -e .
       - name: Lint
-        run: .venv/bin/ruff check src tests
+        run: ruff check src tests
       - name: Test with coverage
-        run: .venv/bin/pytest --cov=openradix_agents --cov-report=term-missing --cov-report=xml
+        run: pytest --cov=openradix_agents --cov-report=term-missing --cov-report=xml
       - uses: actions/upload-artifact@v4
         if: always()
         with:

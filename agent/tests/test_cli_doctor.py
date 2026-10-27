@@ -23,7 +23,7 @@ def test_check_provider_missing_key(monkeypatch):
 
 
 def test_check_provider_ok_and_fail(monkeypatch):
-    monkeypatch.setenv("GROQ_API_KEY", "gsk_test_key_123456")
+    monkeypatch.setenv("GROQ_API_KEY", "dummy")
     monkeypatch.setattr(providers, "invoke", lambda n, p: "  pong \n")
     ok = doctor.check_provider("groq")
     assert ok["status"] == "OK" and ok["detail"] == "pong"

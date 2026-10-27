@@ -243,7 +243,7 @@ All tests run offline: LLM providers, Supabase and the agent service are faked.
 | backend | `npm run typecheck && npm run test:coverage` | routes, agent proxy, companies service, errors |
 | agent | `.venv/bin/ruff check src tests && .venv/bin/pytest --cov` | pipeline, agents, CLI, doctor, FastAPI |
 
-GitHub Actions (`.github/workflows/ci.yml`) runs the job for each changed service, plus a gitleaks secret scan. Require the **CI passed** check on `main` in branch protection. Dependabot (`.github/dependabot.yml`) opens weekly update PRs.
+GitHub Actions (`.github/workflows/ci.yml`) runs the job for each changed service, plus a gitleaks secret scan. Require the **CI passed** check on `main` in branch protection.
 
 ---
 
