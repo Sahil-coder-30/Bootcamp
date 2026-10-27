@@ -26,7 +26,6 @@ build:
 manifests:
   rawYaml:
     - k8s/secrets.yml
-    - k8s/rbac.yml
     - k8s/ingress.yml
     - k8s/backend-deployment.yml
     - k8s/backend-service.yml
