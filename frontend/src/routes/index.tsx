@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import LandingPage from "@/features/landing/components/LandingPage";
 import CompanyPickerPage from "@/features/companies/components/CompanyPickerPage";
 import { APP_NAME, COLLEGE_SHORT } from "@/lib/college";
+import { getStoredUser, subscribeToAuthChanges } from "@/lib/auth";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -32,29 +33,12 @@ export const Route = createFileRoute("/")({
 });
 
 function RootIndexComponent() {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
-    try {
-      return Boolean(localStorage.getItem("placeintel_user"));
-    } catch {
-      return false;
-    }
-  });
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => Boolean(getStoredUser()));
 
   useEffect(() => {
-    const handleAuthChange = () => {
-      try {
-        setIsLoggedIn(Boolean(localStorage.getItem("placeintel_user")));
-      } catch {
-        setIsLoggedIn(false);
-      }
-    };
-
-    window.addEventListener("placeintel_auth_change", handleAuthChange);
-    window.addEventListener("storage", handleAuthChange);
-    return () => {
-      window.removeEventListener("placeintel_auth_change", handleAuthChange);
-      window.removeEventListener("storage", handleAuthChange);
-    };
+    return subscribeToAuthChanges((user) => {
+      setIsLoggedIn(Boolean(user));
+    });
   }, []);
 
   // Option B: If logged in, show the original 115-Company Picker Page directly.

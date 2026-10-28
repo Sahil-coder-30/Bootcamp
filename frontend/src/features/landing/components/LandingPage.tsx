@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LandingHeader } from "./LandingHeader";
 import { HeroSection } from "./HeroSection";
 import { LockedFeatureBanner } from "./LockedFeatureBanner";
@@ -8,35 +8,31 @@ import { PlacementTiers } from "./PlacementTiers";
 import { FeatureBento } from "./FeatureBento";
 import { FaqSection } from "./FaqSection";
 import { LandingFooter } from "./LandingFooter";
-import { AuthModal, type CandidateUser } from "./AuthModal";
+import { AuthModal } from "./AuthModal";
+import {
+  type CandidateUser,
+  getStoredUser,
+  saveStoredUser,
+  clearStoredUser,
+  subscribeToAuthChanges,
+} from "@/lib/auth";
 
 export const LandingPage: React.FC = () => {
-  const [currentUser, setCurrentUser] = useState<CandidateUser | null>(() => {
-    try {
-      const stored = localStorage.getItem("placeintel_user");
-      return stored ? JSON.parse(stored) : null;
-    } catch {
-      return null;
-    }
-  });
-
+  const [currentUser, setCurrentUser] = useState<CandidateUser | null>(() => getStoredUser());
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authInitialTab, setAuthInitialTab] = useState<"login" | "register" | "demo">("register");
 
+  useEffect(() => {
+    return subscribeToAuthChanges((user) => {
+      setCurrentUser(user);
+    });
+  }, []);
+
   const handleUserChange = (user: CandidateUser | null) => {
-    setCurrentUser(user);
     if (user) {
-      try {
-        localStorage.setItem("placeintel_user", JSON.stringify(user));
-      } catch {
-        // ignore
-      }
+      saveStoredUser(user);
     } else {
-      try {
-        localStorage.removeItem("placeintel_user");
-      } catch {
-        // ignore
-      }
+      clearStoredUser();
     }
   };
 

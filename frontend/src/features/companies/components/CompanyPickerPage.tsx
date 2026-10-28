@@ -31,6 +31,12 @@ import { useCompanies } from "../Hooks/companies.hooks";
 import { isNullish, type CompanySummary, type CompanyType } from "@/lib/companyData";
 import { APP_NAME, COLLEGE_NAME, COLLEGE_SHORT, PORTAL_TITLE } from "@/lib/college";
 import { cn } from "@/lib/utils";
+import {
+  getStoredUser,
+  clearStoredUser,
+  subscribeToAuthChanges,
+  type CandidateUser,
+} from "@/lib/auth";
 
 const FILTERS: ("All" | CompanyType)[] = ["All", "Super Dream", "Dream", "Standard", "Regular"];
 
@@ -178,24 +184,18 @@ export default function CompanyPickerPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [sortBy, setSortBy] = useState<"default" | "name" | "growth" | "tier">("default");
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
-  const [currentUser, setCurrentUser] = useState<{ name: string; email: string } | null>(() => {
-    try {
-      const stored = localStorage.getItem("placeintel_user");
-      return stored ? JSON.parse(stored) : null;
-    } catch {
-      return null;
-    }
-  });
+  const [currentUser, setCurrentUser] = useState<CandidateUser | null>(() => getStoredUser());
+
+  useEffect(() => {
+    return subscribeToAuthChanges((user) => {
+      setCurrentUser(user);
+    });
+  }, []);
 
   const handleLogout = () => {
-    try {
-      localStorage.removeItem("placeintel_user");
-      window.dispatchEvent(new Event("placeintel_auth_change"));
-      setCurrentUser(null);
-      navigate({ to: "/" });
-    } catch {
-      // ignore
-    }
+    clearStoredUser();
+    setCurrentUser(null);
+    navigate({ to: "/" });
   };
 
   const { data: companies = [], isLoading, isError, error, refetch } = useCompanies();

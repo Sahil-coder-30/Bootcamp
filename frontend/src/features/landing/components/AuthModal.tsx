@@ -13,14 +13,9 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { type CandidateUser, saveStoredUser } from "@/lib/auth";
 
-export interface CandidateUser {
-  id: string;
-  name: string;
-  role: string;
-  avatarText: string;
-  email: string;
-}
+export type { CandidateUser };
 
 const DEMO_PROFILES: CandidateUser[] = [
   {
@@ -88,6 +83,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         avatarText: (email[0] || "C").toUpperCase(),
         email: email || "student@jssaten.ac.in",
       };
+      saveStoredUser(user);
       onLoginSuccess(user);
       onClose();
     }, 600);
@@ -112,12 +108,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           : "CU",
         email: email || "student@jssaten.ac.in",
       };
+      saveStoredUser(user);
       onLoginSuccess(user);
       onClose();
     }, 700);
   };
 
   const handleSelectDemo = (profile: CandidateUser) => {
+    saveStoredUser(profile);
     onLoginSuccess(profile);
     onClose();
   };
