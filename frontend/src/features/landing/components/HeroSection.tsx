@@ -48,7 +48,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           {/* Master Headline */}
           <h1 className="mt-7 max-w-4xl font-heading text-4xl font-extrabold tracking-tight text-white sm:text-6xl md:text-6xl lg:leading-[1.12]">
             Where Campus Placement Meets{" "}
-            <span className="bg-gradient-to-r from-orange-400 via-amber-300 to-orange-500 bg-clip-text text-transparent underline decoration-orange-500/40 decoration-wavy decoration-1 underline-offset-8">
+            <span className="bg-gradient-to-r from-orange-400 via-amber-300 to-orange-500 bg-clip-text text-transparent">
               Deterministic Skill Matching.
             </span>
           </h1>
