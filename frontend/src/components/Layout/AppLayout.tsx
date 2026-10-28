@@ -7,7 +7,9 @@ import {
   LayoutGrid,
   Moon,
   Sun,
+  LogIn,
   UserCheck,
+  UserRound,
 } from "lucide-react";
 import {
   Sidebar,
@@ -33,6 +35,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/features/auth/Hooks/auth.hooks";
 import { useCompany } from "@/features/companies/Hooks/companies.hooks";
 import { APP_NAME, COLLEGE_SHORT } from "@/lib/college";
 import { cn } from "@/lib/utils";
@@ -81,6 +84,7 @@ function ThemeToggle() {
 }
 
 function AppSidebar() {
+  const { user, ready } = useAuth();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const { selected } = useCompany();
 
@@ -175,6 +179,20 @@ function AppSidebar() {
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
+          {ready && (
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                tooltip={user ? "My profile" : "Sign in"}
+                className="rounded-xl py-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              >
+                <Link to={user ? "/profile" : "/login"}>
+                  {user ? <UserRound className="h-4 w-4" /> : <LogIn className="h-4 w-4" />}
+                  <span className="truncate">{user ? user.name : "Sign in"}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )}
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>

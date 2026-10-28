@@ -14,6 +14,7 @@ import {
   createRouter,
 } from "@tanstack/react-router";
 
+import authReducer from "@/features/auth/slice/auth.slice";
 import companiesReducer from "@/features/companies/slice/companies.slice";
 import intelligenceReducer from "@/features/intelligence/slice/intelligence.slice";
 import skillsReducer from "@/features/skills/slice/skills.slice";
@@ -23,6 +24,7 @@ import type { CompanyProfile, CompanySummary } from "@/lib/companyData";
 export const makeStore = () =>
   configureStore({
     reducer: {
+      auth: authReducer,
       companies: companiesReducer,
       intelligence: intelligenceReducer,
       skills: skillsReducer,

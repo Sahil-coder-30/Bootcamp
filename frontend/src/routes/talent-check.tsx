@@ -1,7 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { authRequiredEverywhere, requireSignIn } from "@/lib/requireSignIn";
 import { TalentCheckPage } from "@/features/talentCheck/components/TalentCheckPage";
 
 export const Route = createFileRoute("/talent-check")({
+  beforeLoad: ({ location }) => {
+    if (authRequiredEverywhere()) requireSignIn(location);
+  },
   head: () => ({
     meta: [
       { title: "Talent Check | Readiness Evaluation & Hiring Bar Analysis" },
