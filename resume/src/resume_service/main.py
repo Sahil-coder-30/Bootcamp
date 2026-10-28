@@ -141,6 +141,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         return {"status": "ok"}
 
     @app.get("/readyz", tags=["health"])
+    @app.get("/ready", tags=["health"])
     def readyz(request: Request) -> JSONResponse:
         ok = request.app.state.repo.ping()
         return JSONResponse(status_code=200 if ok else 503, content={"status": "ok" if ok else "db_unavailable"})
