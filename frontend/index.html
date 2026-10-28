@@ -1,24 +1,25 @@
 <!doctype html>
-<html lang="en" class="dark" style="color-scheme: dark">
+<html lang="en" class="light-theme" style="color-scheme: light" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>PlaceIntel | JSSATEN Placement Intelligence Hub</title>
     <script>
-      // Instant theme boot (before first paint) to avoid a flash. Dark is the default.
       (function () {
-        var light = false;
         try {
-          light = localStorage.getItem("theme") === "light";
+          var stored =
+            localStorage.getItem("placeintel_theme") || localStorage.getItem("theme") || "light";
+          var isDark = stored === "dark";
+          document.documentElement.classList.toggle("dark", isDark);
+          document.documentElement.classList.toggle("light-theme", !isDark);
+          document.documentElement.setAttribute("data-theme", stored);
+          document.documentElement.style.colorScheme = isDark ? "dark" : "light";
         } catch (e) {}
-        document.documentElement.classList.toggle("dark", !light);
-        document.documentElement.classList.toggle("light-theme", light);
-        document.documentElement.style.colorScheme = light ? "light" : "dark";
       })();
     </script>
   </head>
   <body
-    class="min-h-screen bg-background text-foreground antialiased selection:bg-zinc-800 selection:text-white"
+    class="min-h-screen bg-background text-foreground antialiased selection:bg-primary selection:text-white"
   >
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>

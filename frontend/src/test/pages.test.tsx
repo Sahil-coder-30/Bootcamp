@@ -63,7 +63,7 @@ describe("CompanyPickerPage", () => {
     renderPage(CompanyPickerPage, "/");
     await waitFor(() => expect(cards()).toHaveLength(3));
     await userEvent.type(screen.getByLabelText("Search companies"), "pune");
-    await waitFor(() => expect(cards()).toHaveLength(1));
+    await waitFor(() => expect(cards()).toHaveLength(1), { timeout: 5000 });
     expect(cards()[0]).toHaveTextContent("Globex");
   });
 

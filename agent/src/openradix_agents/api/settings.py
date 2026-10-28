@@ -13,8 +13,7 @@ from .. import config
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(
-        env_prefix="AGENT_", env_file=config.ROOT / ".env", extra="ignore")
+    model_config = SettingsConfigDict(env_prefix="AGENT_", env_file=config.ROOT / ".env", extra="ignore")
 
     host: str = "0.0.0.0"
     port: int = 8000

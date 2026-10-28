@@ -13,6 +13,7 @@ from pydantic import BaseModel, Field, model_validator
 
 # --- Skill and Candidate Profile ---
 
+
 class Skill(BaseModel):
     skill_name: str
     category_code: str
@@ -52,6 +53,7 @@ class CandidateProfileSummary(BaseModel):
 
 # --- Company Skill Bar ---
 
+
 class CompanyBarRow(BaseModel):
     skill_set_id: int
     category_code: str
@@ -71,6 +73,7 @@ class CompanyBar(BaseModel):
 
 
 # --- Topic Ladder & Study Plan ---
+
 
 class NextTopic(BaseModel):
     level: int = Field(ge=1, le=10)
@@ -93,6 +96,7 @@ class StudyPlan(BaseModel):
 
 
 # --- Talent Check Results ---
+
 
 class GapRow(BaseModel):
     category_code: str
@@ -142,6 +146,7 @@ class TalentCheckResult(BaseModel):
 
 # --- Batch & Ranking Models ---
 
+
 class MatrixCell(BaseModel):
     profile_id: str
     company_id: int
@@ -183,3 +188,80 @@ class RankRequest(BaseModel):
     profile: CandidateProfileSummary
     bar_matrix: BarMatrix | None = None
     limit: int = 10
+
+
+# --- Role 2: Resume Parsing Models ---
+
+
+class ResumeContact(BaseModel):
+    name: str
+    email: str | None = None
+    phone: str | None = None
+    links: list[str] = Field(default_factory=list)
+
+
+class EducationEntry(BaseModel):
+    degree: str
+    institution: str
+    year: str | None = None
+    score: str | None = None
+
+
+class ExperienceEntry(BaseModel):
+    title: str
+    org: str
+    kind: Literal["internship", "job", "freelance", "other"] = "internship"
+    start: str | None = None
+    end: str | None = None
+    highlights: list[str] = Field(default_factory=list)
+    skills: list[str] = Field(default_factory=list)
+
+
+class ProjectEntry(BaseModel):
+    name: str
+    description: str
+    skills: list[str] = Field(default_factory=list)
+    link: str | None = None
+
+
+class HackathonEntry(BaseModel):
+    name: str
+    result: str | None = "Participant"
+    year: str | None = None
+
+
+class CertificationEntry(BaseModel):
+    name: str
+    issuer: str | None = None
+    year: str | None = None
+
+
+class CategoryLevelDetail(BaseModel):
+    level: int = Field(ge=1, le=10)
+    bloom: str  # CU | AP | AS | EV | CR
+    confidence: Literal["high", "medium", "low"] = "high"
+    points: float = 0.0
+    basis: str
+    capped_by: str | None = None
+    evidence_refs: list[str] = Field(default_factory=list)
+
+
+class ResumeExtraction(BaseModel):
+    source_type: Literal["resume"] = "resume"
+    source_file: str
+    company: None = None
+    role: str | None = None
+    document_id: str | None = None
+    extraction_id: str | None = None
+    existing_profile_id: str | None = None
+    candidate: ResumeContact
+    skills: list[Skill] = Field(default_factory=list)
+    education: list[EducationEntry] = Field(default_factory=list)
+    experience: list[ExperienceEntry] = Field(default_factory=list)
+    projects: list[ProjectEntry] = Field(default_factory=list)
+    hackathons: list[HackathonEntry] = Field(default_factory=list)
+    certifications: list[CertificationEntry] = Field(default_factory=list)
+    category_levels: dict[str, int] = Field(default_factory=dict)
+    category_level_details: dict[str, CategoryLevelDetail] = Field(default_factory=dict)
+    field_confidence: dict[str, Literal["high", "medium", "low"]] = Field(default_factory=dict)
+    meta: dict[str, Any] = Field(default_factory=dict)

@@ -1,8 +1,10 @@
 import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useTheme } from "@/hooks/useTheme";
 import {
   ArrowLeft,
   Building2,
+  FileText,
   GraduationCap,
   LayoutGrid,
   Moon,
@@ -42,31 +44,11 @@ const NAV = [
   { title: "Company Intelligence", url: "/company/intelligence", icon: Building2 },
   { title: "Skill Intelligence", url: "/company/skills", icon: GraduationCap },
   { title: "Talent Check", url: "/talent-check", icon: UserCheck },
+  { title: "Resume Parser", url: "/resume", icon: FileText },
 ] as const;
 
-// `.dark` drives the Tailwind/shadcn palette, `.light-theme` drives the SCSS tokens in src/styles.
-function applyTheme(dark: boolean) {
-  document.documentElement.classList.toggle("dark", dark);
-  document.documentElement.classList.toggle("light-theme", !dark);
-}
-
 function ThemeToggle() {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    const isDarkStored =
-      localStorage.getItem("theme") === "dark" ||
-      (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches);
-    setIsDark(isDarkStored);
-    applyTheme(isDarkStored);
-  }, []);
-
-  const toggleTheme = () => {
-    const nextDark = !isDark;
-    setIsDark(nextDark);
-    applyTheme(nextDark);
-    localStorage.setItem("theme", nextDark ? "dark" : "light");
-  };
+  const { theme, toggleTheme, isDark } = useTheme();
 
   return (
     <Button
@@ -76,7 +58,11 @@ function ThemeToggle() {
       aria-label="Toggle theme"
       className="h-8 w-8 rounded-lg text-muted-foreground transition-colors hover:text-foreground"
     >
-      {isDark ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4" />}
+      {isDark ? (
+        <Sun className="h-4 w-4 text-primary" />
+      ) : (
+        <Moon className="h-4 w-4 text-primary" />
+      )}
     </Button>
   );
 }
@@ -117,7 +103,7 @@ function AppSidebar() {
                 {selected.companyName}
               </p>
               <Link
-                to="/"
+                to="/companies"
                 className="inline-flex items-center text-[10px] font-medium text-primary hover:underline"
               >
                 Change Company
@@ -182,7 +168,7 @@ function AppSidebar() {
               tooltip="All Companies Directory"
               className="rounded-xl py-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
             >
-              <Link to="/">
+              <Link to="/companies">
                 <LayoutGrid className="h-4 w-4" />
                 <span>All Companies</span>
               </Link>
@@ -199,6 +185,7 @@ export default function AppLayout() {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const isSkillsPage = path.endsWith("/skills");
   const isTalentCheck = path.startsWith("/talent-check");
+  const isResume = path.startsWith("/resume");
 
   return (
     <SidebarProvider>
@@ -217,7 +204,18 @@ export default function AppLayout() {
                         to="/"
                         className="text-xs font-medium text-muted-foreground hover:text-foreground"
                       >
-                        Companies Directory
+                        Home
+                      </Link>
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <BreadcrumbLink asChild>
+                      <Link
+                        to="/companies"
+                        className="text-xs font-medium text-muted-foreground hover:text-foreground"
+                      >
+                        Companies
                       </Link>
                     </BreadcrumbLink>
                   </BreadcrumbItem>
@@ -232,11 +230,13 @@ export default function AppLayout() {
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
                     <BreadcrumbPage className="text-xs font-semibold text-primary">
-                      {isTalentCheck
-                        ? "Talent Check & Readiness"
-                        : isSkillsPage
-                          ? "Skill Intelligence"
-                          : "Company Intelligence"}
+                      {isResume
+                        ? "Resume Parser & Fingerprint"
+                        : isTalentCheck
+                          ? "Talent Check & Readiness"
+                          : isSkillsPage
+                            ? "Skill Intelligence"
+                            : "Company Intelligence"}
                     </BreadcrumbPage>
                   </BreadcrumbItem>
                 </BreadcrumbList>
@@ -250,7 +250,7 @@ export default function AppLayout() {
                   to="/company/intelligence"
                   className={cn(
                     "flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-medium transition-all",
-                    !isSkillsPage && !isTalentCheck
+                    !isSkillsPage && !isTalentCheck && !isResume
                       ? "bg-card text-foreground font-semibold shadow-2xs"
                       : "text-muted-foreground hover:text-foreground",
                   )}
@@ -282,9 +282,21 @@ export default function AppLayout() {
                   <UserCheck className="h-3.5 w-3.5" />
                   <span>Talent Check</span>
                 </Link>
+                <Link
+                  to="/resume"
+                  className={cn(
+                    "flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-medium transition-all",
+                    isResume
+                      ? "bg-card text-foreground font-semibold shadow-2xs"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  <FileText className="h-3.5 w-3.5 text-orange-400" />
+                  <span>Resume Parser</span>
+                </Link>
               </div>
 
-              <Link to="/">
+              <Link to="/companies">
                 <Button
                   variant="outline"
                   size="sm"

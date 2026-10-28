@@ -27,4 +27,3 @@ integrated flow can embed it as step 3. Form rules are a copy of the backend's a
 
 Dev note: `vite.config.ts` proxies `/api` to `http://localhost` (the k8s ingress). Without the cluster, run the
 backend on port 4000 and set `VITE_API_URL=http://localhost:4000` in `.env`.
-
