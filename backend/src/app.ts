@@ -9,7 +9,7 @@ export function createApp() {
   const app = express();
   app.use(morgan("dev"));
   app.use(cors({ origin: env.corsOrigins }));
-  app.use(express.json({ limit: "2mb" }));
+  app.use(express.json({ limit: "10mb" }));
 
   // Kubernetes probes
   app.get("/healthz", (_req, res) => {

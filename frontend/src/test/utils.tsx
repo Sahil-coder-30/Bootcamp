@@ -18,6 +18,7 @@ import companiesReducer from "@/features/companies/slice/companies.slice";
 import intelligenceReducer from "@/features/intelligence/slice/intelligence.slice";
 import skillsReducer from "@/features/skills/slice/skills.slice";
 import talentCheckReducer from "@/features/talentCheck/slice/talentCheck.slice";
+import resumeReducer from "@/features/resume/slice/resume.slice";
 import type { CompanyProfile, CompanySummary } from "@/lib/companyData";
 
 export const makeStore = () =>
@@ -27,6 +28,7 @@ export const makeStore = () =>
       intelligence: intelligenceReducer,
       skills: skillsReducer,
       talentCheck: talentCheckReducer,
+      resume: resumeReducer,
     },
   });
 

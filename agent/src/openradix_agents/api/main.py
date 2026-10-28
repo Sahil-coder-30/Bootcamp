@@ -67,6 +67,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     except ImportError as e:
         logger.warning(f"Could not import talent_check router: {e}")
 
+    try:
+        from talent_match.resume.router import router as resume_router
+        app.include_router(resume_router)
+    except ImportError as e:
+        logger.warning(f"Could not import resume router: {e}")
+
     return app
 
 

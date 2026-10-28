@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   Building2,
+  FileText,
   GraduationCap,
   LayoutGrid,
   Moon,
@@ -41,6 +42,7 @@ const NAV = [
   { title: "Company Intelligence", url: "/company/intelligence", icon: Building2 },
   { title: "Skill Intelligence", url: "/company/skills", icon: GraduationCap },
   { title: "Talent Check", url: "/talent-check", icon: UserCheck },
+  { title: "Resume Parser", url: "/resume", icon: FileText },
 ] as const;
 
 // `.dark` drives the Tailwind/shadcn palette, `.light-theme` drives the SCSS tokens in src/styles.
@@ -186,6 +188,7 @@ export default function AppLayout() {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const isSkillsPage = path.endsWith("/skills");
   const isTalentCheck = path.startsWith("/talent-check");
+  const isResume = path.startsWith("/resume");
 
   return (
     <SidebarProvider>
@@ -230,11 +233,13 @@ export default function AppLayout() {
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
                     <BreadcrumbPage className="text-xs font-semibold text-primary">
-                      {isTalentCheck
-                        ? "Talent Check & Readiness"
-                        : isSkillsPage
-                          ? "Skill Intelligence"
-                          : "Company Intelligence"}
+                      {isResume
+                        ? "Resume Parser & Fingerprint"
+                        : isTalentCheck
+                          ? "Talent Check & Readiness"
+                          : isSkillsPage
+                            ? "Skill Intelligence"
+                            : "Company Intelligence"}
                     </BreadcrumbPage>
                   </BreadcrumbItem>
                 </BreadcrumbList>
@@ -248,7 +253,7 @@ export default function AppLayout() {
                   to="/company/intelligence"
                   className={cn(
                     "flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-medium transition-all",
-                    !isSkillsPage && !isTalentCheck
+                    !isSkillsPage && !isTalentCheck && !isResume
                       ? "bg-card text-foreground font-semibold shadow-2xs"
                       : "text-muted-foreground hover:text-foreground",
                   )}
@@ -279,6 +284,18 @@ export default function AppLayout() {
                 >
                   <UserCheck className="h-3.5 w-3.5" />
                   <span>Talent Check</span>
+                </Link>
+                <Link
+                  to="/resume"
+                  className={cn(
+                    "flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-medium transition-all",
+                    isResume
+                      ? "bg-card text-foreground font-semibold shadow-2xs"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  <FileText className="h-3.5 w-3.5 text-orange-400" />
+                  <span>Resume Parser</span>
                 </Link>
               </div>
 

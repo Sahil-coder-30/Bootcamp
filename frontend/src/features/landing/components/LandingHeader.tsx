@@ -9,6 +9,7 @@ import {
   UserCheck,
   Sparkles,
   Building2,
+  FileText,
   GraduationCap,
 } from "lucide-react";
 import { APP_NAME } from "@/lib/college";
@@ -92,6 +93,13 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ currentUser, onUse
                 >
                   <UserCheck className="h-3.5 w-3.5 text-orange-400" />
                   Talent Check
+                </Link>
+                <Link
+                  to="/resume"
+                  className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-zinc-200 transition-colors hover:bg-zinc-800 hover:text-white"
+                >
+                  <FileText className="h-3.5 w-3.5 text-orange-400" />
+                  Resume Parser
                 </Link>
                 <Link
                   to="/company/skills"
@@ -259,6 +267,13 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ currentUser, onUse
                     className="rounded-lg px-3 py-2 text-sm text-orange-400 hover:bg-orange-500/10"
                   >
                     Talent Check
+                  </Link>
+                  <Link
+                    to="/resume"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="rounded-lg px-3 py-2 text-sm text-zinc-200 hover:bg-zinc-800"
+                  >
+                    Resume Parser
                   </Link>
                   <Link
                     to="/company/skills"
