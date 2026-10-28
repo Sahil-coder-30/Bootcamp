@@ -8,6 +8,7 @@ import {
   Moon,
   Sun,
   UserCheck,
+  UserRound,
 } from "lucide-react";
 import {
   Sidebar,
@@ -163,6 +164,18 @@ function AppSidebar() {
 
       <SidebarFooter className="border-t border-sidebar-border/80 p-3">
         <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
+              tooltip="Candidate profiles"
+              className="rounded-xl py-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+            >
+              <Link to="/profile">
+                <UserRound className="h-4 w-4" />
+                <span>My Profile</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild

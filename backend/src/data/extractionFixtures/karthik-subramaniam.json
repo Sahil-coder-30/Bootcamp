@@ -1,0 +1,144 @@
+{
+  "id": "e1000000-0000-4000-8000-000000000002",
+  "document_id": "d1000000-0000-4000-8000-000000000002",
+  "source_type": "resume",
+  "source_file": "karthik_subramaniam.pdf",
+  "company": null,
+  "role": "Data Analyst",
+  "skills": [
+    {
+      "skill_name": "Python",
+      "category_code": "COD",
+      "evidence": "Pandas pipelines and forecasting model in Python",
+      "confidence": "high",
+      "section": "projects",
+      "canonical_id": "python"
+    },
+    {
+      "skill_name": "Statistics",
+      "category_code": "APTI",
+      "evidence": "Hypothesis testing and A/B analysis during the internship",
+      "confidence": "high",
+      "section": "experience",
+      "canonical_id": "statistics"
+    },
+    {
+      "skill_name": "Presentation Skills",
+      "category_code": "COMM",
+      "evidence": "Presented churn findings to business stakeholders",
+      "confidence": "high",
+      "section": "experience",
+      "canonical_id": "presentation"
+    },
+    {
+      "skill_name": "Machine Learning",
+      "category_code": "AI",
+      "evidence": "Gradient boosting demand forecast",
+      "confidence": "high",
+      "section": "projects",
+      "canonical_id": "machine-learning"
+    },
+    {
+      "skill_name": "SQL",
+      "category_code": "SQL",
+      "evidence": "Wrote window-function reports against a 40M row table",
+      "confidence": "high",
+      "section": "experience",
+      "canonical_id": "sql"
+    },
+    {
+      "skill_name": "Power BI",
+      "category_code": "OTHER",
+      "evidence": "Churn dashboards used by 3 teams",
+      "confidence": "high",
+      "section": "experience",
+      "canonical_id": "power-bi"
+    },
+    {
+      "skill_name": "Arrays and Strings",
+      "category_code": "DSA",
+      "evidence": "Solved 150 easy/medium problems",
+      "confidence": "medium",
+      "section": "skills",
+      "canonical_id": "arrays-strings"
+    }
+  ],
+  "category_levels": {
+    "COD": 5,
+    "DSA": 4,
+    "APTI": 7,
+    "COMM": 6,
+    "OOD": 3,
+    "AI": 6,
+    "SQL": 7,
+    "SYSD": 3,
+    "CLOUD": 3,
+    "SWE": 4,
+    "NETW": 2,
+    "OS": 2
+  },
+  "candidate": {
+    "name": "Karthik Subramaniam",
+    "email": "karthik.subramaniam@example.com",
+    "phone": "+91 91234 56780",
+    "links": [
+      "github.com/karthik-s"
+    ]
+  },
+  "education": [
+    {
+      "degree": "B.Tech Information Technology",
+      "institution": "ABC College of Engineering",
+      "year": "2026",
+      "score": "8.9 CGPA"
+    }
+  ],
+  "experience": [
+    {
+      "title": "Data Analyst Intern",
+      "org": "Insight Analytics",
+      "start": "2025-06",
+      "end": "2025-08",
+      "highlights": [
+        "Built churn dashboards in Power BI used by 3 teams",
+        "Automated weekly reporting with pandas"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Retail Demand Forecast",
+      "description": "Gradient boosting model for weekly SKU demand with 12% lower MAPE than baseline",
+      "skills": [
+        "Python",
+        "scikit-learn",
+        "SQL"
+      ]
+    }
+  ],
+  "hackathons": [
+    {
+      "name": "Kaggle Playground Series",
+      "result": "Top 8%",
+      "year": "2025"
+    }
+  ],
+  "certifications": [
+    {
+      "name": "Google Data Analytics",
+      "issuer": "Coursera",
+      "year": "2024"
+    },
+    {
+      "name": "Azure Data Fundamentals",
+      "issuer": "Microsoft",
+      "year": "2025"
+    }
+  ],
+  "field_confidence": {
+    "education": "high",
+    "experience": "high",
+    "projects": "medium",
+    "candidate": "high"
+  }
+}

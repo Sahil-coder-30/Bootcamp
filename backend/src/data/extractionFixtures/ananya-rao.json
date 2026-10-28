@@ -1,0 +1,204 @@
+{
+  "id": "e1000000-0000-4000-8000-000000000001",
+  "document_id": "d1000000-0000-4000-8000-000000000001",
+  "source_type": "resume",
+  "source_file": "ananya_rao.pdf",
+  "company": null,
+  "role": "Software Engineer",
+  "skills": [
+    {
+      "skill_name": "Go",
+      "category_code": "COD",
+      "evidence": "Built a Kafka consumer in Go during the Acme internship",
+      "confidence": "high",
+      "section": "experience",
+      "canonical_id": "go"
+    },
+    {
+      "skill_name": "C++",
+      "category_code": "COD",
+      "evidence": "MiniKV storage engine written in C++",
+      "confidence": "high",
+      "section": "projects",
+      "canonical_id": "cpp"
+    },
+    {
+      "skill_name": "Data Structures",
+      "category_code": "DSA",
+      "evidence": "Implemented LSM trees and skip lists in MiniKV",
+      "confidence": "high",
+      "section": "projects",
+      "canonical_id": "data-structures"
+    },
+    {
+      "skill_name": "Competitive Programming",
+      "category_code": "DSA",
+      "evidence": "Codeforces specialist, 1500+ rating",
+      "confidence": "medium",
+      "section": "hackathons",
+      "canonical_id": "competitive-programming"
+    },
+    {
+      "skill_name": "Quantitative Aptitude",
+      "category_code": "APTI",
+      "evidence": "Cleared aptitude rounds in campus drives",
+      "confidence": "medium",
+      "section": "skills",
+      "canonical_id": "aptitude"
+    },
+    {
+      "skill_name": "Technical Writing",
+      "category_code": "COMM",
+      "evidence": "Wrote design docs for the TraceLens project",
+      "confidence": "medium",
+      "section": "projects",
+      "canonical_id": "technical-writing"
+    },
+    {
+      "skill_name": "Object-Oriented Design",
+      "category_code": "OOD",
+      "evidence": "Designed the MiniKV module boundaries with SOLID principles",
+      "confidence": "high",
+      "section": "projects",
+      "canonical_id": "ood"
+    },
+    {
+      "skill_name": "Prompt Engineering",
+      "category_code": "AI",
+      "evidence": "Completed a short course on LLM prompting",
+      "confidence": "low",
+      "section": "certifications",
+      "canonical_id": "prompt-engineering"
+    },
+    {
+      "skill_name": "PostgreSQL",
+      "category_code": "SQL",
+      "evidence": "Used PostgreSQL for the billing service tests",
+      "confidence": "medium",
+      "section": "experience",
+      "canonical_id": "postgresql"
+    },
+    {
+      "skill_name": "System Design",
+      "category_code": "SYSD",
+      "evidence": "Designed TraceLens collector and storage tiers",
+      "confidence": "high",
+      "section": "projects",
+      "canonical_id": "system-design"
+    },
+    {
+      "skill_name": "Docker",
+      "category_code": "CLOUD",
+      "evidence": "Containerised TraceLens services",
+      "confidence": "medium",
+      "section": "projects",
+      "canonical_id": "docker"
+    },
+    {
+      "skill_name": "Git",
+      "category_code": "SWE",
+      "evidence": "Daily code review and branching workflow at Acme",
+      "confidence": "high",
+      "section": "experience",
+      "canonical_id": "git"
+    },
+    {
+      "skill_name": "TCP/IP",
+      "category_code": "NETW",
+      "evidence": "Implemented a TCP-based replication protocol in MiniKV",
+      "confidence": "medium",
+      "section": "projects",
+      "canonical_id": "tcp-ip"
+    },
+    {
+      "skill_name": "Linux",
+      "category_code": "OS",
+      "evidence": "Profiled and tuned MiniKV I/O on Linux",
+      "confidence": "high",
+      "section": "projects",
+      "canonical_id": "linux"
+    }
+  ],
+  "category_levels": {
+    "COD": 7,
+    "DSA": 7,
+    "APTI": 6,
+    "COMM": 5,
+    "OOD": 6,
+    "AI": 3,
+    "SQL": 4,
+    "SYSD": 6,
+    "CLOUD": 5,
+    "SWE": 6,
+    "NETW": 5,
+    "OS": 6
+  },
+  "candidate": {
+    "name": "Ananya Rao",
+    "email": "ananya.rao@example.com",
+    "phone": "+91 98765 43210",
+    "links": [
+      "github.com/ananya-rao"
+    ]
+  },
+  "education": [
+    {
+      "degree": "B.Tech CSE",
+      "institution": "XYZ Institute of Technology",
+      "year": "2026",
+      "score": "8.7 CGPA"
+    }
+  ],
+  "experience": [
+    {
+      "title": "SDE Intern",
+      "org": "Acme Systems",
+      "start": "2025-05",
+      "end": "2025-07",
+      "highlights": [
+        "Built a Kafka consumer in Go that cut ingest lag by 40%",
+        "Wrote integration tests for the billing service"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "MiniKV",
+      "description": "Persistent key-value store in C++ with a write-ahead log and LSM compaction",
+      "skills": [
+        "C++",
+        "Operating Systems",
+        "Data Structures"
+      ]
+    },
+    {
+      "name": "TraceLens",
+      "description": "Distributed tracing dashboard on Go microservices",
+      "skills": [
+        "Go",
+        "Kafka",
+        "Docker"
+      ]
+    }
+  ],
+  "hackathons": [
+    {
+      "name": "Smart India Hackathon",
+      "result": "Finalist",
+      "year": "2025"
+    }
+  ],
+  "certifications": [
+    {
+      "name": "AWS Cloud Practitioner",
+      "issuer": "AWS",
+      "year": "2025"
+    }
+  ],
+  "field_confidence": {
+    "education": "high",
+    "experience": "high",
+    "projects": "medium",
+    "candidate": "high"
+  }
+}

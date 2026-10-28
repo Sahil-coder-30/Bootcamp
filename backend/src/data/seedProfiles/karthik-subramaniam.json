@@ -1,0 +1,213 @@
+{
+  "id": "3a000000-0000-4000-8000-000000000002",
+  "version": 1,
+  "name": "Karthik Subramaniam",
+  "email": "karthik.subramaniam@example.com",
+  "education": "B.Tech Information Technology, ABC College of Engineering, 2026, 8.9 CGPA",
+  "skills": [
+    {
+      "skill_name": "Python",
+      "category_code": "COD",
+      "evidence": "Pandas pipelines and forecasting model in Python",
+      "confidence": "high",
+      "section": "projects",
+      "canonical_id": "python"
+    },
+    {
+      "skill_name": "Statistics",
+      "category_code": "APTI",
+      "evidence": "Hypothesis testing and A/B analysis during the internship",
+      "confidence": "high",
+      "section": "experience",
+      "canonical_id": "statistics"
+    },
+    {
+      "skill_name": "Presentation Skills",
+      "category_code": "COMM",
+      "evidence": "Presented churn findings to business stakeholders",
+      "confidence": "high",
+      "section": "experience",
+      "canonical_id": "presentation"
+    },
+    {
+      "skill_name": "Machine Learning",
+      "category_code": "AI",
+      "evidence": "Gradient boosting demand forecast",
+      "confidence": "high",
+      "section": "projects",
+      "canonical_id": "machine-learning"
+    },
+    {
+      "skill_name": "SQL",
+      "category_code": "SQL",
+      "evidence": "Wrote window-function reports against a 40M row table",
+      "confidence": "high",
+      "section": "experience",
+      "canonical_id": "sql"
+    },
+    {
+      "skill_name": "Power BI",
+      "category_code": "OTHER",
+      "evidence": "Churn dashboards used by 3 teams",
+      "confidence": "high",
+      "section": "experience",
+      "canonical_id": "power-bi"
+    },
+    {
+      "skill_name": "Arrays and Strings",
+      "category_code": "DSA",
+      "evidence": "Solved 150 easy/medium problems",
+      "confidence": "medium",
+      "section": "skills",
+      "canonical_id": "arrays-strings"
+    }
+  ],
+  "hackathons": [
+    {
+      "name": "Kaggle Playground Series",
+      "result": "Top 8%",
+      "year": "2025"
+    }
+  ],
+  "internships": [
+    {
+      "title": "Data Analyst Intern",
+      "org": "Insight Analytics",
+      "start": "2025-06",
+      "end": "2025-08",
+      "highlights": [
+        "Built churn dashboards in Power BI used by 3 teams",
+        "Automated weekly reporting with pandas"
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "name": "Google Data Analytics",
+      "issuer": "Coursera",
+      "year": "2024"
+    },
+    {
+      "name": "Azure Data Fundamentals",
+      "issuer": "Microsoft",
+      "year": "2025"
+    }
+  ],
+  "preferred_roles": [
+    "Data Analyst",
+    "Data Scientist"
+  ],
+  "cv_file": null,
+  "phone": "+91 91234 56780",
+  "links": [
+    "github.com/karthik-s"
+  ],
+  "education_details": [
+    {
+      "degree": "B.Tech Information Technology",
+      "institution": "ABC College of Engineering",
+      "year": "2026",
+      "score": "8.9 CGPA"
+    }
+  ],
+  "projects": [
+    {
+      "name": "Retail Demand Forecast",
+      "description": "Gradient boosting model for weekly SKU demand with 12% lower MAPE than baseline",
+      "skills": [
+        "Python",
+        "scikit-learn",
+        "SQL"
+      ]
+    }
+  ],
+  "skill_levels": {
+    "COD": {
+      "level": 5,
+      "source": "resume_inferred",
+      "confidence": "high",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 5
+    },
+    "DSA": {
+      "level": 4,
+      "source": "resume_inferred",
+      "confidence": "medium",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 4
+    },
+    "APTI": {
+      "level": 7,
+      "source": "resume_inferred",
+      "confidence": "high",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 7
+    },
+    "COMM": {
+      "level": 6,
+      "source": "resume_inferred",
+      "confidence": "high",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 6
+    },
+    "OOD": {
+      "level": 3,
+      "source": "resume_inferred",
+      "confidence": "medium",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 3
+    },
+    "AI": {
+      "level": 6,
+      "source": "resume_inferred",
+      "confidence": "high",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 6
+    },
+    "SQL": {
+      "level": 7,
+      "source": "resume_inferred",
+      "confidence": "high",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 7
+    },
+    "SYSD": {
+      "level": 3,
+      "source": "resume_inferred",
+      "confidence": "medium",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 3
+    },
+    "CLOUD": {
+      "level": 3,
+      "source": "resume_inferred",
+      "confidence": "medium",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 3
+    },
+    "SWE": {
+      "level": 4,
+      "source": "resume_inferred",
+      "confidence": "medium",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 4
+    },
+    "NETW": {
+      "level": 2,
+      "source": "resume_inferred",
+      "confidence": "low",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 2
+    },
+    "OS": {
+      "level": 2,
+      "source": "resume_inferred",
+      "confidence": "low",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 2
+    }
+  },
+  "resume_extraction_id": null,
+  "schema_version": "1.0",
+  "updated_at": "2026-10-27T10:00:00.000Z"
+}
