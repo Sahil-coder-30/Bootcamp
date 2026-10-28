@@ -3,6 +3,7 @@ import cors from "cors";
 import morgan from "morgan";
 import { env } from "./config/env.js";
 import routes from "./routes/index.js";
+import { authenticate } from "./middlewares/auth.js";
 import { errorHandler, notFound } from "./middlewares/errorHandler.js";
 
 export function createApp() {
@@ -19,7 +20,7 @@ export function createApp() {
     res.status(200).json({ status: "ready" });
   });
 
-  app.use("/api", routes);
+  app.use("/api", authenticate, routes);
 
   app.use(notFound);
   app.use(errorHandler);
