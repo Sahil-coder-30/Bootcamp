@@ -7,8 +7,10 @@ import { requireAuth } from "../middlewares/auth.js";
 const router = Router();
 
 router.get("/health", resumes.resumeHealth);
+router.get("/sample/:candidateKey", resumes.getSampleResume);
 router.post("/parse", resumes.parseResume);
 router.post("/parse-text", resumes.parseResumeText);
+router.post("/levels/infer", resumes.inferLevels);
 router.post("/levels", resumes.inferLevels);
 router.post("/", resumes.uploadResume);
 router.get("/", requireAuth, resumes.listResumes);

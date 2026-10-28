@@ -7,6 +7,7 @@ import intelligenceReducer from "./features/intelligence/slice/intelligence.slic
 import profileReducer from "./features/profile/slice/profile.slice";
 import skillsReducer from "./features/skills/slice/skills.slice";
 import talentCheckReducer from "./features/talentCheck/slice/talentCheck.slice";
+import resumeReducer from "./features/resume/slice/resume.slice";
 import jdReducer from "./features/jd/slice/jd.slice";
 
 export const store = configureStore({
@@ -17,6 +18,7 @@ export const store = configureStore({
     profile: profileReducer,
     skills: skillsReducer,
     talentCheck: talentCheckReducer,
+    resume: resumeReducer,
     jd: jdReducer,
   },
 });

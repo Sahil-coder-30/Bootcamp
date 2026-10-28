@@ -1,6 +1,8 @@
 import type { Request, Response } from "express";
 import { HttpError } from "../middlewares/errorHandler.js";
 import { callResume, resumeJson } from "../services/resume.service.js";
+import * as resumesService from "../services/resumes.service.js";
+import { parseResumeSchema, inferLevelsSchema } from "../lib/resumes.schemas.js";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 // Slightly above the resume service's own 5 MB limit (multipart adds a few hundred bytes).
@@ -32,10 +34,27 @@ export async function uploadResume(req: Request, res: Response) {
   res.status(upstream.status).json(await resumeJson(upstream));
 }
 
-/** POST /api/resumes/parse: parse only, nothing stored (try-it-out on the landing page). */
+/** POST /api/resumes/parse: parse only, supports multipart file or JSON sample_key */
 export async function parseResume(req: Request, res: Response) {
-  requireMultipart(req);
-  res.json(await resumeJson(await callResume(req, "parse", { stream: req })));
+  if (req.is("multipart/form-data")) {
+    requireMultipart(req);
+    res.json(await resumeJson(await callResume(req, "parse", { stream: req })));
+    return;
+  }
+  const parsed = parseResumeSchema.safeParse(req.body);
+  if (!parsed.success) {
+    throw new HttpError(400, parsed.error.issues.map((i) => i.message).join(", "));
+  }
+  const result = await resumesService.parseResume(parsed.data);
+  res.json(result);
+}
+
+/** GET /api/resumes/sample/:candidateKey: built-in sample resume extraction */
+export async function getSampleResume(req: Request, res: Response) {
+  const rawKey = req.params["candidateKey"];
+  const candidateKey = Array.isArray(rawKey) ? rawKey[0] || "ananya" : rawKey || "ananya";
+  const result = await resumesService.getSampleResume(candidateKey);
+  res.json(result);
 }
 
 /** POST /api/resumes/parse-text {text, source_file?} */
@@ -43,8 +62,16 @@ export async function parseResumeText(req: Request, res: Response) {
   res.json(await resumeJson(await callResume(req, "parse/text", { json: req.body ?? {} })));
 }
 
-/** POST /api/resumes/levels: re-score an edited extraction (deterministic, no document). */
+/** POST /api/resumes/levels or /api/resumes/levels/infer: re-score an edited extraction */
 export async function inferLevels(req: Request, res: Response) {
+  if (req.body?.extraction) {
+    const parsed = inferLevelsSchema.safeParse(req.body);
+    if (parsed.success) {
+      const result = await resumesService.inferLevels(parsed.data.extraction);
+      res.json(result);
+      return;
+    }
+  }
   res.json(await resumeJson(await callResume(req, "levels/infer", { json: req.body ?? {} })));
 }
 

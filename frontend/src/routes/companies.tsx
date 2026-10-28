@@ -1,0 +1,21 @@
+import { createFileRoute } from "@tanstack/react-router";
+import CompanyPickerPage from "@/features/companies/components/CompanyPickerPage";
+import { APP_NAME, COLLEGE_SHORT } from "@/lib/college";
+
+export const Route = createFileRoute("/companies")({
+  head: () => ({
+    meta: [
+      { title: `Companies Directory | ${APP_NAME} | ${COLLEGE_SHORT}` },
+      {
+        name: "description",
+        content:
+          "Browse 115 recruiting companies, evaluate salary tiers, and review skill ladders for campus placements at JSS Academy of Technical Education.",
+      },
+      {
+        property: "og:title",
+        content: `Companies Directory | ${APP_NAME} | ${COLLEGE_SHORT}`,
+      },
+    ],
+  }),
+  component: CompanyPickerPage,
+});
