@@ -22,6 +22,8 @@ class Skill(BaseModel):
     level_hint: int | None = Field(default=None, ge=1, le=10)
     requirement: Literal["must", "nice"] | None = None
     section: str | None = None
+    evidence_span: dict[str, int] | None = None  # {start, end, page}: char offsets into documents.text
+    alt_group: str | None = None
 
 
 class CandidateSkillLevel(BaseModel):
@@ -48,6 +50,22 @@ class CandidateProfileSummary(BaseModel):
                 normalized[code] = val
         self.skill_levels = normalized
         return self
+
+
+# --- JD extraction (Role 1) ---
+
+class ExtractedSkillList(BaseModel):
+    source_type: Literal["jd", "resume"] = "jd"
+    source_file: str
+    company: str | None = None
+    role: str | None = None
+    skills: list[Skill] = Field(default_factory=list)
+    document_id: str | None = None
+    company_id: int | None = None
+    category_levels: dict[str, int] = Field(default_factory=dict)
+    jd_id: str | None = None
+    extraction_id: str | None = None
+    meta: dict[str, Any] = Field(default_factory=dict)
 
 
 # --- Company Skill Bar ---

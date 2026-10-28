@@ -14,6 +14,8 @@ The Express backend proxies ``/api/agent/*`` here (see backend/src/services/agen
     GET  /jobs/{id}              poll a run
     POST /validate               re-run data-quality checks on a saved record
     GET  /companies/{c}/...      read the artifacts a run wrote
+    POST /documents/parse        JD/resume file -> text + sections (Role 1)
+    POST /extract/jd             JD -> ExtractedSkillList (Role 1)
 """
 
 import logging
@@ -66,6 +68,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         app.include_router(talent_check_router)
     except ImportError as e:
         logger.warning(f"Could not import talent_check router: {e}")
+
+    try:
+        from talent_match.jd.router import router as jd_router
+        app.include_router(jd_router)
+    except ImportError as e:
+        logger.warning(f"Could not import jd router: {e}")
 
     return app
 
