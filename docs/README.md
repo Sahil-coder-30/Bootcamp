@@ -22,3 +22,4 @@ Pick a JD (1) → parse a resume (2) → build or update the profile (3) → run
 | Web UI | `frontend/` | 5173 | features `jd`, `resume`, `profile`, `talentCheck`, `skillMatch`, `flow` |
 | API | `backend/` | 4000 | uploads, Supabase reads and writes, caching, orchestration |
 | Agent | `agent/` | 8000 | text extraction, LLM extraction, level inference, scoring, matching (stateless) |
+

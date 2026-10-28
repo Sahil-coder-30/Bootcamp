@@ -6,6 +6,7 @@ import companiesReducer from "./features/companies/slice/companies.slice";
 import intelligenceReducer from "./features/intelligence/slice/intelligence.slice";
 import skillsReducer from "./features/skills/slice/skills.slice";
 import talentCheckReducer from "./features/talentCheck/slice/talentCheck.slice";
+import jdReducer from "./features/jd/slice/jd.slice";
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     intelligence: intelligenceReducer,
     skills: skillsReducer,
     talentCheck: talentCheckReducer,
+    jd: jdReducer,
   },
 });
 
