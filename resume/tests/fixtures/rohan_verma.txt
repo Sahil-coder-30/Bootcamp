@@ -1,0 +1,43 @@
+ROHAN VERMA
+Full Stack Engineer
+rohan.verma@example.com | +91 90000 12345 | github.com/rohanverma | leetcode.com/rohanv
+
+SUMMARY
+Full stack engineer who has shipped products used by 50,000+ users and maintains an open-source library.
+
+EDUCATION
+B.Tech Computer Science, IIT Delhi, 2021 - 2025, CGPA 9.1/10
+
+EXPERIENCE
+Software Engineer Intern | Microsoft India Pvt Ltd | May 2024 - Aug 2024
+- Led the design of a microservices notification system in C# and .NET on Azure handling 1M messages a day
+- Wrote integration tests, set up Azure DevOps CI/CD pipelines and reviewed pull requests
+- Reduced API latency by 35% with Redis caching and query optimization in SQL Server
+Software Developer Intern | Razorpay | Dec 2023 - Feb 2024
+- Built REST APIs in Node.js and TypeScript with PostgreSQL for the payments dashboard; shipped to production
+- Containerized services with Docker and deployed on Kubernetes (AWS EKS)
+- Debugged TCP connection pooling issues and tuned Linux kernel network parameters
+
+PROJECTS
+DevFlow (open source) | React, Node.js, MongoDB, WebSockets
+- Architected and maintain an open-source developer collaboration tool with 1.2k GitHub stars and 40 contributors
+- Real-time editing over WebSockets, deployed with GitHub Actions to AWS
+Smart Campus Assistant | Python, LangChain, OpenAI, FAISS
+- Designed a RAG chatbot over college documents serving 3,000 students; added evaluation with pytest
+Concurrent Web Crawler | Go
+- Built a concurrent crawler in Go with goroutines and rate limiting, 500 pages/s; object-oriented design with interfaces
+
+SKILLS
+Languages: C++, Python, Java, JavaScript, TypeScript, Go, C#, SQL
+Frameworks: React, Node.js, Express, Django, .NET
+Cloud/DevOps: AWS, Azure, Docker, Kubernetes, Terraform, GitHub Actions
+CS: Data Structures, Algorithms, OOP, Design Patterns, Operating Systems, Computer Networks, DBMS, System Design
+
+ACHIEVEMENTS
+- Codeforces Expert (max rating 1720), LeetCode rating 2240, 900+ problems solved
+- ICPC Asia Regional finalist 2023
+- Runner-up, HackTheMountains 2023 hackathon (built a disaster-response app)
+- Speaker at GDG DevFest Delhi 2024 on building RAG apps
+
+POSITIONS OF RESPONSIBILITY
+- President, Coding Club IIT Delhi; organised workshops for 400+ students and mentored 30 juniors

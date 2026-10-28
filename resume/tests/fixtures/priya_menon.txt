@@ -1,0 +1,32 @@
+Priya Menon
+priya.menon@example.com
+Phone: 9123456780
+Kochi, Kerala
+
+Career Objective
+Aspiring Software Engineer looking for an entry-level role.
+
+Education
+B.Sc Computer Science, St. Teresa's College, 2025, 78%
+Class XII, Kendriya Vidyalaya, 2022, 88%
+
+Internship
+Technical Support Intern, Infozen Solutions Pvt Ltd, Jan 2025 - Jun 2025
+- Handled 30+ customer tickets a week over email and phone for a billing product
+- Wrote SQL queries in MySQL to triage customer data issues
+- Documented troubleshooting steps for the support knowledge base
+
+Projects
+Library Management System
+- A simple Java console app with classes for books and members
+
+Skills
+SQL, MySQL, PL/SQL, Oracle, Java, HTML, CSS, Communication, MS Excel
+
+Certifications
+Oracle Database SQL Certified Associate (2025)
+NPTEL Programming in Java (2024)
+
+Positions of Responsibility
+- Coordinator, college cultural fest; organised events for 500+ students
+- Anchor for the annual day function
