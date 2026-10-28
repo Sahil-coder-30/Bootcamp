@@ -12,6 +12,16 @@ export const env = {
   supabaseUrl: read("SUPABASE_URL"),
   /** Server-side key. Prefer the service-role key; the anon key also works for read-only tables. */
   supabaseKey: read("SUPABASE_SERVICE_ROLE_KEY") ?? read("SUPABASE_ANON_KEY"),
+  /** True only with the service-role key: RLS tables (documents, extractions, job_postings) need it. */
+  supabaseServiceRole: Boolean(read("SUPABASE_SERVICE_ROLE_KEY")),
+  /**
+   * Where Role 1 keeps documents, JD extractions and job postings: "supabase" or "file"
+   * (a local JSON store under JD_STORE_DIR). Default: supabase with the service-role key, else file.
+   */
+  jdStore: (read("JD_STORE") ?? (read("SUPABASE_SERVICE_ROLE_KEY") && read("SUPABASE_URL") ? "supabase" : "file")) as
+    | "supabase"
+    | "file",
+  jdStoreDir: read("JD_STORE_DIR") ?? ".data/jd-store",
   /** Base URL of the FastAPI agent service (../agent). */
   /**
    * HS256 secret shared with the auth service (../auth). Without it, bearer tokens are not

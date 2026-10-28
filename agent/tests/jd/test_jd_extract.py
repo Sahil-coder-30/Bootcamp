@@ -315,3 +315,8 @@ def test_api_errors(client):
         client.post("/documents/parse", json={"file_name": "a.txt", "content_b64": empty}).status_code == 422
     )
     assert client.post("/extract/jd", json={"source_file": "x"}).status_code == 400
+
+
+def test_api_version(client):
+    body = client.get("/extract/jd/version").json()
+    assert body["prompt_version"] == "jd-v1" and body["parser_version"] == "doc-1.0"

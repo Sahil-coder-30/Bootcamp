@@ -6,6 +6,7 @@ documents and extractions.
 
     POST /documents/parse   {file_name, mime?, content_b64} -> parsed text + sections + sha256
     POST /extract/jd        JdExtractRequest -> ExtractedSkillList
+    GET  /extract/jd/version {prompt_version, ...}: the backend's cache key
 """
 
 from __future__ import annotations
@@ -19,8 +20,11 @@ from pydantic import BaseModel
 
 from talent_match.contract import ExtractedSkillList
 from talent_match.documents import DocumentError, parse_document
+from talent_match.jd.levels import LEVELS_VERSION
 from talent_match.jd.pipeline import JdExtractRequest, extract_jd
-from talent_match.jd.sections import StructuredDocument, structure
+from talent_match.jd.sections import PARSER_VERSION, StructuredDocument, structure
+from talent_match.llm import load_prompt
+from talent_match.taxonomy import get_taxonomy
 
 MAX_BYTES = 10 * 1024 * 1024
 
@@ -68,3 +72,13 @@ def extract_jd_endpoint(req: JdExtractRequest) -> ExtractedSkillList:
         return extract_jd(req)
     except ValueError as exc:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, str(exc)) from exc
+
+
+@router.get("/extract/jd/version")
+def extract_jd_version() -> dict[str, str]:
+    return {
+        "prompt_version": load_prompt("jd_extract").version,
+        "parser_version": PARSER_VERSION,
+        "levels_version": LEVELS_VERSION,
+        "taxonomy_version": get_taxonomy().version,
+    }
