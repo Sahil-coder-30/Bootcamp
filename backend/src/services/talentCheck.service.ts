@@ -239,6 +239,10 @@ export async function listTalentChecks(profileId?: string): Promise<any[]> {
   }
 
   const { data, error } = await query.limit(20);
-  if (error) throw error;
+  // Gracefully handle missing table (e.g. fresh DB without talent_checks migration yet)
+  if (error) {
+    if (error.message?.includes("talent_checks") || (error as any).code === "42P01") return [];
+    throw error;
+  }
   return data || [];
 }
