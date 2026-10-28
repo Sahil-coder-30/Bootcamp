@@ -3,6 +3,7 @@ import { health } from "../controllers/health.controller.js";
 import companiesRoutes from "./companies.routes.js";
 import agentRoutes from "./agent.routes.js";
 import talentCheckRoutes from "./talentCheck.routes.js";
+import resumesRoutes from "./resumes.routes.js";
 import { requireAuth } from "../middlewares/auth.js";
 import { env } from "../config/env.js";
 
@@ -11,6 +12,7 @@ const router = Router();
 router.get("/health", health);
 router.use("/companies", companiesRoutes);
 router.use("/agent", agentRoutes);
+router.use("/resumes", resumesRoutes);
 router.get("/whoami", requireAuth, (req, res) => {
   res.json({ user: req.user });
 });

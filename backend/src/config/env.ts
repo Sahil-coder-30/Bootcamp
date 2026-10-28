@@ -23,4 +23,8 @@ export const env = {
   /** true = protected routes (talent-check) answer 401 without a valid token. Off by default so the demo stays open. */
   authRequired: read("AUTH_REQUIRED") === "true",
   agentUrl: (read("AGENT_URL") ?? "http://localhost:8000").replace(/\/$/, ""),
+  /** Base URL of the resume parsing service (../resume). */
+  resumeUrl: (read("RESUME_URL") ?? "http://localhost:8100").replace(/\/$/, ""),
+  /** Optional shared secret, sent as X-Resume-Key when the resume service has RESUME_API_KEY set. */
+  resumeApiKey: read("RESUME_API_KEY"),
 };
