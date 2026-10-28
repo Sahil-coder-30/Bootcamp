@@ -31,7 +31,7 @@ select = ["F", "E", "W", "B", "I"]
 
 [tool.ruff.lint.flake8-bugbear]
 # FastAPI's dependency markers are meant to be argument defaults.
-extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.Header"]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.Header", "fastapi.File", "fastapi.Form", "File", "Form"]
 
 [tool.coverage.run]
 source = ["openradix_agents", "talent_match"]

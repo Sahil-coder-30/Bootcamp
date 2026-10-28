@@ -94,7 +94,10 @@ export interface JdDetail {
   };
 }
 
-export async function uploadDocumentAPI(file: File, kind: "jd" | "resume" = "jd"): Promise<UploadedDocument> {
+export async function uploadDocumentAPI(
+  file: File,
+  kind: "jd" | "resume" = "jd",
+): Promise<UploadedDocument> {
   const form = new FormData();
   form.append("kind", kind);
   form.append("file", file);
@@ -111,7 +114,9 @@ export async function extractJdAPI(body: {
   force?: boolean;
 }): Promise<ExtractedSkillList> {
   // LLM extraction takes 5-60 s on a cache miss.
-  const { data } = await apiClient.post<ExtractedSkillList>("/jds/extract", body, { timeout: 300_000 });
+  const { data } = await apiClient.post<ExtractedSkillList>("/jds/extract", body, {
+    timeout: 300_000,
+  });
   return data;
 }
 

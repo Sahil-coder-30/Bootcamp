@@ -7,8 +7,21 @@ import { useCallback, useEffect, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { toErrorMessage } from "@/services/apiClient";
 import { CATEGORY_CODES } from "@/lib/categories";
-import { extractJdAPI, getJdAPI, listJdsAPI, uploadDocumentAPI, type JdSkill } from "../service/jd.api";
-import { selectJd, setDetail, setError, setLibrary, setLoading, setUploadStage } from "../slice/jd.slice";
+import {
+  extractJdAPI,
+  getJdAPI,
+  listJdsAPI,
+  uploadDocumentAPI,
+  type JdSkill,
+} from "../service/jd.api";
+import {
+  selectJd,
+  setDetail,
+  setError,
+  setLibrary,
+  setLoading,
+  setUploadStage,
+} from "../slice/jd.slice";
 
 /** Saved JD extractions (GET /api/jds), loaded once. */
 export function useJdLibrary() {
@@ -23,7 +36,12 @@ export function useJdLibrary() {
       dispatch(setLibrary(rows));
       return rows;
     } catch (err) {
-      dispatch(setError({ scope: "library", error: toErrorMessage(err, "Could not load the JD library.") }));
+      dispatch(
+        setError({
+          scope: "library",
+          error: toErrorMessage(err, "Could not load the JD library."),
+        }),
+      );
       return [];
     } finally {
       dispatch(setLoading({ scope: "library", loading: false }));
@@ -36,7 +54,14 @@ export function useJdLibrary() {
 
   const select = useCallback((id: string | null) => dispatch(selectJd(id)), [dispatch]);
 
-  return { items: library, isLoading: loading.library, error: errors.library, refetch, selectedId, select };
+  return {
+    items: library,
+    isLoading: loading.library,
+    error: errors.library,
+    refetch,
+    selectedId,
+    select,
+  };
 }
 
 /** One JD with its extraction and document text (GET /api/jds/:id). */
@@ -54,7 +79,9 @@ export function useJdDetail(jdId: string | null) {
       dispatch(setDetail(data));
       return data;
     } catch (err) {
-      dispatch(setError({ scope: "detail", error: toErrorMessage(err, "Could not load this JD.") }));
+      dispatch(
+        setError({ scope: "detail", error: toErrorMessage(err, "Could not load this JD.") }),
+      );
       return null;
     } finally {
       dispatch(setLoading({ scope: "detail", loading: false }));
@@ -91,7 +118,9 @@ export function useJdUpload() {
         dispatch(setUploadStage("done"));
         return result;
       } catch (err) {
-        dispatch(setError({ scope: "upload", error: toErrorMessage(err, "Upload or extraction failed.") }));
+        dispatch(
+          setError({ scope: "upload", error: toErrorMessage(err, "Upload or extraction failed.") }),
+        );
         dispatch(setUploadStage("error"));
         return null;
       } finally {
@@ -113,7 +142,9 @@ export function useJdUpload() {
         dispatch(setLibrary(await listJdsAPI()));
         dispatch(setUploadStage("done"));
       } catch (err) {
-        dispatch(setError({ scope: "upload", error: toErrorMessage(err, "Re-extraction failed.") }));
+        dispatch(
+          setError({ scope: "upload", error: toErrorMessage(err, "Re-extraction failed.") }),
+        );
         dispatch(setUploadStage("error"));
       } finally {
         dispatch(setLoading({ scope: "upload", loading: false }));
@@ -122,7 +153,13 @@ export function useJdUpload() {
     [dispatch],
   );
 
-  return { run, reextract, stage: uploadStage, error: errors.upload, isBusy: uploadStage === "uploading" || uploadStage === "extracting" };
+  return {
+    run,
+    reextract,
+    stage: uploadStage,
+    error: errors.upload,
+    isBusy: uploadStage === "uploading" || uploadStage === "extracting",
+  };
 }
 
 export interface CategoryGroup {
@@ -133,7 +170,10 @@ export interface CategoryGroup {
 }
 
 /** Skills grouped by the 12 categories (+ OTHER), in contract order, empty groups dropped. */
-export function useGroupedSkills(skills: JdSkill[] | undefined, levels: Record<string, number> | undefined) {
+export function useGroupedSkills(
+  skills: JdSkill[] | undefined,
+  levels: Record<string, number> | undefined,
+) {
   return useMemo<CategoryGroup[]>(() => {
     const order = [...CATEGORY_CODES, "OTHER"] as string[];
     const groups = new Map<string, CategoryGroup>();

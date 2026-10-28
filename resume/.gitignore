@@ -1,4 +1,6 @@
-data/
+/data/
+!src/resume_service/data/
+!src/resume_service/data/**
 .coverage
 coverage.xml
 htmlcov/

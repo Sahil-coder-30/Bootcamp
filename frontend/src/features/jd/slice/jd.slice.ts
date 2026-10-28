@@ -55,5 +55,6 @@ const jdSlice = createSlice({
   },
 });
 
-export const { setLibrary, setDetail, selectJd, setUploadStage, setLoading, setError } = jdSlice.actions;
+export const { setLibrary, setDetail, selectJd, setUploadStage, setLoading, setError } =
+  jdSlice.actions;
 export default jdSlice.reducer;

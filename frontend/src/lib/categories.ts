@@ -91,4 +91,5 @@ export const CATEGORY_COLORS: Record<CategoryCode, string> = {
 
 export const isCode = (v: string): v is Code => (CODES as readonly string[]).includes(v);
 export const categoryName = (code: string): string => CATEGORY_NAMES[code as CategoryCode] ?? code;
-export const categoryColor = (code: string): string => CATEGORY_COLORS[code as CategoryCode] ?? CATEGORY_COLORS.OTHER;
+export const categoryColor = (code: string): string =>
+  CATEGORY_COLORS[code as CategoryCode] ?? CATEGORY_COLORS.OTHER;

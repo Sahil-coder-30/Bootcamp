@@ -81,7 +81,8 @@ const listen = (server: Server) =>
 
 const form = (bytes: Buffer | string, name: string, kind?: string) => {
   const f = new FormData();
-  f.append("file", new Blob([typeof bytes === "string" ? Buffer.from(bytes) : bytes]), name);
+  const data = typeof bytes === "string" ? bytes : Uint8Array.from(bytes);
+  f.append("file", new Blob([data]), name);
   if (kind) f.append("kind", kind);
   return f;
 };
@@ -104,6 +105,7 @@ beforeAll(async () => {
     if (req.url === "/extract/jd") return res.end(JSON.stringify(extraction(body!)));
     res.statusCode = 404;
     res.end(JSON.stringify({ detail: "nope" }));
+    return;
   });
   const port = await listen(fake);
   process.env["AGENT_URL"] = `http://127.0.0.1:${port}`;
