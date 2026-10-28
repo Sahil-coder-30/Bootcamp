@@ -16,3 +16,15 @@ npm install && npm run dev   # http://localhost:5173
 ```
 
 Start the backend first (`../backend`, port 4000); Vite proxies `/api` to it. In production set `VITE_API_URL` to the backend URL.
+
+## Profile builder (Talent Match, Role 3)
+
+`/profile` lists saved candidate profiles, `/profile/new` and `/profile/:id` open the 7-step builder
+(`src/features/profile`). A parsed resume can pre-fill it (`?extraction=<id>`); re-importing a CV into a saved
+profile shows a diff instead of overwriting. `ProfileBuilder` takes `{profileId?, extractionId?, onSaved?}` so the
+integrated flow can embed it as step 3. Form rules are a copy of the backend's and both run
+`docs/contract/fixtures/candidate-profile-cases.json`.
+
+Dev note: `vite.config.ts` proxies `/api` to `http://localhost` (the k8s ingress). Without the cluster, run the
+backend on port 4000 and set `VITE_API_URL=http://localhost:4000` in `.env`.
+

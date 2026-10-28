@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import authReducer from "./features/auth/slice/auth.slice";
 import companiesReducer from "./features/companies/slice/companies.slice";
 import intelligenceReducer from "./features/intelligence/slice/intelligence.slice";
+import profileReducer from "./features/profile/slice/profile.slice";
 import skillsReducer from "./features/skills/slice/skills.slice";
 import talentCheckReducer from "./features/talentCheck/slice/talentCheck.slice";
 import jdReducer from "./features/jd/slice/jd.slice";
@@ -13,6 +14,7 @@ export const store = configureStore({
     auth: authReducer,
     companies: companiesReducer,
     intelligence: intelligenceReducer,
+    profile: profileReducer,
     skills: skillsReducer,
     talentCheck: talentCheckReducer,
     jd: jdReducer,

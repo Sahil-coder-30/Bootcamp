@@ -170,6 +170,18 @@ function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
+              tooltip="Candidate profiles"
+              className="rounded-xl py-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+            >
+              <Link to="/profile">
+                <UserRound className="h-4 w-4" />
+                <span>My Profile</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
               tooltip="All Companies Directory"
               className="rounded-xl py-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
             >

@@ -18,6 +18,9 @@ import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as CompanyIndexRouteImport } from './routes/company.index'
 import { Route as CompanyIntelligenceRouteImport } from './routes/company.intelligence'
 import { Route as CompanySkillsRouteImport } from './routes/company.skills'
+import { Route as ProfileIndexRouteImport } from './routes/profile.index'
+import { Route as ProfileProfileIdRouteImport } from './routes/profile.$profileId'
+import { Route as ProfileNewRouteImport } from './routes/profile.new'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -64,39 +67,62 @@ const CompanySkillsRoute = CompanySkillsRouteImport.update({
   path: '/skills',
   getParentRoute: () => CompanyRoute,
 } as any)
+const ProfileIndexRoute = ProfileIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProfileRoute,
+} as any)
+const ProfileProfileIdRoute = ProfileProfileIdRouteImport.update({
+  id: '/$profileId',
+  path: '/$profileId',
+  getParentRoute: () => ProfileRoute,
+} as any)
+const ProfileNewRoute = ProfileNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => ProfileRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/company': typeof CompanyRouteWithChildren
   '/login': typeof LoginRoute
-  '/profile': typeof ProfileRoute
+  '/profile': typeof ProfileRouteWithChildren
   '/talent-check': typeof TalentCheckRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/company/intelligence': typeof CompanyIntelligenceRoute
   '/company/skills': typeof CompanySkillsRoute
+  '/profile/$profileId': typeof ProfileProfileIdRoute
+  '/profile/new': typeof ProfileNewRoute
   '/company/': typeof CompanyIndexRoute
+  '/profile/': typeof ProfileIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
-  '/profile': typeof ProfileRoute
   '/talent-check': typeof TalentCheckRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/company/intelligence': typeof CompanyIntelligenceRoute
   '/company/skills': typeof CompanySkillsRoute
+  '/profile/$profileId': typeof ProfileProfileIdRoute
+  '/profile/new': typeof ProfileNewRoute
   '/company': typeof CompanyIndexRoute
+  '/profile': typeof ProfileIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/company': typeof CompanyRouteWithChildren
   '/login': typeof LoginRoute
-  '/profile': typeof ProfileRoute
+  '/profile': typeof ProfileRouteWithChildren
   '/talent-check': typeof TalentCheckRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/company/intelligence': typeof CompanyIntelligenceRoute
   '/company/skills': typeof CompanySkillsRoute
+  '/profile/$profileId': typeof ProfileProfileIdRoute
+  '/profile/new': typeof ProfileNewRoute
   '/company/': typeof CompanyIndexRoute
+  '/profile/': typeof ProfileIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -109,17 +135,22 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/company/intelligence'
     | '/company/skills'
+    | '/profile/$profileId'
+    | '/profile/new'
     | '/company/'
+    | '/profile/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
-    | '/profile'
     | '/talent-check'
     | '/auth/callback'
     | '/company/intelligence'
     | '/company/skills'
+    | '/profile/$profileId'
+    | '/profile/new'
     | '/company'
+    | '/profile'
   id:
     | '__root__'
     | '/'
@@ -130,14 +161,17 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/company/intelligence'
     | '/company/skills'
+    | '/profile/$profileId'
+    | '/profile/new'
     | '/company/'
+    | '/profile/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CompanyRoute: typeof CompanyRouteWithChildren
   LoginRoute: typeof LoginRoute
-  ProfileRoute: typeof ProfileRoute
+  ProfileRoute: typeof ProfileRouteWithChildren
   TalentCheckRoute: typeof TalentCheckRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
 }
@@ -207,6 +241,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompanySkillsRouteImport
       parentRoute: typeof CompanyRoute
     }
+    '/profile/': {
+      id: '/profile/'
+      path: '/'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof ProfileIndexRouteImport
+      parentRoute: typeof ProfileRoute
+    }
+    '/profile/$profileId': {
+      id: '/profile/$profileId'
+      path: '/$profileId'
+      fullPath: '/profile/$profileId'
+      preLoaderRoute: typeof ProfileProfileIdRouteImport
+      parentRoute: typeof ProfileRoute
+    }
+    '/profile/new': {
+      id: '/profile/new'
+      path: '/new'
+      fullPath: '/profile/new'
+      preLoaderRoute: typeof ProfileNewRouteImport
+      parentRoute: typeof ProfileRoute
+    }
   }
 }
 
@@ -225,11 +280,26 @@ const CompanyRouteChildren: CompanyRouteChildren = {
 const CompanyRouteWithChildren =
   CompanyRoute._addFileChildren(CompanyRouteChildren)
 
+interface ProfileRouteChildren {
+  ProfileProfileIdRoute: typeof ProfileProfileIdRoute
+  ProfileNewRoute: typeof ProfileNewRoute
+  ProfileIndexRoute: typeof ProfileIndexRoute
+}
+
+const ProfileRouteChildren: ProfileRouteChildren = {
+  ProfileProfileIdRoute: ProfileProfileIdRoute,
+  ProfileNewRoute: ProfileNewRoute,
+  ProfileIndexRoute: ProfileIndexRoute,
+}
+
+const ProfileRouteWithChildren =
+  ProfileRoute._addFileChildren(ProfileRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CompanyRoute: CompanyRouteWithChildren,
   LoginRoute: LoginRoute,
-  ProfileRoute: ProfileRoute,
+  ProfileRoute: ProfileRouteWithChildren,
   TalentCheckRoute: TalentCheckRoute,
   AuthCallbackRoute: AuthCallbackRoute,
 }

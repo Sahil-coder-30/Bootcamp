@@ -1,0 +1,557 @@
+{
+  "_about": "Shared by backend (vitest) and frontend (vitest) so the two copies of the profile rules cannot drift. `set` patches `base` by dotted path; {\"$delete\":true} removes a key, {\"$copy\":\"skills.0\"} copies another path.",
+  "base": {
+    "name": "Ananya Rao",
+    "email": "ananya.rao@example.com",
+    "education": "B.Tech CSE, XYZ Institute of Technology, 2026, 8.7 CGPA",
+    "skills": [
+      {
+        "skill_name": "Go",
+        "category_code": "COD",
+        "evidence": "Built a Kafka consumer in Go during the Acme internship",
+        "confidence": "high",
+        "section": "experience",
+        "canonical_id": "go"
+      },
+      {
+        "skill_name": "C++",
+        "category_code": "COD",
+        "evidence": "MiniKV storage engine written in C++",
+        "confidence": "high",
+        "section": "projects",
+        "canonical_id": "cpp"
+      },
+      {
+        "skill_name": "Data Structures",
+        "category_code": "DSA",
+        "evidence": "Implemented LSM trees and skip lists in MiniKV",
+        "confidence": "high",
+        "section": "projects",
+        "canonical_id": "data-structures"
+      },
+      {
+        "skill_name": "Competitive Programming",
+        "category_code": "DSA",
+        "evidence": "Codeforces specialist, 1500+ rating",
+        "confidence": "medium",
+        "section": "hackathons",
+        "canonical_id": "competitive-programming"
+      },
+      {
+        "skill_name": "Quantitative Aptitude",
+        "category_code": "APTI",
+        "evidence": "Cleared aptitude rounds in campus drives",
+        "confidence": "medium",
+        "section": "skills",
+        "canonical_id": "aptitude"
+      },
+      {
+        "skill_name": "Technical Writing",
+        "category_code": "COMM",
+        "evidence": "Wrote design docs for the TraceLens project",
+        "confidence": "medium",
+        "section": "projects",
+        "canonical_id": "technical-writing"
+      },
+      {
+        "skill_name": "Object-Oriented Design",
+        "category_code": "OOD",
+        "evidence": "Designed the MiniKV module boundaries with SOLID principles",
+        "confidence": "high",
+        "section": "projects",
+        "canonical_id": "ood"
+      },
+      {
+        "skill_name": "Prompt Engineering",
+        "category_code": "AI",
+        "evidence": "Completed a short course on LLM prompting",
+        "confidence": "low",
+        "section": "certifications",
+        "canonical_id": "prompt-engineering"
+      },
+      {
+        "skill_name": "PostgreSQL",
+        "category_code": "SQL",
+        "evidence": "Used PostgreSQL for the billing service tests",
+        "confidence": "medium",
+        "section": "experience",
+        "canonical_id": "postgresql"
+      },
+      {
+        "skill_name": "System Design",
+        "category_code": "SYSD",
+        "evidence": "Designed TraceLens collector and storage tiers",
+        "confidence": "high",
+        "section": "projects",
+        "canonical_id": "system-design"
+      },
+      {
+        "skill_name": "Docker",
+        "category_code": "CLOUD",
+        "evidence": "Containerised TraceLens services",
+        "confidence": "medium",
+        "section": "projects",
+        "canonical_id": "docker"
+      },
+      {
+        "skill_name": "Git",
+        "category_code": "SWE",
+        "evidence": "Daily code review and branching workflow at Acme",
+        "confidence": "high",
+        "section": "experience",
+        "canonical_id": "git"
+      },
+      {
+        "skill_name": "TCP/IP",
+        "category_code": "NETW",
+        "evidence": "Implemented a TCP-based replication protocol in MiniKV",
+        "confidence": "medium",
+        "section": "projects",
+        "canonical_id": "tcp-ip"
+      },
+      {
+        "skill_name": "Linux",
+        "category_code": "OS",
+        "evidence": "Profiled and tuned MiniKV I/O on Linux",
+        "confidence": "high",
+        "section": "projects",
+        "canonical_id": "linux"
+      }
+    ],
+    "hackathons": [
+      {
+        "name": "Smart India Hackathon",
+        "result": "Finalist",
+        "year": "2025"
+      }
+    ],
+    "internships": [
+      {
+        "title": "SDE Intern",
+        "org": "Acme Systems",
+        "start": "2025-05",
+        "end": "2025-07",
+        "highlights": [
+          "Built a Kafka consumer in Go that cut ingest lag by 40%",
+          "Wrote integration tests for the billing service"
+        ]
+      }
+    ],
+    "certifications": [
+      {
+        "name": "AWS Cloud Practitioner",
+        "issuer": "AWS",
+        "year": "2025"
+      }
+    ],
+    "preferred_roles": [
+      "Software Engineer"
+    ],
+    "cv_file": null,
+    "phone": "+91 98765 43210",
+    "links": [
+      "github.com/ananya-rao"
+    ],
+    "education_details": [
+      {
+        "degree": "B.Tech CSE",
+        "institution": "XYZ Institute of Technology",
+        "year": "2026",
+        "score": "8.7 CGPA"
+      }
+    ],
+    "projects": [
+      {
+        "name": "MiniKV",
+        "description": "Persistent key-value store in C++ with a write-ahead log and LSM compaction",
+        "skills": [
+          "C++",
+          "Operating Systems",
+          "Data Structures"
+        ]
+      },
+      {
+        "name": "TraceLens",
+        "description": "Distributed tracing dashboard on Go microservices",
+        "skills": [
+          "Go",
+          "Kafka",
+          "Docker"
+        ]
+      }
+    ],
+    "skill_levels": {
+      "COD": {
+        "level": 7,
+        "source": "resume_inferred",
+        "confidence": "high",
+        "basis": "Sample profile, hand-labelled against the shared rubric",
+        "inferred_level": 7
+      },
+      "DSA": {
+        "level": 7,
+        "source": "resume_inferred",
+        "confidence": "high",
+        "basis": "Sample profile, hand-labelled against the shared rubric",
+        "inferred_level": 7
+      },
+      "APTI": {
+        "level": 6,
+        "source": "resume_inferred",
+        "confidence": "high",
+        "basis": "Sample profile, hand-labelled against the shared rubric",
+        "inferred_level": 6
+      },
+      "COMM": {
+        "level": 5,
+        "source": "resume_inferred",
+        "confidence": "high",
+        "basis": "Sample profile, hand-labelled against the shared rubric",
+        "inferred_level": 5
+      },
+      "OOD": {
+        "level": 6,
+        "source": "resume_inferred",
+        "confidence": "high",
+        "basis": "Sample profile, hand-labelled against the shared rubric",
+        "inferred_level": 6
+      },
+      "AI": {
+        "level": 3,
+        "source": "resume_inferred",
+        "confidence": "medium",
+        "basis": "Sample profile, hand-labelled against the shared rubric",
+        "inferred_level": 3
+      },
+      "SQL": {
+        "level": 4,
+        "source": "resume_inferred",
+        "confidence": "medium",
+        "basis": "Sample profile, hand-labelled against the shared rubric",
+        "inferred_level": 4
+      },
+      "SYSD": {
+        "level": 6,
+        "source": "resume_inferred",
+        "confidence": "high",
+        "basis": "Sample profile, hand-labelled against the shared rubric",
+        "inferred_level": 6
+      },
+      "CLOUD": {
+        "level": 5,
+        "source": "resume_inferred",
+        "confidence": "high",
+        "basis": "Sample profile, hand-labelled against the shared rubric",
+        "inferred_level": 5
+      },
+      "SWE": {
+        "level": 6,
+        "source": "resume_inferred",
+        "confidence": "high",
+        "basis": "Sample profile, hand-labelled against the shared rubric",
+        "inferred_level": 6
+      },
+      "NETW": {
+        "level": 5,
+        "source": "resume_inferred",
+        "confidence": "high",
+        "basis": "Sample profile, hand-labelled against the shared rubric",
+        "inferred_level": 5
+      },
+      "OS": {
+        "level": 6,
+        "source": "resume_inferred",
+        "confidence": "high",
+        "basis": "Sample profile, hand-labelled against the shared rubric",
+        "inferred_level": 6
+      }
+    },
+    "resume_extraction_id": null,
+    "schema_version": "1.0"
+  },
+  "cases": [
+    {
+      "name": "the Ananya seed is valid",
+      "set": {},
+      "expect": "ok"
+    },
+    {
+      "name": "upper-case email is accepted (and lower-cased)",
+      "set": {
+        "email": "ANANYA.RAO@Example.com"
+      },
+      "expect": "ok"
+    },
+    {
+      "name": "an ongoing internship has a null end",
+      "set": {
+        "internships.0.end": null
+      },
+      "expect": "ok"
+    },
+    {
+      "name": "optional sections may be empty",
+      "set": {
+        "hackathons": [],
+        "certifications": [],
+        "projects": [],
+        "links": []
+      },
+      "expect": "ok"
+    },
+    {
+      "name": "name too short",
+      "set": {
+        "name": "A"
+      },
+      "expect": {
+        "path": "name"
+      }
+    },
+    {
+      "name": "name too long",
+      "set": {
+        "name": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "expect": {
+        "path": "name"
+      }
+    },
+    {
+      "name": "email is not an email",
+      "set": {
+        "email": "not-an-email"
+      },
+      "expect": {
+        "path": "email"
+      }
+    },
+    {
+      "name": "education year is not 4 digits",
+      "set": {
+        "education_details.0.year": "20x6"
+      },
+      "expect": {
+        "path": "education_details.0.year"
+      }
+    },
+    {
+      "name": "education year before 1990",
+      "set": {
+        "education_details.0.year": "1980"
+      },
+      "expect": {
+        "path": "education_details.0.year"
+      }
+    },
+    {
+      "name": "education degree is empty",
+      "set": {
+        "education_details.0.degree": ""
+      },
+      "expect": {
+        "path": "education_details.0.degree"
+      }
+    },
+    {
+      "name": "internship end is before start",
+      "set": {
+        "internships.0.start": "2025-08",
+        "internships.0.end": "2025-07"
+      },
+      "expect": {
+        "path": "internships.0.end"
+      }
+    },
+    {
+      "name": "internship start is not YYYY-MM",
+      "set": {
+        "internships.0.start": "2025-13"
+      },
+      "expect": {
+        "path": "internships.0.start"
+      }
+    },
+    {
+      "name": "internship org is empty",
+      "set": {
+        "internships.0.org": ""
+      },
+      "expect": {
+        "path": "internships.0.org"
+      }
+    },
+    {
+      "name": "hackathon year is in the far future",
+      "set": {
+        "hackathons.0.year": "2999"
+      },
+      "expect": {
+        "path": "hackathons.0.year"
+      }
+    },
+    {
+      "name": "certification name is empty",
+      "set": {
+        "certifications.0.name": ""
+      },
+      "expect": {
+        "path": "certifications.0.name"
+      }
+    },
+    {
+      "name": "more than 5 preferred roles",
+      "set": {
+        "preferred_roles": [
+          "aa",
+          "bb",
+          "cc",
+          "dd",
+          "ee",
+          "ff"
+        ]
+      },
+      "expect": {
+        "path": "preferred_roles"
+      }
+    },
+    {
+      "name": "duplicate preferred roles, case-insensitive",
+      "set": {
+        "preferred_roles": [
+          "Backend",
+          "backend"
+        ]
+      },
+      "expect": {
+        "path": "preferred_roles.1"
+      }
+    },
+    {
+      "name": "skill with an unknown category",
+      "set": {
+        "skills.0.category_code": "XYZ"
+      },
+      "expect": {
+        "path": "skills.0.category_code"
+      }
+    },
+    {
+      "name": "skill with no evidence",
+      "set": {
+        "skills.0.evidence": ""
+      },
+      "expect": {
+        "path": "skills.0.evidence"
+      }
+    },
+    {
+      "name": "skill evidence over 200 chars",
+      "set": {
+        "skills.0.evidence": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "expect": {
+        "path": "skills.0.evidence"
+      }
+    },
+    {
+      "name": "duplicate skill",
+      "set": {
+        "skills.1": {
+          "$copy": "skills.0"
+        }
+      },
+      "expect": {
+        "path": "skills.1.skill_name"
+      }
+    },
+    {
+      "name": "skill_levels is missing a code",
+      "set": {
+        "skill_levels.OS": {
+          "$delete": true
+        }
+      },
+      "expect": {
+        "path": "skill_levels.OS"
+      }
+    },
+    {
+      "name": "skill_levels has an extra OTHER key",
+      "set": {
+        "skill_levels.OTHER": {
+          "level": 3,
+          "source": "self",
+          "confidence": "low",
+          "basis": "x"
+        }
+      },
+      "expect": {
+        "path": "skill_levels"
+      }
+    },
+    {
+      "name": "level 0 is not allowed",
+      "set": {
+        "skill_levels.COD.level": 0
+      },
+      "expect": {
+        "path": "skill_levels.COD.level"
+      }
+    },
+    {
+      "name": "level 11 is not allowed",
+      "set": {
+        "skill_levels.COD.level": 11
+      },
+      "expect": {
+        "path": "skill_levels.COD.level"
+      }
+    },
+    {
+      "name": "level must be an integer",
+      "set": {
+        "skill_levels.COD.level": 5.5
+      },
+      "expect": {
+        "path": "skill_levels.COD.level"
+      }
+    },
+    {
+      "name": "unknown level source",
+      "set": {
+        "skill_levels.COD.source": "guess"
+      },
+      "expect": {
+        "path": "skill_levels.COD.source"
+      }
+    },
+    {
+      "name": "basis over 200 chars",
+      "set": {
+        "skill_levels.COD.basis": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "expect": {
+        "path": "skill_levels.COD.basis"
+      }
+    },
+    {
+      "name": "unsupported schema_version",
+      "set": {
+        "schema_version": "2.0"
+      },
+      "expect": {
+        "path": "schema_version"
+      }
+    },
+    {
+      "name": "unknown top-level key",
+      "set": {
+        "favourite_colour": "teal"
+      },
+      "expect": {
+        "path": ""
+      }
+    }
+  ]
+}

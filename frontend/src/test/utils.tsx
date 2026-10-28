@@ -17,6 +17,7 @@ import {
 import authReducer from "@/features/auth/slice/auth.slice";
 import companiesReducer from "@/features/companies/slice/companies.slice";
 import intelligenceReducer from "@/features/intelligence/slice/intelligence.slice";
+import profileReducer from "@/features/profile/slice/profile.slice";
 import skillsReducer from "@/features/skills/slice/skills.slice";
 import talentCheckReducer from "@/features/talentCheck/slice/talentCheck.slice";
 import type { CompanyProfile, CompanySummary } from "@/lib/companyData";
@@ -27,6 +28,7 @@ export const makeStore = () =>
       auth: authReducer,
       companies: companiesReducer,
       intelligence: intelligenceReducer,
+      profile: profileReducer,
       skills: skillsReducer,
       talentCheck: talentCheckReducer,
     },
@@ -40,7 +42,14 @@ export function withStore(store: TestStore) {
   };
 }
 
-const APP_PATHS = ["/", "/company/intelligence", "/company/skills"];
+const APP_PATHS = [
+  "/",
+  "/company/intelligence",
+  "/company/skills",
+  "/profile",
+  "/profile/new",
+  "/profile/$profileId",
+];
 
 /** Renders `Page` at `path`; every other app path renders a "at <path>" marker. */
 export function renderPage(Page: RouteComponent, path: string, store: TestStore = makeStore()) {

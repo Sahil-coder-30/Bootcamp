@@ -37,4 +37,8 @@ export const env = {
   resumeUrl: (read("RESUME_URL") ?? "http://localhost:8100").replace(/\/$/, ""),
   /** Optional shared secret, sent as X-Resume-Key when the resume service has RESUME_API_KEY set. */
   resumeApiKey: read("RESUME_API_KEY"),
+  /** "memory" forces the in-memory profile store even when Supabase is configured (tests, offline demo). */
+  profilesStore: read("PROFILES_STORE"),
+  /** "fixtures" reads Role 2 extractions from src/data/extractionFixtures instead of Supabase. */
+  extractionsSource: read("EXTRACTIONS_SOURCE"),
 };

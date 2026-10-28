@@ -10,6 +10,7 @@
     "test": "vitest run",
     "seed:sql": "tsx scripts/generate-seed-sql.ts",
     "seed:db": "tsx scripts/populate-db.ts",
+    "seed:profiles": "tsx scripts/seed-profiles.ts",
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {

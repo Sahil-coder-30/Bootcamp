@@ -9,7 +9,7 @@ import { errorHandler, notFound } from "./middlewares/errorHandler.js";
 export function createApp() {
   const app = express();
   app.use(morgan("dev"));
-  app.use(cors({ origin: env.corsOrigins }));
+  app.use(cors({ origin: env.corsOrigins, exposedHeaders: ["ETag", "Location"] }));
   app.use(express.json({ limit: "2mb" }));
 
   // Kubernetes probes
