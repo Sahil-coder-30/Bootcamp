@@ -37,9 +37,18 @@ def test_check_provider_ok_and_fail(monkeypatch):
 
 
 def test_doctor_run_exit_code(monkeypatch, capsys):
-    monkeypatch.setattr(doctor, "check_provider", lambda n: {
-        "provider": n, "key_name": "K", "model": "m", "preview": "x",
-        "status": "OK" if n == "groq" else "FAIL", "detail": ""})
+    monkeypatch.setattr(
+        doctor,
+        "check_provider",
+        lambda n: {
+            "provider": n,
+            "key_name": "K",
+            "model": "m",
+            "preview": "x",
+            "status": "OK" if n == "groq" else "FAIL",
+            "detail": "",
+        },
+    )
     assert doctor.run(("groq",)) == 0
     assert doctor.run(("groq", "gemini")) == 1
     assert "NOT working" in capsys.readouterr().out
@@ -92,6 +101,7 @@ def test_cli_doctor(monkeypatch):
 
 def test_cli_serve(monkeypatch):
     from openradix_agents.api import main as api_main
+
     seen = {}
     monkeypatch.setattr(api_main, "serve", lambda **kw: seen.update(kw))
     cli.main(["serve", "--port", "9001"])

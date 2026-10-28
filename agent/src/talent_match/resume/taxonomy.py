@@ -26,7 +26,6 @@ SKILL_TAXONOMY: dict[str, tuple[str, str]] = {
     "kotlin": ("kotlin", "COD"),
     "ruby": ("ruby", "COD"),
     "c#": ("csharp", "COD"),
-
     # DSA - Data Structures & Algorithms
     "dsa": ("dsa", "DSA"),
     "algorithms": ("algorithms", "DSA"),
@@ -37,7 +36,6 @@ SKILL_TAXONOMY: dict[str, tuple[str, str]] = {
     "sorting": ("sorting", "DSA"),
     "competitive programming": ("competitive-programming", "DSA"),
     "leetcode": ("leetcode", "DSA"),
-
     # SQL - SQL & Relational Databases
     "sql": ("sql", "SQL"),
     "postgresql": ("postgresql", "SQL"),
@@ -50,7 +48,6 @@ SKILL_TAXONOMY: dict[str, tuple[str, str]] = {
     "indexing": ("indexing", "SQL"),
     "redis": ("redis", "SQL"),
     "mongodb": ("mongodb", "SQL"),
-
     # SYSD - System Design & Distributed Systems
     "system design": ("system-design", "SYSD"),
     "distributed systems": ("distributed-systems", "SYSD"),
@@ -64,7 +61,6 @@ SKILL_TAXONOMY: dict[str, tuple[str, str]] = {
     "raft": ("raft", "SYSD"),
     "event-driven": ("event-driven", "SYSD"),
     "rate limiting": ("rate-limiting", "SYSD"),
-
     # CLOUD - DevOps & Cloud
     "cloud": ("cloud", "CLOUD"),
     "aws": ("aws", "CLOUD"),
@@ -80,7 +76,6 @@ SKILL_TAXONOMY: dict[str, tuple[str, str]] = {
     "github actions": ("github-actions", "CLOUD"),
     "jenkins": ("jenkins", "CLOUD"),
     "ansible": ("ansible", "CLOUD"),
-
     # SWE - Software Engineering Practices & Web
     "react": ("react", "SWE"),
     "reactjs": ("react", "SWE"),
@@ -99,7 +94,6 @@ SKILL_TAXONOMY: dict[str, tuple[str, str]] = {
     "git": ("git", "SWE"),
     "agile": ("agile", "SWE"),
     "unit testing": ("testing", "SWE"),
-
     # AI - AI Native & Machine Learning
     "machine learning": ("machine-learning", "AI"),
     "deep learning": ("deep-learning", "AI"),
@@ -112,7 +106,6 @@ SKILL_TAXONOMY: dict[str, tuple[str, str]] = {
     "nlp": ("nlp", "AI"),
     "computer vision": ("computer-vision", "AI"),
     "huggingface": ("huggingface", "AI"),
-
     # OS - Operating Systems
     "linux": ("linux", "OS"),
     "unix": ("unix", "OS"),
@@ -122,7 +115,6 @@ SKILL_TAXONOMY: dict[str, tuple[str, str]] = {
     "memory management": ("memory-management", "OS"),
     "bash": ("bash", "OS"),
     "shell scripting": ("shell", "OS"),
-
     # NETW - Computer Networking
     "networking": ("networking", "NETW"),
     "computer networks": ("networking", "NETW"),
@@ -131,13 +123,11 @@ SKILL_TAXONOMY: dict[str, tuple[str, str]] = {
     "dns": ("dns", "NETW"),
     "websockets": ("websockets", "NETW"),
     "tls/ssl": ("tls-ssl", "NETW"),
-
     # OOD - Object-Oriented Design
     "oop": ("oop", "OOD"),
     "object-oriented programming": ("oop", "OOD"),
     "design patterns": ("design-patterns", "OOD"),
     "solid principles": ("solid", "OOD"),
-
     # COMM & APTI
     "communication": ("communication", "COMM"),
     "leadership": ("leadership", "COMM"),

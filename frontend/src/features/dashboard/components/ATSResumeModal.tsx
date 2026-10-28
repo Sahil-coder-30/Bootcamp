@@ -1,5 +1,13 @@
 import React from "react";
-import { X, ShieldCheck, CheckCircle2, AlertCircle, FileCheck, ArrowUpRight, Zap } from "lucide-react";
+import {
+  X,
+  ShieldCheck,
+  CheckCircle2,
+  AlertCircle,
+  FileCheck,
+  ArrowUpRight,
+  Zap,
+} from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 
@@ -21,7 +29,9 @@ export const ATSResumeModal: React.FC<ATSResumeModalProps> = ({ isOpen, onClose 
               <ShieldCheck className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h3 className="font-heading text-lg font-bold text-foreground">ATS Resume Audit & Compliance</h3>
+              <h3 className="font-heading text-lg font-bold text-foreground">
+                ATS Resume Audit & Compliance
+              </h3>
               <p className="text-xs text-muted-foreground">
                 Format invariance, PII redaction audit, and keyword coverage
               </p>
@@ -81,7 +91,9 @@ export const ATSResumeModal: React.FC<ATSResumeModalProps> = ({ isOpen, onClose 
               <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
               Standard Heading Structures (Experience, Education, Skills)
             </span>
-            <span className="font-mono text-emerald-700 dark:text-emerald-400 font-semibold">Passed</span>
+            <span className="font-mono text-emerald-700 dark:text-emerald-400 font-semibold">
+              Passed
+            </span>
           </div>
 
           <div className="flex items-center justify-between rounded-xl border border-border bg-card-sub p-3 text-xs">

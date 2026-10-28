@@ -79,7 +79,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
               "flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-xs font-semibold transition-all",
               activeItem === "dashboard"
                 ? "bg-[#c86432] dark:bg-gradient-to-r dark:from-[#c86432] dark:to-[#a85024] text-white shadow-sm font-bold"
-                : "text-[#5c5346] dark:text-[#9c9081] hover:bg-[#dfd5c5]/60 dark:hover:bg-[#241e19] hover:text-[#1e1b18] dark:hover:text-[#ede5db]"
+                : "text-[#5c5346] dark:text-[#9c9081] hover:bg-[#dfd5c5]/60 dark:hover:bg-[#241e19] hover:text-[#1e1b18] dark:hover:text-[#ede5db]",
             )}
           >
             <LayoutDashboard className="h-4 w-4" />
@@ -93,7 +93,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
               "flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-xs font-semibold transition-all",
               activeItem === "resume"
                 ? "bg-[#c86432] text-white shadow-sm font-bold"
-                : "text-[#5c5346] dark:text-[#9c9081] hover:bg-[#dfd5c5]/60 dark:hover:bg-[#241e19] hover:text-[#1e1b18] dark:hover:text-[#ede5db]"
+                : "text-[#5c5346] dark:text-[#9c9081] hover:bg-[#dfd5c5]/60 dark:hover:bg-[#241e19] hover:text-[#1e1b18] dark:hover:text-[#ede5db]",
             )}
           >
             <FileText className="h-4 w-4 text-[#7c7468] dark:text-[#8c8072]" />
@@ -123,7 +123,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
               "flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-xs font-semibold transition-all",
               activeItem === "talent-check"
                 ? "bg-[#c86432] text-white shadow-sm font-bold"
-                : "text-[#5c5346] dark:text-[#9c9081] hover:bg-[#dfd5c5]/60 dark:hover:bg-[#241e19] hover:text-[#1e1b18] dark:hover:text-[#ede5db]"
+                : "text-[#5c5346] dark:text-[#9c9081] hover:bg-[#dfd5c5]/60 dark:hover:bg-[#241e19] hover:text-[#1e1b18] dark:hover:text-[#ede5db]",
             )}
           >
             <ShieldCheck className="h-4 w-4 text-[#7c7468] dark:text-[#8c8072]" />
@@ -137,7 +137,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
               "flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-xs font-semibold transition-all",
               activeItem === "skills"
                 ? "bg-[#c86432] text-white shadow-sm font-bold"
-                : "text-[#5c5346] dark:text-[#9c9081] hover:bg-[#dfd5c5]/60 dark:hover:bg-[#241e19] hover:text-[#1e1b18] dark:hover:text-[#ede5db]"
+                : "text-[#5c5346] dark:text-[#9c9081] hover:bg-[#dfd5c5]/60 dark:hover:bg-[#241e19] hover:text-[#1e1b18] dark:hover:text-[#ede5db]",
             )}
           >
             <GraduationCap className="h-4 w-4 text-[#7c7468] dark:text-[#8c8072]" />
@@ -164,7 +164,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
               "flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-xs font-semibold transition-all",
               activeItem === "companies"
                 ? "bg-[#c86432] text-white shadow-sm font-bold"
-                : "text-[#5c5346] dark:text-[#9c9081] hover:bg-[#dfd5c5]/60 dark:hover:bg-[#241e19] hover:text-[#1e1b18] dark:hover:text-[#ede5db]"
+                : "text-[#5c5346] dark:text-[#9c9081] hover:bg-[#dfd5c5]/60 dark:hover:bg-[#241e19] hover:text-[#1e1b18] dark:hover:text-[#ede5db]",
             )}
           >
             <Building2 className="h-4 w-4 text-[#7c7468] dark:text-[#8c8072]" />

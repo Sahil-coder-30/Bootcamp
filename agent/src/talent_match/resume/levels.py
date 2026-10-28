@@ -8,23 +8,39 @@ evidence tracking, confidence ratings, and explainable audit bases.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Literal
+
 from talent_match.contract import CategoryLevelDetail, ResumeExtraction
 
 LEVELS_VERSION = "lv-1.0"
 
 ALL_CATEGORIES = [
-    "COD", "DSA", "APTI", "COMM", "OOD", "AI",
-    "SQL", "SYSD", "CLOUD", "SWE", "NETW", "OS",
+    "COD",
+    "DSA",
+    "APTI",
+    "COMM",
+    "OOD",
+    "AI",
+    "SQL",
+    "SYSD",
+    "CLOUD",
+    "SWE",
+    "NETW",
+    "OS",
 ]
 
 BLOOM_CODES = {
-    1: "CU", 2: "CU",
-    3: "AP", 4: "AP",
-    5: "AS", 6: "AS",
-    7: "EV", 8: "EV",
-    9: "CR", 10: "CR",
+    1: "CU",
+    2: "CU",
+    3: "AP",
+    4: "AP",
+    5: "AS",
+    6: "AS",
+    7: "EV",
+    8: "EV",
+    9: "CR",
+    10: "CR",
 }
 
 
@@ -32,8 +48,15 @@ BLOOM_CODES = {
 class EvidenceUnit:
     category: str
     kind: Literal[
-        "listed", "coursework", "certification", "project",
-        "hackathon", "experience", "competitive", "soft_signal", "publication",
+        "listed",
+        "coursework",
+        "certification",
+        "project",
+        "hackathon",
+        "experience",
+        "competitive",
+        "soft_signal",
+        "publication",
     ]
     ref: str
     text: str
@@ -84,7 +107,11 @@ def points_to_level(points: float, units: list[EvidenceUnit]) -> tuple[int, str 
         raw = 10
 
     # Bloom Gating Rules
-    applied_units = [u for u in units if u.kind in ("project", "hackathon", "experience", "competitive", "publication", "soft_signal")]
+    applied_units = [
+        u
+        for u in units
+        if u.kind in ("project", "hackathon", "experience", "competitive", "publication", "soft_signal")
+    ]
     has_cert = any(u.kind == "certification" for u in units)
     has_exp = any(u.kind == "experience" for u in units)
     has_lead_or_top = any(u.leadership or u.top_rank or (u.production and u.quantified) for u in units)
@@ -123,7 +150,9 @@ def collect_evidence(extraction: ResumeExtraction) -> dict[str, list[EvidenceUni
     # 1. Experience units
     for exp in extraction.experience:
         text = f"{exp.title} at {exp.org}: " + " ".join(exp.highlights)
-        is_lead = any(w in text.lower() for w in ("led", "designed", "architected", "owned", "spearheaded", "mentored"))
+        is_lead = any(
+            w in text.lower() for w in ("led", "designed", "architected", "owned", "spearheaded", "mentored")
+        )
         is_quant = any(w in text for w in ("%", "ms", "x", "users", "k", "M", "sec", "00"))
 
         # Map experience skills into category units
@@ -150,9 +179,13 @@ def collect_evidence(extraction: ResumeExtraction) -> dict[str, list[EvidenceUni
     # 2. Project units
     for proj in extraction.projects:
         p_text = f"{proj.name}: {proj.description}"
-        is_lead = any(w in p_text.lower() for w in ("designed", "built", "implemented", "authored", "created"))
+        is_lead = any(
+            w in p_text.lower() for w in ("designed", "built", "implemented", "authored", "created")
+        )
         is_quant = any(w in p_text for w in ("%", "ms", "ops/s", "users", "scale", "rps", "latency"))
-        is_create = any(w in p_text.lower() for w in ("novel", "from scratch", "open source", "published", "patent"))
+        is_create = any(
+            w in p_text.lower() for w in ("novel", "from scratch", "open source", "published", "patent")
+        )
 
         cat_seen = set()
         for sk in extraction.skills:
@@ -175,7 +208,9 @@ def collect_evidence(extraction: ResumeExtraction) -> dict[str, list[EvidenceUni
 
     # 3. Hackathons
     for h in extraction.hackathons:
-        is_top = any(w in (h.result or "").lower() for w in ("winner", "runner", "1st", "2nd", "finalist", "top"))
+        is_top = any(
+            w in (h.result or "").lower() for w in ("winner", "runner", "1st", "2nd", "finalist", "top")
+        )
         # Hackathons boost COD, DSA, and APTI
         for cat in ("COD", "DSA", "APTI"):
             evidence[cat].append(
@@ -259,7 +294,9 @@ def infer_levels(extraction: ResumeExtraction) -> tuple[dict[str, int], dict[str
         bloom = bloom_for_level(level)
 
         # Confidence assignment
-        applied_count = sum(1 for u in units if u.kind in ("experience", "project", "hackathon", "competitive"))
+        applied_count = sum(
+            1 for u in units if u.kind in ("experience", "project", "hackathon", "competitive")
+        )
         if applied_count >= 2:
             confidence = "high"
         elif applied_count == 1 or any(u.kind == "certification" for u in units):

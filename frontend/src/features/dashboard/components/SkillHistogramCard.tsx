@@ -6,7 +6,7 @@ export interface SkillItem {
   code: string;
   name: string;
   candidateLevel: number; // 1 to 5
-  requiredLevel: number;  // 1 to 5
+  requiredLevel: number; // 1 to 5
   bloomStage: "Understand" | "Apply" | "Analyze" | "Evaluate" | "Create";
   bloomCode: "CU" | "AP" | "AS" | "EV" | "CR";
   category: "Core" | "Systems" | "Engineering";
@@ -124,11 +124,31 @@ export const RADIX_12_SKILLS: SkillItem[] = [
 ];
 
 const BLOOM_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-  CU: { bg: "bg-[#eae2d5] dark:bg-[#28211b]", text: "text-[#5c4a38] dark:text-[#d9a873]", border: "border-[#dfd5c5] dark:border-[#382f27]" },
-  AP: { bg: "bg-[#eae2d5] dark:bg-[#28211b]", text: "text-[#5c4a38] dark:text-[#d9a873]", border: "border-[#dfd5c5] dark:border-[#382f27]" },
-  AS: { bg: "bg-[#eae2d5] dark:bg-[#28211b]", text: "text-[#5c4a38] dark:text-[#d9a873]", border: "border-[#dfd5c5] dark:border-[#382f27]" },
-  EV: { bg: "bg-[#eae2d5] dark:bg-[#28211b]", text: "text-[#5c4a38] dark:text-[#d9a873]", border: "border-[#dfd5c5] dark:border-[#382f27]" },
-  CR: { bg: "bg-[#eae2d5] dark:bg-[#28211b]", text: "text-[#5c4a38] dark:text-[#d9a873]", border: "border-[#dfd5c5] dark:border-[#382f27]" },
+  CU: {
+    bg: "bg-[#eae2d5] dark:bg-[#28211b]",
+    text: "text-[#5c4a38] dark:text-[#d9a873]",
+    border: "border-[#dfd5c5] dark:border-[#382f27]",
+  },
+  AP: {
+    bg: "bg-[#eae2d5] dark:bg-[#28211b]",
+    text: "text-[#5c4a38] dark:text-[#d9a873]",
+    border: "border-[#dfd5c5] dark:border-[#382f27]",
+  },
+  AS: {
+    bg: "bg-[#eae2d5] dark:bg-[#28211b]",
+    text: "text-[#5c4a38] dark:text-[#d9a873]",
+    border: "border-[#dfd5c5] dark:border-[#382f27]",
+  },
+  EV: {
+    bg: "bg-[#eae2d5] dark:bg-[#28211b]",
+    text: "text-[#5c4a38] dark:text-[#d9a873]",
+    border: "border-[#dfd5c5] dark:border-[#382f27]",
+  },
+  CR: {
+    bg: "bg-[#eae2d5] dark:bg-[#28211b]",
+    text: "text-[#5c4a38] dark:text-[#d9a873]",
+    border: "border-[#dfd5c5] dark:border-[#382f27]",
+  },
 };
 
 interface SkillHistogramCardProps {
@@ -140,10 +160,12 @@ export const SkillHistogramCard: React.FC<SkillHistogramCardProps> = ({
   onSelectSkill,
   selectedSkillCode,
 }) => {
-  const [filterCategory, setFilterCategory] = useState<"All" | "Core" | "Systems" | "Engineering">("All");
+  const [filterCategory, setFilterCategory] = useState<"All" | "Core" | "Systems" | "Engineering">(
+    "All",
+  );
 
   const filteredSkills = RADIX_12_SKILLS.filter(
-    (s) => filterCategory === "All" || s.category === filterCategory
+    (s) => filterCategory === "All" || s.category === filterCategory,
   );
 
   return (
@@ -174,7 +196,7 @@ export const SkillHistogramCard: React.FC<SkillHistogramCardProps> = ({
                 "rounded-full px-3 py-1 font-medium transition-all cursor-pointer",
                 filterCategory === cat
                   ? "bg-[#1e1b18] dark:bg-primary text-white font-bold shadow-xs"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-muted-foreground hover:text-foreground",
               )}
             >
               {cat}
@@ -195,7 +217,9 @@ export const SkillHistogramCard: React.FC<SkillHistogramCardProps> = ({
             Target Hiring Bar
           </span>
         </div>
-        <span className="font-mono text-[10px] text-muted-foreground">Click row to filter study plan</span>
+        <span className="font-mono text-[10px] text-muted-foreground">
+          Click row to filter study plan
+        </span>
       </div>
 
       {/* Histogram Bars List */}
@@ -218,7 +242,7 @@ export const SkillHistogramCard: React.FC<SkillHistogramCardProps> = ({
                 "group relative rounded-xl border p-2.5 transition-all cursor-pointer",
                 isSelected
                   ? "border-primary bg-card-sub ring-1 ring-primary shadow-xs"
-                  : "border-border bg-card-sub hover:border-primary/60"
+                  : "border-border bg-card-sub hover:border-primary/60",
               )}
             >
               {/* Row Header */}
@@ -238,7 +262,7 @@ export const SkillHistogramCard: React.FC<SkillHistogramCardProps> = ({
                       "rounded-full border px-2 py-0.2 text-[10px] font-semibold",
                       bloom.bg,
                       bloom.text,
-                      bloom.border
+                      bloom.border,
                     )}
                   >
                     {skill.bloomCode} · L{skill.candidateLevel}
@@ -246,11 +270,13 @@ export const SkillHistogramCard: React.FC<SkillHistogramCardProps> = ({
 
                   {meetsBar ? (
                     <span className="flex items-center gap-0.5 text-[10px] font-semibold text-emerald-700 dark:text-emerald-400">
-                      <CheckCircle2 className="h-3 w-3 text-emerald-600 dark:text-emerald-400" /> Met
+                      <CheckCircle2 className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />{" "}
+                      Met
                     </span>
                   ) : (
                     <span className="flex items-center gap-0.5 text-[10px] font-semibold text-amber-700 dark:text-amber-400">
-                      <AlertTriangle className="h-3 w-3 text-amber-600 dark:text-amber-400" /> -{skill.requiredLevel - skill.candidateLevel}L
+                      <AlertTriangle className="h-3 w-3 text-amber-600 dark:text-amber-400" /> -
+                      {skill.requiredLevel - skill.candidateLevel}L
                     </span>
                   )}
                 </div>
@@ -288,9 +314,7 @@ export const SkillHistogramCard: React.FC<SkillHistogramCardProps> = ({
         <span>
           <strong className="text-foreground">8 of 12</strong> skills satisfy Super Dream bar
         </span>
-        <span className="text-[11px] font-semibold text-foreground">
-          Composite Index: 3.4/5.0
-        </span>
+        <span className="text-[11px] font-semibold text-foreground">Composite Index: 3.4/5.0</span>
       </div>
     </div>
   );

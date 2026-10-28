@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { X, Sparkles, CheckCircle2, AlertTriangle, ArrowRight, Upload, FileText } from "lucide-react";
+import {
+  X,
+  Sparkles,
+  CheckCircle2,
+  AlertTriangle,
+  ArrowRight,
+  Upload,
+  FileText,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface JDMatcherModalProps {
@@ -9,7 +17,7 @@ interface JDMatcherModalProps {
 
 export const JDMatcherModal: React.FC<JDMatcherModalProps> = ({ isOpen, onClose }) => {
   const [jdText, setJdText] = useState(
-    "Looking for a Software Development Engineer (SDE-1) skilled in Distributed Systems, Go/Python, Concurrency, PostgreSQL, Microservices, and REST API design."
+    "Looking for a Software Development Engineer (SDE-1) skilled in Distributed Systems, Go/Python, Concurrency, PostgreSQL, Microservices, and REST API design.",
   );
   const [analyzed, setAnalyzed] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
@@ -34,7 +42,9 @@ export const JDMatcherModal: React.FC<JDMatcherModalProps> = ({ isOpen, onClose 
               <FileText className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h3 className="font-heading text-lg font-bold text-foreground">Job Description (JD) Matcher</h3>
+              <h3 className="font-heading text-lg font-bold text-foreground">
+                Job Description (JD) Matcher
+              </h3>
               <p className="text-xs text-muted-foreground">
                 Match any recruiter JD against your 12 RADIX Bloom skill benchmarks
               </p>
@@ -99,13 +109,17 @@ export const JDMatcherModal: React.FC<JDMatcherModalProps> = ({ isOpen, onClose 
 
             <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
               <div className="rounded-lg bg-card p-2.5 border border-border">
-                <p className="font-semibold text-emerald-700 dark:text-emerald-400">✓ Strong Matches (4/5)</p>
+                <p className="font-semibold text-emerald-700 dark:text-emerald-400">
+                  ✓ Strong Matches (4/5)
+                </p>
                 <p className="text-[11px] text-muted-foreground mt-1">
                   Distributed Systems, REST APIs, PostgreSQL, Python
                 </p>
               </div>
               <div className="rounded-lg bg-card p-2.5 border border-border">
-                <p className="font-semibold text-amber-700 dark:text-amber-400">⚡ Recommended Prep (1 Gap)</p>
+                <p className="font-semibold text-amber-700 dark:text-amber-400">
+                  ⚡ Recommended Prep (1 Gap)
+                </p>
                 <p className="text-[11px] text-muted-foreground mt-1">
                   Concurrency: Channel communication & Goroutines
                 </p>

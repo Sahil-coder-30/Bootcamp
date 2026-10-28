@@ -42,9 +42,11 @@ const FILTERS: ("All" | CompanyType)[] = ["All", "Super Dream", "Dream", "Standa
 
 // Theme palette for company tiers
 const TYPE_STYLES: Record<CompanyType, string> = {
-  "Super Dream": "bg-[#4a154b] dark:bg-[#4a183d] text-white dark:text-[#f0d5eb] border-[#3d113e] dark:border-[#5c234d] shadow-xs",
+  "Super Dream":
+    "bg-[#4a154b] dark:bg-[#4a183d] text-white dark:text-[#f0d5eb] border-[#3d113e] dark:border-[#5c234d] shadow-xs",
   Dream: "bg-primary/10 text-primary border-primary/30 shadow-xs",
-  Standard: "bg-emerald-500/10 text-emerald-800 dark:text-emerald-400 border-emerald-500/30 shadow-xs",
+  Standard:
+    "bg-emerald-500/10 text-emerald-800 dark:text-emerald-400 border-emerald-500/30 shadow-xs",
   Regular: "bg-amber-500/10 text-amber-800 dark:text-amber-400 border-amber-500/30 shadow-xs",
 };
 
@@ -57,7 +59,8 @@ const TYPE_DOTS: Record<CompanyType, string> = {
 
 const ACTIVE_STYLES: Record<string, string> = {
   All: "bg-[#1e1b18] dark:bg-primary text-white border-transparent shadow-sm font-semibold",
-  "Super Dream": "bg-[#4a154b] dark:bg-[#4a183d] text-white dark:text-[#f0d5eb] border-transparent shadow-sm font-semibold",
+  "Super Dream":
+    "bg-[#4a154b] dark:bg-[#4a183d] text-white dark:text-[#f0d5eb] border-transparent shadow-sm font-semibold",
   Dream: "bg-primary text-white border-transparent shadow-sm font-semibold",
   Standard: "bg-emerald-600 text-white border-transparent shadow-sm font-semibold",
   Regular: "bg-amber-600 text-white border-transparent shadow-sm font-semibold",
@@ -455,7 +458,9 @@ export default function CompanyPickerPage() {
               <p className="mt-2.5 font-heading text-3xl font-extrabold tracking-tight text-[#384959]">
                 {companies.length}
               </p>
-              <p className="mt-1 text-[11px] font-medium text-[#6A89A7]">Active Campus Recruiters</p>
+              <p className="mt-1 text-[11px] font-medium text-[#6A89A7]">
+                Active Campus Recruiters
+              </p>
             </div>
 
             {/* Super Dream Card */}
@@ -659,8 +664,8 @@ export default function CompanyPickerPage() {
         {(debounced || selectedCategory !== "All" || filter !== "All") && (
           <div className="mt-3 flex items-center justify-between text-xs text-[#6A89A7]">
             <span>
-              Showing <strong className="text-[#384959]">{visible.length}</strong> of {companies.length}{" "}
-              recruiting partners
+              Showing <strong className="text-[#384959]">{visible.length}</strong> of{" "}
+              {companies.length} recruiting partners
             </span>
             <button
               onClick={reset}
@@ -676,10 +681,7 @@ export default function CompanyPickerPage() {
           {isLoading ? (
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="rounded-2xl border border-[#c8dcf2] bg-white p-5 space-y-4"
-                >
+                <div key={i} className="rounded-2xl border border-[#c8dcf2] bg-white p-5 space-y-4">
                   <div className="flex items-center justify-between">
                     <Skeleton className="h-12 w-12 rounded-xl bg-[#e9f3fd]" />
                     <Skeleton className="h-6 w-24 rounded-full bg-[#e9f3fd]" />
@@ -766,7 +768,9 @@ export default function CompanyPickerPage() {
                                 className="h-10 w-10 rounded-lg border border-[#c8dcf2] bg-white shadow-xs"
                               />
                               <div>
-                                <p className="font-heading font-semibold text-[#384959]">{c.name}</p>
+                                <p className="font-heading font-semibold text-[#384959]">
+                                  {c.name}
+                                </p>
                                 <p className="text-xs text-[#6A89A7]">{c.shortName}</p>
                               </div>
                             </div>
@@ -901,7 +905,10 @@ export default function CompanyPickerPage() {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/company/intelligence" className="transition-colors hover:text-[#384959]">
+                  <Link
+                    to="/company/intelligence"
+                    className="transition-colors hover:text-[#384959]"
+                  >
                     Corporate Dossiers
                   </Link>
                 </li>

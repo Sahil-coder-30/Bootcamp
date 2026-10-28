@@ -121,9 +121,7 @@ export const CandidateDashboard: React.FC = () => {
                   className="flex items-center justify-between p-2.5 rounded-xl border border-border bg-card-sub hover:border-primary hover:bg-muted transition-colors"
                 >
                   <div className="truncate">
-                    <p className="font-semibold text-xs text-foreground truncate">
-                      {c.name}
-                    </p>
+                    <p className="font-semibold text-xs text-foreground truncate">{c.name}</p>
                     <p className="text-[10px] text-muted-foreground">{c.category}</p>
                   </div>
                   <span className="text-[10px] font-bold text-foreground">{c.companyType}</span>
@@ -146,8 +144,10 @@ export const CandidateDashboard: React.FC = () => {
                 {greeting}, {candidateName} 👋
               </h1>
               <p className="mt-1.5 text-xs sm:text-sm text-muted-foreground">
-                Candidate Profile: <strong className="text-foreground">B.Tech CSE &apos;26</strong> · Targeting:{" "}
-                <span className="text-foreground font-semibold">Super Dream & Dream Bars</span> - Zero LLM Drift
+                Candidate Profile: <strong className="text-foreground">B.Tech CSE &apos;26</strong>{" "}
+                · Targeting:{" "}
+                <span className="text-foreground font-semibold">Super Dream & Dream Bars</span> -
+                Zero LLM Drift
               </p>
             </div>
 
@@ -183,9 +183,7 @@ export const CandidateDashboard: React.FC = () => {
                 <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
                   Tier-1 Readiness
                 </p>
-                <p className="text-xs font-bold text-foreground">
-                  Ready for 74% Bars
-                </p>
+                <p className="text-xs font-bold text-foreground">Ready for 74% Bars</p>
               </div>
             </div>
           </div>
@@ -213,14 +211,8 @@ export const CandidateDashboard: React.FC = () => {
       </div>
 
       {/* Global Modals for JD Matcher & ATS Resume */}
-      <JDMatcherModal
-        isOpen={isJDModalOpen}
-        onClose={() => setIsJDModalOpen(false)}
-      />
-      <ATSResumeModal
-        isOpen={isATSModalOpen}
-        onClose={() => setIsATSModalOpen(false)}
-      />
+      <JDMatcherModal isOpen={isJDModalOpen} onClose={() => setIsJDModalOpen(false)} />
+      <ATSResumeModal isOpen={isATSModalOpen} onClose={() => setIsATSModalOpen(false)} />
     </div>
   );
 };

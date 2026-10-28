@@ -1,6 +1,14 @@
 import React from "react";
 import { Link } from "@tanstack/react-router";
-import { Building2, Trophy, ArrowRight, ShieldCheck, CheckCircle2, AlertTriangle, Sparkles } from "lucide-react";
+import {
+  Building2,
+  Trophy,
+  ArrowRight,
+  ShieldCheck,
+  CheckCircle2,
+  AlertTriangle,
+  Sparkles,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface CompanyMatchItem {
@@ -92,9 +100,7 @@ export const TopCompanyMatchesCard: React.FC = () => {
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-sm text-foreground">
-                      {company.name}
-                    </span>
+                    <span className="font-semibold text-sm text-foreground">{company.name}</span>
                     <span className="rounded-full px-2 py-0.5 text-[10px] font-bold bg-[#4a154b] dark:bg-[#4a183d] text-white dark:text-[#f0d5eb] border border-[#3d113e] dark:border-[#5c234d]">
                       {company.tier}
                     </span>
@@ -129,7 +135,7 @@ export const TopCompanyMatchesCard: React.FC = () => {
                       "text-[10px] font-semibold capitalize",
                       company.verdict === "ready"
                         ? "text-emerald-700 dark:text-emerald-400"
-                        : "text-muted-foreground"
+                        : "text-muted-foreground",
                     )}
                   >
                     {company.verdict === "ready" ? "Eligible Bar" : "Near Threshold"}

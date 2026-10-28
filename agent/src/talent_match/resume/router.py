@@ -11,6 +11,7 @@ from __future__ import annotations
 import base64
 import time
 from typing import Optional
+
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile, status
 from pydantic import BaseModel
 
@@ -37,8 +38,6 @@ async def extract_resume_endpoint(
     sample_key: Optional[str] = Form(None),
 ) -> ResumeExtraction:
     """Parse a candidate resume into a structured ResumeExtraction with Bloom levels."""
-    start_time = time.perf_counter()
-
     if sample_key:
         sample = get_sample_extraction(sample_key)
         return sample

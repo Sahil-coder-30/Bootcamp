@@ -47,9 +47,7 @@ export const PriorityRoadmapCard: React.FC = () => {
   const [topics, setTopics] = useState<StudyTopicItem[]>(INITIAL_TOPICS);
 
   const toggleTopic = (id: string) => {
-    setTopics((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
-    );
+    setTopics((prev) => prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)));
   };
 
   const completedCount = topics.filter((t) => t.completed).length;
@@ -96,7 +94,7 @@ export const PriorityRoadmapCard: React.FC = () => {
                 "group rounded-xl border p-3 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3",
                 topic.completed
                   ? "border-emerald-300 dark:border-emerald-800 bg-emerald-500/10 opacity-80"
-                  : "border-border bg-card-sub hover:border-primary/60"
+                  : "border-border bg-card-sub hover:border-primary/60",
               )}
             >
               {/* Left Title and Tags */}
@@ -107,7 +105,7 @@ export const PriorityRoadmapCard: React.FC = () => {
                     "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-colors",
                     topic.completed
                       ? "border-emerald-500 bg-emerald-500 text-white"
-                      : "border-border bg-card text-transparent group-hover:border-primary"
+                      : "border-border bg-card text-transparent group-hover:border-primary",
                   )}
                 >
                   <CheckCircle2 className="h-3.5 w-3.5 stroke-[3]" />
@@ -121,9 +119,7 @@ export const PriorityRoadmapCard: React.FC = () => {
                     <span
                       className={cn(
                         "text-xs font-semibold",
-                        topic.completed
-                          ? "line-through text-muted-foreground"
-                          : "text-foreground"
+                        topic.completed ? "line-through text-muted-foreground" : "text-foreground",
                       )}
                     >
                       {topic.title}
@@ -153,7 +149,7 @@ export const PriorityRoadmapCard: React.FC = () => {
                     "text-[10px] font-semibold px-2 py-1 rounded-md border",
                     topic.completed
                       ? "border-emerald-400 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 bg-emerald-100/50 dark:bg-emerald-950/40"
-                      : "border-border text-foreground bg-card group-hover:border-primary/60"
+                      : "border-border text-foreground bg-card group-hover:border-primary/60",
                   )}
                 >
                   {topic.completed ? "Completed ✓" : "Mark Done"}

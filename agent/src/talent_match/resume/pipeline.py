@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import time
+
 from talent_match.contract import (
     ResumeContact,
     ResumeExtraction,
@@ -31,16 +32,16 @@ def parse_resume(
 ) -> ResumeExtraction:
     """Master pipeline: layout -> patterns -> sections -> extract -> merge -> levels."""
     start_time = time.perf_counter()
-    opts = options or ResumeOptions()
+    _opts = options or ResumeOptions()
     file_sha256 = hashlib.sha256(data).hexdigest()
 
     # 1. Document layout reading order
     lines = extract_document_lines(data, file_name, mime)
-    full_text = "\n".join(l.text for l in lines)
+    full_text = "\n".join(ln.text for ln in lines)
 
     # 2. Deterministic Contact & PII Redaction
     contact_data = find_contacts(full_text)
-    redacted_text = redact_pii(full_text, contact_data)
+    _ = redact_pii(full_text, contact_data)
 
     # 3. Section Segmentation
     sections = segment(lines)

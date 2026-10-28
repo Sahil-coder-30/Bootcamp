@@ -58,7 +58,11 @@ function ThemeToggle() {
       aria-label="Toggle theme"
       className="h-8 w-8 rounded-lg text-muted-foreground transition-colors hover:text-foreground"
     >
-      {isDark ? <Sun className="h-4 w-4 text-primary" /> : <Moon className="h-4 w-4 text-primary" />}
+      {isDark ? (
+        <Sun className="h-4 w-4 text-primary" />
+      ) : (
+        <Moon className="h-4 w-4 text-primary" />
+      )}
     </Button>
   );
 }

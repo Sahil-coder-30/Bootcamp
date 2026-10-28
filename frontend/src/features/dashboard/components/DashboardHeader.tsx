@@ -76,12 +76,16 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           {theme === "dark" ? (
             <>
               <Moon className="h-3.5 w-3.5 text-primary" />
-              <span className="hidden sm:inline text-xs font-medium text-foreground">Dark Theme</span>
+              <span className="hidden sm:inline text-xs font-medium text-foreground">
+                Dark Theme
+              </span>
             </>
           ) : (
             <>
               <Sun className="h-3.5 w-3.5 text-primary" />
-              <span className="hidden sm:inline text-xs font-medium text-foreground">Light Theme</span>
+              <span className="hidden sm:inline text-xs font-medium text-foreground">
+                Light Theme
+              </span>
             </>
           )}
         </button>

@@ -7,6 +7,7 @@ Internal data models for Role 2: Resume Parsing pipeline.
 from __future__ import annotations
 
 from typing import Literal
+
 from pydantic import BaseModel, Field
 
 SectionName = Literal[
@@ -63,7 +64,7 @@ class Section(BaseModel):
 
     @property
     def raw_text(self) -> str:
-        return "\n".join(l.text for l in self.lines)
+        return "\n".join(line.text for line in self.lines)
 
 
 class Contact(BaseModel):

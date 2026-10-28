@@ -13,6 +13,7 @@ from pydantic import BaseModel, Field, model_validator
 
 # --- Skill and Candidate Profile ---
 
+
 class Skill(BaseModel):
     skill_name: str
     category_code: str
@@ -52,6 +53,7 @@ class CandidateProfileSummary(BaseModel):
 
 # --- Company Skill Bar ---
 
+
 class CompanyBarRow(BaseModel):
     skill_set_id: int
     category_code: str
@@ -71,6 +73,7 @@ class CompanyBar(BaseModel):
 
 
 # --- Topic Ladder & Study Plan ---
+
 
 class NextTopic(BaseModel):
     level: int = Field(ge=1, le=10)
@@ -93,6 +96,7 @@ class StudyPlan(BaseModel):
 
 
 # --- Talent Check Results ---
+
 
 class GapRow(BaseModel):
     category_code: str
@@ -142,6 +146,7 @@ class TalentCheckResult(BaseModel):
 
 # --- Batch & Ranking Models ---
 
+
 class MatrixCell(BaseModel):
     profile_id: str
     company_id: int
@@ -186,6 +191,7 @@ class RankRequest(BaseModel):
 
 
 # --- Role 2: Resume Parsing Models ---
+
 
 class ResumeContact(BaseModel):
     name: str
@@ -259,4 +265,3 @@ class ResumeExtraction(BaseModel):
     category_level_details: dict[str, CategoryLevelDetail] = Field(default_factory=dict)
     field_confidence: dict[str, Literal["high", "medium", "low"]] = Field(default_factory=dict)
     meta: dict[str, Any] = Field(default_factory=dict)
-

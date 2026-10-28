@@ -8,7 +8,7 @@ and structured LLM calls with automated offline fallback.
 from __future__ import annotations
 
 import re
-from typing import Any
+
 from talent_match.contract import (
     CertificationEntry,
     EducationEntry,
@@ -17,14 +17,13 @@ from talent_match.contract import (
     ProjectEntry,
 )
 from talent_match.resume.models import RawSkill, Section
-from talent_match.resume.patterns import parse_date_range, find_scores
+from talent_match.resume.patterns import find_scores, parse_date_range
 from talent_match.resume.taxonomy import SKILL_TAXONOMY, canonicalize
 
 
 def parse_skills_section(section: Section) -> list[RawSkill]:
     """Parse skills section deterministically without needing an LLM."""
     skills: list[RawSkill] = []
-    text = section.raw_text
 
     # Split lines, strip labels like "Languages:", "Frameworks:", "Tools:"
     for line_idx, line in enumerate(section.lines, 1):
@@ -97,7 +96,10 @@ def extract_deterministic_sections(
 
             institution = "JSS Academy of Technical Education"
             for line in sec.lines:
-                if any(w in line.text.lower() for w in ("institute", "university", "college", "academy", "school", "jss")):
+                if any(
+                    w in line.text.lower()
+                    for w in ("institute", "university", "college", "academy", "school", "jss")
+                ):
                     institution = line.text.strip()
                     break
 
@@ -112,7 +114,7 @@ def extract_deterministic_sections(
 
         elif name == "experience":
             # Segment into jobs / internships by looking at dates and titles
-            lines = [l.text for l in sec.lines if l.text.strip()]
+            lines = [ln.text for ln in sec.lines if ln.text.strip()]
             cur_title = "Software Engineering Intern"
             cur_org = "Technology Partner"
             highlights: list[str] = []
@@ -120,7 +122,9 @@ def extract_deterministic_sections(
 
             for line in lines:
                 start_d, end_d = parse_date_range(line)
-                if start_d and any(w in line.lower() for w in ("intern", "engineer", "developer", "trainee", "associate")):
+                if start_d and any(
+                    w in line.lower() for w in ("intern", "engineer", "developer", "trainee", "associate")
+                ):
                     parts = re.split(r"[,|\-–]", line)
                     if len(parts) >= 2:
                         cur_title = parts[0].strip()
@@ -152,14 +156,16 @@ def extract_deterministic_sections(
                     kind="internship",
                     start="2025-05",
                     end="2025-07",
-                    highlights=highlights[:4] if highlights else ["Engineered scalable backend components and pipeline integrations."],
+                    highlights=highlights[:4]
+                    if highlights
+                    else ["Engineered scalable backend components and pipeline integrations."],
                     skills=exp_skills[:6],
                 )
             )
 
         elif name == "projects":
             # Extract project names and bullet lines
-            lines = [l.text for l in sec.lines if l.text.strip()]
+            lines = [ln.text for ln in sec.lines if ln.text.strip()]
             cur_proj_name = "Key Technical Project"
             cur_desc_parts: list[str] = []
             proj_skills: list[str] = []
@@ -209,7 +215,9 @@ def extract_deterministic_sections(
             for line in sec.lines:
                 t = line.text.strip()
                 if len(t) > 5:
-                    result = "Winner" if any(w in t.lower() for w in ("winner", "1st", "first")) else "Finalist"
+                    result = (
+                        "Winner" if any(w in t.lower() for w in ("winner", "1st", "first")) else "Finalist"
+                    )
                     hackathons.append(
                         HackathonEntry(
                             name=t[:60],
@@ -222,7 +230,9 @@ def extract_deterministic_sections(
             for line in sec.lines:
                 t = line.text.strip()
                 if len(t) > 5:
-                    issuer = "AWS" if "aws" in t.lower() else "Oracle" if "oracle" in t.lower() else "Coursera"
+                    issuer = (
+                        "AWS" if "aws" in t.lower() else "Oracle" if "oracle" in t.lower() else "Coursera"
+                    )
                     certifications.append(
                         CertificationEntry(
                             name=t[:60],

@@ -9,27 +9,49 @@ from __future__ import annotations
 
 import re
 from datetime import datetime
+
 from talent_match.resume.models import Contact, Rank
 
 EMAIL_RE = re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b")
 PHONE_RE = re.compile(r"(?:(?:\+?91[\s-]?)?[6-9]\d{4}[\s-]?\d{5}|\b\+?[1-9]\d{1,14}\b)")
-LINK_RE = re.compile(r"\b(?:https?://)?(?:www\.)?(?:github\.com/[A-Za-z0-9_.-]+|linkedin\.com/in/[A-Za-z0-9_.-]+|leetcode\.com/(?:u/)?[A-Za-z0-9_.-]+|codeforces\.com/profile/[A-Za-z0-9_.-]+|kaggle\.com/[A-Za-z0-9_.-]+|[A-Za-z0-9_.-]+\.(?:dev|me|io|tech|com|in))\b", re.IGNORECASE)
-SCORE_RE = re.compile(r"\b(?:\d\.\d{1,2}(?:\s*/\s*10)?\s*(?:CGPA|GPA|CPI)?|\d{2}(?:\.\d+)?\s*%)\b", re.IGNORECASE)
+LINK_RE = re.compile(
+    r"\b(?:https?://)?(?:www\.)?(?:github\.com/[A-Za-z0-9_.-]+|linkedin\.com/in/[A-Za-z0-9_.-]+|leetcode\.com/(?:u/)?[A-Za-z0-9_.-]+|codeforces\.com/profile/[A-Za-z0-9_.-]+|kaggle\.com/[A-Za-z0-9_.-]+|[A-Za-z0-9_.-]+\.(?:dev|me|io|tech|com|in))\b",
+    re.IGNORECASE,
+)
+SCORE_RE = re.compile(
+    r"\b(?:\d\.\d{1,2}(?:\s*/\s*10)?\s*(?:CGPA|GPA|CPI)?|\d{2}(?:\.\d+)?\s*%)\b", re.IGNORECASE
+)
 DATE_RANGE_RE = re.compile(
     r"(?:(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{4}|\d{2}/\d{4}|\d{4}-\d{2}|\b\d{4}\b)\s*(?:–|-|to)\s*(?:(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{4}|\d{2}/\d{4}|\d{4}-\d{2}|\b\d{4}\b|present|current)",
     re.IGNORECASE,
 )
 RANK_PATTERNS = [
-    (re.compile(r"LeetCode\s*(?:Contest\s*Rating|Rating|Rank)?\s*[:\-]?\s*(\d{3,4})", re.IGNORECASE), "LeetCode"),
-    (re.compile(r"Codeforces\s*(?:Rating|Rank)?\s*[:\-]?\s*(\d{3,4}|\b(?:Expert|Specialist|Candidate Master|Master)\b)", re.IGNORECASE), "Codeforces"),
-    (re.compile(r"(?:ICPC|ACM\s*ICPC)\s*[:\-]?\s*([A-Za-z0-9\s]+(?:Regional|World\s*Finalist|Rank\s*\d+))", re.IGNORECASE), "ICPC"),
+    (
+        re.compile(r"LeetCode\s*(?:Contest\s*Rating|Rating|Rank)?\s*[:\-]?\s*(\d{3,4})", re.IGNORECASE),
+        "LeetCode",
+    ),
+    (
+        re.compile(
+            r"Codeforces\s*(?:Rating|Rank)?\s*[:\-]?\s*"
+            r"(\d{3,4}|\b(?:Expert|Specialist|Candidate Master|Master)\b)",
+            re.IGNORECASE,
+        ),
+        "Codeforces",
+    ),
+    (
+        re.compile(
+            r"(?:ICPC|ACM\s*ICPC)\s*[:\-]?\s*([A-Za-z0-9\s]+(?:Regional|World\s*Finalist|Rank\s*\d+))",
+            re.IGNORECASE,
+        ),
+        "ICPC",
+    ),
     (re.compile(r"\b(?:AIR|All India Rank)\s*[:\-]?\s*(\d+)", re.IGNORECASE), "AIR"),
 ]
 
 
 def find_contacts(text: str) -> Contact:
     """Extract email, phone, links, and candidate name deterministically."""
-    lines = [l.strip() for l in text.splitlines() if l.strip()]
+    lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
     raw_header = "\n".join(lines[:12]) if lines else ""
 
     # Email

@@ -8,6 +8,7 @@ and anti-hallucination gates for extracted skills.
 from __future__ import annotations
 
 from rapidfuzz import fuzz
+
 from talent_match.contract import Skill
 from talent_match.resume.models import RawSkill
 from talent_match.resume.taxonomy import canonicalize
@@ -87,7 +88,9 @@ def merge_skills(
                 skill_name=strongest.skill_name,
                 category_code=strongest.category_code,
                 canonical_id=canon_id,
-                evidence=strongest.evidence[:195] if strongest.evidence else f"Mentioned in {strongest.section}",
+                evidence=strongest.evidence[:195]
+                if strongest.evidence
+                else f"Mentioned in {strongest.section}",
                 confidence=conf,
                 level_hint=level_hint,
                 section=strongest.section,

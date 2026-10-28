@@ -7,14 +7,10 @@ Validates PII masking, Bloom gates (lv-1.0), grounding checks, and API routes.
 
 from __future__ import annotations
 
-import pytest
 from fastapi.testclient import TestClient
 
 from openradix_agents.api.main import app
-from talent_match.contract import ResumeExtraction
-from talent_match.resume.layout import detect_gutter, normalize
-from talent_match.resume.levels import infer_levels
-from talent_match.resume.models import Block, Line, Section
+from talent_match.resume.models import Line
 from talent_match.resume.patterns import find_contacts, find_scores, redact_pii
 from talent_match.resume.samples import get_sample_extraction
 from talent_match.resume.sections import classify_heading, segment
@@ -101,3 +97,110 @@ def test_fastapi_endpoints():
     infer_data = res_infer.json()
     assert "category_levels" in infer_data
     assert infer_data["latency_ms"] < 50
+
+
+def test_full_pipeline_parse_resume():
+    from talent_match.resume.pipeline import parse_resume
+
+    sample_cv = b"""
+    Ananya Rao
+    ananya.rao@jssaten.ac.in | +91 98765 43210
+    github.com/ananyarao | linkedin.com/in/ananyarao
+
+    EDUCATION
+    B.Tech in Computer Science, JSS Academy of Technical Education, 2026, 8.85 CGPA
+
+    EXPERIENCE
+    Software Engineering Intern at CloudScale Technologies
+    2025-05 to 2025-07
+    - Engineered scalable microservices in Go and Python processing 10k req/s with Kafka.
+    - Optimized PostgreSQL database queries reducing latency by 40%.
+    - Deployed Docker containers to AWS ECS with CI/CD pipeline.
+
+    PROJECTS
+    Distributed KV Store
+    - Implemented Raft consensus in Go with gRPC communication.
+    - Designed distributed cache using Redis and WebSockets.
+
+    SKILLS
+    Languages: Go, Python, TypeScript, Java, C++
+    Frameworks & Tools: React, Docker, Kubernetes, Kafka, Redis, PostgreSQL, Git, Linux
+    """
+    res = parse_resume(sample_cv, file_name="ananya_resume.txt", mime="text/plain")
+    assert res.candidate.name == "Ananya Rao"
+    assert len(res.skills) > 0
+    assert "SYSD" in res.category_levels
+    assert res.meta["grounding_rate"] > 0.5
+
+
+def test_taxonomy_and_merge():
+    from talent_match.resume.merge import merge_skills
+    from talent_match.resume.models import RawSkill
+    from talent_match.resume.taxonomy import canonicalize
+
+    assert canonicalize("python") == ("python", "COD")
+    assert canonicalize("kubernetes") == ("kubernetes", "CLOUD")
+    assert canonicalize("reactjs") == ("react", "SWE")
+    assert canonicalize("unknown-super-tech")[1] == "SWE"
+
+    raw = [
+        RawSkill(
+            skill_name="Go",
+            category_code="COD",
+            evidence="Built Go backend",
+            confidence="high",
+            section="experience",
+        ),
+        RawSkill(
+            skill_name="Go",
+            category_code="COD",
+            evidence="Go microservice",
+            confidence="medium",
+            section="projects",
+        ),
+        RawSkill(
+            skill_name="PostgreSQL",
+            category_code="SQL",
+            evidence="PostgreSQL queries",
+            confidence="high",
+            section="experience",
+        ),
+    ]
+    skills, rate, warnings = merge_skills(raw, "Built Go backend and PostgreSQL queries")
+    assert len(skills) == 2
+    assert rate >= 0.5
+
+
+def test_layout_normalize_and_gutter():
+    from talent_match.resume.layout import detect_gutter, extract_document_lines, normalize
+
+    assert normalize("hello   world\uf0a7") == "hello world"
+    lines = extract_document_lines(b"Line 1\nLine 2", "test.txt", "text/plain")
+    assert len(lines) == 2
+    assert detect_gutter([], page_w=595.0, body_top=50.0, body_bot=800.0) is None
+
+
+def test_router_json_and_upload():
+    import base64
+
+    # JSON endpoint with sample key
+    res = client.post("/extract/resume/json", json={"sample_key": "karthik"})
+    assert res.status_code == 200
+    assert res.json()["candidate"]["name"] == "Karthik Subramaniam"
+
+    # JSON endpoint with base64 content
+    b64 = base64.b64encode(
+        b"Ananya Rao\nananya@example.com\nEXPERIENCE\n- SDE Intern with Python"
+    ).decode()
+    res2 = client.post("/extract/resume/json", json={"content_b64": b64, "file_name": "test.txt"})
+    assert res2.status_code == 200
+
+    # Multipart upload endpoint
+    files = {"file": ("resume.txt", b"Ananya Rao\nananya@example.com\nSKILLS\nPython, Docker", "text/plain")}
+    res3 = client.post("/extract/resume", files=files)
+    assert res3.status_code == 200
+
+    # Default fallback when no file is uploaded
+    res_none = client.post("/extract/resume")
+    assert res_none.status_code == 200
+    assert res_none.json()["candidate"]["name"] == "Ananya Rao"

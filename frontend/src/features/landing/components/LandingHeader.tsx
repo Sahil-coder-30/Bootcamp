@@ -225,7 +225,11 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ currentUser, onUse
                   title={`Switch to ${theme === "dark" ? "Ice Slate Light Theme" : "Obsidian Dark Theme"}`}
                   className="p-2 rounded-xl border border-zinc-800 light-theme:border-[#c8dcf2] bg-zinc-900/60 light-theme:bg-white text-zinc-300 light-theme:text-[#384959] hover:border-[#88BDF2] transition-colors cursor-pointer"
                 >
-                  {isDark ? <Sun className="h-4 w-4 text-[#88BDF2]" /> : <Moon className="h-4 w-4 text-[#384959]" />}
+                  {isDark ? (
+                    <Sun className="h-4 w-4 text-[#88BDF2]" />
+                  ) : (
+                    <Moon className="h-4 w-4 text-[#384959]" />
+                  )}
                 </button>
 
                 <Button

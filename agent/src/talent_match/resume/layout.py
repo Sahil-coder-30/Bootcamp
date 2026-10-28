@@ -9,9 +9,10 @@ from __future__ import annotations
 
 import io
 import unicodedata
-from typing import Any
-import pymupdf as fitz
+
 import docx  # python-docx
+import pymupdf as fitz
+
 from talent_match.resume.models import Block, Line
 
 
@@ -26,6 +27,8 @@ def normalize(text: str) -> str:
     # Standardize bullet symbols
     for b in ("•", "▪", "●", "➢", "◦", "–", "—", "►", "*"):
         t = t.replace(b, "- ")
+    import re
+    t = re.sub(r"[ \t]+", " ", t)
     return t.strip()
 
 
@@ -85,24 +88,24 @@ def strip_running_lines(pages: list[list[Line]]) -> list[Line]:
 
     # Count occurrences of normalized text near top/bottom 7%
     repeats: set[str] = set()
-    first_page_top = {normalize(l.text) for l in pages[0][:4]}
-    first_page_bot = {normalize(l.text) for l in pages[0][-3:]}
+    first_page_top = {normalize(ln.text) for ln in pages[0][:4]}
+    first_page_bot = {normalize(ln.text) for ln in pages[0][-3:]}
 
     for p in pages[1:]:
-        for l in p[:4]:
-            norm = normalize(l.text)
+        for ln in p[:4]:
+            norm = normalize(ln.text)
             if norm and norm in first_page_top:
                 repeats.add(norm)
-        for l in p[-3:]:
-            norm = normalize(l.text)
+        for ln in p[-3:]:
+            norm = normalize(ln.text)
             if norm and norm in first_page_bot:
                 repeats.add(norm)
 
     clean: list[Line] = []
     for p in pages:
-        for l in p:
-            if normalize(l.text) not in repeats:
-                clean.append(l)
+        for ln in p:
+            if normalize(ln.text) not in repeats:
+                clean.append(ln)
     return clean
 
 
@@ -123,12 +126,12 @@ def extract_pdf_lines(data: bytes) -> list[Line]:
             if b.get("type") != 0:  # skip image blocks
                 continue
             lines: list[Line] = []
-            for l in b.get("lines", []):
+            for ln in b.get("lines", []):
                 text_parts: list[str] = []
                 max_size = 10.0
                 is_bold = False
 
-                for span in l.get("spans", []):
+                for span in ln.get("spans", []):
                     span_text = span.get("text", "")
                     if span_text:
                         text_parts.append(span_text)
@@ -139,7 +142,7 @@ def extract_pdf_lines(data: bytes) -> list[Line]:
 
                 full_line = "".join(text_parts).strip()
                 if full_line:
-                    bbox = l.get("bbox", (0, 0, 0, 0))
+                    bbox = ln.get("bbox", (0, 0, 0, 0))
                     lines.append(
                         Line(
                             text=full_line,
@@ -177,7 +180,11 @@ def extract_pdf_lines(data: bytes) -> list[Line]:
             top_blocks = [b for b in page_blocks if b.y1 < body_top or b.width >= 0.70 * page_w]
             left_blocks = [b for b in page_blocks if b not in top_blocks and b.x1 <= gutter_x]
             right_blocks = [b for b in page_blocks if b not in top_blocks and b.x0 >= gutter_x]
-            mid_blocks = [b for b in page_blocks if b not in top_blocks and b not in left_blocks and b not in right_blocks]
+            mid_blocks = [
+                b
+                for b in page_blocks
+                if b not in top_blocks and b not in left_blocks and b not in right_blocks
+            ]
 
             top_blocks.sort(key=lambda b: b.y0)
             left_blocks.sort(key=lambda b: b.y0)
@@ -240,10 +247,23 @@ def extract_docx_lines(data: bytes) -> list[Line]:
 
 
 def extract_document_lines(data: bytes, file_name: str, mime: str = "") -> list[Line]:
-    """Master entry point for extracting reading-ordered lines from PDF or DOCX."""
+    """Master entry point for extracting reading-ordered lines from PDF, DOCX, or text."""
     fname = file_name.lower()
     if fname.endswith(".docx") or "wordprocessingml" in mime:
         return extract_docx_lines(data)
+    elif fname.endswith(".txt") or fname.endswith(".md") or "text/plain" in mime:
+        raw_text = data.decode("utf-8", errors="ignore")
+        return [
+            Line(
+                text=line.strip(),
+                page=1,
+                font_size=12.0 if line.strip().isupper() else 10.0,
+                is_bold=line.strip().isupper(),
+                is_caps=line.strip().isupper() and len(line.strip()) > 3,
+            )
+            for line in raw_text.splitlines()
+            if line.strip()
+        ]
     else:
         # Default to PDF
         return extract_pdf_lines(data)

@@ -7,58 +7,118 @@ Section segmentation using heading style candidates and rapidfuzz fuzzy lexicon 
 from __future__ import annotations
 
 import re
+
 from rapidfuzz import fuzz
+
 from talent_match.resume.models import Line, Section, SectionName
 
 HEADING_LEXICON: dict[SectionName, tuple[str, ...]] = {
     "summary": (
-        "summary", "profile", "professional summary", "career objective",
-        "objective", "about me", "executive summary", "overview",
+        "summary",
+        "profile",
+        "professional summary",
+        "career objective",
+        "objective",
+        "about me",
+        "executive summary",
+        "overview",
     ),
     "education": (
-        "education", "academic background", "academics", "qualifications",
-        "scholastic achievements", "educational qualifications", "academic credentials",
+        "education",
+        "academic background",
+        "academics",
+        "qualifications",
+        "scholastic achievements",
+        "educational qualifications",
+        "academic credentials",
     ),
     "experience": (
-        "experience", "work experience", "internships", "internship",
-        "professional experience", "employment", "industry experience",
-        "work history", "practical experience",
+        "experience",
+        "work experience",
+        "internships",
+        "internship",
+        "professional experience",
+        "employment",
+        "industry experience",
+        "work history",
+        "practical experience",
     ),
     "projects": (
-        "projects", "academic projects", "personal projects", "key projects",
-        "technical projects", "selected projects", "engineering projects",
+        "projects",
+        "academic projects",
+        "personal projects",
+        "key projects",
+        "technical projects",
+        "selected projects",
+        "engineering projects",
     ),
     "skills": (
-        "skills", "technical skills", "tech stack", "tools and technologies",
-        "core competencies", "skill set", "technical proficiencies",
-        "programming skills", "technologies", "key skills",
+        "skills",
+        "technical skills",
+        "tech stack",
+        "tools and technologies",
+        "core competencies",
+        "skill set",
+        "technical proficiencies",
+        "programming skills",
+        "technologies",
+        "key skills",
     ),
     "certifications": (
-        "certifications", "certificates", "licenses", "courses",
-        "online courses", "credentials", "professional certifications",
+        "certifications",
+        "certificates",
+        "licenses",
+        "courses",
+        "online courses",
+        "credentials",
+        "professional certifications",
     ),
     "hackathons": (
-        "hackathons", "competitions", "coding competitions", "contests",
-        "hackathon participations", "competitive coding",
+        "hackathons",
+        "competitions",
+        "coding competitions",
+        "contests",
+        "hackathon participations",
+        "competitive coding",
     ),
     "achievements": (
-        "achievements", "awards", "honors", "accomplishments",
-        "scholarships", "honours and awards", "academic achievements",
+        "achievements",
+        "awards",
+        "honors",
+        "accomplishments",
+        "scholarships",
+        "honours and awards",
+        "academic achievements",
     ),
     "positions": (
-        "positions of responsibility", "leadership", "extracurricular",
-        "volunteering", "activities", "extra curricular activities",
+        "positions of responsibility",
+        "leadership",
+        "extracurricular",
+        "volunteering",
+        "activities",
+        "extra curricular activities",
         "co curricular",
     ),
     "publications": (
-        "publications", "research", "papers", "conference proceedings",
-        "journal articles", "patents",
+        "publications",
+        "research",
+        "papers",
+        "conference proceedings",
+        "journal articles",
+        "patents",
     ),
     "coursework": (
-        "relevant coursework", "coursework", "subjects", "core subjects",
+        "relevant coursework",
+        "coursework",
+        "subjects",
+        "core subjects",
     ),
     "other": (
-        "languages", "interests", "hobbies", "declaration", "references",
+        "languages",
+        "interests",
+        "hobbies",
+        "declaration",
+        "references",
     ),
 }
 
@@ -117,7 +177,7 @@ def segment(lines: list[Line]) -> list[Section]:
         return []
 
     # Calculate median body font size
-    sizes = sorted(l.font_size for l in lines)
+    sizes = sorted(ln.font_size for ln in lines)
     median_size = sizes[len(sizes) // 2] if sizes else 10.0
 
     sections: list[Section] = []
