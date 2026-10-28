@@ -8,7 +8,14 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { ResumeExtraction } from "../service/resume.api";
 
 export type ResumeTab =
-  "overview" | "experience" | "projects" | "skills" | "education" | "radar" | "invariance";
+  | "overview"
+  | "experience"
+  | "projects"
+  | "skills"
+  | "education"
+  | "hackathons"
+  | "radar"
+  | "invariance";
 
 interface ResumeState {
   currentExtraction: ResumeExtraction | null;

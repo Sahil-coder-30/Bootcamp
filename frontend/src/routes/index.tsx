@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import LandingPage from "@/features/landing/components/LandingPage";
-import CompanyPickerPage from "@/features/companies/components/CompanyPickerPage";
+import CandidateDashboard from "@/features/dashboard/components/CandidateDashboard";
 import { APP_NAME, COLLEGE_SHORT } from "@/lib/college";
 import { getStoredUser, subscribeToAuthChanges } from "@/lib/auth";
 
@@ -41,10 +41,10 @@ function RootIndexComponent() {
     });
   }, []);
 
-  // Option B: If logged in, show the original 115-Company Picker Page directly.
-  // If logged out, show the clean, crisp, professional Landing Page.
+  // Post-login UI: Shows the personalized Candidate Intelligence Dashboard (Option C)
+  // When logged out: Shows the high-impact institutional Landing Page
   if (isLoggedIn) {
-    return <CompanyPickerPage />;
+    return <CandidateDashboard />;
   }
 
   return <LandingPage />;

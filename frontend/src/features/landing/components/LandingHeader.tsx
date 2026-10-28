@@ -11,10 +11,13 @@ import {
   Building2,
   FileText,
   GraduationCap,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { APP_NAME } from "@/lib/college";
 import { Button } from "@/components/ui/button";
 import { AuthModal, type CandidateUser } from "./AuthModal";
+import { useTheme } from "@/hooks/useTheme";
 
 interface LandingHeaderProps {
   currentUser: CandidateUser | null;
@@ -22,6 +25,7 @@ interface LandingHeaderProps {
 }
 
 export const LandingHeader: React.FC<LandingHeaderProps> = ({ currentUser, onUserChange }) => {
+  const { theme, toggleTheme, isDark } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
@@ -216,11 +220,19 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ currentUser, onUse
               </div>
             ) : (
               <div className="flex items-center gap-2">
+                <button
+                  onClick={toggleTheme}
+                  title={`Switch to ${theme === "dark" ? "Ice Slate Light Theme" : "Obsidian Dark Theme"}`}
+                  className="p-2 rounded-xl border border-zinc-800 light-theme:border-[#c8dcf2] bg-zinc-900/60 light-theme:bg-white text-zinc-300 light-theme:text-[#384959] hover:border-[#88BDF2] transition-colors cursor-pointer"
+                >
+                  {isDark ? <Sun className="h-4 w-4 text-[#88BDF2]" /> : <Moon className="h-4 w-4 text-[#384959]" />}
+                </button>
+
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => openAuth("login")}
-                  className="h-8.5 rounded-lg text-xs font-semibold text-zinc-300 hover:bg-zinc-800/80 hover:text-white cursor-pointer"
+                  className="h-8.5 rounded-lg text-xs font-semibold text-zinc-300 light-theme:text-[#384959] hover:bg-zinc-800/80 light-theme:hover:bg-[#BDDDFC]/50 hover:text-white light-theme:hover:text-[#384959] cursor-pointer"
                 >
                   Sign In
                 </Button>

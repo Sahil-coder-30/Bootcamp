@@ -1,5 +1,6 @@
 import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useTheme } from "@/hooks/useTheme";
 import {
   ArrowLeft,
   Building2,
@@ -45,29 +46,8 @@ const NAV = [
   { title: "Resume Parser", url: "/resume", icon: FileText },
 ] as const;
 
-// `.dark` drives the Tailwind/shadcn palette, `.light-theme` drives the SCSS tokens in src/styles.
-function applyTheme(dark: boolean) {
-  document.documentElement.classList.toggle("dark", dark);
-  document.documentElement.classList.toggle("light-theme", !dark);
-}
-
 function ThemeToggle() {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    const isDarkStored =
-      localStorage.getItem("theme") === "dark" ||
-      (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches);
-    setIsDark(isDarkStored);
-    applyTheme(isDarkStored);
-  }, []);
-
-  const toggleTheme = () => {
-    const nextDark = !isDark;
-    setIsDark(nextDark);
-    applyTheme(nextDark);
-    localStorage.setItem("theme", nextDark ? "dark" : "light");
-  };
+  const { theme, toggleTheme, isDark } = useTheme();
 
   return (
     <Button
@@ -77,7 +57,7 @@ function ThemeToggle() {
       aria-label="Toggle theme"
       className="h-8 w-8 rounded-lg text-muted-foreground transition-colors hover:text-foreground"
     >
-      {isDark ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4" />}
+      {isDark ? <Sun className="h-4 w-4 text-primary" /> : <Moon className="h-4 w-4 text-primary" />}
     </Button>
   );
 }
