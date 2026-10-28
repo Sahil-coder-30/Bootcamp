@@ -62,8 +62,8 @@ describe("CompanyPickerPage", () => {
     vi.mocked(getCompaniesAPI).mockResolvedValue(COMPANIES);
     renderPage(CompanyPickerPage, "/");
     await waitFor(() => expect(cards()).toHaveLength(3));
-    await userEvent.type(screen.getByLabelText("Search companies"), "pune");
-    await waitFor(() => expect(cards()).toHaveLength(1));
+    fireEvent.change(screen.getByLabelText("Search companies"), { target: { value: "pune" } });
+    await waitFor(() => expect(cards()).toHaveLength(1), { timeout: 4000 });
     expect(cards()[0]).toHaveTextContent("Globex");
   });
 

@@ -101,7 +101,7 @@ export const TopCompanyMatchesCard: React.FC = () => {
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-sm text-foreground">{company.name}</span>
-                    <span className="rounded-full px-2 py-0.5 text-[10px] font-bold bg-[#4a154b] dark:bg-[#4a183d] text-white dark:text-[#f0d5eb] border border-[#3d113e] dark:border-[#5c234d]">
+                    <span className="rounded-full px-2 py-0.5 text-[10px] font-bold bg-purple-500/10 text-purple-400 border border-purple-500/30">
                       {company.tier}
                     </span>
                   </div>

@@ -272,34 +272,34 @@ export default function CompanyPickerPage() {
   ).length;
 
   return (
-    <div className="min-h-screen bg-[#050506] text-zinc-100 selection:bg-zinc-800 selection:text-white">
+    <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-white">
       {/* 1. Institutional Top Status Bar */}
-      <div className="border-b border-zinc-800/80 bg-[#09090b] py-2">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 text-xs font-medium text-zinc-400 sm:px-6">
+      <div className="border-b border-border bg-card-sub py-2">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 text-xs font-medium text-muted-foreground sm:px-6">
           <div className="flex items-center gap-2.5">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
             </span>
-            <span className="font-semibold text-zinc-200">{COLLEGE_SHORT}</span>
+            <span className="font-semibold text-foreground">{COLLEGE_SHORT}</span>
             <span className="hidden sm:inline">·</span>
-            <span className="hidden sm:inline text-zinc-400">
+            <span className="hidden sm:inline text-muted-foreground">
               Department of Training & Placement
             </span>
             <span className="hidden md:inline">·</span>
-            <span className="hidden md:inline text-zinc-500">Autonomous Institute</span>
+            <span className="hidden md:inline text-muted-foreground/80">Autonomous Institute</span>
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-zinc-700/60 bg-zinc-900 px-2.5 py-0.5 text-[11px] font-medium text-zinc-300">
-              <ShieldCheck className="h-3 w-3 text-zinc-400" />
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground">
+              <ShieldCheck className="h-3 w-3 text-emerald-500" />
               Academic Drive 2025–26
             </span>
             <a
               href="https://jssaten.ac.in"
               target="_blank"
               rel="noreferrer"
-              className="hidden items-center gap-1 text-[11px] text-zinc-400 transition-colors hover:text-white sm:flex"
+              className="hidden items-center gap-1 text-[11px] text-muted-foreground transition-colors hover:text-foreground sm:flex"
             >
               jssaten.ac.in
               <ExternalLink className="h-2.5 w-2.5" />
@@ -309,46 +309,53 @@ export default function CompanyPickerPage() {
       </div>
 
       {/* 2. Executive Navigation Header */}
-      <nav className="sticky top-0 z-40 border-b border-zinc-800/80 bg-[#050506]/90 backdrop-blur-md">
+      <nav className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-700 bg-gradient-to-b from-zinc-800 to-black font-heading text-sm font-bold text-white shadow-md">
+          <Link to="/" className="flex items-center gap-3 focus:outline-none group">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-indigo-700 font-heading text-sm font-black text-white shadow-md shadow-primary/20">
               PI
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-heading text-lg font-bold tracking-tight text-white">
+                <span className="font-heading text-lg font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
                   {APP_NAME}
                 </span>
-                <span className="rounded-full border border-zinc-700/80 bg-zinc-900 px-2 py-0.5 text-[10px] font-semibold text-zinc-300">
-                  CAMPUS PRO
+                <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                  115 RECRUITERS
                 </span>
               </div>
-              <p className="text-[11px] text-zinc-400">JSSATEN Placement Intelligence Hub</p>
+              <p className="text-[11px] text-muted-foreground">
+                {COLLEGE_SHORT} Placement Directory
+              </p>
             </div>
-          </div>
+          </Link>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <a
-              href="#directory"
-              className="hidden rounded-xl border border-zinc-800 bg-zinc-900/60 px-3.5 py-2 text-xs font-semibold text-zinc-300 transition-colors hover:border-zinc-700 hover:text-white sm:inline-flex items-center gap-1.5"
-            >
-              <Building2 className="h-3.5 w-3.5 text-zinc-400" />
-              Recruiters ({companies.length})
-            </a>
             <Link
-              to="/company/skills"
-              className="hidden rounded-xl border border-zinc-800 bg-zinc-900/60 px-3.5 py-2 text-xs font-semibold text-zinc-300 transition-colors hover:border-zinc-700 hover:text-white sm:inline-flex items-center gap-1.5"
+              to="/"
+              className="hidden rounded-xl border border-border bg-card px-3.5 py-2 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground hover:bg-muted sm:inline-flex items-center gap-1.5"
             >
-              <GraduationCap className="h-3.5 w-3.5 text-zinc-400" />
-              Skill Ladders
+              Home
+            </Link>
+            <Link
+              to="/dashboard"
+              className="rounded-xl border border-primary/30 bg-primary/10 px-3.5 py-2 text-xs font-semibold text-primary transition-colors hover:bg-primary/20 inline-flex items-center gap-1.5 shadow-2xs"
+            >
+              <Briefcase className="h-3.5 w-3.5 text-primary" />
+              Candidate Dashboard
             </Link>
             <Link
               to="/talent-check"
-              className="rounded-xl border border-emerald-500/30 bg-emerald-950/40 px-3.5 py-2 text-xs font-semibold text-emerald-300 transition-colors hover:bg-emerald-900/50 hover:text-emerald-100 inline-flex items-center gap-1.5 shadow-sm"
+              className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-2 text-xs font-semibold text-emerald-400 transition-colors hover:bg-emerald-500/20 inline-flex items-center gap-1.5 shadow-2xs"
             >
               <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
               Talent Check
+            </Link>
+            <Link
+              to="/resume"
+              className="hidden md:inline-flex rounded-xl border border-border bg-card px-3.5 py-2 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground hover:bg-muted items-center gap-1.5"
+            >
+              Resume ATS
             </Link>
           </div>
         </div>

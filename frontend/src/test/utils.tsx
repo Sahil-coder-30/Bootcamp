@@ -44,11 +44,16 @@ export function withStore(store: TestStore) {
 
 const APP_PATHS = [
   "/",
+  "/companies",
   "/company/intelligence",
   "/company/skills",
+  "/dashboard",
+  "/login",
   "/profile",
   "/profile/new",
   "/profile/$profileId",
+  "/resume",
+  "/talent-check",
 ];
 
 /** Renders `Page` at `path`; every other app path renders a "at <path>" marker. */

@@ -69,15 +69,51 @@ export const TalentCheckPage: React.FC = () => {
   const companyObj = COMPANIES.find((c) => c.id === selectedCompany);
 
   return (
-    <div className="min-h-screen bg-[#07080B] text-slate-100 p-4 sm:p-8 space-y-8">
+    <div className="min-h-screen bg-background text-foreground p-4 sm:p-8 space-y-6 selection:bg-primary selection:text-white">
+      {/* Top Breadcrumb Header */}
+      <div className="flex items-center justify-between border-b border-border pb-4">
+        <div className="flex items-center gap-3">
+          <a
+            href="/"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Home
+          </a>
+          <span className="text-muted-foreground/40">/</span>
+          <a
+            href="/dashboard"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary transition-colors hover:underline"
+          >
+            Dashboard
+          </a>
+          <span className="text-muted-foreground/40">/</span>
+          <span className="text-xs font-semibold text-foreground">Talent Check</span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <a
+            href="/companies"
+            className="rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground"
+          >
+            115 Companies
+          </a>
+          <a
+            href="/resume"
+            className="rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground"
+          >
+            Resume ATS
+          </a>
+        </div>
+      </div>
+
       {/* Top Navigation & Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800/80 pb-6">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-6">
         <div>
           <div className="flex items-center gap-2.5">
-            <span className="w-8 h-8 rounded-lg bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 font-bold text-sm">
-              R4
+            <span className="w-8 h-8 rounded-lg bg-primary/20 border border-primary/30 flex items-center justify-center text-primary font-bold text-sm">
+              TC
             </span>
-            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight">
               Talent Check
             </h1>
           </div>
