@@ -50,6 +50,12 @@ spec:
             secretKeyRef:
               name: database
               key: SUPABASE_SERVICE_ROLE_KEY
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: auth-secret
+              key: JWT_SECRET
+              optional: true
         - name: AGENT_URL
           value: "http://agent-service"
         - name: CORS_ORIGINS

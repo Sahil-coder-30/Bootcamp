@@ -28,6 +28,7 @@ jobs:
       frontend: ${{ steps.filter.outputs.frontend }}
       backend: ${{ steps.filter.outputs.backend }}
       agent: ${{ steps.filter.outputs.agent }}
+      auth: ${{ steps.filter.outputs.auth }}
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
@@ -45,6 +46,9 @@ jobs:
             agent:
               - *shared
               - agent/**
+            auth:
+              - *shared
+              - auth/**
 
   frontend:
     name: Frontend (lint, build, test)
@@ -138,6 +142,51 @@ jobs:
           path: agent/coverage.xml
           if-no-files-found: ignore
 
+  auth:
+    name: Auth (typecheck, build, test)
+    needs: changes
+    if: needs.changes.outputs.auth == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: auth
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: authtest
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: auth/package-lock.json
+      - run: npm ci
+      - name: Typecheck (src and tests)
+        run: npm run typecheck
+      - name: Build
+        run: npm run build
+      - name: Test with coverage (Google is faked; the migration and store run on the Postgres service)
+        env:
+          TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/authtest
+        run: npm run test:coverage
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: auth-coverage
+          path: auth/coverage/lcov.info
+          if-no-files-found: ignore
+
   secrets:
     name: Secret scan
     runs-on: ubuntu-latest
@@ -152,7 +201,7 @@ jobs:
   ci-passed:
     name: CI passed
     if: always()
-    needs: [frontend, backend, agent, secrets]
+    needs: [frontend, backend, agent, auth, secrets]
     runs-on: ubuntu-latest
     steps:
       - name: Fail if any job failed or was cancelled
