@@ -39,3 +39,13 @@ if (typeof window.localStorage?.setItem !== "function") {
 
 // jsdom has no layout, so it does not implement scrollIntoView.
 if (!Element.prototype.scrollIntoView) Element.prototype.scrollIntoView = () => {};
+
+// jsdom has no ResizeObserver; radix (slider, tooltip) measures elements with it.
+if (!("ResizeObserver" in globalThis)) {
+  class ResizeObserverStub {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
+  Object.defineProperty(globalThis, "ResizeObserver", { configurable: true, value: ResizeObserverStub });
+}

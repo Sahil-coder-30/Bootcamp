@@ -10,6 +10,7 @@
     "test": "vitest run",
     "seed:sql": "tsx scripts/generate-seed-sql.ts",
     "seed:db": "tsx scripts/populate-db.ts",
+    "seed:profiles": "tsx scripts/seed-profiles.ts",
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
@@ -17,7 +18,8 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
-    "morgan": "^1.12.1"
+    "morgan": "^1.12.1",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

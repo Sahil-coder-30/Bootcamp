@@ -4,6 +4,8 @@ import path from "node:path";
 
 export default defineConfig({
   plugins: [react()],
+  // The profile tests read the shared fixtures in ../docs and the seed profiles in ../backend.
+  server: { fs: { allow: [path.resolve(__dirname, "..")] } },
   test: {
     environment: "jsdom",
     globals: true,
