@@ -338,10 +338,17 @@ export default function CompanyPickerPage() {
             </a>
             <Link
               to="/company/skills"
-              className="rounded-xl border border-zinc-700 bg-zinc-100 px-3.5 py-2 text-xs font-semibold text-zinc-950 transition-colors hover:bg-white inline-flex items-center gap-1.5 shadow-sm"
+              className="hidden rounded-xl border border-zinc-800 bg-zinc-900/60 px-3.5 py-2 text-xs font-semibold text-zinc-300 transition-colors hover:border-zinc-700 hover:text-white sm:inline-flex items-center gap-1.5"
             >
-              <GraduationCap className="h-3.5 w-3.5" />
+              <GraduationCap className="h-3.5 w-3.5 text-zinc-400" />
               Skill Ladders
+            </Link>
+            <Link
+              to="/talent-check"
+              className="rounded-xl border border-emerald-500/30 bg-emerald-950/40 px-3.5 py-2 text-xs font-semibold text-emerald-300 transition-colors hover:bg-emerald-900/50 hover:text-emerald-100 inline-flex items-center gap-1.5 shadow-sm"
+            >
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+              Talent Check
             </Link>
           </div>
         </div>
@@ -393,7 +400,14 @@ export default function CompanyPickerPage() {
                 className="inline-flex items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900/80 px-4 py-2.5 text-xs font-semibold text-zinc-200 shadow-sm transition-colors hover:border-zinc-700 hover:text-white"
               >
                 <Layers className="h-4 w-4 text-zinc-400" />
-                View Skill Matrix & Taxonomy
+                View Skill Matrix
+              </Link>
+              <Link
+                to="/talent-check"
+                className="inline-flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-950/40 px-4 py-2.5 text-xs font-semibold text-emerald-300 shadow-sm transition-colors hover:bg-emerald-900/50 hover:text-emerald-100"
+              >
+                <ShieldCheck className="h-4 w-4 text-emerald-400" />
+                Talent Check & Readiness
               </Link>
             </div>
           </div>
@@ -857,6 +871,14 @@ export default function CompanyPickerPage() {
                 <li>
                   <Link to="/company/intelligence" className="transition-colors hover:text-white">
                     Corporate Dossiers
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/talent-check"
+                    className="transition-colors hover:text-white text-emerald-400"
+                  >
+                    Talent Check & Readiness Benchmarking
                   </Link>
                 </li>
               </ul>

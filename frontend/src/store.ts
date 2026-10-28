@@ -4,12 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import companiesReducer from "./features/companies/slice/companies.slice";
 import intelligenceReducer from "./features/intelligence/slice/intelligence.slice";
 import skillsReducer from "./features/skills/slice/skills.slice";
+import talentCheckReducer from "./features/talentCheck/slice/talentCheck.slice";
 
 export const store = configureStore({
   reducer: {
     companies: companiesReducer,
     intelligence: intelligenceReducer,
     skills: skillsReducer,
+    talentCheck: talentCheckReducer,
   },
 });
 

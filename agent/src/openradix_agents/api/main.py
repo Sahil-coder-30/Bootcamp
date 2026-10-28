@@ -60,6 +60,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     for module in (health, pipeline, jobs, artifacts):
         app.include_router(module.router)
+
+    try:
+        from talent_match.talent_check.router import router as talent_check_router
+        app.include_router(talent_check_router)
+    except ImportError as e:
+        logger.warning(f"Could not import talent_check router: {e}")
+
     return app
 
 

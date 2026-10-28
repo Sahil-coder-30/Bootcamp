@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CompanyRouteImport } from './routes/company'
+import { Route as TalentCheckRouteImport } from './routes/talent-check'
 import { Route as CompanyIndexRouteImport } from './routes/company.index'
 import { Route as CompanyIntelligenceRouteImport } from './routes/company.intelligence'
 import { Route as CompanySkillsRouteImport } from './routes/company.skills'
@@ -23,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
 const CompanyRoute = CompanyRouteImport.update({
   id: '/company',
   path: '/company',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TalentCheckRoute = TalentCheckRouteImport.update({
+  id: '/talent-check',
+  path: '/talent-check',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CompanyIndexRoute = CompanyIndexRouteImport.update({
@@ -44,12 +50,14 @@ const CompanySkillsRoute = CompanySkillsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/company': typeof CompanyRouteWithChildren
+  '/talent-check': typeof TalentCheckRoute
   '/company/intelligence': typeof CompanyIntelligenceRoute
   '/company/skills': typeof CompanySkillsRoute
   '/company/': typeof CompanyIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/talent-check': typeof TalentCheckRoute
   '/company/intelligence': typeof CompanyIntelligenceRoute
   '/company/skills': typeof CompanySkillsRoute
   '/company': typeof CompanyIndexRoute
@@ -58,6 +66,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/company': typeof CompanyRouteWithChildren
+  '/talent-check': typeof TalentCheckRoute
   '/company/intelligence': typeof CompanyIntelligenceRoute
   '/company/skills': typeof CompanySkillsRoute
   '/company/': typeof CompanyIndexRoute
@@ -65,13 +74,24 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/company' | '/company/intelligence' | '/company/skills' | '/company/'
+    | '/'
+    | '/company'
+    | '/talent-check'
+    | '/company/intelligence'
+    | '/company/skills'
+    | '/company/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/company/intelligence' | '/company/skills' | '/company'
+  to:
+    | '/'
+    | '/talent-check'
+    | '/company/intelligence'
+    | '/company/skills'
+    | '/company'
   id:
     | '__root__'
     | '/'
     | '/company'
+    | '/talent-check'
     | '/company/intelligence'
     | '/company/skills'
     | '/company/'
@@ -80,6 +100,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CompanyRoute: typeof CompanyRouteWithChildren
+  TalentCheckRoute: typeof TalentCheckRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -96,6 +117,13 @@ declare module '@tanstack/react-router' {
       path: '/company'
       fullPath: '/company'
       preLoaderRoute: typeof CompanyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/talent-check': {
+      id: '/talent-check'
+      path: '/talent-check'
+      fullPath: '/talent-check'
+      preLoaderRoute: typeof TalentCheckRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/company/': {
@@ -140,6 +168,7 @@ const CompanyRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CompanyRoute: CompanyRouteWithChildren,
+  TalentCheckRoute: TalentCheckRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

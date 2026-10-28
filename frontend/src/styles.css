@@ -160,20 +160,34 @@
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-heading);
     letter-spacing: -0.015em;
   }
 }
 
 @keyframes glow {
-  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 color-mix(in oklab, var(--primary) 40%, transparent); }
-  50% { opacity: 0.85; box-shadow: 0 0 0 4px color-mix(in oklab, var(--primary) 0%, transparent); }
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--primary) 40%, transparent);
+  }
+  50% {
+    opacity: 0.85;
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--primary) 0%, transparent);
+  }
 }
 
 @utility no-scrollbar {
   scrollbar-width: none;
-  &::-webkit-scrollbar { display: none; }
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @utility glass-card {
