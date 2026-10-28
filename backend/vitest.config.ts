@@ -4,6 +4,8 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["test/**/*.test.ts"],
+    // Profile routes must never touch a real database during tests, even with a local .env.
+    env: { PROFILES_STORE: "memory", EXTRACTIONS_SOURCE: "fixtures" },
     coverage: {
       provider: "v8",
       include: ["src/**/*.ts"],

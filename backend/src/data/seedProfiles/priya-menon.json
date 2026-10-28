@@ -1,0 +1,181 @@
+{
+  "id": "3a000000-0000-4000-8000-000000000003",
+  "version": 1,
+  "name": "Priya Menon",
+  "email": "priya.menon@example.com",
+  "education": "BCA, PQR College of Computer Applications, 2026, 78%",
+  "skills": [
+    {
+      "skill_name": "Customer Communication",
+      "category_code": "COMM",
+      "evidence": "Handled escalations and wrote KB articles at Northwind",
+      "confidence": "high",
+      "section": "experience",
+      "canonical_id": "customer-communication"
+    },
+    {
+      "skill_name": "SQL",
+      "category_code": "SQL",
+      "evidence": "Queried ticket data for weekly reports",
+      "confidence": "medium",
+      "section": "experience",
+      "canonical_id": "sql"
+    },
+    {
+      "skill_name": "Python",
+      "category_code": "COD",
+      "evidence": "Built the Helpdesk Ticket Tracker in Django",
+      "confidence": "medium",
+      "section": "projects",
+      "canonical_id": "python"
+    },
+    {
+      "skill_name": "Operating Systems",
+      "category_code": "OS",
+      "evidence": "Windows and Linux troubleshooting during the internship",
+      "confidence": "medium",
+      "section": "experience",
+      "canonical_id": "operating-systems"
+    },
+    {
+      "skill_name": "Networking Basics",
+      "category_code": "NETW",
+      "evidence": "Diagnosed VPN and DNS issues for users",
+      "confidence": "medium",
+      "section": "experience",
+      "canonical_id": "networking-basics"
+    }
+  ],
+  "hackathons": [],
+  "internships": [
+    {
+      "title": "IT Support Intern",
+      "org": "Northwind Services",
+      "start": "2025-06",
+      "end": "2025-07",
+      "highlights": [
+        "Resolved 120+ L1 tickets with a 95% satisfaction score",
+        "Wrote knowledge-base articles for the help desk"
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "name": "ITIL 4 Foundation",
+      "issuer": "Axelos",
+      "year": "2025"
+    }
+  ],
+  "preferred_roles": [
+    "Application Support Analyst"
+  ],
+  "cv_file": null,
+  "phone": "+91 99887 66554",
+  "education_details": [
+    {
+      "degree": "BCA",
+      "institution": "PQR College of Computer Applications",
+      "year": "2026",
+      "score": "78%"
+    }
+  ],
+  "projects": [
+    {
+      "name": "Helpdesk Ticket Tracker",
+      "description": "Small Django app to log and triage support tickets",
+      "skills": [
+        "Python",
+        "SQL"
+      ]
+    }
+  ],
+  "skill_levels": {
+    "COD": {
+      "level": 3,
+      "source": "resume_inferred",
+      "confidence": "medium",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 3
+    },
+    "DSA": {
+      "level": 3,
+      "source": "resume_inferred",
+      "confidence": "medium",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 3
+    },
+    "APTI": {
+      "level": 5,
+      "source": "resume_inferred",
+      "confidence": "high",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 5
+    },
+    "COMM": {
+      "level": 7,
+      "source": "resume_inferred",
+      "confidence": "high",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 7
+    },
+    "OOD": {
+      "level": 3,
+      "source": "resume_inferred",
+      "confidence": "medium",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 3
+    },
+    "AI": {
+      "level": 2,
+      "source": "resume_inferred",
+      "confidence": "low",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 2
+    },
+    "SQL": {
+      "level": 5,
+      "source": "resume_inferred",
+      "confidence": "high",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 5
+    },
+    "SYSD": {
+      "level": 2,
+      "source": "resume_inferred",
+      "confidence": "low",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 2
+    },
+    "CLOUD": {
+      "level": 3,
+      "source": "resume_inferred",
+      "confidence": "medium",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 3
+    },
+    "SWE": {
+      "level": 3,
+      "source": "resume_inferred",
+      "confidence": "medium",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 3
+    },
+    "NETW": {
+      "level": 4,
+      "source": "resume_inferred",
+      "confidence": "medium",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 4
+    },
+    "OS": {
+      "level": 5,
+      "source": "resume_inferred",
+      "confidence": "high",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 5
+    }
+  },
+  "resume_extraction_id": null,
+  "schema_version": "1.0",
+  "updated_at": "2026-10-27T10:00:00.000Z"
+}

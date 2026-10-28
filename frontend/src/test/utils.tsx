@@ -16,6 +16,7 @@ import {
 
 import companiesReducer from "@/features/companies/slice/companies.slice";
 import intelligenceReducer from "@/features/intelligence/slice/intelligence.slice";
+import profileReducer from "@/features/profile/slice/profile.slice";
 import skillsReducer from "@/features/skills/slice/skills.slice";
 import talentCheckReducer from "@/features/talentCheck/slice/talentCheck.slice";
 import resumeReducer from "@/features/resume/slice/resume.slice";
@@ -26,6 +27,7 @@ export const makeStore = () =>
     reducer: {
       companies: companiesReducer,
       intelligence: intelligenceReducer,
+      profile: profileReducer,
       skills: skillsReducer,
       talentCheck: talentCheckReducer,
       resume: resumeReducer,
@@ -40,7 +42,14 @@ export function withStore(store: TestStore) {
   };
 }
 
-const APP_PATHS = ["/", "/company/intelligence", "/company/skills"];
+const APP_PATHS = [
+  "/",
+  "/company/intelligence",
+  "/company/skills",
+  "/profile",
+  "/profile/new",
+  "/profile/$profileId",
+];
 
 /** Renders `Page` at `path`; every other app path renders a "at <path>" marker. */
 export function renderPage(Page: RouteComponent, path: string, store: TestStore = makeStore()) {

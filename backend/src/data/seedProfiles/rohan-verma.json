@@ -1,0 +1,272 @@
+{
+  "id": "3a000000-0000-4000-8000-000000000004",
+  "version": 1,
+  "name": "Rohan Verma",
+  "email": "rohan.verma@example.com",
+  "education": "B.Tech CSE, LMN Institute of Technology, 2026, 9.1 CGPA",
+  "skills": [
+    {
+      "skill_name": "Rust",
+      "category_code": "COD",
+      "evidence": "ShardDB is written in Rust",
+      "confidence": "high",
+      "section": "projects",
+      "canonical_id": "rust"
+    },
+    {
+      "skill_name": "Dynamic Programming",
+      "category_code": "DSA",
+      "evidence": "ICPC regionals rank 14",
+      "confidence": "high",
+      "section": "hackathons",
+      "canonical_id": "dynamic-programming"
+    },
+    {
+      "skill_name": "Logical Reasoning",
+      "category_code": "APTI",
+      "evidence": "Top percentile in the national aptitude test",
+      "confidence": "medium",
+      "section": "skills",
+      "canonical_id": "aptitude"
+    },
+    {
+      "skill_name": "Technical Presentations",
+      "category_code": "COMM",
+      "evidence": "Presented the RAG work at the lab seminar",
+      "confidence": "high",
+      "section": "experience",
+      "canonical_id": "technical-writing"
+    },
+    {
+      "skill_name": "Design Patterns",
+      "category_code": "OOD",
+      "evidence": "Applied strategy and observer patterns in the rate limiter",
+      "confidence": "high",
+      "section": "experience",
+      "canonical_id": "design-patterns"
+    },
+    {
+      "skill_name": "LLM Applications",
+      "category_code": "AI",
+      "evidence": "PromptLint and the RAG reproduction",
+      "confidence": "high",
+      "section": "projects",
+      "canonical_id": "llm"
+    },
+    {
+      "skill_name": "SQL",
+      "category_code": "SQL",
+      "evidence": "ShardDB query routing and rebalancing",
+      "confidence": "high",
+      "section": "projects",
+      "canonical_id": "sql"
+    },
+    {
+      "skill_name": "System Design",
+      "category_code": "SYSD",
+      "evidence": "Designed the sharding and rebalancing protocol",
+      "confidence": "high",
+      "section": "projects",
+      "canonical_id": "system-design"
+    },
+    {
+      "skill_name": "Kubernetes",
+      "category_code": "CLOUD",
+      "evidence": "Migrated cron service to Kubernetes jobs at Orbit Labs",
+      "confidence": "high",
+      "section": "experience",
+      "canonical_id": "kubernetes"
+    },
+    {
+      "skill_name": "Code Review",
+      "category_code": "SWE",
+      "evidence": "Reviewed PRs for 3 teams during the internship",
+      "confidence": "high",
+      "section": "experience",
+      "canonical_id": "code-review"
+    },
+    {
+      "skill_name": "TCP/IP",
+      "category_code": "NETW",
+      "evidence": "Built the ShardDB wire protocol",
+      "confidence": "medium",
+      "section": "projects",
+      "canonical_id": "tcp-ip"
+    },
+    {
+      "skill_name": "Linux",
+      "category_code": "OS",
+      "evidence": "Tuned process scheduling for the rate limiter",
+      "confidence": "high",
+      "section": "experience",
+      "canonical_id": "linux"
+    }
+  ],
+  "hackathons": [
+    {
+      "name": "ICPC Regionals",
+      "result": "Rank 14",
+      "year": "2025"
+    },
+    {
+      "name": "HackWithInfy",
+      "result": "Finalist",
+      "year": "2025"
+    }
+  ],
+  "internships": [
+    {
+      "title": "Software Engineering Intern",
+      "org": "Orbit Labs",
+      "start": "2025-05",
+      "end": "2025-08",
+      "highlights": [
+        "Shipped a rate limiter used by 12 services",
+        "Led the migration of a cron service to Kubernetes jobs"
+      ]
+    },
+    {
+      "title": "Research Intern",
+      "org": "LMN AI Lab",
+      "start": "2024-12",
+      "end": "2025-02",
+      "highlights": [
+        "Reproduced a retrieval-augmented generation paper and cut latency by 30%"
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "name": "CKA: Certified Kubernetes Administrator",
+      "issuer": "CNCF",
+      "year": "2025"
+    }
+  ],
+  "preferred_roles": [
+    "Software Engineer",
+    "Data Scientist"
+  ],
+  "cv_file": null,
+  "phone": "+91 90000 11223",
+  "links": [
+    "github.com/rohan-verma",
+    "linkedin.com/in/rohan-verma"
+  ],
+  "education_details": [
+    {
+      "degree": "B.Tech CSE",
+      "institution": "LMN Institute of Technology",
+      "year": "2026",
+      "score": "9.1 CGPA"
+    }
+  ],
+  "projects": [
+    {
+      "name": "ShardDB",
+      "description": "Sharded SQL proxy in Rust with online rebalancing",
+      "skills": [
+        "Rust",
+        "SQL",
+        "System Design"
+      ]
+    },
+    {
+      "name": "PromptLint",
+      "description": "Static analysis for LLM prompts, 400 GitHub stars",
+      "skills": [
+        "Python",
+        "LLM",
+        "CI"
+      ]
+    }
+  ],
+  "skill_levels": {
+    "COD": {
+      "level": 8,
+      "source": "resume_inferred",
+      "confidence": "high",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 8
+    },
+    "DSA": {
+      "level": 7,
+      "source": "resume_inferred",
+      "confidence": "high",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 7
+    },
+    "APTI": {
+      "level": 7,
+      "source": "resume_inferred",
+      "confidence": "high",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 7
+    },
+    "COMM": {
+      "level": 7,
+      "source": "resume_inferred",
+      "confidence": "high",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 7
+    },
+    "OOD": {
+      "level": 7,
+      "source": "resume_inferred",
+      "confidence": "high",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 7
+    },
+    "AI": {
+      "level": 6,
+      "source": "resume_inferred",
+      "confidence": "high",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 6
+    },
+    "SQL": {
+      "level": 6,
+      "source": "resume_inferred",
+      "confidence": "high",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 6
+    },
+    "SYSD": {
+      "level": 6,
+      "source": "resume_inferred",
+      "confidence": "high",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 6
+    },
+    "CLOUD": {
+      "level": 6,
+      "source": "resume_inferred",
+      "confidence": "high",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 6
+    },
+    "SWE": {
+      "level": 7,
+      "source": "resume_inferred",
+      "confidence": "high",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 7
+    },
+    "NETW": {
+      "level": 5,
+      "source": "resume_inferred",
+      "confidence": "high",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 5
+    },
+    "OS": {
+      "level": 6,
+      "source": "resume_inferred",
+      "confidence": "high",
+      "basis": "Sample profile, hand-labelled against the shared rubric",
+      "inferred_level": 6
+    }
+  },
+  "resume_extraction_id": null,
+  "schema_version": "1.0",
+  "updated_at": "2026-10-27T10:00:00.000Z"
+}
