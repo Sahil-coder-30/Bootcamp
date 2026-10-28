@@ -14,22 +14,30 @@ export const runTalentCheckSchema = z
     skill_levels_override: z.record(z.string(), z.number().int().min(1).max(10)).optional(),
     persist: z.boolean().optional().default(true),
   })
-  .transform((data) => {
+  .superRefine((data, ctx) => {
     const profile_id = data.profile_id ?? data.profileId;
     const company_id = data.company_id ?? data.companyId;
     if (!profile_id) {
-      throw new Error("profile_id is required");
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "profile_id is required",
+        path: ["profile_id"],
+      });
     }
     if (!company_id) {
-      throw new Error("company_id is required");
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "company_id is required",
+        path: ["company_id"],
+      });
     }
-    return {
-      profile_id,
-      company_id,
-      skill_levels_override: data.skill_levels_override,
-      persist: data.persist,
-    };
-  });
+  })
+  .transform((data) => ({
+    profile_id: (data.profile_id ?? data.profileId)!,
+    company_id: (data.company_id ?? data.companyId)!,
+    skill_levels_override: data.skill_levels_override,
+    persist: data.persist,
+  }));
 
 export type RunTalentCheckInput = z.infer<typeof runTalentCheckSchema>;
 

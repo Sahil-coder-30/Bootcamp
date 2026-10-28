@@ -12,10 +12,7 @@ interface NextTopicsListProps {
   selectedCode?: string | null;
 }
 
-export const NextTopicsList: React.FC<NextTopicsListProps> = ({
-  rows,
-  selectedCode,
-}) => {
+export const NextTopicsList: React.FC<NextTopicsListProps> = ({ rows, selectedCode }) => {
   const activeRows = selectedCode
     ? rows.filter((r) => r.category_code === selectedCode && r.gap)
     : rows.filter((r) => r.gap);
@@ -49,7 +46,10 @@ export const NextTopicsList: React.FC<NextTopicsListProps> = ({
 
           <div className="space-y-3">
             {row.next_topics.map((t) => {
-              const topicItems = t.topics.split(";").map((s) => s.trim()).filter(Boolean);
+              const topicItems = t.topics
+                .split(";")
+                .map((s) => s.trim())
+                .filter(Boolean);
               return (
                 <div
                   key={t.level}
@@ -59,9 +59,7 @@ export const NextTopicsList: React.FC<NextTopicsListProps> = ({
                     <span className="text-xs font-bold text-blue-400 font-mono">
                       Target Level {t.level}
                     </span>
-                    <span className="text-[11px] text-slate-500 font-mono">
-                      Bloom Tier
-                    </span>
+                    <span className="text-[11px] text-slate-500 font-mono">Bloom Tier</span>
                   </div>
 
                   <ul className="space-y-1.5">

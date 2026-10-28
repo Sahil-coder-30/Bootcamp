@@ -47,9 +47,10 @@ export const ReadinessCard: React.FC<ReadinessCardProps> = ({
       badgeClass: "bg-amber-500/15 text-amber-400 border-amber-500/30",
       glowColor: "rgba(245, 158, 11, 0.2)",
       icon: AlertTriangle,
-      desc: blockingCount > 0
-        ? `Score reaches threshold, but held back by ${blockingCount} critical gap${blockingCount > 1 ? "s" : ""}.`
-        : "Close to bar (60-79%). Minor curriculum study recommended.",
+      desc:
+        blockingCount > 0
+          ? `Score reaches threshold, but held back by ${blockingCount} critical gap${blockingCount > 1 ? "s" : ""}.`
+          : "Close to bar (60-79%). Minor curriculum study recommended.",
     },
     not_yet: {
       label: "Needs Preparation",
@@ -102,8 +103,10 @@ export const ReadinessCard: React.FC<ReadinessCardProps> = ({
             <div
               className="w-28 h-28 rounded-full flex flex-col items-center justify-center border-2"
               style={{
-                borderColor: verdict === "ready" ? "#10B981" : verdict === "almost" ? "#F59E0B" : "#EF4444",
-                background: "radial-gradient(circle, rgba(14, 16, 23, 0.8) 0%, rgba(7, 8, 11, 0.9) 100%)",
+                borderColor:
+                  verdict === "ready" ? "#10B981" : verdict === "almost" ? "#F59E0B" : "#EF4444",
+                background:
+                  "radial-gradient(circle, rgba(14, 16, 23, 0.8) 0%, rgba(7, 8, 11, 0.9) 100%)",
                 boxShadow: `0 0 24px -2px ${verdictConfig.glowColor}`,
               }}
             >
@@ -124,9 +127,7 @@ export const ReadinessCard: React.FC<ReadinessCardProps> = ({
               {verdictConfig.label}
             </div>
 
-            <p className="text-sm text-slate-300 leading-snug max-w-sm">
-              {verdictConfig.desc}
-            </p>
+            <p className="text-sm text-slate-300 leading-snug max-w-sm">{verdictConfig.desc}</p>
 
             {readinessRange && (
               <div className="flex items-center gap-1.5 text-xs text-slate-400 font-mono pt-1">
@@ -145,21 +146,23 @@ export const ReadinessCard: React.FC<ReadinessCardProps> = ({
           <div className="bg-slate-900/60 rounded-xl p-3 border border-slate-800/60">
             <div className="text-xs text-slate-400 mb-1">Levels Covered</div>
             <div className="text-lg font-bold text-white font-mono">
-              {levelsCovered ?? "—"} <span className="text-xs text-slate-500 font-normal">/ {levelsNeeded ?? "—"}</span>
+              {levelsCovered ?? "—"}{" "}
+              <span className="text-xs text-slate-500 font-normal">/ {levelsNeeded ?? "—"}</span>
             </div>
             <div className="text-[11px] text-emerald-400 mt-0.5">
-              {levelsNeeded ? `${Math.round(((levelsCovered || 0) / levelsNeeded) * 100)}% climbed` : ""}
+              {levelsNeeded
+                ? `${Math.round(((levelsCovered || 0) / levelsNeeded) * 100)}% climbed`
+                : ""}
             </div>
           </div>
 
           <div className="bg-slate-900/60 rounded-xl p-3 border border-slate-800/60">
             <div className="text-xs text-slate-400 mb-1">Categories Met</div>
             <div className="text-lg font-bold text-white font-mono">
-              {categoriesMet ?? "—"} <span className="text-xs text-slate-500 font-normal">/ 12</span>
+              {categoriesMet ?? "—"}{" "}
+              <span className="text-xs text-slate-500 font-normal">/ 12</span>
             </div>
-            <div className="text-[11px] text-slate-400 mt-0.5">
-              At or above bar
-            </div>
+            <div className="text-[11px] text-slate-400 mt-0.5">At or above bar</div>
           </div>
 
           <div className="bg-slate-900/60 rounded-xl p-3 border border-slate-800/60 col-span-2 sm:col-span-1">

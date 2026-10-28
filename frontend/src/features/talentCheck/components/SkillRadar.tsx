@@ -64,7 +64,11 @@ export const SkillRadar: React.FC<SkillRadarProps> = ({
           <Tooltip
             content={({ active, payload }) => {
               if (active && payload && payload.length > 0 && payload[0]?.payload) {
-                const item = payload[0].payload as { subject: string; candidate: number; required: number };
+                const item = payload[0].payload as {
+                  subject: string;
+                  candidate: number;
+                  required: number;
+                };
                 return (
                   <div className="bg-slate-900/95 border border-slate-700/80 rounded-lg p-2.5 text-xs shadow-xl backdrop-blur-md">
                     <div className="font-bold text-white mb-1">{item.subject}</div>

@@ -5,9 +5,9 @@ Tests vectorized batch computation and company ranking over all 115 companies.
 """
 
 import time
-import pytest
+
 from talent_match.talent_check.bar import matrix_from_snapshot
-from talent_match.talent_check.batch import rank_companies, score_matrix_vectorized
+from talent_match.talent_check.batch import rank_companies
 from talent_match.talent_check.scoring import raw_readiness, round_score
 
 ANANYA = [7, 7, 6, 5, 6, 4, 4, 6, 5, 6, 6, 7]

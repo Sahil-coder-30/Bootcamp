@@ -6,6 +6,7 @@ Proves 'visibly different results' across candidates and verifies brief consiste
 """
 
 import pytest
+
 from talent_match.talent_check.scoring import raw_readiness, round_score, verdict_for
 
 CANDIDATES = {
@@ -46,7 +47,7 @@ def test_brief_consistency():
         verdicts[c_name] = {}
         for comp_name, bar in COMPANIES.items():
             sc = round_score(raw_readiness(c_lvls, bar))
-            shortfalls = [max(0, r - c) for c, r in zip(c_lvls, bar)]
+            shortfalls = [max(0, r - c) for c, r in zip(c_lvls, bar, strict=False)]
             vrd = verdict_for(sc, shortfalls)
             matrix[c_name][comp_name] = sc
             verdicts[c_name][comp_name] = vrd

@@ -8,7 +8,6 @@ Stateless, high-performance HTTP service.
 from __future__ import annotations
 
 import time
-from typing import Any
 
 from fastapi import APIRouter, HTTPException, status
 
@@ -41,7 +40,7 @@ async def run_talent_check_endpoint(req: TalentCheckRequest) -> TalentCheckResul
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Scoring error: {str(e)}",
-        )
+        ) from e
 
 
 @router.post("/batch", response_model=TalentMatrixResult)
@@ -64,7 +63,7 @@ async def batch_matrix_endpoint(req: MatrixRequest) -> TalentMatrixResult:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Batch evaluation error: {str(e)}",
-        )
+        ) from e
 
 
 @router.post("/rank", response_model=list[RankRow])
@@ -87,4 +86,4 @@ async def rank_companies_endpoint(req: RankRequest) -> list[RankRow]:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Ranking error: {str(e)}",
-        )
+        ) from e

@@ -77,8 +77,8 @@ export const WhatIfPanel: React.FC<WhatIfPanelProps> = ({
                 previewVerdict === "ready"
                   ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40"
                   : previewVerdict === "almost"
-                  ? "bg-amber-500/20 text-amber-400 border border-amber-500/40"
-                  : "bg-rose-500/20 text-rose-400 border border-rose-500/40"
+                    ? "bg-amber-500/20 text-amber-400 border border-amber-500/40"
+                    : "bg-rose-500/20 text-rose-400 border border-rose-500/40"
               }`}
             >
               {previewVerdict.replace("_", " ")}
@@ -142,9 +142,7 @@ export const WhatIfPanel: React.FC<WhatIfPanelProps> = ({
                   <span className="font-mono font-bold text-xs text-slate-300">
                     {row.category_code}
                   </span>
-                  {isRowModified && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
-                  )}
+                  {isRowModified && <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />}
                 </div>
 
                 <div className="text-xs font-mono">

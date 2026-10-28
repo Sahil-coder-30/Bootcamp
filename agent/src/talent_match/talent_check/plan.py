@@ -8,7 +8,6 @@ Prioritizes unblocking critical gaps (shortfall >= 3) then minimizes effort hour
 from __future__ import annotations
 
 import math
-from typing import Sequence
 
 from talent_match.contract import GapRow, StudyPlan, StudyPlanStep
 from talent_match.talent_check.bar import bloom_for
@@ -28,7 +27,7 @@ def study_plan(
     cand_levels = {r.category_code: r.candidate_level for r in gap_rows}
     req_levels = {r.category_code: r.required_level for r in gap_rows}
     weights = {r.category_code: r.weight for r in gap_rows}
-    
+
     needed_sum = sum(max(0, req - 1) for req in req_levels.values())
     if needed_sum == 0:
         return StudyPlan(steps=[], total_steps=0, total_hours=0, summary="Already meeting all requirements.")
@@ -54,12 +53,15 @@ def study_plan(
             for lvl in range(curr + 1, target + 1):
                 b_code = bloom_for(lvl)
                 step_hours += EFFORT_HOURS.get(b_code, 12)
-            
+
             topics_desc = None
             if ladder and code in ladder:
-                topics_desc = "; ".join(
-                    ladder[code].get(str(lvl), "") for lvl in range(curr + 1, target + 1) if ladder[code].get(str(lvl))
-                )
+                sub_topics = [
+                    ladder[code].get(str(lvl), "")
+                    for lvl in range(curr + 1, target + 1)
+                    if ladder[code].get(str(lvl))
+                ]
+                topics_desc = "; ".join(sub_topics) if sub_topics else None
 
             steps.append(
                 StudyPlanStep(
@@ -117,7 +119,10 @@ def study_plan(
 
     total_steps_count = sum(s.to_level - s.from_level for s in steps)
     weeks = max(1, round(total_hours / 30))
-    summary = f"{total_steps_count} level steps, about {total_hours} h (~{weeks} weeks at 30 h/week) to reach Ready"
+    summary = (
+        f"{total_steps_count} level steps, about {total_hours} h "
+        f"(~{weeks} weeks at 30 h/week) to reach Ready"
+    )
 
     return StudyPlan(
         steps=steps,

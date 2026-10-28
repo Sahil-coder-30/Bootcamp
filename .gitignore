@@ -5,7 +5,6 @@
 *.local
 k8s/secrets.yml
 !k8s/secrets.example.yml
-.agents
 
 # --- Old bootcamp material, local only ---
 _archive/

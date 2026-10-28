@@ -138,8 +138,19 @@ export const getCompanyRankingAPI = async (profileId: string, limit = 10): Promi
   return response.data;
 };
 
-export const listTalentChecksAPI = async (profileId?: string): Promise<any[]> => {
-  const response = await apiClient.get<any[]>("/talent-check", {
+export interface TalentCheckSummary {
+  id: string;
+  profile_id: string;
+  company_id: number;
+  readiness_score: number;
+  verdict: "ready" | "almost" | "not_yet";
+  scoring_version: string;
+  bar_source: string;
+  created_at?: string;
+}
+
+export const listTalentChecksAPI = async (profileId?: string): Promise<TalentCheckSummary[]> => {
+  const response = await apiClient.get<TalentCheckSummary[]>("/talent-check", {
     params: { profile_id: profileId },
   });
   return response.data;

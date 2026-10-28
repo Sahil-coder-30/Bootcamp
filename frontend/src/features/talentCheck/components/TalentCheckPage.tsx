@@ -49,7 +49,9 @@ const COMPANIES = [
 export const TalentCheckPage: React.FC = () => {
   const [selectedCandidate, setSelectedCandidate] = useState(CANDIDATES[0]!.id);
   const [selectedCompany, setSelectedCompany] = useState<number>(COMPANIES[0]!.id);
-  const [activeTab, setActiveTab] = useState<"analysis" | "whatif" | "study" | "ranking" | "matrix">("analysis");
+  const [activeTab, setActiveTab] = useState<
+    "analysis" | "whatif" | "study" | "ranking" | "matrix"
+  >("analysis");
   const [selectedSkillCode, setSelectedSkillCode] = useState<string | null>("SQL");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -57,7 +59,11 @@ export const TalentCheckPage: React.FC = () => {
   const { result, run, isLoading, error } = useTalentCheck(selectedCandidate, selectedCompany);
   const whatIf = useWhatIf(result);
   const { matrix, run: runMatrix } = useTalentMatrix([4, 78, 24]);
-  const { ranking, run: runRanking, isLoading: isRankingLoading } = useCompanyRanking(selectedCandidate);
+  const {
+    ranking,
+    run: runRanking,
+    isLoading: isRankingLoading,
+  } = useCompanyRanking(selectedCandidate);
 
   const candidateObj = CANDIDATES.find((c) => c.id === selectedCandidate);
   const companyObj = COMPANIES.find((c) => c.id === selectedCompany);
@@ -76,7 +82,8 @@ export const TalentCheckPage: React.FC = () => {
             </h1>
           </div>
           <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl leading-relaxed">
-            One-button evaluation comparing candidate profiles against employer hiring bars across 12 RADIX skillsets with mathematical transparency.
+            One-button evaluation comparing candidate profiles against employer hiring bars across
+            12 RADIX skillsets with mathematical transparency.
           </p>
         </div>
 
@@ -146,7 +153,9 @@ export const TalentCheckPage: React.FC = () => {
         <ReadinessCard
           score={whatIf.preview ? whatIf.preview.score : result.readiness_score}
           verdict={whatIf.preview ? whatIf.preview.verdict : result.verdict}
-          blockingCount={whatIf.preview ? whatIf.preview.blockingCount : result.blocking_gaps.length}
+          blockingCount={
+            whatIf.preview ? whatIf.preview.blockingCount : result.blocking_gaps.length
+          }
           levelsCovered={result.levels_covered}
           levelsNeeded={result.levels_needed}
           categoriesMet={result.categories_met}
@@ -187,7 +196,9 @@ export const TalentCheckPage: React.FC = () => {
         <button
           onClick={() => setActiveTab("study")}
           className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-            activeTab === "study" ? "bg-emerald-600 text-white" : "text-slate-400 hover:text-emerald-400"
+            activeTab === "study"
+              ? "bg-emerald-600 text-white"
+              : "text-slate-400 hover:text-emerald-400"
           }`}
         >
           <Sparkles className="w-3.5 h-3.5" /> Fastest Path & Curriculum
@@ -198,7 +209,9 @@ export const TalentCheckPage: React.FC = () => {
             void runRanking();
           }}
           className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-            activeTab === "ranking" ? "bg-amber-600 text-white" : "text-slate-400 hover:text-amber-400"
+            activeTab === "ranking"
+              ? "bg-amber-600 text-white"
+              : "text-slate-400 hover:text-amber-400"
           }`}
         >
           <Trophy className="w-3.5 h-3.5" /> 115-Company Rankings
@@ -261,10 +274,7 @@ export const TalentCheckPage: React.FC = () => {
                   <h3 className="text-sm font-bold uppercase tracking-wider text-slate-300 mb-3">
                     Curriculum for {selectedSkillCode || "Selected Skill"}
                   </h3>
-                  <NextTopicsList
-                    rows={result.skillset_gap}
-                    selectedCode={selectedSkillCode}
-                  />
+                  <NextTopicsList rows={result.skillset_gap} selectedCode={selectedSkillCode} />
                 </div>
               </div>
             </div>
@@ -276,7 +286,9 @@ export const TalentCheckPage: React.FC = () => {
               overrides={whatIf.overrides}
               previewScore={whatIf.preview ? whatIf.preview.score : result.readiness_score}
               previewVerdict={whatIf.preview ? whatIf.preview.verdict : result.verdict}
-              previewBlockingCount={whatIf.preview ? whatIf.preview.blockingCount : result.blocking_gaps.length}
+              previewBlockingCount={
+                whatIf.preview ? whatIf.preview.blockingCount : result.blocking_gaps.length
+              }
               onSetLevel={whatIf.setLevel}
               onReset={whatIf.reset}
               onApplyPlan={whatIf.applyPlan}

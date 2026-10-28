@@ -62,7 +62,7 @@ def generate_test_vectors() -> list[dict[str, Any]]:
     for name, c, r in named_cases:
         raw = raw_readiness(c, r)
         sc = round_score(raw)
-        shortfalls = [max(0, req - cand) for cand, req in zip(c, r)]
+        shortfalls = [max(0, req - cand) for cand, req in zip(c, r, strict=False)]
         vrd = verdict_for(sc, shortfalls)
         blocking = [s >= 3 for s in shortfalls]
         vectors.append({
@@ -88,7 +88,7 @@ def generate_test_vectors() -> list[dict[str, Any]]:
     for name, c, r in boundary_cases:
         raw = raw_readiness(c, r)
         sc = round_score(raw)
-        shortfalls = [max(0, req - cand) for cand, req in zip(c, r)]
+        shortfalls = [max(0, req - cand) for cand, req in zip(c, r, strict=False)]
         vrd = verdict_for(sc, shortfalls)
         blocking = [s >= 3 for s in shortfalls]
         vectors.append({
@@ -107,7 +107,7 @@ def generate_test_vectors() -> list[dict[str, Any]]:
         r = [((i * 2 + j * 2) % 10) + 1 for j in range(12)]
         raw = raw_readiness(c, r)
         sc = round_score(raw)
-        shortfalls = [max(0, req - cand) for cand, req in zip(c, r)]
+        shortfalls = [max(0, req - cand) for cand, req in zip(c, r, strict=False)]
         vrd = verdict_for(sc, shortfalls)
         blocking = [s >= 3 for s in shortfalls]
         vectors.append({

@@ -55,9 +55,8 @@ def explain(
     # Sentence 3: Blocking & Met status
     parts = []
     if blocking_count > 0:
-        parts.append(
-            f"{blocking_count} {'category is' if blocking_count == 1 else 'categories are'} more than two levels short, which blocks a Ready verdict"
-        )
+        cat_str = "category is" if blocking_count == 1 else "categories are"
+        parts.append(f"{blocking_count} {cat_str} more than two levels short, which blocks a Ready verdict")
     if met_count > 0:
         parts.append(f"{met_count} of 12 categories already {'meets' if met_count == 1 else 'meet'} the bar")
     if parts:
@@ -66,9 +65,10 @@ def explain(
     # Sentence 4: Action plan
     if study_plan_steps > 0:
         if blocking_count > 0:
+            target_cats = "category that is" if blocking_count == 1 else "categories that are"
             sentences.append(
-                f"The fastest path to Ready is {study_plan_steps} level steps, starting with the {blocking_count} "
-                f"{'category that is' if blocking_count == 1 else 'categories that are'} more than two levels short."
+                f"The fastest path to Ready is {study_plan_steps} level steps, starting with the "
+                f"{blocking_count} {target_cats} more than two levels short."
             )
         else:
             sentences.append(f"The fastest path to Ready is {study_plan_steps} level steps.")

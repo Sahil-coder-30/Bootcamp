@@ -63,7 +63,10 @@ def bar_from_snapshot(company_id: int, snapshot: dict[str, Any] | None = None) -
                 CompanyBarRow(
                     skill_set_id=s["skill_set_id"],
                     category_code=s["category_code"],
-                    skill_set_name=s.get("skill_set_name", CODE_NAMES.get(s["category_code"], s["category_code"])),
+                    skill_set_name=s.get(
+                        "skill_set_name",
+                        CODE_NAMES.get(s["category_code"], s["category_code"]),
+                    ),
                     required_level=s["required_level"],
                     bloom_code=s.get("bloom_code", bloom_for(s["required_level"])),
                     raw_bloom_code=s.get("raw_bloom_code"),
@@ -96,7 +99,7 @@ def bar_from_snapshot(company_id: int, snapshot: dict[str, Any] | None = None) -
                 raw_bloom_code=bloom_for(lvl),
                 bloom_mismatch=False,
             )
-            for i, (code, lvl) in enumerate(zip(CODES, levels))
+            for i, (code, lvl) in enumerate(zip(CODES, levels, strict=False))
         ]
         return CompanyBar(
             company_id=company_id,

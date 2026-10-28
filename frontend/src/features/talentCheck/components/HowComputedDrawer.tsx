@@ -53,15 +53,16 @@ export const HowComputedDrawer: React.FC<HowComputedDrawerProps> = ({
               readiness = 100 * sum(covered) / sum(needed)
             </div>
             <div className="text-slate-300 font-sans text-xs leading-relaxed">
-              Readiness is the share of the company's skill ladder climbed above floor Level 1.
-              For {result.company}:
+              Readiness is the share of the company's skill ladder climbed above floor Level 1. For{" "}
+              {result.company}:
             </div>
             <div className="p-2.5 bg-slate-950/60 rounded border border-slate-800 text-slate-200">
-              100 * ({covered} covered / {needed} needed) = {( (100 * covered) / needed ).toFixed(2)}% →{" "}
-              <strong className="text-white font-bold">{result.readiness_score} / 100</strong>
+              100 * ({covered} covered / {needed} needed) = {((100 * covered) / needed).toFixed(2)}%
+              → <strong className="text-white font-bold">{result.readiness_score} / 100</strong>
             </div>
             <div className="text-slate-400 font-sans text-[11px]">
-              Each missing level costs exactly <strong className="text-blue-400">{pointsPerLevel} points</strong>.
+              Each missing level costs exactly{" "}
+              <strong className="text-blue-400">{pointsPerLevel} points</strong>.
             </div>
           </div>
 
@@ -74,7 +75,8 @@ export const HowComputedDrawer: React.FC<HowComputedDrawerProps> = ({
             <p className="text-slate-300 leading-relaxed">
               Real engineering interview loops are non-compensatory: a hole 3 or more levels short
               (a full Bloom cognitive band away) fails interview rounds regardless of average score.
-              A candidate requires a score of <strong>80+</strong> with <strong>zero blocking categories</strong> to achieve a <strong>Ready</strong> verdict.
+              A candidate requires a score of <strong>80+</strong> with{" "}
+              <strong>zero blocking categories</strong> to achieve a <strong>Ready</strong> verdict.
             </p>
           </div>
 
@@ -85,14 +87,17 @@ export const HowComputedDrawer: React.FC<HowComputedDrawerProps> = ({
               <span>Data Provenance & Mismatch Handling</span>
             </div>
             <p className="text-slate-300 leading-relaxed">
-              Company bar loaded from: <strong className="text-white uppercase">{result.meta?.bar_source || "db"}</strong>.
+              Company bar loaded from:{" "}
+              <strong className="text-white uppercase">{result.meta?.bar_source || "db"}</strong>.
             </p>
             <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg text-amber-300 text-[11px] leading-relaxed">
               <strong className="flex items-center gap-1.5 mb-1 text-amber-400">
                 <AlertTriangle className="w-3.5 h-3.5" /> Data Quality Audit:
               </strong>
-              51% (698 of 1,380) of rows in RADIX's database had Bloom code discrepancies (e.g. Google Coding stored as '8-CR', while Level 8 is Evaluation 'EV').
-              Role 4 treats the numeric required level as the source of truth, derives the Bloom code dynamically, and preserves the raw code below for audit compliance.
+              51% (698 of 1,380) of rows in RADIX's database had Bloom code discrepancies (e.g.
+              Google Coding stored as '8-CR', while Level 8 is Evaluation 'EV'). Role 4 treats the
+              numeric required level as the source of truth, derives the Bloom code dynamically, and
+              preserves the raw code below for audit compliance.
             </div>
           </div>
 
@@ -118,10 +123,14 @@ export const HowComputedDrawer: React.FC<HowComputedDrawerProps> = ({
                     <tr key={g.category_code} className="hover:bg-slate-900/50">
                       <td className="p-2.5 font-bold text-white">{g.category_code}</td>
                       <td className="p-2.5 text-slate-300">L{g.candidate_level}</td>
-                      <td className="p-2.5 text-blue-400">L{g.required_level} ({g.required_bloom})</td>
+                      <td className="p-2.5 text-blue-400">
+                        L{g.required_level} ({g.required_bloom})
+                      </td>
                       <td className="p-2.5">
                         {g.gap ? (
-                          <span className={g.blocking ? "text-rose-400 font-bold" : "text-amber-400"}>
+                          <span
+                            className={g.blocking ? "text-rose-400 font-bold" : "text-amber-400"}
+                          >
                             -{g.shortfall} {g.blocking ? "(Block)" : ""}
                           </span>
                         ) : (

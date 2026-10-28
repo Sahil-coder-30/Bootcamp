@@ -7,7 +7,6 @@ Scores 10,000 companies in ~1.3 ms on a single core.
 
 from __future__ import annotations
 
-import math
 from typing import Sequence
 
 import numpy as np
@@ -92,7 +91,7 @@ def rank_companies(
     for j in range(M):
         sc = int(scores[j])
         blk = bool(blockings[j])
-        
+
         if sc >= READY_THRESHOLD and not blk:
             vrd = "ready"
         elif sc >= ALMOST_THRESHOLD:

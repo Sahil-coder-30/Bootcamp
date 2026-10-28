@@ -39,3 +39,12 @@ if (typeof window.localStorage?.setItem !== "function") {
 
 // jsdom has no layout, so it does not implement scrollIntoView.
 if (!Element.prototype.scrollIntoView) Element.prototype.scrollIntoView = () => {};
+
+if (!globalThis.ResizeObserver) {
+  class ResizeObserver {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
+  globalThis.ResizeObserver = ResizeObserver;
+}

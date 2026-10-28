@@ -13,11 +13,8 @@ interface ReadinessHeatmapProps {
   onSelectCell?: (profileId: string, companyId: number) => void;
 }
 
-export const ReadinessHeatmap: React.FC<ReadinessHeatmapProps> = ({
-  matrix,
-  onSelectCell,
-}) => {
-  if (!matrix || matrix.cells.length === 0) {
+export const ReadinessHeatmap: React.FC<ReadinessHeatmapProps> = ({ matrix, onSelectCell }) => {
+  if (!matrix || !matrix.cells || matrix.cells.length === 0) {
     return (
       <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-8 text-center text-slate-400 text-sm">
         No matrix data available.
@@ -44,7 +41,8 @@ export const ReadinessHeatmap: React.FC<ReadinessHeatmapProps> = ({
             Candidate Comparison Matrix
           </h3>
           <p className="text-xs text-slate-400 mt-1">
-            Compare candidate readiness scores across companies. Click any cell to inspect detailed gaps.
+            Compare candidate readiness scores across companies. Click any cell to inspect detailed
+            gaps.
           </p>
         </div>
       </div>
@@ -71,12 +69,15 @@ export const ReadinessHeatmap: React.FC<ReadinessHeatmapProps> = ({
         <tbody className="divide-y divide-slate-800/80">
           {matrix.profiles.map((prof) => (
             <tr key={prof.id} className="hover:bg-slate-900/40 transition-colors">
-              <td className="p-3.5 font-semibold text-sm text-white">
-                {prof.name}
-              </td>
+              <td className="p-3.5 font-semibold text-sm text-white">{prof.name}</td>
               {matrix.companies.map((comp) => {
                 const data = cellMap.get(`${prof.id}:${comp.company_id}`);
-                if (!data) return <td key={comp.company_id} className="p-3 text-center text-slate-600">—</td>;
+                if (!data)
+                  return (
+                    <td key={comp.company_id} className="p-3 text-center text-slate-600">
+                      —
+                    </td>
+                  );
 
                 const isReady = data.verdict === "ready";
                 const isAlmost = data.verdict === "almost";
@@ -84,8 +85,8 @@ export const ReadinessHeatmap: React.FC<ReadinessHeatmapProps> = ({
                 const bgStyle = isReady
                   ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/25"
                   : isAlmost
-                  ? "bg-amber-500/15 border-amber-500/30 text-amber-400 hover:bg-amber-500/25"
-                  : "bg-rose-500/15 border-rose-500/30 text-rose-400 hover:bg-rose-500/25";
+                    ? "bg-amber-500/15 border-amber-500/30 text-amber-400 hover:bg-amber-500/25"
+                    : "bg-rose-500/15 border-rose-500/30 text-rose-400 hover:bg-rose-500/25";
 
                 return (
                   <td key={comp.company_id} className="p-2 text-center">

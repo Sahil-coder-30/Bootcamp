@@ -7,6 +7,7 @@ Guarantees byte-for-byte behavioral agreement between Python and the TypeScript 
 
 import json
 from pathlib import Path
+
 import pytest
 
 from talent_match.talent_check.scoring import (
@@ -33,7 +34,7 @@ def test_cross_language_vector(vec):
 
     raw = raw_readiness(c, r)
     score = round_score(raw)
-    shortfalls = [max(0, req - cand) for cand, req in zip(c, r)]
+    shortfalls = [max(0, req - cand) for cand, req in zip(c, r, strict=False)]
     verdict = verdict_for(score, shortfalls)
     blocking = [s >= 3 for s in shortfalls]
 

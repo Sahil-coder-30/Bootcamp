@@ -5,7 +5,6 @@ Unit tests for Role 4: Talent Check mathematical scoring engine (tc-1.0).
 Verifies the worked example (Ananya x Google), edge cases, and ranking rules.
 """
 
-import pytest
 from talent_match.contract import (
     CandidateProfileSummary,
     CandidateSkillLevel,
@@ -68,7 +67,8 @@ def test_worked_example_ananya_google():
     assert result.categories_met == 1
 
     # 3. Blocking rows (shortfall >= 3)
-    # APTI (6 vs 9 = 3), AI (4 vs 7 = 3), SQL (4 vs 8 = 4), CLOUD (5 vs 9 = 4), SWE (6 vs 9 = 3), NETW (6 vs 9 = 3)
+    # APTI (6 vs 9 = 3), AI (4 vs 7 = 3), SQL (4 vs 8 = 4),
+    # CLOUD (5 vs 9 = 4), SWE (6 vs 9 = 3), NETW (6 vs 9 = 3)
     assert set(result.blocking_gaps) == {"APTI", "AI", "SQL", "CLOUD", "SWE", "NETW"}
     assert len(result.blocking_gaps) == 6
 
@@ -79,7 +79,7 @@ def test_worked_example_ananya_google():
     # 5. Study Plan
     assert result.study_plan is not None
     assert result.study_plan.total_steps == 12
-    # ~190 hours: 8 steps for blocking (AI +1 AP=8, SQL +2 AS=24, APTI +1 AS=12 +1 EV=20, CLOUD +2 AS=24, SWE +1 AS=12, NETW +1 AS=12)
+    # ~190 hours: 8 steps for blocking (AI +1, SQL +2, APTI +2, CLOUD +2, SWE +1, NETW +1)
     # plus 4 cheapest remaining steps to reach 80
     assert 180 <= result.study_plan.total_hours <= 210
 

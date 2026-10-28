@@ -9,18 +9,33 @@ export const ALMOST_THRESHOLD = 60;
 export const BLOCKING_SHORTFALL = 3;
 
 export const CODES = [
-  "COD", "DSA", "APTI", "COMM", "OOD", "AI",
-  "SQL", "SYSD", "CLOUD", "SWE", "NETW", "OS"
+  "COD",
+  "DSA",
+  "APTI",
+  "COMM",
+  "OOD",
+  "AI",
+  "SQL",
+  "SYSD",
+  "CLOUD",
+  "SWE",
+  "NETW",
+  "OS",
 ] as const;
 
-export type CategoryCode = typeof CODES[number];
+export type CategoryCode = (typeof CODES)[number];
 
 export const BLOOM_BANDS: Record<number, string> = {
-  1: "CU", 2: "CU",
-  3: "AP", 4: "AP",
-  5: "AS", 6: "AS",
-  7: "EV", 8: "EV",
-  9: "CR", 10: "CR",
+  1: "CU",
+  2: "CU",
+  3: "AP",
+  4: "AP",
+  5: "AS",
+  6: "AS",
+  7: "EV",
+  8: "EV",
+  9: "CR",
+  10: "CR",
 };
 
 export function bloomFor(level: number): string {
@@ -58,7 +73,7 @@ export function verdictFor(score: number, shortfalls: number[]): "ready" | "almo
 
 export function scoreLevels(
   candidateLevels: number[],
-  requiredLevels: number[]
+  requiredLevels: number[],
 ): {
   raw: number;
   score: number;

@@ -56,3 +56,88 @@ describe("skills slice", () => {
     expect(s.errors[3]).toBeUndefined();
   });
 });
+
+import talentCheck, {
+  initWhatIf,
+  resetWhatIf,
+  setCompanyBar,
+  setCompanyRanking,
+  setError,
+  setLoading,
+  setTalentCheckResult,
+  setTalentMatrix,
+  setWhatIfOverride,
+} from "@/features/talentCheck/slice/talentCheck.slice";
+
+describe("talentCheck slice", () => {
+  it("manages company bars and clears error", () => {
+    let s = talentCheck(init(talentCheck), setError({ scope: "bar", error: "fail" }));
+    expect(s.errors.bar).toBe("fail");
+    const bar = {
+      company_id: 4,
+      company_name: "Google",
+      source: "db" as const,
+      rows: [],
+    };
+    s = talentCheck(s, setCompanyBar({ id: 4, data: bar }));
+    expect(s.barsByCompany[4]).toEqual(bar);
+    expect(s.errors.bar).toBeNull();
+  });
+
+  it("stores talent check results and matrix", () => {
+    let s = talentCheck(init(talentCheck), setError({ scope: "check", error: "fail" }));
+    const result = {
+      company: "Google",
+      company_id: 4,
+      profile_id: "6f1c-ananya",
+      readiness_score: 82,
+      verdict: "ready" as const,
+      top_gaps: [],
+      scoring_version: "tc-1.0",
+      skillset_gap: [],
+      explanation: "Meets bar",
+      blocking_gaps: [],
+    };
+    s = talentCheck(s, setTalentCheckResult({ key: "6f1c-ananya:4", data: result }));
+    expect(s.resultsByKey["6f1c-ananya:4"]).toEqual(result);
+    expect(s.errors.check).toBeNull();
+
+    const matrix = {
+      companies: [{ company_id: 4, company_name: "Google" }],
+      profiles: [{ id: "6f1c-ananya", name: "Ananya" }],
+      cells: [],
+      scoring_version: "tc-1.0",
+    };
+    s = talentCheck(s, setTalentMatrix(matrix));
+    expect(s.matrix).toEqual(matrix);
+    expect(s.errors.matrix).toBeNull();
+  });
+
+  it("manages rankings, what-if overrides, and loading states", () => {
+    let s = talentCheck(init(talentCheck), setError({ scope: "rank", error: "fail" }));
+    const ranking = [
+      {
+        company_id: 4,
+        company_name: "Google",
+        readiness_score: 80,
+        verdict: "ready" as const,
+      },
+    ];
+    s = talentCheck(s, setCompanyRanking({ profileId: "6f1c-ananya", data: ranking }));
+    expect(s.rankingsByProfile["6f1c-ananya"]).toEqual(ranking);
+    expect(s.errors.rank).toBeNull();
+
+    s = talentCheck(s, initWhatIf("6f1c-ananya:4"));
+    expect(s.whatIf.key).toBe("6f1c-ananya:4");
+    expect(s.whatIf.overrides).toEqual({});
+
+    s = talentCheck(s, setWhatIfOverride({ code: "DSA", level: 8 }));
+    expect(s.whatIf.overrides).toEqual({ DSA: 8 });
+
+    s = talentCheck(s, resetWhatIf());
+    expect(s.whatIf.overrides).toEqual({});
+
+    s = talentCheck(s, setLoading({ scope: "matrix", loading: true }));
+    expect(s.loading.matrix).toBe(true);
+  });
+});

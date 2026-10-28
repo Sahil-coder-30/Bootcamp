@@ -5,15 +5,15 @@ Hypothesis property-based tests for Role 4: Talent Check (tc-1.0).
 Proves the mathematical invariants guaranteed in plan.md section 3.4.
 """
 
-from hypothesis import given, strategies as st
 import pytest
+from hypothesis import given
+from hypothesis import strategies as st
 
 from talent_match.talent_check.scoring import (
     raw_readiness,
     round_score,
     verdict_for,
 )
-from talent_match.talent_check.constants import READY_THRESHOLD, ALMOST_THRESHOLD
 
 # Generate 12 skill levels between 1 and 10
 levels_strategy = st.lists(st.integers(min_value=1, max_value=10), min_size=12, max_size=12)
@@ -33,7 +33,7 @@ def test_property_monotonicity(cand, req, index, boost):
     """Property 2: Raising candidate level never lowers score and never worsens verdict."""
     raw1 = raw_readiness(cand, req)
     score1 = round_score(raw1)
-    shortfalls1 = [max(0, r - c) for c, r in zip(cand, req)]
+    shortfalls1 = [max(0, r - c) for c, r in zip(cand, req, strict=False)]
     verdict1 = verdict_for(score1, shortfalls1)
 
     cand_boosted = list(cand)
@@ -41,7 +41,7 @@ def test_property_monotonicity(cand, req, index, boost):
 
     raw2 = raw_readiness(cand_boosted, req)
     score2 = round_score(raw2)
-    shortfalls2 = [max(0, r - c) for c, r in zip(cand_boosted, req)]
+    shortfalls2 = [max(0, r - c) for c, r in zip(cand_boosted, req, strict=False)]
     verdict2 = verdict_for(score2, shortfalls2)
 
     assert score2 >= score1
@@ -55,7 +55,7 @@ def test_property_monotonicity(cand, req, index, boost):
 @given(cand=levels_strategy, req=levels_strategy)
 def test_property_cap_invariance(cand, req):
     """Property 3: Capped at the bar (overqualification does not grant excess credit)."""
-    capped_cand = [min(c, r) for c, r in zip(cand, req)]
+    capped_cand = [min(c, r) for c, r in zip(cand, req, strict=False)]
     raw_orig = raw_readiness(cand, req)
     raw_capped = raw_readiness(capped_cand, req)
     assert pytest.approx(raw_orig, rel=1e-7) == raw_capped

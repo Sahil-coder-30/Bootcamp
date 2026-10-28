@@ -22,11 +22,7 @@ const BLOOM_COLORS: Record<string, string> = {
   CR: "#EC4899", // Pink 500
 };
 
-export const GapBars: React.FC<GapBarsProps> = ({
-  rows,
-  selectedCode,
-  onSelectCode,
-}) => {
+export const GapBars: React.FC<GapBarsProps> = ({ rows, selectedCode, onSelectCode }) => {
   return (
     <div className="space-y-3">
       {rows.map((row) => {
@@ -128,9 +124,7 @@ export const GapBars: React.FC<GapBarsProps> = ({
             <div className="flex items-center justify-between text-[11px] text-slate-500 mt-1.5 font-mono">
               <span>Weight: {(row.weight * 100).toFixed(1)}%</span>
               {row.points_lost > 0 && (
-                <span className="text-rose-400/90 font-medium">
-                  Cost: -{row.points_lost} pts
-                </span>
+                <span className="text-rose-400/90 font-medium">Cost: -{row.points_lost} pts</span>
               )}
             </div>
           </div>

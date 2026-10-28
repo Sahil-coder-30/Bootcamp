@@ -90,13 +90,13 @@ const talentCheckSlice = createSlice({
     },
     setLoading(
       state,
-      action: PayloadAction<{ scope: keyof TalentCheckState["loading"]; loading: boolean }>
+      action: PayloadAction<{ scope: keyof TalentCheckState["loading"]; loading: boolean }>,
     ) {
       state.loading[action.payload.scope] = action.payload.loading;
     },
     setError(
       state,
-      action: PayloadAction<{ scope: keyof TalentCheckState["errors"]; error: string | null }>
+      action: PayloadAction<{ scope: keyof TalentCheckState["errors"]; error: string | null }>,
     ) {
       state.errors[action.payload.scope] = action.payload.error;
     },

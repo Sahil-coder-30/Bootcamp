@@ -874,7 +874,10 @@ export default function CompanyPickerPage() {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/talent-check" className="transition-colors hover:text-white text-emerald-400">
+                  <Link
+                    to="/talent-check"
+                    className="transition-colors hover:text-white text-emerald-400"
+                  >
                     Talent Check & Readiness Benchmarking
                   </Link>
                 </li>

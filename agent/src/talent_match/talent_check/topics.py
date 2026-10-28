@@ -6,12 +6,9 @@ Topic ladder resolution and text normalization for missing skill levels.
 
 from __future__ import annotations
 
-import re
-from typing import Any
-
 from talent_match.contract import NextTopic
-from talent_match.talent_check.constants import BLOOM_NAMES, CODE_NAMES
 from talent_match.talent_check.bar import bloom_for
+from talent_match.talent_check.constants import BLOOM_NAMES, CODE_NAMES
 
 
 def clean_text(s: str) -> str:

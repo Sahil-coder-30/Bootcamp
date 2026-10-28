@@ -1,6 +1,14 @@
 import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Building2, GraduationCap, LayoutGrid, Moon, Sun, UserCheck } from "lucide-react";
+import {
+  ArrowLeft,
+  Building2,
+  GraduationCap,
+  LayoutGrid,
+  Moon,
+  Sun,
+  UserCheck,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,

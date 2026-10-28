@@ -11,7 +11,6 @@ import math
 from typing import Literal, Sequence
 
 from talent_match.contract import (
-    CandidateProfileSummary,
     CompanyBar,
     GapRow,
     TalentCheckRequest,
@@ -41,7 +40,7 @@ def raw_readiness(c: Sequence[int], r: Sequence[int]) -> float:
     if needed_sum == 0:
         return 100.0
 
-    covered_sum = sum(min(cand, req) - 1 for cand, req in zip(c, r))
+    covered_sum = sum(min(cand, req) - 1 for cand, req in zip(c, r, strict=False))
     return 100.0 * covered_sum / needed_sum
 
 
@@ -101,7 +100,7 @@ def score_talent_check(req: TalentCheckRequest) -> TalentCheckResult:
 
     # Index bar rows by category code
     bar_rows_by_code = {r.category_code: r for r in bar.rows}
-    
+
     # Ensure all 12 canonical codes are present in bar
     req_levels: list[int] = []
     for code in CODES:
@@ -125,8 +124,8 @@ def score_talent_check(req: TalentCheckRequest) -> TalentCheckResult:
 
     # 3. Calculate Core Metrics
     needed_sum = sum(max(0, r - 1) for r in req_levels)
-    covered_sum = sum(min(c, r) - 1 for c, r in zip(cand_levels, req_levels))
-    shortfalls = [max(0, r - c) for c, r in zip(cand_levels, req_levels)]
+    covered_sum = sum(min(c, r) - 1 for c, r in zip(cand_levels, req_levels, strict=False))
+    shortfalls = [max(0, r - c) for c, r in zip(cand_levels, req_levels, strict=False)]
 
     readiness_flt = raw_readiness(cand_levels, req_levels)
     readiness_score = round_score(readiness_flt)

@@ -63,7 +63,8 @@ export const StudyPlan: React.FC<StudyPlanProps> = ({ plan, onApplyPlan }) => {
                   {step.category_code}
                 </span>
                 <span className="text-xs font-mono text-emerald-400 font-semibold flex items-center gap-1">
-                  Level {step.from_level} <ArrowRight className="w-3 h-3 text-slate-500" /> Level {step.to_level}
+                  Level {step.from_level} <ArrowRight className="w-3 h-3 text-slate-500" /> Level{" "}
+                  {step.to_level}
                 </span>
               </div>
 
@@ -75,7 +76,10 @@ export const StudyPlan: React.FC<StudyPlanProps> = ({ plan, onApplyPlan }) => {
             </div>
 
             <div className="flex items-center justify-between pt-3 border-t border-slate-900 mt-3 text-[11px] text-slate-500 font-mono">
-              <span>{step.to_level - step.from_level} step{step.to_level - step.from_level > 1 ? "s" : ""}</span>
+              <span>
+                {step.to_level - step.from_level} step
+                {step.to_level - step.from_level > 1 ? "s" : ""}
+              </span>
               <span className="text-blue-400">~{step.hours} hours</span>
             </div>
           </div>

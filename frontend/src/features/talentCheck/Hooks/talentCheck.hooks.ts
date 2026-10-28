@@ -53,7 +53,7 @@ export function useCompanySkillBar(companyId?: number | null) {
         setError({
           scope: "bar",
           error: toErrorMessage(err, "Unable to retrieve company skill bar."),
-        })
+        }),
       );
       return null;
     } finally {
@@ -98,7 +98,7 @@ export function useTalentCheck(profileId?: string, companyId?: number | null) {
         setError({
           scope: "check",
           error: toErrorMessage(err, "Talent Check evaluation failed."),
-        })
+        }),
       );
       return null;
     } finally {
@@ -131,7 +131,7 @@ export function useWhatIf(result?: TalentCheckResult | null) {
     (code: string, level: number) => {
       dispatch(setWhatIfOverride({ code, level }));
     },
-    [dispatch]
+    [dispatch],
   );
 
   const reset = useCallback(() => {
@@ -197,7 +197,7 @@ export function useTalentMatrix(companyIds: number[] = [4, 78, 24]) {
         setError({
           scope: "matrix",
           error: toErrorMessage(err, "Failed to load comparison matrix."),
-        })
+        }),
       );
       return null;
     } finally {
@@ -228,7 +228,7 @@ export function useCompanyRanking(profileId?: string) {
         setError({
           scope: "rank",
           error: toErrorMessage(err, "Failed to rank companies."),
-        })
+        }),
       );
       return null;
     } finally {

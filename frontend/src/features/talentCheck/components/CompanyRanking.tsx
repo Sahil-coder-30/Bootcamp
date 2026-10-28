@@ -5,7 +5,15 @@
  */
 
 import React, { useState, useMemo } from "react";
-import { Trophy, Search, Building2, CheckCircle2, AlertTriangle, XCircle, ArrowRight } from "lucide-react";
+import {
+  Trophy,
+  Search,
+  Building2,
+  CheckCircle2,
+  AlertTriangle,
+  XCircle,
+  ArrowRight,
+} from "lucide-react";
 import type { RankRow } from "../service/talentCheck.api";
 
 interface CompanyRankingProps {
@@ -74,7 +82,9 @@ export const CompanyRanking: React.FC<CompanyRankingProps> = ({
         <button
           onClick={() => setFilter("ready")}
           className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors cursor-pointer flex items-center gap-1.5 ${
-            filter === "ready" ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "text-slate-400 hover:text-emerald-400"
+            filter === "ready"
+              ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+              : "text-slate-400 hover:text-emerald-400"
           }`}
         >
           <CheckCircle2 className="w-3.5 h-3.5" /> Ready ({readyCount})
@@ -82,7 +92,9 @@ export const CompanyRanking: React.FC<CompanyRankingProps> = ({
         <button
           onClick={() => setFilter("almost")}
           className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors cursor-pointer flex items-center gap-1.5 ${
-            filter === "almost" ? "bg-amber-500/20 text-amber-400 border border-amber-500/30" : "text-slate-400 hover:text-amber-400"
+            filter === "almost"
+              ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
+              : "text-slate-400 hover:text-amber-400"
           }`}
         >
           <AlertTriangle className="w-3.5 h-3.5" /> Almost ({almostCount})
@@ -90,7 +102,9 @@ export const CompanyRanking: React.FC<CompanyRankingProps> = ({
         <button
           onClick={() => setFilter("not_yet")}
           className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors cursor-pointer flex items-center gap-1.5 ${
-            filter === "not_yet" ? "bg-rose-500/20 text-rose-400 border border-rose-500/30" : "text-slate-400 hover:text-rose-400"
+            filter === "not_yet"
+              ? "bg-rose-500/20 text-rose-400 border border-rose-500/30"
+              : "text-slate-400 hover:text-rose-400"
           }`}
         >
           <XCircle className="w-3.5 h-3.5" /> Needs Prep ({notYetCount})
@@ -103,9 +117,7 @@ export const CompanyRanking: React.FC<CompanyRankingProps> = ({
           Computing rankings across all 115 companies...
         </div>
       ) : filtered.length === 0 ? (
-        <div className="py-8 text-center text-xs text-slate-500">
-          No matching companies found.
-        </div>
+        <div className="py-8 text-center text-xs text-slate-500">No matching companies found.</div>
       ) : (
         <div className="space-y-2 max-h-[460px] overflow-y-auto pr-1">
           {filtered.map((row, idx) => {
@@ -115,8 +127,8 @@ export const CompanyRanking: React.FC<CompanyRankingProps> = ({
             const badgeStyle = isReady
               ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30"
               : isAlmost
-              ? "bg-amber-500/15 text-amber-400 border-amber-500/30"
-              : "bg-rose-500/15 text-rose-400 border-rose-500/30";
+                ? "bg-amber-500/15 text-amber-400 border-amber-500/30"
+                : "bg-rose-500/15 text-rose-400 border-rose-500/30";
 
             return (
               <div
@@ -145,7 +157,9 @@ export const CompanyRanking: React.FC<CompanyRankingProps> = ({
                     </div>
                   </div>
 
-                  <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider border ${badgeStyle}`}>
+                  <span
+                    className={`px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider border ${badgeStyle}`}
+                  >
                     {row.verdict.replace("_", " ")}
                   </span>
 

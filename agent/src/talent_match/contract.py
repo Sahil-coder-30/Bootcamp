@@ -8,8 +8,8 @@ Locked to 00-shared-contract.md (v1.1) and role-4-talent-check/plan.md.
 from __future__ import annotations
 
 from typing import Any, Literal
-from pydantic import BaseModel, Field, model_validator
 
+from pydantic import BaseModel, Field, model_validator
 
 # --- Skill and Candidate Profile ---
 
