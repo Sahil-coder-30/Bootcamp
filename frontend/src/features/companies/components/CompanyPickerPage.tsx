@@ -171,13 +171,32 @@ const CompanyCard = memo(function CompanyCard({
 export default function CompanyPickerPage() {
   const navigate = useNavigate();
   const { selectCompany } = useCompany();
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
   const [debounced, setDebounced] = useState("");
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("All");
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [sortBy, setSortBy] = useState<"default" | "name" | "growth" | "tier">("default");
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
-  const searchInputRef = useRef<HTMLInputElement>(null);
+  const [currentUser, setCurrentUser] = useState<{ name: string; email: string } | null>(() => {
+    try {
+      const stored = localStorage.getItem("placeintel_user");
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const handleLogout = () => {
+    try {
+      localStorage.removeItem("placeintel_user");
+      window.dispatchEvent(new Event("placeintel_auth_change"));
+      setCurrentUser(null);
+      navigate({ to: "/" });
+    } catch {
+      // ignore
+    }
+  };
 
   const { data: companies = [], isLoading, isError, error, refetch } = useCompanies();
 
@@ -311,7 +330,7 @@ export default function CompanyPickerPage() {
       {/* 2. Executive Navigation Header */}
       <nav className="sticky top-0 z-40 border-b border-zinc-800/80 bg-[#050506]/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
-          <div className="flex items-center gap-3">
+          <Link to="/" className="flex items-center gap-3 transition-opacity hover:opacity-90">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-700 bg-gradient-to-b from-zinc-800 to-black font-heading text-sm font-bold text-white shadow-md">
               PI
             </div>
@@ -326,9 +345,28 @@ export default function CompanyPickerPage() {
               </div>
               <p className="text-[11px] text-zinc-400">JSSATEN Placement Intelligence Hub</p>
             </div>
-          </div>
+          </Link>
 
           <div className="flex items-center gap-2 sm:gap-3">
+            {currentUser ? (
+              <div className="flex items-center gap-2 rounded-xl border border-orange-500/30 bg-zinc-900/80 px-2.5 py-1 text-xs">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                <span className="font-semibold text-white">{currentUser.name}</span>
+                <button
+                  onClick={handleLogout}
+                  className="ml-1 text-[11px] font-semibold text-rose-400 hover:text-rose-300 transition-colors cursor-pointer"
+                >
+                  Log Out
+                </button>
+              </div>
+            ) : (
+              <Link
+                to="/"
+                className="rounded-xl border border-zinc-800 bg-zinc-900/60 px-3 py-1.5 text-xs font-semibold text-zinc-300 transition-colors hover:border-zinc-700 hover:text-white inline-flex items-center gap-1.5"
+              >
+                ← Landing Page
+              </Link>
+            )}
             <a
               href="#directory"
               className="hidden rounded-xl border border-zinc-800 bg-zinc-900/60 px-3.5 py-2 text-xs font-semibold text-zinc-300 transition-colors hover:border-zinc-700 hover:text-white sm:inline-flex items-center gap-1.5"

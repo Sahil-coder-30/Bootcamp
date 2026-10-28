@@ -116,7 +116,7 @@ function AppSidebar() {
                 {selected.companyName}
               </p>
               <Link
-                to="/"
+                to="/companies"
                 className="inline-flex items-center text-[10px] font-medium text-primary hover:underline"
               >
                 Change Company
@@ -169,7 +169,7 @@ function AppSidebar() {
               tooltip="All Companies Directory"
               className="rounded-xl py-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
             >
-              <Link to="/">
+              <Link to="/companies">
                 <LayoutGrid className="h-4 w-4" />
                 <span>All Companies</span>
               </Link>
@@ -204,7 +204,18 @@ export default function AppLayout() {
                         to="/"
                         className="text-xs font-medium text-muted-foreground hover:text-foreground"
                       >
-                        Companies Directory
+                        Home
+                      </Link>
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <BreadcrumbLink asChild>
+                      <Link
+                        to="/companies"
+                        className="text-xs font-medium text-muted-foreground hover:text-foreground"
+                      >
+                        Companies
                       </Link>
                     </BreadcrumbLink>
                   </BreadcrumbItem>
@@ -271,7 +282,7 @@ export default function AppLayout() {
                 </Link>
               </div>
 
-              <Link to="/">
+              <Link to="/companies">
                 <Button
                   variant="outline"
                   size="sm"
