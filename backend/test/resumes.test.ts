@@ -69,24 +69,27 @@ describe("Resume Parsing HTTP Endpoints", () => {
       if (url.startsWith("/extract/resume/sample/")) {
         const key = url.split("/").pop()?.toLowerCase() || "ananya";
         const sample = SAMPLE_PAYLOADS[key] || SAMPLE_PAYLOADS["ananya"];
-        return res.end(JSON.stringify(sample));
+        res.end(JSON.stringify(sample));
+        return;
       }
 
       if (url === "/extract/resume/json") {
         const key = (body?.sample_key || "ananya").toLowerCase();
         const sample = SAMPLE_PAYLOADS[key] || SAMPLE_PAYLOADS["ananya"];
-        return res.end(JSON.stringify(sample));
+        res.end(JSON.stringify(sample));
+        return;
       }
 
       if (url === "/levels/infer") {
         const extraction = body?.extraction;
-        return res.end(
+        res.end(
           JSON.stringify({
             category_levels: extraction?.category_levels || SAMPLE_PAYLOADS["ananya"].category_levels,
             category_level_details: extraction?.category_level_details || {},
             latency_ms: 1.2,
           }),
         );
+        return;
       }
 
       res.end(JSON.stringify({}));
