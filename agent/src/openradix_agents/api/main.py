@@ -67,6 +67,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     except ImportError as e:
         logger.warning(f"Could not import talent_check router: {e}")
 
+    try:
+        from talent_match.skill_match.router import router as skill_match_router
+        app.include_router(skill_match_router)
+    except ImportError as e:
+        logger.warning(f"Could not import skill_match router: {e}")
+
     return app
 
 
