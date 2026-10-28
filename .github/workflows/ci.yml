@@ -29,6 +29,7 @@ jobs:
       backend: ${{ steps.filter.outputs.backend }}
       agent: ${{ steps.filter.outputs.agent }}
       auth: ${{ steps.filter.outputs.auth }}
+      resume: ${{ steps.filter.outputs.resume }}
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
@@ -49,6 +50,9 @@ jobs:
             auth:
               - *shared
               - auth/**
+            resume:
+              - *shared
+              - resume/**
 
   frontend:
     name: Frontend (lint, build, test)
@@ -187,6 +191,53 @@ jobs:
           path: auth/coverage/lcov.info
           if-no-files-found: ignore
 
+  resume:
+    name: Resume service (lint, typecheck, test)
+    needs: changes
+    if: needs.changes.outputs.resume == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: resume
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: resumetest
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+          enable-cache: true
+          cache-dependency-glob: resume/requirements*.txt
+      # setup-uv activates its own venv, so the tools are called by name.
+      - name: Install (includes the spaCy model wheel)
+        run: uv pip install -r requirements-dev.txt -e .
+      - name: Lint
+        run: ruff check src tests
+      - name: Typecheck
+        run: mypy
+      - name: Test with coverage (offline parsing; S3 mocked with moto; migration runs on Postgres)
+        env:
+          TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/resumetest
+        run: pytest --cov --cov-report=term-missing --cov-report=xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: resume-coverage
+          path: resume/coverage.xml
+          if-no-files-found: ignore
+
   secrets:
     name: Secret scan
     runs-on: ubuntu-latest
@@ -201,7 +252,7 @@ jobs:
   ci-passed:
     name: CI passed
     if: always()
-    needs: [frontend, backend, agent, auth, secrets]
+    needs: [frontend, backend, agent, auth, resume, secrets]
     runs-on: ubuntu-latest
     steps:
       - name: Fail if any job failed or was cancelled
