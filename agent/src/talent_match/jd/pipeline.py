@@ -83,11 +83,13 @@ def prepare(doc: StructuredDocument) -> str:
 
 
 def keyword_candidates(doc: StructuredDocument) -> list[Candidate]:
-    """Taxonomy keyword scan over the kept sections (plan 3.11)."""
+    """Taxonomy keyword scan (plan 3.11). Only the requirement/skill sections when the JD has
+    them, so a company blurb ("leader in financial services") never becomes a requirement."""
     tax = get_taxonomy()
     out: list[Candidate] = []
+    has_signal = any(s.signal for s in doc.sections)
     for sec in doc.sections:
-        if sec.drop:
+        if sec.drop or (has_signal and not sec.signal):
             continue
         chunk = doc.text[sec.start : sec.end]
         mode = "skills" if sec.kind in ("skills", "requirements") else "other"

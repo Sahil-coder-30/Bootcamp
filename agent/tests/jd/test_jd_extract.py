@@ -320,3 +320,21 @@ def test_api_errors(client):
 def test_api_version(client):
     body = client.get("/extract/jd/version").json()
     assert body["prompt_version"] == "jd-v1" and body["parser_version"] == "doc-1.0"
+
+
+def test_keyword_scan_ignores_company_blurb_when_jd_has_requirements(monkeypatch):
+    monkeypatch.setattr(
+        jd_pipeline,
+        "run_structured",
+        fake_llm(
+            JdLlmOutput(
+                skills=[
+                    LlmSkill(skill_name="Java", category_code="COD", evidence="Good command of Java", line=15)
+                ]
+            )
+        ),
+    )
+    out = extract_jd(JdExtractRequest(text=ORACLE, companies=COMPANIES))
+    fin = next(s for s in out.skills if s.canonical_id == "financial-services")
+    assert fin.requirement == "nice"
+    assert "Good to Have" not in fin.evidence and "banking domain" in fin.evidence
