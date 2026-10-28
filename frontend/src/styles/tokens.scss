@@ -2,47 +2,47 @@
 //   @use "@/styles/tokens.scss" as *;   (or a relative path)
 
 // Spacing Scale (8px Grid Standard)
-$space-1:   4px;
-$space-2:   8px;
-$space-3:   12px;
-$space-4:   16px;
-$space-5:   20px;
-$space-6:   24px;   // Standard component padding
-$space-8:   32px;
-$space-10:  40px;
-$space-12:  48px;
-$space-16:  64px;
+$space-1: 4px;
+$space-2: 8px;
+$space-3: 12px;
+$space-4: 16px;
+$space-5: 20px;
+$space-6: 24px; // Standard component padding
+$space-8: 32px;
+$space-10: 40px;
+$space-12: 48px;
+$space-16: 64px;
 
 // Surface & Background Mappings
-$color-bg:            var(--bg-canvas);
-$color-bg-sidebar:    var(--bg-surface);
-$color-bg-panel:      var(--bg-overlay);
-$color-bg-element:    var(--bg-element);
-$color-bg-active:     var(--bg-active);
+$color-bg: var(--bg-canvas);
+$color-bg-sidebar: var(--bg-surface);
+$color-bg-panel: var(--bg-overlay);
+$color-bg-element: var(--bg-element);
+$color-bg-active: var(--bg-active);
 
 // Border System
-$color-border:        var(--border);
+$color-border: var(--border);
 $color-border-strong: var(--border-strong);
-$color-border-glow:   var(--border-glow);
+$color-border-glow: var(--border-glow);
 
 // Brand & Accent Colors
-$color-primary:       var(--brand-primary);
+$color-primary: var(--brand-primary);
 $color-primary-hover: var(--brand-hover);
-$color-primary-glow:  var(--brand-subtle);
-$color-accent:        var(--accent-primary);
-$color-accent-hover:  var(--accent-hover);
+$color-primary-glow: var(--brand-subtle);
+$color-accent: var(--accent-primary);
+$color-accent-hover: var(--accent-hover);
 
 // Typography Tokens
-$color-text:          var(--text-primary);
-$color-text-muted:    var(--text-secondary);
+$color-text: var(--text-primary);
+$color-text-muted: var(--text-secondary);
 $color-text-disabled: var(--text-disabled);
 
-$font-sans:           var(--font-sans);
-$font-mono:           var(--font-mono);
+$font-sans: var(--font-sans);
+$font-mono: var(--font-mono);
 
 // Alpha Card Helpers
-$color-rgb-text:      var(--color-rgb-text);
-$color-bg-card:       rgba(var(--color-rgb-text), 0.03);
+$color-rgb-text: var(--color-rgb-text);
+$color-bg-card: rgba(var(--color-rgb-text), 0.03);
 $color-bg-card-hover: rgba(var(--color-rgb-text), 0.06);
 
 // Layout Mixins
@@ -81,9 +81,13 @@ $color-bg-card-hover: rgba(var(--color-rgb-text), 0.06);
 }
 
 @mixin respond-to($bp) {
-  @if $bp == 'mobile' {
-    @media (max-width: 768px) { @content; }
-  } @else if $bp == 'tablet' {
-    @media (max-width: 1024px) { @content; }
+  @if $bp == "mobile" {
+    @media (max-width: 768px) {
+      @content;
+    }
+  } @else if $bp == "tablet" {
+    @media (max-width: 1024px) {
+      @content;
+    }
   }
 }

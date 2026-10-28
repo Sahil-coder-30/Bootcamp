@@ -6,5 +6,6 @@ const router = Router();
 router.get("/", companies.listCompanies);
 router.get("/:id", companies.getCompany);
 router.get("/:id/skills", companies.getCompanySkills);
+router.get("/:id/skill-bar", companies.getCompanySkillBar);
 
 export default router;

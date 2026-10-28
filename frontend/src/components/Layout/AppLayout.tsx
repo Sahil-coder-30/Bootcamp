@@ -1,6 +1,15 @@
 import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Building2, GraduationCap, LayoutGrid, Moon, Sun, UserRound } from "lucide-react";
+import {
+  ArrowLeft,
+  Building2,
+  GraduationCap,
+  LayoutGrid,
+  Moon,
+  Sun,
+  UserCheck,
+  UserRound,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -32,6 +41,7 @@ import { cn } from "@/lib/utils";
 const NAV = [
   { title: "Company Intelligence", url: "/company/intelligence", icon: Building2 },
   { title: "Skill Intelligence", url: "/company/skills", icon: GraduationCap },
+  { title: "Talent Check", url: "/talent-check", icon: UserCheck },
 ] as const;
 
 // `.dark` drives the Tailwind/shadcn palette, `.light-theme` drives the SCSS tokens in src/styles.
@@ -188,6 +198,7 @@ export default function AppLayout() {
   const { selected } = useCompany();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const isSkillsPage = path.endsWith("/skills");
+  const isTalentCheck = path.startsWith("/talent-check");
 
   return (
     <SidebarProvider>
@@ -221,7 +232,11 @@ export default function AppLayout() {
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
                     <BreadcrumbPage className="text-xs font-semibold text-primary">
-                      {isSkillsPage ? "Skill Intelligence" : "Company Intelligence"}
+                      {isTalentCheck
+                        ? "Talent Check & Readiness"
+                        : isSkillsPage
+                          ? "Skill Intelligence"
+                          : "Company Intelligence"}
                     </BreadcrumbPage>
                   </BreadcrumbItem>
                 </BreadcrumbList>
@@ -235,7 +250,7 @@ export default function AppLayout() {
                   to="/company/intelligence"
                   className={cn(
                     "flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-medium transition-all",
-                    !isSkillsPage
+                    !isSkillsPage && !isTalentCheck
                       ? "bg-card text-foreground font-semibold shadow-2xs"
                       : "text-muted-foreground hover:text-foreground",
                   )}
@@ -254,6 +269,18 @@ export default function AppLayout() {
                 >
                   <GraduationCap className="h-3.5 w-3.5" />
                   <span>Skill Roadmap</span>
+                </Link>
+                <Link
+                  to="/talent-check"
+                  className={cn(
+                    "flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-medium transition-all",
+                    isTalentCheck
+                      ? "bg-card text-foreground font-semibold shadow-2xs"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  <UserCheck className="h-3.5 w-3.5" />
+                  <span>Talent Check</span>
                 </Link>
               </div>
 

@@ -33,7 +33,7 @@ const yearString = (maxYear: () => number, minYear = 1990) =>
     .refine((v) => v === "" || /^\d{4}$/.test(v), "Use a 4-digit year")
     .refine(
       (v) => v === "" || (Number(v) >= minYear && Number(v) <= maxYear()),
-      () => ({ message: `Year must be between ${minYear} and ${maxYear()}` }),
+      { error: () => `Year must be between ${minYear} and ${maxYear()}` },
     );
 
 const yearMonth = z

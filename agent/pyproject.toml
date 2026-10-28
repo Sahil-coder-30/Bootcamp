@@ -34,7 +34,7 @@ select = ["F", "E", "W", "B", "I"]
 extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.Header"]
 
 [tool.coverage.run]
-source = ["openradix_agents"]
+source = ["openradix_agents", "talent_match"]
 omit = ["*/test_*.py"]
 
 [tool.coverage.report]
