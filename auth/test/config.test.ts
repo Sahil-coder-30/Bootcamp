@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { loadConfig } from "../src/config/env.js";
+import { readCookie, safeRedirect } from "../src/services/oauthState.js";
 import { hashToken, newRefreshToken, signAccessToken, verifyAccessToken } from "../src/services/tokens.js";
-import { createGoogleVerifier } from "../src/services/google.js";
 
 describe("config", () => {
   it("refuses a production start without a strong JWT_SECRET", () => {
@@ -35,13 +35,14 @@ describe("tokens", () => {
   });
 });
 
-describe("google verifier without config", () => {
-  it("answers 503 when GOOGLE_CLIENT_ID is missing", async () => {
-    const g = createGoogleVerifier(loadConfig({ JWT_SECRET: "z".repeat(40) }));
-    await expect(g.verifyIdToken("abc")).rejects.toMatchObject({ status: 503 });
+describe("oauth helpers", () => {
+  it("reads cookies", () => {
+    expect(readCookie("a=1; oauth_nonce=abc%20d; b=2", "oauth_nonce")).toBe("abc d");
+    expect(readCookie(undefined, "x")).toBeUndefined();
   });
-  it("answers 503 for the code flow without a client secret", async () => {
-    const g = createGoogleVerifier(loadConfig({ JWT_SECRET: "z".repeat(40), GOOGLE_CLIENT_ID: "id" }));
-    await expect(g.exchangeCode("c", "http://x")).rejects.toMatchObject({ status: 503 });
+  it("only allows same-site redirect targets", () => {
+    expect(safeRedirect("/profile")).toBe("/profile");
+    expect(safeRedirect(undefined)).toBe("/");
+    expect(safeRedirect("//x.com")).toBe("/");
   });
 });

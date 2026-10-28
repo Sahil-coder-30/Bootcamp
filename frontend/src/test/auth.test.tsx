@@ -3,8 +3,7 @@ import userEvent from "@testing-library/user-event";
 import axios, { AxiosError, type AxiosAdapter, type InternalAxiosRequestConfig } from "axios";
 
 vi.mock("@/features/auth/service/auth.api", () => ({
-  getAuthConfigAPI: vi.fn(),
-  googleLoginAPI: vi.fn(),
+  googleLoginUrl: vi.fn((r: string) => `/api/auth/google?redirect=${r}`),
   getMeAPI: vi.fn(),
   updateMeAPI: vi.fn(),
   logoutAPI: vi.fn(),
@@ -15,6 +14,8 @@ import { apiClient, setSessionLostHandler } from "@/services/apiClient";
 import { AUTH_STORAGE_KEY, readSession, writeSession } from "@/lib/authStorage";
 import { useAuth, useAuthBootstrap } from "@/features/auth/Hooks/auth.hooks";
 import ProfilePage from "@/features/auth/components/ProfilePage";
+import LoginPage from "@/features/auth/components/LoginPage";
+import AuthCallbackPage from "@/features/auth/components/AuthCallbackPage";
 import { safeRedirect } from "@/lib/safeRedirect";
 import { makeStore, renderPage, withStore } from "./utils";
 
@@ -126,34 +127,30 @@ describe("apiClient auth", () => {
 });
 
 describe("useAuth", () => {
-  it("signs in with a Google credential and stores the tokens", async () => {
-    vi.mocked(authApi.googleLoginAPI).mockResolvedValue({
-      accessToken: "a",
-      refreshToken: "r",
-      expiresIn: 900,
-      user,
-    });
+  it("completes sign-in from the callback tokens", async () => {
+    vi.mocked(authApi.getMeAPI).mockResolvedValue(user);
     const store = makeStore();
     const { result } = renderHook(() => useAuth(), { wrapper: withStore(store) });
     let ok = false;
     await act(async () => {
-      ok = await result.current.signInWithGoogle("cred-123456");
+      ok = await result.current.completeSignIn("a", "r");
     });
     expect(ok).toBe(true);
     expect(result.current.user?.email).toBe("a@b.c");
     expect(readSession()).toEqual({ accessToken: "a", refreshToken: "r" });
   });
 
-  it("surfaces a sign-in error", async () => {
-    vi.mocked(authApi.googleLoginAPI).mockRejectedValue(
-      new Error("Sign-in is limited to: jssaten.ac.in"),
-    );
+  it("drops the tokens when the server rejects them", async () => {
+    vi.mocked(authApi.getMeAPI).mockRejectedValue(new Error("Invalid or expired token"));
     const { result } = renderHook(() => useAuth(), { wrapper: withStore(makeStore()) });
+    let ok = true;
     await act(async () => {
-      await result.current.signInWithGoogle("cred-123456");
+      ok = await result.current.completeSignIn("a", "r");
     });
+    expect(ok).toBe(false);
     expect(result.current.user).toBeNull();
-    expect(result.current.error).toMatch(/limited to/);
+    expect(result.current.error).toMatch(/expired/);
+    expect(readSession()).toBeNull();
   });
 
   it("signs out and revokes the refresh token", async () => {
@@ -225,5 +222,39 @@ describe("safeRedirect", () => {
     [undefined, "/"],
   ])("%s -> %s", (input, out) => {
     expect(safeRedirect(input)).toBe(out);
+  });
+});
+
+describe("LoginPage", () => {
+  it("links to the Google redirect flow and keeps the return path", async () => {
+    renderPage(
+      () => <LoginPage redirect="/talent-check" error="Sign-in is limited to: jssaten.ac.in" />,
+      "/",
+    );
+    const link = await screen.findByRole("link", { name: "Continue with Google" });
+    expect(link).toHaveAttribute("href", "/api/auth/google?redirect=/talent-check");
+    expect(screen.getByRole("alert")).toHaveTextContent("limited to");
+  });
+});
+
+describe("AuthCallbackPage", () => {
+  const land = (hash: string) => window.history.replaceState(null, "", `/${hash}`);
+
+  it("stores the fragment tokens, clears the URL and goes to the saved page", async () => {
+    vi.mocked(authApi.getMeAPI).mockResolvedValue(user);
+    land("#accessToken=acc&refreshToken=ref&redirect=%2F");
+    const store = makeStore();
+    renderPage(AuthCallbackPage, "/", store);
+    await waitFor(() => expect(store.getState().auth.user?.email).toBe("a@b.c"));
+    expect(readSession()).toEqual({ accessToken: "acc", refreshToken: "ref" });
+    expect(window.location.hash).toBe("");
+  });
+
+  it("sends the user back to /login when the tokens are missing", async () => {
+    land("");
+    const store = makeStore();
+    renderPage(AuthCallbackPage, "/", store);
+    await waitFor(() => expect(readSession()).toBeNull());
+    expect(store.getState().auth.user).toBeNull();
   });
 });

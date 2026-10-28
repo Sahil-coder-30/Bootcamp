@@ -44,6 +44,10 @@ spec:
           value: "true"
         - name: CORS_ORIGINS
           value: "http://localhost:5173,http://localhost:3000"
+        - name: FRONTEND_URL
+          value: "http://localhost:5173"
+        - name: GOOGLE_CALLBACK_URL
+          value: "http://localhost/api/auth/google/callback"
         - name: DATABASE_URL
           valueFrom:
             secretKeyRef:

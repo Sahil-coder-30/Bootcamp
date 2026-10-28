@@ -11,6 +11,10 @@ export interface AuthConfig {
   refreshTtlDays: number;
   googleClientId?: string;
   googleClientSecret?: string;
+  /** Must match an "Authorized redirect URI" in the Google OAuth client. */
+  googleCallbackUrl: string;
+  /** Where the browser lands after Google sign-in (tokens are appended as a URL fragment). */
+  frontendUrl: string;
   /** Optional comma-separated allow-list, e.g. "jssaten.ac.in". Empty means any Google account. */
   allowedEmailDomains: string[];
   adminEmails: string[];
@@ -46,6 +50,8 @@ export function loadConfig(source: NodeJS.ProcessEnv = process.env): AuthConfig 
     refreshTtlDays: Number(read("REFRESH_TOKEN_TTL_DAYS") ?? 30),
     googleClientId: read("GOOGLE_CLIENT_ID"),
     googleClientSecret: read("GOOGLE_CLIENT_SECRET"),
+    googleCallbackUrl: read("GOOGLE_CALLBACK_URL") ?? "http://localhost:5173/api/auth/google/callback",
+    frontendUrl: (read("FRONTEND_URL") ?? "http://localhost:5173").replace(/\/$/, ""),
     allowedEmailDomains: list("ALLOWED_EMAIL_DOMAINS"),
     adminEmails: list("ADMIN_EMAILS"),
     autoMigrate: read("AUTO_MIGRATE") === "true",

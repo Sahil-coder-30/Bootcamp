@@ -1,12 +1,19 @@
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { APP_NAME, COLLEGE_SHORT } from "@/lib/college";
 import { safeRedirect } from "@/lib/safeRedirect";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "../Hooks/auth.hooks";
-import { GoogleSignInButton } from "./GoogleSignInButton";
+import { googleLoginUrl } from "../service/auth.api";
 
-export default function LoginPage({ redirect }: { redirect?: string | undefined }) {
-  const { user, ready, loading, error, signInWithGoogle } = useAuth();
+export default function LoginPage({
+  redirect,
+  error,
+}: {
+  redirect?: string | undefined;
+  error?: string | undefined;
+}) {
+  const { user, ready, error: authError } = useAuth();
   const navigate = useNavigate();
   const target = safeRedirect(redirect);
 
@@ -14,12 +21,7 @@ export default function LoginPage({ redirect }: { redirect?: string | undefined 
     if (ready && user) void navigate({ to: target });
   }, [ready, user, navigate, target]);
 
-  const onCredential = useCallback(
-    (credential: string) => {
-      void signInWithGoogle(credential);
-    },
-    [signInWithGoogle],
-  );
+  const message = error ?? authError;
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -29,11 +31,12 @@ export default function LoginPage({ redirect }: { redirect?: string | undefined 
         <p className="mt-6 mb-4 text-sm text-foreground">
           Sign in to save your profile and resume.
         </p>
-        <GoogleSignInButton onCredential={onCredential} />
-        {loading && <p className="mt-4 text-sm text-muted-foreground">Signing you in…</p>}
-        {error && (
+        <Button asChild className="w-full rounded-full">
+          <a href={googleLoginUrl(target)}>Continue with Google</a>
+        </Button>
+        {message && (
           <p role="alert" className="mt-4 text-sm text-destructive">
-            {error}
+            {message}
           </p>
         )}
       </div>

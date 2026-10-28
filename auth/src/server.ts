@@ -1,7 +1,6 @@
 import { loadConfig } from "./config/env.js";
 import { createApp } from "./app.js";
 import { runMigrations } from "./migrate.js";
-import { createGoogleVerifier } from "./services/google.js";
 import { MemoryStore } from "./services/memoryStore.js";
 import { PgStore } from "./services/pgStore.js";
 
@@ -17,6 +16,6 @@ if (!config.databaseUrl) {
 if (!config.googleClientId) console.warn("[auth] GOOGLE_CLIENT_ID not set: Google sign-in will answer 503");
 
 const store = config.databaseUrl ? new PgStore(config.databaseUrl) : new MemoryStore();
-const app = createApp({ config, store, google: createGoogleVerifier(config) });
+const app = createApp({ config, store });
 
 app.listen(config.port, () => console.log(`[auth] listening on :${config.port}`));

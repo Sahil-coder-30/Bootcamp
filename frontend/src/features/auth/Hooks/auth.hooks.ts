@@ -2,13 +2,7 @@ import { useCallback, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { clearSession, readSession, writeSession } from "@/lib/authStorage";
 import { setSessionLostHandler, toErrorMessage } from "@/services/apiClient";
-import {
-  getMeAPI,
-  googleLoginAPI,
-  logoutAPI,
-  updateMeAPI,
-  type ProfilePatch,
-} from "../service/auth.api";
+import { getMeAPI, logoutAPI, updateMeAPI, type ProfilePatch } from "../service/auth.api";
 import { setAuthError, setAuthLoading, setAuthReady, setAuthUser } from "../slice/auth.slice";
 
 /** Reads the signed-in user. Call `useAuthBootstrap` once near the app root. */
@@ -16,16 +10,17 @@ export function useAuth() {
   const dispatch = useAppDispatch();
   const { user, ready, loading, error } = useAppSelector((s) => s.auth);
 
-  const signInWithGoogle = useCallback(
-    async (credential: string): Promise<boolean> => {
+  /** Called by /auth/callback with the tokens the auth service put in the URL fragment. */
+  const completeSignIn = useCallback(
+    async (accessToken: string, refreshToken: string): Promise<boolean> => {
       dispatch(setAuthLoading(true));
+      writeSession({ accessToken, refreshToken });
       try {
-        const session = await googleLoginAPI(credential);
-        writeSession({ accessToken: session.accessToken, refreshToken: session.refreshToken });
-        dispatch(setAuthUser(session.user));
+        dispatch(setAuthUser(await getMeAPI()));
         return true;
       } catch (err) {
-        dispatch(setAuthError(toErrorMessage(err, "Google sign-in failed")));
+        clearSession();
+        dispatch(setAuthError(toErrorMessage(err, "Sign-in failed")));
         return false;
       }
     },
@@ -53,7 +48,7 @@ export function useAuth() {
     [dispatch],
   );
 
-  return { user, ready, loading, error, signInWithGoogle, signOut, updateProfile };
+  return { user, ready, loading, error, completeSignIn, signOut, updateProfile };
 }
 
 /** On first mount, restores the user from a saved session. */

@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-export const googleLoginSchema = z.object({ credential: z.string().min(10) });
-export const googleCodeSchema = z.object({ code: z.string().min(4), redirectUri: z.string().url() });
 export const refreshSchema = z.object({ refreshToken: z.string().min(10) });
 
 const nullableText = (max: number) => z.string().trim().max(max).nullable();

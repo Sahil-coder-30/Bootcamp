@@ -15,22 +15,15 @@ export interface AuthUser {
   candidateProfileId: string | null;
 }
 
-export interface SessionResponse {
-  accessToken: string;
-  refreshToken: string;
-  expiresIn: number;
-  user: AuthUser;
-}
-
 export type ProfilePatch = Partial<
   Pick<AuthUser, "name" | "phone" | "college" | "branch" | "graduationYear" | "resumeId">
 >;
 
-export const getAuthConfigAPI = async (): Promise<{ googleClientId: string | null }> =>
-  (await apiClient.get<{ googleClientId: string | null }>("/auth/config")).data;
-
-export const googleLoginAPI = async (credential: string): Promise<SessionResponse> =>
-  (await apiClient.post<SessionResponse>("/auth/google", { credential })).data;
+/** Where the browser goes to start Google sign-in (full-page redirect, handled by the auth service). */
+export const googleLoginUrl = (redirect: string): string => {
+  const base = ((import.meta.env["VITE_API_URL"] as string | undefined) ?? "").replace(/\/$/, "");
+  return `${base}/api/auth/google?redirect=${encodeURIComponent(redirect)}`;
+};
 
 export const getMeAPI = async (): Promise<AuthUser> =>
   (await apiClient.get<{ user: AuthUser }>("/auth/me")).data.user;
