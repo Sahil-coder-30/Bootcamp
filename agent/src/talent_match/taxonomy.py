@@ -6,11 +6,12 @@ Canonical skill taxonomy, aliases, hierarchy, implication DAG, and false-friends
 
 from __future__ import annotations
 
-import json
 from typing import Literal
+
 from pydantic import BaseModel, Field
 
-CategoryCode = str  # 'COD' | 'DSA' | 'AI' | 'SQL' | 'SYSD' | 'CLOUD' | 'SWE' | 'NETW' | 'OS' | 'COMM' | 'APTI' | 'OOD' | 'OTHER'
+# Valid category codes: COD | DSA | AI | SQL | SYSD | CLOUD | SWE | NETW | OS | COMM | APTI | OOD | OTHER
+CategoryCode = str
 
 
 class TaxonomyEntry(BaseModel):
@@ -118,9 +119,11 @@ SEED: list[TaxonomyEntry] = [
         kind="language",
         aliases=["structured query language", "ansi sql"],
         distinct_from=["nosql"],
-        learn_hint="Window functions, CTEs, query plan optimization, indexing strategies, and ACID transactions.",
+        learn_hint=(
+            "Window functions, CTEs, query plan optimization,"
+            " indexing strategies, and ACID transactions."
+        ),
     ),
-
     # Frameworks & Libs
     TaxonomyEntry(
         canonical_id="react",
@@ -176,7 +179,10 @@ SEED: list[TaxonomyEntry] = [
         kind="framework",
         aliases=["django rest framework", "drf"],
         implies=["python"],
-        learn_hint="ORM query optimization (select_related/prefetch_related), middleware, and authentication.",
+        learn_hint=(
+            "ORM query optimization (select_related/prefetch_related),"
+            " middleware, and authentication."
+        ),
     ),
     TaxonomyEntry(
         canonical_id="flask",
@@ -196,7 +202,6 @@ SEED: list[TaxonomyEntry] = [
         implies=["python"],
         learn_hint="Pydantic models, dependency injection, async endpoints, OpenAPI auto-docs.",
     ),
-
     # Databases
     TaxonomyEntry(
         canonical_id="relational-databases",
@@ -205,7 +210,10 @@ SEED: list[TaxonomyEntry] = [
         kind="concept",
         aliases=["rdbms", "relational database", "relational db", "sql databases"],
         distinct_from=["nosql"],
-        learn_hint="Normalization (1NF-3NF/BCNF), isolation levels, transaction logs (WAL), and query planners.",
+        learn_hint=(
+            "Normalization (1NF-3NF/BCNF), isolation levels,"
+            " transaction logs (WAL), and query planners."
+        ),
     ),
     TaxonomyEntry(
         canonical_id="postgresql",
@@ -217,7 +225,10 @@ SEED: list[TaxonomyEntry] = [
         implies=["sql-lang"],
         related=["mysql"],
         distinct_from=["nosql", "mongodb"],
-        learn_hint="EXPLAIN ANALYZE, indexing (B-Tree, GIN, GiST), JSONB queries, connection pooling (PgBouncer).",
+        learn_hint=(
+            "EXPLAIN ANALYZE, indexing (B-Tree, GIN, GiST), JSONB queries,"
+            " connection pooling (PgBouncer)."
+        ),
     ),
     TaxonomyEntry(
         canonical_id="mysql",
@@ -257,9 +268,11 @@ SEED: list[TaxonomyEntry] = [
         kind="tool",
         aliases=["redis cache", "redis in-memory"],
         parents=["nosql"],
-        learn_hint="Data structures (hashes, sorted sets, bitmaps), persistence (RDB, AOF), caching strategies, Lua scripts.",
+        learn_hint=(
+            "Data structures (hashes, sorted sets, bitmaps), persistence (RDB, AOF),"
+            " caching strategies, Lua scripts."
+        ),
     ),
-
     # Cloud & DevOps
     TaxonomyEntry(
         canonical_id="docker",
@@ -278,7 +291,10 @@ SEED: list[TaxonomyEntry] = [
         aliases=["k8s", "kube", "kubectl"],
         implies=["docker"],
         related=["docker"],
-        learn_hint="Pods, Deployments, Services; deploy your Docker app on minikube. Next: Helm charts, CI/CD to cluster.",
+        learn_hint=(
+            "Pods, Deployments, Services; deploy your Docker app on minikube."
+            " Next: Helm charts, CI/CD to cluster."
+        ),
     ),
     TaxonomyEntry(
         canonical_id="aws",
@@ -313,7 +329,10 @@ SEED: list[TaxonomyEntry] = [
         category_code="SWE",
         kind="tool",
         aliases=["version control", "github", "gitlab", "bitbucket", "git cli"],
-        learn_hint="Rebase, interactive rebase, cherry-pick, merge conflict resolution, branch protection workflows.",
+        learn_hint=(
+            "Rebase, interactive rebase, cherry-pick, merge conflict resolution,"
+            " branch protection workflows."
+        ),
     ),
     TaxonomyEntry(
         canonical_id="ci-cd",
@@ -323,7 +342,6 @@ SEED: list[TaxonomyEntry] = [
         aliases=["continuous integration", "continuous deployment", "github actions", "jenkins"],
         learn_hint="Pipeline automation, automated test stages, artifact builds, and deployment gates.",
     ),
-
     # Distributed Systems & System Design
     TaxonomyEntry(
         canonical_id="distributed-systems",
@@ -331,7 +349,10 @@ SEED: list[TaxonomyEntry] = [
         category_code="SYSD",
         kind="concept",
         aliases=["distributed computing", "distributed architecture"],
-        learn_hint="Consensus algorithms (Raft, Paxos), CAP theorem, distributed transactions, event-driven architecture.",
+        learn_hint=(
+            "Consensus algorithms (Raft, Paxos), CAP theorem,"
+            " distributed transactions, event-driven architecture."
+        ),
     ),
     TaxonomyEntry(
         canonical_id="kafka",
@@ -349,7 +370,10 @@ SEED: list[TaxonomyEntry] = [
         category_code="SYSD",
         kind="concept",
         aliases=["system architecture", "high level design", "hld", "low level design", "lld"],
-        learn_hint="Load balancing, horizontal scaling, caching layers, rate limiting, and database sharding.",
+        learn_hint=(
+            "Load balancing, horizontal scaling, caching layers,"
+            " rate limiting, and database sharding."
+        ),
     ),
     TaxonomyEntry(
         canonical_id="microservices",
@@ -360,7 +384,6 @@ SEED: list[TaxonomyEntry] = [
         implies=["system-design"],
         learn_hint="API gateway, service discovery, saga pattern, circuit breakers, and distributed tracing.",
     ),
-
     # AI & ML
     TaxonomyEntry(
         canonical_id="machine-learning",
@@ -369,7 +392,10 @@ SEED: list[TaxonomyEntry] = [
         kind="concept",
         aliases=["ml", "predictive modeling"],
         distinct_from=["mlops"],
-        learn_hint="Feature engineering, cross-validation, bias-variance tradeoff, regularization, ensemble methods.",
+        learn_hint=(
+            "Feature engineering, cross-validation, bias-variance tradeoff,"
+            " regularization, ensemble methods."
+        ),
     ),
     TaxonomyEntry(
         canonical_id="deep-learning",
@@ -389,7 +415,10 @@ SEED: list[TaxonomyEntry] = [
         aliases=["torch"],
         implies=["python", "machine-learning", "deep-learning"],
         parents=["deep-learning"],
-        learn_hint="Tensors, autograd, custom Dataset/DataLoader, nn.Module, model checkpoints, GPU acceleration.",
+        learn_hint=(
+            "Tensors, autograd, custom Dataset/DataLoader, nn.Module,"
+            " model checkpoints, GPU acceleration."
+        ),
     ),
     TaxonomyEntry(
         canonical_id="tensorflow",
@@ -409,7 +438,10 @@ SEED: list[TaxonomyEntry] = [
         kind="tool",
         aliases=["spark", "pyspark", "spark streaming"],
         implies=["distributed-systems"],
-        learn_hint="RDDs, DataFrames, Catalyst optimizer, partitioning, shuffle operations, and broadcast variables.",
+        learn_hint=(
+            "RDDs, DataFrames, Catalyst optimizer, partitioning,"
+            " shuffle operations, and broadcast variables."
+        ),
     ),
     TaxonomyEntry(
         canonical_id="pandas",
@@ -418,9 +450,11 @@ SEED: list[TaxonomyEntry] = [
         kind="tool",
         aliases=["pandas library"],
         implies=["python"],
-        learn_hint="Vectorized operations, merge/join/groupby, handling missing data, and memory optimization.",
+        learn_hint=(
+            "Vectorized operations, merge/join/groupby,"
+            " handling missing data, and memory optimization."
+        ),
     ),
-
     # DSA & Core CS
     TaxonomyEntry(
         canonical_id="dsa",
@@ -436,7 +470,10 @@ SEED: list[TaxonomyEntry] = [
             "problem solving",
         ],
         maps_to_categories=["DSA"],
-        learn_hint="Time/space complexity, trees, graphs, dynamic programming, heaps, and two-pointer techniques.",
+        learn_hint=(
+            "Time/space complexity, trees, graphs, dynamic programming,"
+            " heaps, and two-pointer techniques."
+        ),
     ),
     TaxonomyEntry(
         canonical_id="cs-fundamentals",
@@ -445,7 +482,10 @@ SEED: list[TaxonomyEntry] = [
         kind="concept",
         aliases=["cs fundamentals", "computer science fundamentals", "core computer science"],
         maps_to_categories=["DSA", "OS", "NETW", "COD"],
-        learn_hint="Operating systems concepts (processes, threads), networking fundamentals (TCP/IP), and algorithms.",
+        learn_hint=(
+            "Operating systems concepts (processes, threads),"
+            " networking fundamentals (TCP/IP), and algorithms."
+        ),
     ),
     TaxonomyEntry(
         canonical_id="operating-systems",
@@ -480,7 +520,10 @@ SEED: list[TaxonomyEntry] = [
         kind="soft",
         aliases=["communication skills", "written communication", "verbal communication"],
         maps_to_categories=["COMM"],
-        learn_hint="Technical documentation, clear PR descriptions, cross-functional collaboration, presentation.",
+        learn_hint=(
+            "Technical documentation, clear PR descriptions,"
+            " cross-functional collaboration, presentation."
+        ),
     ),
 ]
 
@@ -567,7 +610,8 @@ class TaxonomyIndex:
     def relation(self, cand_cid: str, jd_cid: str) -> str | None:
         """
         Determines taxonomy relation:
-        - 'instance_of': candidate skill is an instance / descendant of JD skill (e.g. Postgres -> relational-databases)
+        - 'instance_of': candidate is an instance/descendant of JD skill
+          (e.g. Postgres -> relational-databases)
         - 'implies': candidate skill directly or transitively implies JD skill (e.g. Spring Boot -> Java)
         - 'general_form': candidate skill is ancestor / general form of JD skill (e.g. SQL -> Postgres)
         - 'sibling': both share an immediate common parent (e.g. MySQL & Postgres share relational-databases)
@@ -627,4 +671,3 @@ def is_distinct(a: str, b: str) -> bool:
 
 def relation(cand_cid: str, jd_cid: str) -> str | None:
     return taxonomy_index.relation(cand_cid, jd_cid)
-

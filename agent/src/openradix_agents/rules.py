@@ -36,7 +36,7 @@ def _is_blank(value) -> bool:
 
 
 def _split(value, meta) -> list[str]:
-    delim = (meta.get("delimiter") or ";")
+    delim = meta.get("delimiter") or ";"
     return [p.strip() for p in str(value).split(delim) if p.strip()]
 
 
@@ -90,7 +90,7 @@ def composite_max_count(value, meta):
 def composite_elements_nonempty(value, meta):
     if _is_blank(value):
         return None
-    delim = (meta.get("delimiter") or ";")
+    delim = meta.get("delimiter") or ";"
     parts = str(value).split(delim)
     return "empty element between delimiters" if any(not p.strip() for p in parts) else None
 
@@ -98,7 +98,7 @@ def composite_elements_nonempty(value, meta):
 def composite_no_trailing_delimiter(value, meta):
     if _is_blank(value):
         return None
-    delim = (meta.get("delimiter") or ";")
+    delim = meta.get("delimiter") or ";"
     return "trailing delimiter" if str(value).rstrip().endswith(delim) else None
 
 
@@ -240,8 +240,11 @@ _RESERVED_KEYS = {"company_id", "_defects"}
 
 
 def all_required_present(record: dict, metadata: list[dict]):
-    missing = [m["column_name"] for m in metadata
-               if not m["nullable"] and not str(record.get(m["column_name"], "")).strip()]
+    missing = [
+        m["column_name"]
+        for m in metadata
+        if not m["nullable"] and not str(record.get(m["column_name"], "")).strip()
+    ]
     return None if not missing else f"missing required values: {missing}"
 
 

@@ -14,17 +14,17 @@ Stage 7: category fallback for concept terms
 from __future__ import annotations
 
 from typing import Literal
-import numpy as np
-from pydantic import BaseModel, Field
+
+from pydantic import BaseModel
 from rapidfuzz import fuzz
 
+import talent_match.taxonomy as taxonomy
 from talent_match.contract import CandidateSkillLevel
 from talent_match.skill_match.adjudicate import Adjudicator, GrayPair
 from talent_match.skill_match.embeddings import Embedder, cosine_matrix
 from talent_match.skill_match.normalize import is_short
 from talent_match.skill_match.params import CREDITS, MAX_LLM_PAIRS, THRESHOLDS
 from talent_match.skill_match.terms import CandTerm, JdTerm
-import talent_match.taxonomy as taxonomy
 
 
 class Decision(BaseModel):
@@ -35,7 +35,9 @@ class Decision(BaseModel):
     section: str
     weight: float
     best_candidate_term: CandTerm | None = None
-    method: Literal["exact", "alias", "implied", "fuzzy", "semantic", "llm", "category", "unmatched"] = "unmatched"
+    method: Literal["exact", "alias", "implied", "fuzzy", "semantic", "llm", "category", "unmatched"] = (
+        "unmatched"
+    )
     similarity: float = 0.0
     credit: float = 0.0
     relation: str | None = None
@@ -87,7 +89,6 @@ def run_cascade(
     unresolved_jd: list[JdTerm] = []
 
     for jt in jd_terms:
-        matched = False
 
         # --- Stage 1: Exact match ---
         if jt.norm_name in exact_map:
@@ -252,7 +253,10 @@ def run_cascade(
                 sim = float(cos_sims[idx, c_idx])
                 accept_bound = THRESHOLDS["semantic_accept"]
                 gray_bound = THRESHOLDS["semantic_gray"]
-                if jt.category_code != ct.category_code and "OTHER" not in (jt.category_code, ct.category_code):
+                if jt.category_code != ct.category_code and "OTHER" not in (
+                    jt.category_code,
+                    ct.category_code,
+                ):
                     accept_bound += THRESHOLDS["cross_category_semantic_boost"]
                     gray_bound += THRESHOLDS["cross_category_semantic_boost"]
 
@@ -299,7 +303,7 @@ def run_cascade(
         # Prioritize must-have requirements
         sorted_gray = sorted(gray_candidates, key=lambda x: (0 if x[0].requirement == "must" else 1, -x[3]))
 
-        for jt, ct, src, sim in sorted_gray:
+        for jt, ct, _src, sim in sorted_gray:
             # Check if jt already resolved
             if any(d.jd_id == jt.id for d in decisions):
                 continue
@@ -431,4 +435,3 @@ def run_cascade(
             )
 
     return decisions, stage_counts, llm_calls_made, llm_pairs_processed
-

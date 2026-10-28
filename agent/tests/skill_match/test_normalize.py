@@ -39,4 +39,3 @@ def test_is_short():
     assert is_short("sql") is True
     assert is_short("java") is False
     assert is_short("python") is False
-

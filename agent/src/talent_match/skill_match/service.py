@@ -7,7 +7,6 @@ Public service orchestration for single and batch skill matching.
 from __future__ import annotations
 
 import time
-from typing import Any
 
 from talent_match.contract import (
     BatchMatrixCell,
@@ -94,7 +93,9 @@ def match(req: SkillMatchRequest) -> SkillMatchResult:
                     jd_skill=d.jd_skill,
                     candidate_skill=d.best_candidate_term.raw_name,
                     category_code=d.category_code,
-                    method=d.method if d.method in ("exact", "alias", "fuzzy", "semantic", "llm") else "alias",
+                    method=d.method
+                    if d.method in ("exact", "alias", "fuzzy", "semantic", "llm")
+                    else "alias",
                     similarity=float(round(d.similarity, 2)),
                     requirement=d.requirement,
                     evidence=d.candidate_evidence,
@@ -154,7 +155,7 @@ def match_batch(req: SkillMatchBatchRequest) -> SkillMatchBatchResult:
     best_cand_by_jd: dict[str, str] = {}
 
     max_scores_prof: dict[str, tuple[int, float, str]] = {}  # prof_id -> (score, must_cov, jd_id)
-    max_scores_jd: dict[str, tuple[int, float, str]] = {}    # jd_id -> (score, must_cov, prof_id)
+    max_scores_jd: dict[str, tuple[int, float, str]] = {}  # jd_id -> (score, must_cov, prof_id)
 
     for cand in req.candidates:
         c_profile = cand.profile
@@ -216,4 +217,3 @@ def match_batch(req: SkillMatchBatchRequest) -> SkillMatchBatchResult:
         best_candidate_by_jd=best_cand_by_jd,
         meta={"cell_count": len(cells)},
     )
-

@@ -7,11 +7,11 @@ topics to learn next, and effort classifications (quick wins vs big gaps).
 
 from __future__ import annotations
 
+import talent_match.taxonomy as taxonomy
 from talent_match.contract import MissingSkill
 from talent_match.skill_match.cascade import Decision
 from talent_match.skill_match.scoring import ScoreParts, compute_counterfactual_impact
 from talent_match.skill_match.terms import CandTerm, JdTerm
-import talent_match.taxonomy as taxonomy
 
 
 def find_closest_candidate_skill(
@@ -134,7 +134,7 @@ def build_missing(
 
     missing_skills: list[MissingSkill] = []
 
-    for rank, (d, jt, gap_type, impact) in enumerate(gaps, start=1):
+    for rank, (_d, jt, gap_type, impact) in enumerate(gaps, start=1):
         closest = find_closest_candidate_skill(jt, cand_terms)
         cand_lvl = candidate_levels.get(jt.category_code, 1)
         req_lvl = required_levels.get(jt.category_code, jt.level_hint or 5)
@@ -151,7 +151,11 @@ def build_missing(
         # Why it matters explanation
         req_str = "Must-have" if jt.requirement == "must" else "Nice-to-have"
         ev_quote = f' "{jt.evidence}"' if jt.evidence else ""
-        why = f"{req_str} under '{jt.section}':{ev_quote}. Closing it adds about {impact} point{'s' if impact != 1 else ''}."
+        plural = 's' if impact != 1 else ''
+        why = (
+            f"{req_str} under '{jt.section}':{ev_quote}. "
+            f"Closing it adds about {impact} point{plural}."
+        )
 
         learn_next = get_learn_next_hint(jt, topics, cand_lvl, req_lvl)
 
@@ -175,4 +179,3 @@ def build_missing(
         )
 
     return missing_skills
-

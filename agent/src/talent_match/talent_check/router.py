@@ -49,8 +49,7 @@ async def batch_matrix_endpoint(req: MatrixRequest) -> TalentMatrixResult:
     try:
         cells = score_matrix_all(req.profiles, req.bars)
         comp_summaries = [
-            {"company_id": b.company_id, "company_name": b.display_name or b.company_name}
-            for b in req.bars
+            {"company_id": b.company_id, "company_name": b.display_name or b.company_name} for b in req.bars
         ]
         prof_summaries = [{"id": p.id, "name": p.name} for p in req.profiles]
         return TalentMatrixResult(

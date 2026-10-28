@@ -11,6 +11,7 @@ import logging
 import os
 from pathlib import Path
 from typing import Literal
+
 from pydantic import BaseModel, Field
 
 from talent_match.skill_match.params import PROMPT_VERSION
@@ -84,7 +85,11 @@ class Adjudicator:
         if not missing_pairs or self._disabled:
             # For any remaining missing pair when disabled or offline, default to partial or unrelated
             for p in missing_pairs:
-                results[p.id] = Verdict(id=p.id, verdict="unrelated", reason="LLM adjudication skipped or cached out")
+                results[p.id] = Verdict(
+                    id=p.id,
+                    verdict="unrelated",
+                    reason="LLM adjudication skipped or cached out",
+                )
             return results, 0
 
         # Enforce budget cap
@@ -93,17 +98,21 @@ class Adjudicator:
 
         try:
             from openradix_agents.providers import get_chat_model
+
             model = get_chat_model(temperature=0.0)
             structured_model = model.with_structured_output(AdjudicationResponse)
 
             system_prompt = (
-                "You are a strict technical recruiter. For each pair decide whether the candidate's "
-                "skill satisfies the job requirement.\n"
+                "You are a strict technical recruiter. For each pair decide whether"
+                " the candidate's skill satisfies the job requirement.\n"
                 "Definitions:\n"
-                "- equivalent: a recruiter would tick this requirement as met (same skill, synonym, or "
-                "the candidate skill is a specific instance of the required general skill).\n"
-                "- partial: adjacent or transferable; candidate needs weeks, not months. General for specific is partial.\n"
-                "- unrelated: anything else. Different languages are unrelated (Java vs JavaScript). SQL vs NoSQL is partial at most.\n"
+                "- equivalent: a recruiter would tick this requirement as met"
+                " (same skill, synonym, or the candidate skill is a specific"
+                " instance of the required general skill).\n"
+                "- partial: adjacent or transferable; candidate needs weeks,"
+                " not months. General for specific is partial.\n"
+                "- unrelated: anything else. Different languages are unrelated"
+                " (Java vs JavaScript). SQL vs NoSQL is partial at most.\n"
                 "Answer only with JSON matching schema."
             )
 
@@ -147,4 +156,3 @@ class Adjudicator:
             results[p.id] = Verdict(id=p.id, verdict="unrelated", reason="Budget limit reached")
 
         return results, llm_calls
-

@@ -88,4 +88,3 @@ def split_compound(text: str) -> list[str]:
 def is_short(norm: str) -> bool:
     """Return True if normalized term is shorter than 4 characters (e.g. 'go', 'c', 'sql')."""
     return len(norm.strip()) < 4
-

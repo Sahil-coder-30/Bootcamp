@@ -44,4 +44,3 @@ async def skill_match_batch_endpoint(req: SkillMatchBatchRequest) -> SkillMatchB
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Skill match batch failed: {str(e)}",
         ) from e
-

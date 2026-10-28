@@ -53,4 +53,3 @@ def test_taxonomy_no_cycles():
 
         imp = taxonomy.implies_closure(cid)
         assert cid not in imp, f"Cycle detected in implies for {cid}"
-

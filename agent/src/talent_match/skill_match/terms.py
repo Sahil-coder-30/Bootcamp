@@ -9,8 +9,10 @@ from __future__ import annotations
 
 import re
 from typing import Literal
-from pydantic import BaseModel, Field
 
+from pydantic import BaseModel
+
+import talent_match.taxonomy as taxonomy
 from talent_match.contract import (
     CandidateProfile,
     ExtractedSkillList,
@@ -19,7 +21,6 @@ from talent_match.contract import (
 )
 from talent_match.skill_match.normalize import normalize, split_compound
 from talent_match.skill_match.params import BASE_WEIGHTS, EVIDENCE_FACTORS, SECTION_FACTOR
-import talent_match.taxonomy as taxonomy
 
 
 class JdTerm(BaseModel):
@@ -67,7 +68,7 @@ def detect_alt_groups(skills: list[Skill]) -> dict[int, str]:
             evidence_to_indices.setdefault(norm_ev, []).append(idx)
 
     group_counter = 1
-    for ev, indices in evidence_to_indices.items():
+    for _ev, indices in evidence_to_indices.items():
         if len(indices) > 1:
             grp_id = f"alt_group_{group_counter}"
             group_counter += 1
@@ -209,4 +210,3 @@ def build_candidate_terms(
                 terms.append(ct)
 
     return terms
-

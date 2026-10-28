@@ -6,10 +6,8 @@ Deterministic pure scoring function for sm-1.0 and counterfactual impact calcula
 
 from __future__ import annotations
 
-import math
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
-from talent_match.contract import ScoreBreakdown
 from talent_match.skill_match.cascade import Decision
 from talent_match.skill_match.params import WEIGHTS
 from talent_match.skill_match.terms import JdTerm
@@ -99,7 +97,7 @@ def score(
             n_missing_must += 1
             missing_must_names.append(f"Any of {grp}")
 
-    for grp, (gw, gcw) in alt_groups_nice.items():
+    for _grp, (gw, gcw) in alt_groups_nice.items():
         sum_nice_w += gw
         sum_nice_cw += gcw
 
@@ -138,7 +136,9 @@ def score(
         sample_missing = ", ".join(missing_must_names[:2])
         if len(missing_must_names) > 2:
             sample_missing += f" (+{len(missing_must_names) - 2} more)"
-        cap_reason = f"{n_missing_must} must-have skill{'s' if n_missing_must > 1 else ''} missing ({sample_missing})"
+        cap_reason = (
+            f"{n_missing_must} must-have skill{'s' if n_missing_must > 1 else ''} missing ({sample_missing})"
+        )
 
     if must_coverage < 0.50:
         if cap > 49:
@@ -155,9 +155,7 @@ def score(
         band = "weak"
 
     category_coverage = {
-        cat: round(cat_credits[cat] / cat_weights[cat], 2)
-        for cat in cat_weights
-        if cat_weights[cat] > 0
+        cat: round(cat_credits[cat] / cat_weights[cat], 2) for cat in cat_weights if cat_weights[cat] > 0
     }
 
     return ScoreParts(
@@ -209,4 +207,3 @@ def compute_counterfactual_impact(
     sim_res = score(simulated_decisions, jd_terms, required_levels, candidate_levels)
     delta = sim_res.match_score - current_score
     return max(1, delta)
-

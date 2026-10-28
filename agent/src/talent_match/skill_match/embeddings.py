@@ -11,16 +11,18 @@ import logging
 import os
 from pathlib import Path
 from typing import Protocol
+
 import numpy as np
 
 logger = logging.getLogger("talent_match.embeddings")
 
-SNAPSHOT_PATH = Path(__file__).resolve().parent.parent.parent.parent / "data" / "snapshots" / "skill_embeddings.json"
+SNAPSHOT_PATH = (
+    Path(__file__).resolve().parent.parent.parent.parent / "data" / "snapshots" / "skill_embeddings.json"
+)
 
 
 class Embedder(Protocol):
-    def embed(self, texts: list[str]) -> np.ndarray:
-        ...
+    def embed(self, texts: list[str]) -> np.ndarray: ...
 
 
 class SnapshotEmbedder:
@@ -67,6 +69,7 @@ class GeminiEmbedder:
         if self._client is None and os.getenv("GOOGLE_API_KEY"):
             try:
                 from langchain_google_genai import GoogleGenerativeAIEmbeddings
+
                 self._client = GoogleGenerativeAIEmbeddings(
                     model=self.model_name,
                     google_api_key=os.getenv("GOOGLE_API_KEY"),
@@ -105,4 +108,3 @@ def cosine_matrix(a: np.ndarray, b: np.ndarray) -> np.ndarray:
     b_norm = b / norm_b
 
     return np.matmul(a_norm, b_norm.T)
-

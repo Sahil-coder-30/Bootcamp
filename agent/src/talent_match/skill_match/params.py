@@ -66,4 +66,3 @@ WEIGHTS = {
 }
 
 MAX_LLM_PAIRS = 40
-
