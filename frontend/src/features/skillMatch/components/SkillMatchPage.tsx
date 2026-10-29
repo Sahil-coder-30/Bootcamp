@@ -34,17 +34,17 @@ export const SkillMatchPage: React.FC = () => {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 space-y-6">
       {/* Top Header & Selector */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-zinc-800 pb-6">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-border pb-6">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="font-heading text-2xl font-bold tracking-tight text-white">
-              Skill Matching & Gap Analysis
+            <h1 className="font-heading text-2xl font-bold tracking-tight text-foreground">
+              Skill Matching &amp; Gap Analysis
             </h1>
-            <span className="rounded-full bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 text-xs font-mono text-emerald-400">
+            <span className="rounded-full bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 text-xs font-mono text-emerald-700 dark:text-emerald-400">
               Role 5
             </span>
           </div>
-          <p className="text-sm text-zinc-400 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             Prioritizes missing skill counterfactuals first, backed by a deterministic 7-stage
             cascade.
           </p>
@@ -53,13 +53,13 @@ export const SkillMatchPage: React.FC = () => {
         {/* Selectors */}
         <div className="flex flex-wrap items-center gap-3">
           <div>
-            <label className="block text-[11px] font-medium text-zinc-400 mb-1">
+            <label className="block text-[11px] font-medium text-muted-foreground mb-1">
               Candidate Profile
             </label>
             <select
               value={profileId}
               onChange={(e) => selectProfile(e.target.value)}
-              className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-xs text-white focus:outline-none focus:border-zinc-500"
+              className="rounded-lg border border-border bg-card px-3 py-1.5 text-xs text-foreground focus:outline-none focus:border-primary"
             >
               {CANDIDATES.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -70,13 +70,13 @@ export const SkillMatchPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-zinc-400 mb-1">
+            <label className="block text-[11px] font-medium text-muted-foreground mb-1">
               Target Job Posting
             </label>
             <select
               value={jdId}
               onChange={(e) => selectJd(e.target.value)}
-              className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-xs text-white focus:outline-none focus:border-zinc-500"
+              className="rounded-lg border border-border bg-card px-3 py-1.5 text-xs text-foreground focus:outline-none focus:border-primary"
             >
               {JOB_POSTINGS.map((j) => (
                 <option key={j.id} value={j.id}>
@@ -90,7 +90,7 @@ export const SkillMatchPage: React.FC = () => {
             <button
               onClick={() => fetchMatch(true)}
               disabled={isLoading}
-              className="rounded-lg border border-zinc-700 bg-zinc-800 px-3.5 py-1.5 text-xs font-medium text-white hover:bg-zinc-700 disabled:opacity-50 transition-colors"
+              className="rounded-lg border border-primary bg-primary px-3.5 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors shadow-xs cursor-pointer"
             >
               {isLoading ? "Matching..." : "Re-run"}
             </button>
@@ -100,7 +100,7 @@ export const SkillMatchPage: React.FC = () => {
 
       {/* Error View */}
       {error && (
-        <div className="rounded-xl border border-rose-500/40 bg-rose-500/10 p-4 text-xs text-rose-300">
+        <div className="rounded-xl border border-rose-500/40 bg-rose-500/10 p-4 text-xs text-rose-600 dark:text-rose-400">
           <span className="font-bold">Error:</span> {error}
         </div>
       )}
@@ -118,34 +118,34 @@ export const SkillMatchPage: React.FC = () => {
           />
 
           {/* Tab Navigation */}
-          <div className="flex items-center justify-between border-b border-zinc-800">
+          <div className="flex items-center justify-between border-b border-border">
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setActiveTab("gaps")}
-                className={`border-b-2 py-2 px-3 text-xs font-semibold transition-colors ${
+                className={`border-b-2 py-2 px-3 text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === "gaps"
-                    ? "border-emerald-500 text-emerald-400"
-                    : "border-transparent text-zinc-400 hover:text-white"
+                    ? "border-primary text-primary"
+                    : "border-transparent text-muted-foreground hover:text-foreground"
                 }`}
               >
                 Missing Gaps First ({result.missing_skills.length})
               </button>
               <button
                 onClick={() => setActiveTab("links")}
-                className={`border-b-2 py-2 px-3 text-xs font-semibold transition-colors ${
+                className={`border-b-2 py-2 px-3 text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === "links"
-                    ? "border-emerald-500 text-emerald-400"
-                    : "border-transparent text-zinc-400 hover:text-white"
+                    ? "border-primary text-primary"
+                    : "border-transparent text-muted-foreground hover:text-foreground"
                 }`}
               >
                 How We Matched ({result.matched_skills.length})
               </button>
               <button
                 onClick={() => setActiveTab("matrix")}
-                className={`border-b-2 py-2 px-3 text-xs font-semibold transition-colors ${
+                className={`border-b-2 py-2 px-3 text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === "matrix"
-                    ? "border-emerald-500 text-emerald-400"
-                    : "border-transparent text-zinc-400 hover:text-white"
+                    ? "border-primary text-primary"
+                    : "border-transparent text-muted-foreground hover:text-foreground"
                 }`}
               >
                 Compare Candidates (4 × 3 Matrix)
@@ -154,7 +154,7 @@ export const SkillMatchPage: React.FC = () => {
 
             <button
               onClick={() => setShowDrawer(true)}
-              className="text-xs text-zinc-400 hover:text-zinc-200 underline"
+              className="text-xs text-muted-foreground hover:text-foreground underline cursor-pointer"
             >
               How this was computed
             </button>

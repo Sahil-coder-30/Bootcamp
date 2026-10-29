@@ -39,27 +39,33 @@ export const SkillRadar: React.FC<SkillRadarProps> = ({
       {/* Legend Header */}
       <div className="flex items-center gap-6 mb-2 text-xs font-medium">
         <div className="flex items-center gap-2">
-          <span className="w-3 h-3 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50" />
-          <span className="text-slate-300">{candidateName}</span>
+          <span className="w-3 h-3 rounded-full bg-emerald-500 shadow-xs" />
+          <span className="text-foreground">{candidateName}</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-3 h-3 rounded-full bg-blue-500 shadow-sm shadow-blue-500/50" />
-          <span className="text-slate-300">{companyName}</span>
+          <span className="w-3 h-3 rounded-full bg-primary shadow-xs" />
+          <span className="text-foreground">{companyName}</span>
         </div>
       </div>
 
       <ResponsiveContainer width="100%" height="100%">
         <RadarChart cx="50%" cy="50%" outerRadius="75%" data={data}>
-          <PolarGrid stroke="rgba(255, 255, 255, 0.08)" />
+          <PolarGrid stroke="var(--color-border, rgba(148, 163, 184, 0.25))" />
           <PolarAngleAxis
             dataKey="subject"
-            tick={{ fill: "#94A3B8", fontSize: 12, fontWeight: 600, fontFamily: "monospace" }}
+            tick={{
+              fill: "currentColor",
+              className: "text-muted-foreground",
+              fontSize: 12,
+              fontWeight: 600,
+              fontFamily: "monospace",
+            }}
           />
           <PolarRadiusAxis
             angle={30}
             domain={[0, 10]}
-            tick={{ fill: "#64748B", fontSize: 10 }}
-            stroke="rgba(255, 255, 255, 0.05)"
+            tick={{ fill: "currentColor", className: "text-muted-foreground", fontSize: 10 }}
+            stroke="var(--color-border, rgba(148, 163, 184, 0.2))"
           />
           <Tooltip
             content={({ active, payload }) => {
@@ -70,12 +76,12 @@ export const SkillRadar: React.FC<SkillRadarProps> = ({
                   required: number;
                 };
                 return (
-                  <div className="bg-slate-900/95 border border-slate-700/80 rounded-lg p-2.5 text-xs shadow-xl backdrop-blur-md">
-                    <div className="font-bold text-white mb-1">{item.subject}</div>
-                    <div className="text-emerald-400">
+                  <div className="bg-card border border-border rounded-lg p-2.5 text-xs shadow-md">
+                    <div className="font-bold text-foreground mb-1">{item.subject}</div>
+                    <div className="text-emerald-700 dark:text-emerald-400 font-medium">
                       {candidateName}: Level {item.candidate}
                     </div>
-                    <div className="text-blue-400">
+                    <div className="text-primary font-medium">
                       {companyName}: Level {item.required}
                     </div>
                   </div>
@@ -84,13 +90,13 @@ export const SkillRadar: React.FC<SkillRadarProps> = ({
               return null;
             }}
           />
-          {/* Required Bar Polygon (Azure) */}
+          {/* Required Bar Polygon (Primary) */}
           <Radar
             name={companyName}
             dataKey="required"
-            stroke="#3B82F6"
+            stroke="#4f46e5"
             strokeWidth={2}
-            fill="#3B82F6"
+            fill="#4f46e5"
             fillOpacity={0.15}
           />
           {/* Candidate Polygon (Emerald) */}

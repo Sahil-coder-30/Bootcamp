@@ -36,29 +36,33 @@ export const WhatIfPanel: React.FC<WhatIfPanelProps> = ({
   const scoreDiff = previewScore - result.readiness_score;
 
   return (
-    <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-5 sm:p-6 backdrop-blur-md">
+    <div className="bg-card border border-border rounded-2xl p-5 sm:p-6 shadow-xs">
       {/* Simulation Header & Live Score Preview Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-slate-800/80 mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-border mb-6">
         <div>
           <div className="flex items-center gap-2">
-            <Sliders className="w-5 h-5 text-blue-400" />
-            <h3 className="text-base font-bold text-white">What-If Simulation Sandbox</h3>
+            <Sliders className="w-5 h-5 text-primary" />
+            <h3 className="text-base font-bold text-foreground">What-If Simulation Sandbox</h3>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             Drag sliders to model skill progression. Recalculates in under 1 ms with zero latency.
           </p>
         </div>
 
         {/* Live Simulation Score Card */}
-        <div className="flex items-center gap-4 bg-slate-950 px-4 py-2 rounded-xl border border-slate-800 shadow-inner">
+        <div className="flex items-center gap-4 bg-card-sub px-4 py-2 rounded-xl border border-border shadow-2xs">
           <div className="text-right">
-            <div className="text-[11px] text-slate-400 uppercase font-medium">Simulated Score</div>
+            <div className="text-[11px] text-muted-foreground uppercase font-medium">
+              Simulated Score
+            </div>
             <div className="flex items-center gap-1.5 justify-end">
-              <span className="text-2xl font-black font-mono text-white">{previewScore}</span>
+              <span className="text-2xl font-black font-mono text-foreground">{previewScore}</span>
               {scoreDiff !== 0 && (
                 <span
                   className={`text-xs font-mono font-bold flex items-center ${
-                    scoreDiff > 0 ? "text-emerald-400" : "text-rose-400"
+                    scoreDiff > 0
+                      ? "text-emerald-700 dark:text-emerald-400"
+                      : "text-rose-600 dark:text-rose-400"
                   }`}
                 >
                   <ArrowUpRight className={`w-3.5 h-3.5 ${scoreDiff < 0 ? "rotate-90" : ""}`} />
@@ -68,17 +72,17 @@ export const WhatIfPanel: React.FC<WhatIfPanelProps> = ({
             </div>
           </div>
 
-          <div className="h-8 w-px bg-slate-800" />
+          <div className="h-8 w-px bg-border" />
 
           <div>
-            <div className="text-[11px] text-slate-400 uppercase font-medium">Verdict</div>
+            <div className="text-[11px] text-muted-foreground uppercase font-medium">Verdict</div>
             <div
               className={`text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded mt-0.5 ${
                 previewVerdict === "ready"
-                  ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40"
+                  ? "bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/40"
                   : previewVerdict === "almost"
-                    ? "bg-amber-500/20 text-amber-400 border border-amber-500/40"
-                    : "bg-rose-500/20 text-rose-400 border border-rose-500/40"
+                    ? "bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-500/40"
+                    : "bg-rose-500/20 text-rose-700 dark:text-rose-400 border border-rose-500/40"
               }`}
             >
               {previewVerdict.replace("_", " ")}
@@ -91,16 +95,16 @@ export const WhatIfPanel: React.FC<WhatIfPanelProps> = ({
       <div className="flex flex-wrap items-center gap-2.5 mb-6">
         <button
           onClick={onApplyPlan}
-          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white transition-all shadow-md shadow-blue-600/20 cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-primary hover:bg-primary/90 text-primary-foreground transition-all shadow-xs cursor-pointer"
         >
-          <Sparkles className="w-3.5 h-3.5 text-blue-200" />
+          <Sparkles className="w-3.5 h-3.5 text-primary-foreground" />
           Apply Fastest Path to Ready
         </button>
 
         {isModified && (
           <button
             onClick={onReset}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors cursor-pointer border border-slate-700"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-card hover:bg-muted text-foreground transition-colors cursor-pointer border border-border"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             Reset
@@ -110,7 +114,7 @@ export const WhatIfPanel: React.FC<WhatIfPanelProps> = ({
         {isModified && onSave && (
           <button
             onClick={onSave}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition-colors cursor-pointer ml-auto"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition-colors cursor-pointer ml-auto shadow-xs"
           >
             <Save className="w-3.5 h-3.5" />
             Save as My Level
@@ -132,23 +136,21 @@ export const WhatIfPanel: React.FC<WhatIfPanelProps> = ({
             <div
               key={row.category_code}
               className={`p-3.5 rounded-xl border transition-all ${
-                isRowModified
-                  ? "bg-slate-900/90 border-blue-500/40 shadow-sm shadow-blue-500/10"
-                  : "bg-slate-900/40 border-slate-800/80"
+                isRowModified ? "bg-card border-primary/50 shadow-xs" : "bg-card border-border"
               }`}
             >
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1.5">
-                  <span className="font-mono font-bold text-xs text-slate-300">
+                  <span className="font-mono font-bold text-xs text-foreground">
                     {row.category_code}
                   </span>
-                  {isRowModified && <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />}
+                  {isRowModified && <span className="w-1.5 h-1.5 rounded-full bg-primary" />}
                 </div>
 
                 <div className="text-xs font-mono">
-                  <span className="text-white font-bold">L{currentVal}</span>{" "}
-                  <span className="text-slate-400">({currentBloom})</span>{" "}
-                  <span className="text-slate-600">/ Bar L{row.required_level}</span>
+                  <span className="text-foreground font-bold">L{currentVal}</span>{" "}
+                  <span className="text-muted-foreground">({currentBloom})</span>{" "}
+                  <span className="text-muted-foreground">/ Bar L{row.required_level}</span>
                 </div>
               </div>
 
@@ -160,10 +162,10 @@ export const WhatIfPanel: React.FC<WhatIfPanelProps> = ({
                 step="1"
                 value={currentVal}
                 onChange={(e) => onSetLevel(row.category_code, Number(e.target.value))}
-                className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
               />
 
-              <div className="flex justify-between text-[10px] text-slate-500 font-mono mt-1">
+              <div className="flex justify-between text-[10px] text-muted-foreground font-mono mt-1">
                 <span>1</span>
                 <span>Bar: {row.required_level}</span>
                 <span>10</span>

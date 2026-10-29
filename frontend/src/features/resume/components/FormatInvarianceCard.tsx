@@ -91,24 +91,24 @@ export const FormatInvarianceCard: React.FC = () => {
   const data = INVARIANCE_PROOFS[selectedKey] ?? INVARIANCE_PROOFS["ananya"]!;
 
   return (
-    <div className="rounded-2xl border border-zinc-800 bg-[#0c0c10] p-6 shadow-xl backdrop-blur-md">
+    <div className="rounded-2xl border border-border bg-card p-6 shadow-xs">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-800/80 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <Scale className="h-5 w-5 text-orange-400" />
-            <h3 className="font-heading text-lg font-bold text-white">
+            <Scale className="h-5 w-5 text-primary" />
+            <h3 className="font-heading text-lg font-bold text-foreground">
               Format Invariance Verification (PDF vs. DOCX)
             </h3>
           </div>
-          <p className="mt-1 text-xs text-zinc-400">
+          <p className="mt-1 text-xs text-muted-foreground">
             Automated proof that layout geometry differences (multi-column gutters, table cells,
             running headers) do not perturb skill extraction or Bloom ratings.
           </p>
         </div>
 
         {/* Candidate Selector Pills */}
-        <div className="flex items-center gap-1.5 self-start sm:self-auto bg-zinc-900/60 p-1 rounded-xl border border-zinc-800">
+        <div className="flex items-center gap-1.5 self-start sm:self-auto bg-card-sub p-1 rounded-xl border border-border">
           {Object.entries(INVARIANCE_PROOFS).map(([key, item]) => (
             <button
               key={key}
@@ -116,8 +116,8 @@ export const FormatInvarianceCard: React.FC = () => {
               onClick={() => setSelectedKey(key)}
               className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-all cursor-pointer ${
                 selectedKey === key
-                  ? "bg-orange-500 text-white shadow-sm"
-                  : "text-zinc-400 hover:text-white"
+                  ? "bg-primary text-primary-foreground shadow-xs font-semibold"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               {item.candidate.split(" ")[0]}
@@ -129,78 +129,80 @@ export const FormatInvarianceCard: React.FC = () => {
       {/* Metrics Row */}
       <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Metric 1: Jaccard */}
-        <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-4">
+        <div className="rounded-xl border border-border bg-card-sub p-4">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-zinc-400 font-medium">Skill Jaccard Overlap</span>
-            <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-[10px]">
+            <span className="text-xs text-muted-foreground font-medium">Skill Jaccard Overlap</span>
+            <Badge className="bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 text-[10px]">
               Target ≥ 0.85
             </Badge>
           </div>
           <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-bold font-mono text-emerald-400">
+            <span className="text-2xl font-bold font-mono text-emerald-700 dark:text-emerald-400">
               {(data.jaccard * 100).toFixed(0)}%
             </span>
-            <span className="text-xs text-zinc-500">
+            <span className="text-xs text-muted-foreground">
               ({data.skillsExtracted.overlap} / {data.skillsExtracted.pdf} skills shared)
             </span>
           </div>
-          <div className="mt-2 h-1.5 w-full bg-zinc-800 rounded-full overflow-hidden">
+          <div className="mt-2 h-1.5 w-full bg-muted rounded-full overflow-hidden">
             <div
-              className="h-full bg-emerald-400 rounded-full"
+              className="h-full bg-emerald-500 rounded-full"
               style={{ width: `${data.jaccard * 100}%` }}
             />
           </div>
         </div>
 
         {/* Metric 2: Level MAE */}
-        <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-4">
+        <div className="rounded-xl border border-border bg-card-sub p-4">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-zinc-400 font-medium">Level MAE Difference</span>
-            <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-[10px]">
+            <span className="text-xs text-muted-foreground font-medium">Level MAE Difference</span>
+            <Badge className="bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 text-[10px]">
               Target ≤ 0.35
             </Badge>
           </div>
           <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-bold font-mono text-emerald-400">
+            <span className="text-2xl font-bold font-mono text-emerald-700 dark:text-emerald-400">
               {data.levelMae.toFixed(2)}
             </span>
-            <span className="text-xs text-zinc-500">across 12 categories</span>
+            <span className="text-xs text-muted-foreground">across 12 categories</span>
           </div>
-          <p className="mt-2 text-[11px] text-zinc-400">
+          <p className="mt-2 text-[11px] text-muted-foreground">
             Average deviation is under 0.25 bands on a 1–10 Bloom scale.
           </p>
         </div>
 
         {/* Metric 3: Max Diff */}
-        <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-4">
+        <div className="rounded-xl border border-border bg-card-sub p-4">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-zinc-400 font-medium">Max Category Delta</span>
-            <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-[10px]">
+            <span className="text-xs text-muted-foreground font-medium">Max Category Delta</span>
+            <Badge className="bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 text-[10px]">
               Target ≤ 1 band
             </Badge>
           </div>
           <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-bold font-mono text-white">{data.maxDiff} band</span>
-            <span className="text-xs text-zinc-500">Strictly bounded</span>
+            <span className="text-2xl font-bold font-mono text-foreground">
+              {data.maxDiff} band
+            </span>
+            <span className="text-xs text-muted-foreground">Strictly bounded</span>
           </div>
-          <p className="mt-2 text-[11px] text-zinc-400">
+          <p className="mt-2 text-[11px] text-muted-foreground">
             Zero ranking regressions regardless of source container format.
           </p>
         </div>
       </div>
 
       {/* Side-by-Side Category Verification */}
-      <div className="mt-6 rounded-xl border border-zinc-800 bg-zinc-900/30 p-4">
+      <div className="mt-6 rounded-xl border border-border bg-card-sub p-4">
         <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-semibold text-zinc-300">
+          <span className="text-xs font-semibold text-foreground">
             Category Score Alignment: PDF vs. DOCX ({data.candidate})
           </span>
-          <div className="flex items-center gap-4 text-xs text-zinc-400">
+          <div className="flex items-center gap-4 text-xs text-muted-foreground">
             <span className="flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-orange-400" /> PDF Render
+              <span className="h-2 w-2 rounded-full bg-orange-500" /> PDF Render
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-cyan-400" /> DOCX Render
+              <span className="h-2 w-2 rounded-full bg-cyan-500" /> DOCX Render
             </span>
           </div>
         </div>
@@ -211,27 +213,27 @@ export const FormatInvarianceCard: React.FC = () => {
             return (
               <div
                 key={lvl.category}
-                className="rounded-lg border border-zinc-800/80 bg-zinc-950/60 p-3 text-center"
+                className="rounded-lg border border-border bg-card p-3 text-center"
               >
-                <div className="text-[11px] font-mono text-zinc-400 font-medium">
+                <div className="text-[11px] font-mono text-muted-foreground font-medium">
                   {lvl.category}
                 </div>
                 <div className="mt-1 flex items-center justify-center gap-2">
-                  <span className="text-sm font-bold text-orange-400 font-mono">
+                  <span className="text-sm font-bold text-orange-600 dark:text-orange-400 font-mono">
                     L{lvl.pdfLevel}
                   </span>
-                  <span className="text-zinc-600 text-xs">/</span>
-                  <span className="text-sm font-bold text-cyan-400 font-mono">
+                  <span className="text-border text-xs">/</span>
+                  <span className="text-sm font-bold text-cyan-600 dark:text-cyan-400 font-mono">
                     L{lvl.docxLevel}
                   </span>
                 </div>
                 <div className="mt-1.5 flex justify-center">
                   {matches ? (
-                    <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 font-medium">
+                    <span className="inline-flex items-center gap-1 text-[10px] text-emerald-700 dark:text-emerald-400 font-medium">
                       <CheckCircle2 className="h-3 w-3" /> Exact
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 text-[10px] text-zinc-400 font-medium">
+                    <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground font-medium">
                       Δ 1 band
                     </span>
                   )}

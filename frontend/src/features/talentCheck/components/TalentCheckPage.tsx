@@ -117,7 +117,7 @@ export const TalentCheckPage: React.FC = () => {
               Talent Check
             </h1>
           </div>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1 max-w-2xl leading-relaxed">
             One-button evaluation comparing candidate profiles against employer hiring bars across
             12 RADIX skillsets with mathematical transparency.
           </p>
@@ -127,20 +127,20 @@ export const TalentCheckPage: React.FC = () => {
         <div className="flex items-center gap-2.5">
           <button
             onClick={() => setIsDrawerOpen(true)}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-850 text-slate-200 border border-slate-700/80 transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-card hover:bg-card-sub text-foreground border border-border shadow-xs transition-colors cursor-pointer"
           >
-            <Calculator className="w-4 h-4 text-blue-400" />
-            Audit Math & Provenance
+            <Calculator className="w-4 h-4 text-primary" />
+            Audit Math &amp; Provenance
           </button>
         </div>
       </div>
 
       {/* Selectors Bar */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-900/40 p-4 rounded-2xl border border-slate-800/80">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-card p-4 rounded-2xl border border-border shadow-xs">
         {/* Candidate Selector */}
         <div>
-          <label className="text-xs font-medium text-slate-400 mb-1.5 flex items-center gap-1.5">
-            <User className="w-3.5 h-3.5 text-blue-400" /> Select Candidate Profile
+          <label className="text-xs font-medium text-muted-foreground mb-1.5 flex items-center gap-1.5">
+            <User className="w-3.5 h-3.5 text-primary" /> Select Candidate Profile
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {CANDIDATES.map((c) => (
@@ -149,12 +149,12 @@ export const TalentCheckPage: React.FC = () => {
                 onClick={() => setSelectedCandidate(c.id)}
                 className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
                   selectedCandidate === c.id
-                    ? "bg-blue-600/15 border-blue-500/50 text-white shadow-sm shadow-blue-500/10"
-                    : "bg-slate-950/60 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700"
+                    ? "bg-primary/10 border-primary/50 text-primary font-bold shadow-xs"
+                    : "bg-background border-border text-muted-foreground hover:text-foreground hover:border-border-strong"
                 }`}
               >
                 <div className="text-xs font-bold leading-tight">{c.name}</div>
-                <div className="text-[10px] text-slate-500 truncate mt-0.5">{c.role}</div>
+                <div className="text-[10px] text-muted-foreground truncate mt-0.5">{c.role}</div>
               </button>
             ))}
           </div>
@@ -162,8 +162,8 @@ export const TalentCheckPage: React.FC = () => {
 
         {/* Company Bar Selector */}
         <div>
-          <label className="text-xs font-medium text-slate-400 mb-1.5 flex items-center gap-1.5">
-            <Building2 className="w-3.5 h-3.5 text-blue-400" /> Select Employer Hiring Bar
+          <label className="text-xs font-medium text-muted-foreground mb-1.5 flex items-center gap-1.5">
+            <Building2 className="w-3.5 h-3.5 text-primary" /> Select Employer Hiring Bar
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             {COMPANIES.map((comp) => (
@@ -172,12 +172,12 @@ export const TalentCheckPage: React.FC = () => {
                 onClick={() => setSelectedCompany(comp.id)}
                 className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
                   selectedCompany === comp.id
-                    ? "bg-blue-600/15 border-blue-500/50 text-white shadow-sm shadow-blue-500/10"
-                    : "bg-slate-950/60 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700"
+                    ? "bg-primary/10 border-primary/50 text-primary font-bold shadow-xs"
+                    : "bg-background border-border text-muted-foreground hover:text-foreground hover:border-border-strong"
                 }`}
               >
                 <div className="text-xs font-bold leading-tight">{comp.name}</div>
-                <div className="text-[10px] text-slate-500 truncate mt-0.5">{comp.tier}</div>
+                <div className="text-[10px] text-muted-foreground truncate mt-0.5">{comp.tier}</div>
               </button>
             ))}
           </div>
@@ -205,26 +205,30 @@ export const TalentCheckPage: React.FC = () => {
 
       {/* Dynamic Narrative Explanation */}
       {result && (
-        <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">
-          <strong className="text-blue-400 font-semibold mr-1.5">Executive Summary:</strong>
+        <div className="p-4 rounded-xl bg-card-sub border border-border text-xs sm:text-sm text-foreground leading-relaxed font-sans">
+          <strong className="text-primary font-semibold mr-1.5">Executive Summary:</strong>
           {result.explanation}
         </div>
       )}
 
       {/* Navigation Tabs */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-slate-800/80 pb-3">
+      <div className="flex flex-wrap items-center gap-2 border-b border-border pb-3">
         <button
           onClick={() => setActiveTab("analysis")}
           className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-            activeTab === "analysis" ? "bg-slate-800 text-white" : "text-slate-400 hover:text-white"
+            activeTab === "analysis"
+              ? "bg-primary text-white"
+              : "text-muted-foreground hover:text-foreground"
           }`}
         >
-          <RadarIcon className="w-3.5 h-3.5" /> Gaps & Radar
+          <RadarIcon className="w-3.5 h-3.5" /> Gaps &amp; Radar
         </button>
         <button
           onClick={() => setActiveTab("whatif")}
           className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-            activeTab === "whatif" ? "bg-blue-600 text-white" : "text-slate-400 hover:text-blue-400"
+            activeTab === "whatif"
+              ? "bg-primary text-white"
+              : "text-muted-foreground hover:text-primary"
           }`}
         >
           <Sliders className="w-3.5 h-3.5" /> What-If Simulator
@@ -234,10 +238,10 @@ export const TalentCheckPage: React.FC = () => {
           className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
             activeTab === "study"
               ? "bg-emerald-600 text-white"
-              : "text-slate-400 hover:text-emerald-400"
+              : "text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400"
           }`}
         >
-          <Sparkles className="w-3.5 h-3.5" /> Fastest Path & Curriculum
+          <Sparkles className="w-3.5 h-3.5" /> Fastest Path &amp; Curriculum
         </button>
         <button
           onClick={() => {
@@ -247,7 +251,7 @@ export const TalentCheckPage: React.FC = () => {
           className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
             activeTab === "ranking"
               ? "bg-amber-600 text-white"
-              : "text-slate-400 hover:text-amber-400"
+              : "text-muted-foreground hover:text-amber-600 dark:hover:text-amber-400"
           }`}
         >
           <Trophy className="w-3.5 h-3.5" /> 115-Company Rankings
@@ -258,7 +262,9 @@ export const TalentCheckPage: React.FC = () => {
             void runMatrix();
           }}
           className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-            activeTab === "matrix" ? "bg-slate-800 text-white" : "text-slate-400 hover:text-white"
+            activeTab === "matrix"
+              ? "bg-primary text-white"
+              : "text-muted-foreground hover:text-foreground"
           }`}
         >
           Compare All
@@ -267,11 +273,11 @@ export const TalentCheckPage: React.FC = () => {
 
       {/* Tab Panels */}
       {isLoading ? (
-        <div className="py-24 text-center text-sm text-slate-400 animate-pulse">
+        <div className="py-24 text-center text-sm text-muted-foreground animate-pulse">
           Computing readiness against {companyObj?.name}...
         </div>
       ) : error ? (
-        <div className="p-6 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-sm text-center">
+        <div className="p-6 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 text-sm text-center">
           {error}
         </div>
       ) : result ? (
@@ -281,10 +287,12 @@ export const TalentCheckPage: React.FC = () => {
               {/* Left Column: Gap Bars */}
               <div className="lg:col-span-7 space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-300">
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">
                     12 Skillset Gaps vs Hiring Bar
                   </h3>
-                  <span className="text-xs text-slate-500">Click a row to inspect topics</span>
+                  <span className="text-xs text-muted-foreground">
+                    Click a row to inspect topics
+                  </span>
                 </div>
                 <GapBars
                   rows={result.skillset_gap}
@@ -295,8 +303,8 @@ export const TalentCheckPage: React.FC = () => {
 
               {/* Right Column: Radar & Topics Preview */}
               <div className="lg:col-span-5 space-y-6">
-                <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-5 backdrop-blur-md">
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-300 mb-2 text-center">
+                <div className="bg-card border border-border rounded-2xl p-5 shadow-xs">
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-foreground mb-2 text-center">
                     12-Axis Skill Radar Envelope
                   </h3>
                   <SkillRadar
@@ -307,7 +315,7 @@ export const TalentCheckPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-300 mb-3">
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-foreground mb-3">
                     Curriculum for {selectedSkillCode || "Selected Skill"}
                   </h3>
                   <NextTopicsList rows={result.skillset_gap} selectedCode={selectedSkillCode} />
@@ -340,8 +348,8 @@ export const TalentCheckPage: React.FC = () => {
                   setActiveTab("whatif");
                 }}
               />
-              <div className="border-t border-slate-800/80 pt-6">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-slate-300 mb-4">
+              <div className="border-t border-border pt-6">
+                <h3 className="text-sm font-bold uppercase tracking-wider text-foreground mb-4">
                   Full Missing Topics Curriculum
                 </h3>
                 <NextTopicsList rows={result.skillset_gap} />
