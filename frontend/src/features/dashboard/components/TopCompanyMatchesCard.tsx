@@ -30,7 +30,7 @@ export const TopCompanyMatchesCard: React.FC<TopCompanyMatchesCardProps> = ({
   loading = false,
 }) => {
   return (
-    <div className="rounded-2xl border border-border bg-card p-5 shadow-xs flex flex-col transition-colors">
+    <div className="rounded-2xl border border-border bg-card p-4 sm:p-5 shadow-xs flex flex-col transition-colors">
       {/* Header */}
       <div className="flex items-center justify-between pb-3.5 border-b border-border">
         <div className="flex items-center gap-2">
@@ -70,21 +70,21 @@ export const TopCompanyMatchesCard: React.FC<TopCompanyMatchesCardProps> = ({
             return (
               <div
                 key={company.id}
-                className="group flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-border bg-card-sub p-3 transition-all hover:border-primary/60"
+                className="group flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 rounded-xl border border-border bg-card-sub p-3 transition-all hover:border-primary/60"
               >
                 {/* Left Identity */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-start sm:items-center gap-3 min-w-0 flex-1">
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border bg-muted font-heading text-xs font-bold text-foreground shadow-2xs">
                     {company.name.slice(0, 2).toUpperCase()}
                   </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h4 className="font-heading text-xs font-bold text-foreground group-hover:text-primary transition-colors">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                      <h4 className="font-heading text-xs sm:text-sm font-bold text-foreground group-hover:text-primary transition-colors truncate max-w-full">
                         {company.name}
                       </h4>
                       <span
                         className={cn(
-                          "rounded-md px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider",
+                          "rounded-md px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider shrink-0",
                           company.tier === "Super Dream"
                             ? "bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20"
                             : company.tier === "Dream"
@@ -96,12 +96,12 @@ export const TopCompanyMatchesCard: React.FC<TopCompanyMatchesCardProps> = ({
                       </span>
                     </div>
 
-                    <div className="mt-0.5 flex items-center gap-2 text-[11px] text-muted-foreground">
-                      <span className="font-semibold text-foreground">{company.packageLPA}</span>
+                    <div className="mt-0.5 flex flex-wrap items-center gap-1.5 sm:gap-2 text-[11px] text-muted-foreground">
+                      <span className="font-semibold text-foreground shrink-0">{company.packageLPA}</span>
                       {company.gapCategory && (
                         <>
-                          <span>•</span>
-                          <span className="text-amber-500 dark:text-amber-400 font-medium truncate max-w-[150px]">
+                          <span className="hidden xs:inline">•</span>
+                          <span className="text-amber-500 dark:text-amber-400 font-medium truncate max-w-[140px] sm:max-w-[180px]">
                             Focus: {company.gapCategory}
                           </span>
                         </>
@@ -111,17 +111,17 @@ export const TopCompanyMatchesCard: React.FC<TopCompanyMatchesCardProps> = ({
                 </div>
 
                 {/* Right Score & Verdict */}
-                <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-border/50">
-                  <div className="text-right">
-                    <div className="font-heading text-sm font-extrabold text-foreground">
+                <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-border/50 w-full sm:w-auto">
+                  <div className="text-left sm:text-right">
+                    <div className="font-heading text-sm font-extrabold text-foreground leading-tight">
                       {company.matchScore}%
                     </div>
-                    <span className="text-[10px] text-muted-foreground">Hiring Bar Match</span>
+                    <span className="text-[10px] text-muted-foreground leading-tight">Hiring Bar Match</span>
                   </div>
 
                   <span
                     className={cn(
-                      "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider border",
+                      "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider border shrink-0",
                       company.verdict === "ready"
                         ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                         : company.verdict === "almost"

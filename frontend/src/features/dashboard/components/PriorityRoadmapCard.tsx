@@ -26,7 +26,7 @@ export const PriorityRoadmapCard: React.FC<PriorityRoadmapCardProps> = ({
   const completedCount = steps.filter((t) => t.completed).length;
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-5 shadow-xs flex flex-col transition-colors">
+    <div className="rounded-2xl border border-border bg-card p-4 sm:p-5 shadow-xs flex flex-col transition-colors">
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-2 pb-3.5 border-b border-border">
         <div className="flex items-center gap-2">
@@ -76,17 +76,17 @@ export const PriorityRoadmapCard: React.FC<PriorityRoadmapCardProps> = ({
                 key={topic.id}
                 onClick={() => onToggleStep?.(topic.id)}
                 className={cn(
-                  "group rounded-xl border p-3 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3",
+                  "group rounded-xl border p-3 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3",
                   topic.completed
                     ? "border-emerald-500/30 bg-emerald-500/10 opacity-80"
                     : "border-border bg-card-sub hover:border-primary/60",
                 )}
               >
                 {/* Left Title and Tags */}
-                <div className="flex items-start gap-3">
+                <div className="flex items-start gap-2.5 sm:gap-3 min-w-0 flex-1">
                   <button
                     type="button"
-                    className="mt-0.5 shrink-0 text-muted-foreground group-hover:text-primary transition-colors cursor-pointer"
+                    className="mt-0.5 shrink-0 p-1 -m-1 rounded-md text-muted-foreground group-hover:text-primary transition-colors cursor-pointer"
                     aria-label={topic.completed ? "Mark incomplete" : "Mark complete"}
                   >
                     {topic.completed ? (
@@ -95,32 +95,32 @@ export const PriorityRoadmapCard: React.FC<PriorityRoadmapCardProps> = ({
                       <Square className="h-4 w-4" />
                     )}
                   </button>
-                  <div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="rounded-md border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px] font-bold text-foreground">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                      <span className="rounded-md border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px] font-bold text-foreground shrink-0">
                         {topic.categoryCode}
                       </span>
                       <h4
                         className={cn(
-                          "font-heading text-xs font-bold text-foreground transition-all",
+                          "font-heading text-xs font-bold text-foreground transition-all truncate max-w-full",
                           topic.completed && "line-through text-muted-foreground",
                         )}
                       >
                         {topic.categoryName}
                       </h4>
-                      <span className="rounded-full bg-primary/10 text-primary border border-primary/20 px-2 py-0.2 text-[10px] font-mono font-semibold">
+                      <span className="rounded-full bg-primary/10 text-primary border border-primary/20 px-2 py-0.2 text-[10px] font-mono font-semibold shrink-0">
                         L{topic.fromLevel} → L{topic.toLevel}
                       </span>
                     </div>
 
-                    <p className="mt-1 text-xs text-foreground/85 leading-relaxed">
+                    <p className="mt-1 text-xs text-foreground/85 leading-relaxed break-words">
                       {topic.topics}
                     </p>
                   </div>
                 </div>
 
                 {/* Right Hours Badge */}
-                <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center shrink-0 pt-1.5 sm:pt-0 border-t sm:border-t-0 border-border/40">
+                <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-border/40 w-full sm:w-auto">
                   <div className="inline-flex items-center gap-1 text-[11px] font-mono font-semibold text-muted-foreground">
                     <Clock className="h-3 w-3 text-primary" />
                     <span>{topic.hours}h</span>
@@ -135,8 +135,8 @@ export const PriorityRoadmapCard: React.FC<PriorityRoadmapCardProps> = ({
 
       {/* Summary Footer */}
       {studyPlan?.summary && (
-        <div className="mt-3 pt-3 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
-          <span className="truncate max-w-[450px]">{studyPlan.summary}</span>
+        <div className="mt-3 pt-3 border-t border-border flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs text-muted-foreground">
+          <span className="truncate max-w-full sm:max-w-[450px]">{studyPlan.summary}</span>
           <span className="text-[11px] font-semibold text-primary shrink-0">
             {studyPlan.totalHours} Total Hours
           </span>

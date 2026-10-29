@@ -87,12 +87,12 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-30 shrink-0 flex items-center justify-between gap-4 border-b border-border bg-background/95 px-4 sm:px-8 h-16 backdrop-blur-md transition-colors">
+    <header className="sticky top-0 z-30 shrink-0 flex items-center justify-between gap-2 sm:gap-4 border-b border-border bg-background/95 px-3 sm:px-8 h-16 backdrop-blur-md transition-colors w-full max-w-full min-w-0">
       {/* Mobile Sidebar Trigger & Breadcrumb */}
-      <div className="flex items-center gap-3 shrink-0">
+      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
         <button
           onClick={onToggleMobileSidebar}
-          className="md:hidden p-2 rounded-xl border border-border bg-card text-foreground cursor-pointer hover:bg-muted"
+          className="md:hidden h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl border border-border bg-card text-foreground cursor-pointer hover:bg-muted active:scale-95 transition-all shadow-2xs"
           aria-label="Toggle navigation menu"
         >
           <Menu className="h-5 w-5" />
@@ -106,24 +106,24 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
       </div>
 
       {/* Center Search Input */}
-      <div className="relative flex-1 max-w-md mx-auto">
-        <Search className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+      <div className="relative flex-1 max-w-md mx-auto min-w-0">
+        <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <input
           ref={searchInputRef}
           type="text"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="Search candidates, job roles, skills..."
-          className="w-full h-10 rounded-full border border-border bg-card pl-10 pr-16 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all shadow-2xs"
+          placeholder="Search candidates, skills..."
+          className="w-full h-10 rounded-full border border-border bg-card pl-9 sm:pl-10 pr-3 sm:pr-16 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all shadow-2xs"
         />
-        <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center gap-1 font-mono text-[10px] text-muted-foreground">
+        <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-1 font-mono text-[10px] text-muted-foreground">
           <kbd className="rounded border border-border bg-muted px-1.5 py-0.5">/</kbd>
           <kbd className="rounded border border-border bg-muted px-1.5 py-0.5">⌘K</kbd>
         </div>
       </div>
 
       {/* Right Controls */}
-      <div className="flex items-center gap-2.5 shrink-0">
+      <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
         {/* Session Badge */}
         <div className="hidden lg:flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-1.5 text-xs font-medium text-foreground shadow-2xs">
           <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
@@ -134,7 +134,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         <button
           onClick={toggleTheme}
           title={`Switch to ${theme === "dark" ? "Light Mode" : "Dark Amber Mode"}`}
-          className="flex items-center gap-2 rounded-full border border-border bg-card px-3.5 py-1.5 text-xs font-semibold text-foreground hover:bg-muted transition-all shadow-2xs cursor-pointer"
+          className="flex items-center justify-center h-10 sm:h-auto min-w-[40px] rounded-full border border-border bg-card p-2 sm:px-3.5 sm:py-1.5 text-xs font-semibold text-foreground hover:bg-muted transition-all shadow-2xs cursor-pointer active:scale-95"
         >
           {theme === "dark" ? (
             <>
@@ -156,31 +156,31 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         {/* Notifications Bell */}
         <button
           aria-label="Notifications"
-          className="relative p-2 rounded-full border border-border bg-card text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer shadow-2xs"
+          className="relative h-10 w-10 min-h-[40px] min-w-[40px] flex items-center justify-center rounded-full border border-border bg-card text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer shadow-2xs active:scale-95"
         >
           <Bell className="h-4 w-4" />
-          <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-primary" />
+          <span className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full bg-primary" />
         </button>
 
         {/* User Profile Selector Menu */}
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-            className="flex items-center gap-2 p-1 rounded-full border border-border bg-card hover:border-primary/50 transition-all cursor-pointer shadow-2xs"
+            className="flex items-center gap-1.5 sm:gap-2 p-1 rounded-full border border-border bg-card hover:border-primary/50 transition-all cursor-pointer shadow-2xs min-h-[40px]"
             aria-label="Candidate user menu"
           >
-            <div className="h-8 w-8 rounded-full border border-primary/40 bg-gradient-to-tr from-primary to-amber-500 flex items-center justify-center text-xs font-bold text-white shadow-xs select-none">
+            <div className="h-8 w-8 rounded-full border border-primary/40 bg-gradient-to-tr from-primary to-amber-500 flex items-center justify-center text-xs font-bold text-white shadow-xs select-none shrink-0">
               {avatarText}
             </div>
-            <span className="hidden sm:inline text-xs font-semibold text-foreground pr-1">
+            <span className="hidden sm:inline text-xs font-semibold text-foreground pr-1 truncate max-w-[100px]">
               {candidateName}
             </span>
-            <ChevronDown className="h-3 w-3 text-muted-foreground mr-1.5" />
+            <ChevronDown className="h-3 w-3 text-muted-foreground mr-1 shrink-0" />
           </button>
 
           {/* Dropdown Candidate Picker */}
           {userDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-64 rounded-2xl border border-border bg-card p-2 shadow-xl z-50 animate-in fade-in-50 zoom-in-95">
+            <div className="absolute right-0 mt-2 w-64 max-w-[calc(100vw-1.5rem)] rounded-2xl border border-border bg-card p-2 shadow-xl z-50 animate-in fade-in-50 zoom-in-95">
               {currentUser && (
                 <div className="p-2.5 border-b border-border bg-card-sub rounded-xl mb-1.5">
                   <div className="flex items-center gap-2.5">

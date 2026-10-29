@@ -78,9 +78,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   }, [companies, searchQuery]);
 
   return (
-    <div className="h-screen w-full flex bg-background text-foreground overflow-hidden font-sans selection:bg-primary selection:text-white">
+    <div className="h-[100dvh] min-h-[100dvh] w-full max-w-full flex bg-background text-foreground overflow-hidden font-sans selection:bg-primary selection:text-white">
       {/* 1. Left Sidebar Navigation (Desktop) */}
-      <div className="hidden md:block shrink-0">
+      <div className="hidden md:block shrink-0 h-[100dvh] max-h-[100dvh]">
         <DashboardSidebar
           currentUser={effectiveUser}
           onOpenJDMatcher={openJDModal}
@@ -90,12 +90,18 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
       {/* Mobile Drawer */}
       {mobileSidebarOpen && (
-        <div className="fixed inset-0 z-50 flex md:hidden">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Navigation drawer"
+          className="fixed inset-0 z-50 flex md:hidden h-[100dvh] w-full"
+        >
           <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-xs"
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
             onClick={() => setMobileSidebarOpen(false)}
+            aria-hidden="true"
           />
-          <div className="relative z-10">
+          <div className="relative z-10 h-full animate-in slide-in-from-left duration-200 shadow-2xl">
             <DashboardSidebar
               currentUser={effectiveUser}
               onNavigate={() => setMobileSidebarOpen(false)}
@@ -113,7 +119,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       )}
 
       {/* 2. Main Work Area */}
-      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 w-full max-w-full h-[100dvh] max-h-[100dvh] overflow-hidden">
         {/* Top Header */}
         <DashboardHeader
           currentUser={effectiveUser}
@@ -161,7 +167,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         )}
 
         {/* Page Content Body */}
-        <main className="flex-1 min-w-0 overflow-y-auto">
+        <main className="flex-1 min-w-0 w-full max-w-full overflow-y-auto overflow-x-hidden scroll-smooth">
           {children ?? <Outlet />}
         </main>
       </div>

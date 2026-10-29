@@ -120,7 +120,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
   };
 
   return (
-    <aside className="w-64 shrink-0 flex flex-col justify-between border-r border-sidebar-border bg-sidebar p-4 h-screen overflow-y-auto overflow-x-hidden select-none transition-colors sticky top-0">
+    <aside className="w-64 shrink-0 flex flex-col justify-between border-r border-sidebar-border bg-sidebar p-4 h-[100dvh] max-h-[100dvh] overflow-y-auto overflow-x-hidden select-none transition-colors sticky top-0">
       {/* 1. Top Brand Block */}
       <div>
         <Link

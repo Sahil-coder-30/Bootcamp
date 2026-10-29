@@ -121,7 +121,7 @@ export const CandidateDashboard: React.FC = () => {
 
   return (
     <DashboardLayout>
-      <div className="px-4 sm:px-8 py-6 space-y-6">
+      <div className="w-full max-w-full min-w-0 overflow-x-hidden px-4 sm:px-8 py-6 space-y-6">
         {/* Error Banner if any */}
         {dashboardError && (
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-xs text-red-500">
@@ -139,21 +139,21 @@ export const CandidateDashboard: React.FC = () => {
         )}
 
           {/* Greeting Banner */}
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 rounded-3xl border border-border bg-card p-5 sm:p-6 shadow-xs">
-            <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-semibold tracking-wider uppercase text-primary">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-                <span>Campus Placement Intelligence Platform</span>
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 sm:gap-6 rounded-3xl border border-border bg-card p-4 sm:p-6 shadow-xs">
+            <div className="min-w-0 flex-1">
+              <div className="inline-flex flex-wrap items-center gap-1.5 sm:gap-2 rounded-2xl sm:rounded-full border border-primary/30 bg-primary/10 px-2.5 sm:px-3 py-1 text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase text-primary max-w-full">
+                <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse shrink-0" />
+                <span>Placement Intelligence</span>
                 <span className="text-muted-foreground">•</span>
                 <span className="font-mono text-muted-foreground">AST Calibrated</span>
               </div>
-              <h1 className="mt-2.5 font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+              <h1 className="mt-2 font-heading text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-foreground truncate max-w-full">
                 {greeting}, {candidateName} 👋
               </h1>
               <p className="mt-1.5 text-xs sm:text-sm text-muted-foreground flex flex-wrap items-center gap-1.5">
                 <span>Profile:</span>
                 {candidateEmail && (
-                  <span className="font-semibold text-primary">{candidateEmail}</span>
+                  <span className="font-semibold text-primary break-all">{candidateEmail}</span>
                 )}
                 {candidateEmail && <span>•</span>}
                 <strong className="text-foreground font-semibold">{educationText}</strong>
@@ -165,7 +165,7 @@ export const CandidateDashboard: React.FC = () => {
 
             {/* Quick Readiness Score Circular Ring Card */}
             {summary?.hasData ? (
-              <div className="flex items-center gap-4 bg-card-sub border border-border rounded-2xl px-5 py-3.5 shadow-xs w-full sm:w-auto shrink-0">
+              <div className="flex items-center gap-3.5 sm:gap-4 bg-card-sub border border-border rounded-2xl p-3 sm:px-5 sm:py-3.5 shadow-xs w-full lg:w-auto shrink-0 justify-between sm:justify-start">
                 <div className="relative h-14 w-14 flex flex-col items-center justify-center shrink-0">
                   <svg className="h-14 w-14 -rotate-90 transform" viewBox="0 0 36 36">
                     <circle
@@ -197,14 +197,14 @@ export const CandidateDashboard: React.FC = () => {
                     </span>
                   </div>
                 </div>
-                <div className="text-left">
+                <div className="text-left min-w-0 flex-1 sm:flex-none">
                   <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
                     Target Readiness
                   </p>
-                  <p className="text-xs font-bold text-foreground">
+                  <p className="text-xs font-bold text-foreground truncate max-w-[180px] sm:max-w-none">
                     {summary.targetCompany.name}: {summary.readinessScore}%
                   </p>
-                  <p className="text-[10px] text-muted-foreground font-medium">
+                  <p className="text-[10px] text-muted-foreground font-medium truncate">
                     {summary?.readinessRange
                       ? `Range: ${summary.readinessRange.low}% to ${summary.readinessRange.high}%`
                       : "Confidence Interval"}
@@ -212,18 +212,18 @@ export const CandidateDashboard: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="flex items-center gap-3 bg-card-sub border border-amber-500/30 rounded-2xl px-5 py-3.5 shadow-xs w-full sm:w-auto shrink-0">
+              <div className="flex items-center gap-3 bg-card-sub border border-amber-500/30 rounded-2xl p-3 sm:px-5 sm:py-3.5 shadow-xs w-full lg:w-auto shrink-0">
                 <div className="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500 shrink-0">
                   <AlertCircle className="h-5 w-5" />
                 </div>
-                <div className="text-left">
+                <div className="text-left min-w-0 flex-1 sm:flex-none">
                   <p className="text-[10px] uppercase font-bold text-amber-500 tracking-wider">
                     Placement Status
                   </p>
-                  <p className="text-xs font-bold text-foreground">
+                  <p className="text-xs font-bold text-foreground truncate">
                     Awaiting Resume
                   </p>
-                  <p className="text-[10px] text-muted-foreground font-medium">
+                  <p className="text-[10px] text-muted-foreground font-medium truncate">
                     Upload resume to evaluate
                   </p>
                 </div>
@@ -294,53 +294,53 @@ export const CandidateDashboard: React.FC = () => {
           ) : (
             <>
               {/* 3 Metric Cards Row (Live Backend Data) */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
                 {/* Metric 1: RADIX Profile Completeness & AST Verification */}
-                <div className="rounded-2xl border border-border bg-card p-5 shadow-xs flex flex-col justify-between min-h-[148px]">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                <div className="rounded-2xl border border-border bg-card p-4 sm:p-5 shadow-xs flex flex-col justify-between min-h-[148px]">
+                  <div className="flex items-center justify-between gap-2 min-w-0">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground truncate">
                       PROFILE COMPLETENESS
                     </span>
-                    <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                    <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary shrink-0">
                       <Trophy className="h-3 w-3" /> Top 5% Cohort
                     </span>
                   </div>
-                  <div className="my-2.5 flex items-baseline gap-1.5">
+                  <div className="my-2 sm:my-2.5 flex items-baseline gap-1.5">
                     <span className="font-heading text-3xl font-extrabold text-foreground tracking-tight">
                       {summary?.completeness ?? 0}
                     </span>
                     <span className="text-sm font-semibold text-muted-foreground">%</span>
                   </div>
-                  <div className="flex items-center justify-between text-xs pt-2.5 border-t border-border/60 text-muted-foreground">
-                    <span className="inline-flex items-center gap-1.5 text-[11px]">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
-                      AST Verified Profile
+                  <div className="flex items-center justify-between text-xs pt-2.5 border-t border-border/60 text-muted-foreground gap-2 min-w-0">
+                    <span className="inline-flex items-center gap-1.5 text-[11px] truncate min-w-0">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0" />
+                      <span className="truncate">AST Verified Profile</span>
                     </span>
-                    <Link to="/profile" className="text-xs text-primary font-semibold hover:underline">
+                    <Link to="/profile" className="text-xs text-primary font-semibold hover:underline shrink-0">
                       Edit Profile
                     </Link>
                   </div>
                 </div>
 
                 {/* Metric 2: Corporate Hiring Bars Met */}
-                <div className="rounded-2xl border border-border bg-card p-5 shadow-xs flex flex-col justify-between min-h-[148px]">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                <div className="rounded-2xl border border-border bg-card p-4 sm:p-5 shadow-xs flex flex-col justify-between min-h-[148px]">
+                  <div className="flex items-center justify-between gap-2 min-w-0">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground truncate">
                       HIRING BARS MET
                     </span>
-                    <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                    <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary shrink-0">
                       <TrendingUp className="h-3 w-3" />{" "}
                       {summary?.targetCompany.verdict === "ready" ? "Ready" : "Almost"}
                     </span>
                   </div>
-                  <div className="my-2.5 flex items-baseline gap-1.5">
+                  <div className="my-2 sm:my-2.5 flex items-baseline gap-1.5">
                     <span className="font-heading text-3xl font-extrabold text-foreground tracking-tight">
                       {summary?.categoriesMet ?? 0}
                     </span>
                     <span className="text-sm font-semibold text-muted-foreground">/ 12 Categories</span>
                   </div>
-                  <div className="flex items-center justify-between text-xs pt-2.5 border-t border-border/60 text-muted-foreground">
-                    <span className="text-[11px] truncate">
+                  <div className="flex items-center justify-between text-xs pt-2.5 border-t border-border/60 text-muted-foreground gap-2 min-w-0">
+                    <span className="text-[11px] truncate min-w-0">
                       <strong className="text-foreground">
                         {summary?.levelsCovered ?? 0}
                       </strong>{" "}
@@ -348,36 +348,38 @@ export const CandidateDashboard: React.FC = () => {
                       <strong className="text-foreground">{summary?.levelsNeeded ?? 72}</strong>{" "}
                       Levels
                     </span>
-                    <span className="text-[11px] font-semibold text-primary truncate max-w-[120px]">
+                    <span className="text-[11px] font-semibold text-primary truncate max-w-[130px] text-right shrink-0">
                       {summary?.targetCompany.name || "Google LLC"}
                     </span>
                   </div>
                 </div>
 
                 {/* Metric 3: Target Enterprise Recruiter */}
-                <div className="rounded-2xl border border-border bg-card p-5 shadow-xs flex flex-col justify-between min-h-[148px]">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                <div className="rounded-2xl border border-border bg-card p-4 sm:p-5 shadow-xs flex flex-col justify-between min-h-[148px]">
+                  <div className="flex items-center justify-between gap-2 min-w-0">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground truncate">
                       TARGET RECRUITER LOCK
                     </span>
-                    <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary font-mono">
+                    <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary font-mono shrink-0">
                       <Clock className="h-3 w-3" /> Active Benchmark
                     </span>
                   </div>
-                  <div className="my-2.5 flex items-baseline justify-between gap-2">
-                    <span className="font-heading text-2xl font-extrabold text-foreground tracking-tight truncate flex-1">
+                  <div className="my-2 sm:my-2.5 flex items-baseline justify-between gap-2 min-w-0">
+                    <span className="font-heading text-xl sm:text-2xl font-extrabold text-foreground tracking-tight truncate flex-1 min-w-0">
                       {summary?.targetCompany.name || "Google LLC"}
                     </span>
-                    <span className="rounded-full bg-primary/10 text-primary border border-primary/20 px-2.5 py-0.5 text-xs font-bold">
+                    <span className="rounded-full bg-primary/10 text-primary border border-primary/20 px-2.5 py-0.5 text-xs font-bold shrink-0">
                       {summary ? `${summary.readinessScore}% Match` : "0% Match"}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between text-xs pt-2.5 border-t border-border/60 text-muted-foreground">
-                    <span className="inline-flex items-center gap-1.5 text-[11px] truncate">
+                  <div className="flex items-center justify-between text-xs pt-2.5 border-t border-border/60 text-muted-foreground gap-2 min-w-0">
+                    <span className="inline-flex items-center gap-1.5 text-[11px] truncate min-w-0">
                       <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
-                      {summary
-                        ? `${summary.studyPlan.totalSteps} Study Steps (${summary.studyPlan.totalHours}h)`
-                        : "Analyzing..."}
+                      <span className="truncate">
+                        {summary
+                          ? `${summary.studyPlan.totalSteps} Study Steps (${summary.studyPlan.totalHours}h)`
+                          : "Analyzing..."}
+                      </span>
                     </span>
                     <Link
                       to="/companies"

@@ -69,7 +69,7 @@ export const SkillHistogramCard: React.FC<SkillHistogramCardProps> = ({
   const metCount = skills.filter((s) => !s.gap).length;
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-5 shadow-xs flex flex-col h-full transition-colors">
+    <div className="rounded-2xl border border-border bg-card p-4 sm:p-5 shadow-xs flex flex-col h-full transition-colors">
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-border">
         <div>
@@ -88,13 +88,13 @@ export const SkillHistogramCard: React.FC<SkillHistogramCardProps> = ({
         </div>
 
         {/* Filter Pills */}
-        <div className="flex items-center gap-1 rounded-full bg-muted p-1 border border-border text-[11px] max-w-full overflow-x-auto no-scrollbar shrink-0">
+        <div className="flex flex-wrap items-center gap-1.5 rounded-xl sm:rounded-full bg-muted p-1 border border-border text-[11px] max-w-full">
           {(["All", "Core", "Systems", "Engineering"] as const).map((cat) => (
             <button
               key={cat}
               onClick={() => setFilterCategory(cat)}
               className={cn(
-                "rounded-full px-2.5 py-1 font-medium transition-all cursor-pointer whitespace-nowrap",
+                "rounded-lg sm:rounded-full px-2.5 py-1 font-medium transition-all cursor-pointer whitespace-nowrap",
                 filterCategory === cat
                   ? "bg-primary text-white font-bold shadow-xs"
                   : "text-muted-foreground hover:text-foreground",
@@ -153,18 +153,20 @@ export const SkillHistogramCard: React.FC<SkillHistogramCardProps> = ({
                 )}
               >
                 {/* Row Header */}
-                <div className="flex items-center justify-between gap-2 text-xs">
-                  <div className="flex items-center gap-2 min-w-0">
+                <div className="flex items-center justify-between gap-1.5 sm:gap-2 text-xs">
+                  <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
                     <span className="shrink-0 rounded-md border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px] font-bold text-foreground">
                       {skill.code}
                     </span>
-                    <span className="font-semibold text-foreground truncate">{skill.name}</span>
+                    <span className="font-semibold text-foreground truncate text-xs sm:text-sm">
+                      {skill.name}
+                    </span>
                   </div>
 
-                  <div className="flex items-center gap-2 shrink-0">
+                  <div className="flex items-center gap-1 sm:gap-2 shrink-0">
                     <span
                       className={cn(
-                        "rounded-full border px-2 py-0.5 text-[10px] font-semibold shrink-0",
+                        "rounded-full border px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-semibold shrink-0",
                         bloom.bg,
                         bloom.text,
                         bloom.border,
@@ -174,19 +176,19 @@ export const SkillHistogramCard: React.FC<SkillHistogramCardProps> = ({
                     </span>
 
                     {meetsBar ? (
-                      <span className="flex items-center gap-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 shrink-0">
+                      <span className="flex items-center gap-0.5 text-[9px] sm:text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 shrink-0">
                         <CheckCircle2 className="h-3 w-3" /> Met
                       </span>
                     ) : (
                       <span
                         className={cn(
-                          "flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.2 rounded-md border shrink-0",
+                          "flex items-center gap-0.5 text-[9px] sm:text-[10px] font-semibold px-1 sm:px-1.5 py-0.2 rounded-md border shrink-0",
                           skill.blocking
                             ? "text-red-500 bg-red-500/10 border-red-500/20"
                             : "text-amber-500 bg-amber-500/10 border-amber-500/20",
                         )}
                       >
-                        <AlertTriangle className="h-3 w-3" /> -{skill.shortfall}L Gap
+                        <AlertTriangle className="h-3 w-3" /> -{skill.shortfall}L
                       </span>
                     )}
                   </div>
