@@ -3,35 +3,38 @@
 // These tokens and helper classes are for new feature components (theme class `.light-theme`).
 // Resets live in `@layer base` so they never override Tailwind utilities.
 
-/* ─── Default Onyx/Obsidian Dark Theme ───────────────────────────── */
-:root {
+/* ─── Dark Amber Theme ───────────────────────────────────────────── */
+:root,
+.dark,
+[data-theme="dark"] {
   /* Surface System */
-  --bg-canvas: #07080b;
-  --bg-surface: #0e1017;
-  --bg-overlay: #161929;
-  --bg-element: #202438;
-  --bg-active: rgba(255, 255, 255, 0.08);
+  --bg-canvas: #0b0c0e;
+  --bg-surface: #12141a;
+  --bg-overlay: #171922;
+  --bg-element: #1e222d;
+  --bg-active: rgba(249, 115, 22, 0.15);
 
   /* Border System */
-  --border-strong: #353a56;
-  --border-glow: rgba(59, 130, 246, 0.15);
+  --border: #1e222d;
+  --border-strong: #2a2e3d;
+  --border-glow: rgba(249, 115, 22, 0.3);
 
   /* Brand & Accent */
-  --brand-primary: #10b981; /* Emerald */
-  --brand-hover: #34d399;
-  --brand-subtle: rgba(16, 185, 129, 0.1);
+  --brand-primary: #f97316; /* Amber Orange */
+  --brand-hover: #fb923c;
+  --brand-subtle: rgba(249, 115, 22, 0.12);
 
-  --accent-primary: #3b82f6; /* Azure Blue */
-  --accent-hover: #60a5fa;
-  --accent-subtle: rgba(59, 130, 246, 0.1);
+  --accent-primary: #f59e0b; /* Warm Amber */
+  --accent-hover: #fbbf24;
+  --accent-subtle: rgba(245, 158, 11, 0.15);
 
   /* Typography Hierarchy (WCAG AAA/AA Compliant) */
-  --text-primary: #ffffff;
+  --text-primary: #f3f4f6;
   --text-secondary: #e2e8f0;
   --text-muted: #94a3b8;
-  --text-disabled: #475569;
+  --text-disabled: #64748b;
 
-  --color-rgb-text: 255, 255, 255;
+  --color-rgb-text: 243, 244, 246;
 
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", monospace;

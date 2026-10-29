@@ -43,7 +43,7 @@ const FILTERS: ("All" | CompanyType)[] = ["All", "Super Dream", "Dream", "Standa
 // Theme palette for company tiers
 const TYPE_STYLES: Record<CompanyType, string> = {
   "Super Dream":
-    "bg-[#4a154b] dark:bg-[#4a183d] text-white dark:text-[#f0d5eb] border-[#3d113e] dark:border-[#5c234d] shadow-xs",
+    "bg-orange-500/10 dark:bg-primary/15 text-orange-600 dark:text-primary border-orange-500/30 dark:border-primary/40 shadow-xs",
   Dream: "bg-primary/10 text-primary border-primary/30 shadow-xs",
   Standard:
     "bg-emerald-500/10 text-emerald-800 dark:text-emerald-400 border-emerald-500/30 shadow-xs",
@@ -51,7 +51,7 @@ const TYPE_STYLES: Record<CompanyType, string> = {
 };
 
 const TYPE_DOTS: Record<CompanyType, string> = {
-  "Super Dream": "bg-white/80 shadow-xs",
+  "Super Dream": "bg-primary shadow-xs",
   Dream: "bg-primary shadow-xs",
   Standard: "bg-emerald-500 shadow-xs",
   Regular: "bg-amber-500 shadow-xs",
@@ -60,7 +60,7 @@ const TYPE_DOTS: Record<CompanyType, string> = {
 const ACTIVE_STYLES: Record<string, string> = {
   All: "bg-[#1e1b18] dark:bg-primary text-white border-transparent shadow-sm font-semibold",
   "Super Dream":
-    "bg-[#4a154b] dark:bg-[#4a183d] text-white dark:text-[#f0d5eb] border-transparent shadow-sm font-semibold",
+    "bg-primary text-white border-transparent shadow-sm font-semibold",
   Dream: "bg-primary text-white border-transparent shadow-sm font-semibold",
   Standard: "bg-emerald-600 text-white border-transparent shadow-sm font-semibold",
   Regular: "bg-amber-600 text-white border-transparent shadow-sm font-semibold",
@@ -93,10 +93,10 @@ const CompanyCard = memo(function CompanyCard({
           onSelect(company);
         }
       }}
-      className="group relative flex flex-col justify-between rounded-2xl border border-[#c8dcf2] bg-white p-5 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#88BDF2] hover:bg-[#f8fbfe] hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#88BDF2]"
+      className="group relative flex flex-col justify-between rounded-2xl border border-[#c8dcf2] dark:border-border bg-white dark:bg-card p-5 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#88BDF2] dark:hover:border-primary/60 hover:bg-[#f8fbfe] dark:hover:bg-card-sub hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
     >
       {/* Top subtle highlight shimmer on hover */}
-      <div className="absolute inset-x-0 top-0 h-[2px] rounded-t-2xl bg-gradient-to-r from-transparent via-[#88BDF2] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+      <div className="absolute inset-x-0 top-0 h-[2px] rounded-t-2xl bg-gradient-to-r from-transparent via-[#88BDF2] dark:via-primary to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
       <div className="space-y-4">
         {/* Header: Logo + Tier Badge */}
@@ -105,7 +105,7 @@ const CompanyCard = memo(function CompanyCard({
             name={company.name}
             logoUrl={company.logoUrl}
             websiteUrl={company.websiteUrl}
-            className="h-13 w-13 rounded-xl border border-[#c8dcf2] bg-white shadow-xs"
+            className="h-13 w-13 rounded-xl border border-[#c8dcf2] dark:border-border bg-white dark:bg-card shadow-xs"
           />
           <div className="flex flex-col items-end gap-1.5">
             <span
@@ -118,7 +118,7 @@ const CompanyCard = memo(function CompanyCard({
               {company.companyType}
             </span>
             {company.category && (
-              <span className="max-w-[150px] truncate rounded-md bg-[#e9f3fd] px-2 py-0.5 text-[10px] font-medium text-[#384959] border border-[#c8dcf2]">
+              <span className="max-w-[150px] truncate rounded-md bg-[#e9f3fd] dark:bg-muted px-2 py-0.5 text-[10px] font-medium text-[#384959] dark:text-foreground border border-[#c8dcf2] dark:border-border">
                 {company.category}
               </span>
             )}
@@ -127,22 +127,22 @@ const CompanyCard = memo(function CompanyCard({
 
         {/* Title */}
         <div>
-          <h3 className="font-heading text-lg font-bold leading-snug tracking-tight text-[#384959] transition-colors duration-200 group-hover:text-[#6A89A7]">
+          <h3 className="font-heading text-lg font-bold leading-snug tracking-tight text-[#384959] dark:text-foreground transition-colors duration-200 group-hover:text-primary">
             {company.name}
           </h3>
-          <p className="text-xs font-medium text-[#6A89A7]">{company.shortName}</p>
+          <p className="text-xs font-medium text-[#6A89A7] dark:text-muted-foreground">{company.shortName}</p>
         </div>
 
         {/* Key Metrics Capsule */}
-        <div className="space-y-2 rounded-xl border border-[#c8dcf2] bg-[#f1f6fc] p-3 text-xs text-[#384959]">
+        <div className="space-y-2 rounded-xl border border-[#c8dcf2] dark:border-border bg-[#f1f6fc] dark:bg-card-sub p-3 text-xs text-[#384959] dark:text-foreground">
           <div className="flex items-center gap-2">
-            <MapPin className="h-3.5 w-3.5 shrink-0 text-[#6A89A7]" />
+            <MapPin className="h-3.5 w-3.5 shrink-0 text-[#6A89A7] dark:text-muted-foreground" />
             <span className="truncate">
               <Val v={company.headquarters} />
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <Users className="h-3.5 w-3.5 shrink-0 text-[#6A89A7]" />
+            <Users className="h-3.5 w-3.5 shrink-0 text-[#6A89A7] dark:text-muted-foreground" />
             <span className="truncate">
               <Val v={company.employeeSize} />
             </span>
@@ -150,7 +150,7 @@ const CompanyCard = memo(function CompanyCard({
           <div
             className={cn(
               "flex items-center gap-1.5 font-medium",
-              down ? "text-rose-600" : "text-emerald-700",
+              down ? "text-rose-600 dark:text-rose-400" : "text-emerald-700 dark:text-emerald-400",
             )}
           >
             {down ? (
@@ -166,12 +166,12 @@ const CompanyCard = memo(function CompanyCard({
       </div>
 
       {/* Footer Action */}
-      <div className="mt-4 flex items-center justify-between border-t border-[#c8dcf2] pt-3 text-xs font-semibold text-[#384959] transition-colors group-hover:text-[#6A89A7]">
+      <div className="mt-4 flex items-center justify-between border-t border-[#c8dcf2] dark:border-border pt-3 text-xs font-semibold text-[#384959] dark:text-muted-foreground transition-colors group-hover:text-primary">
         <span className="flex items-center gap-1.5">
-          <Briefcase className="h-3.5 w-3.5 text-[#6A89A7] group-hover:text-[#384959]" />
+          <Briefcase className="h-3.5 w-3.5 text-[#6A89A7] dark:text-muted-foreground group-hover:text-primary" />
           Explore Intelligence Profile
         </span>
-        <ArrowRight className="h-4 w-4 text-[#6A89A7] transition-transform duration-200 group-hover:translate-x-1 group-hover:text-[#384959]" />
+        <ArrowRight className="h-4 w-4 text-[#6A89A7] dark:text-muted-foreground transition-transform duration-200 group-hover:translate-x-1 group-hover:text-primary" />
       </div>
     </div>
   );
@@ -294,34 +294,34 @@ export default function CompanyPickerPage() {
   ).length;
 
   return (
-    <div className="min-h-screen bg-[#f1f6fc] text-[#384959] selection:bg-[#88BDF2] selection:text-[#384959]">
+    <div className="min-h-screen bg-[#f1f6fc] dark:bg-background text-[#384959] dark:text-foreground selection:bg-[#88BDF2] dark:selection:bg-primary selection:text-[#384959] dark:selection:text-white">
       {/* 1. Institutional Top Status Bar */}
-      <div className="border-b border-[#c8dcf2] bg-[#e9f3fd] py-2">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 text-xs font-medium text-[#6A89A7] sm:px-6">
+      <div className="border-b border-[#c8dcf2] dark:border-border bg-[#e9f3fd] dark:bg-card-sub py-2">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 text-xs font-medium text-[#6A89A7] dark:text-muted-foreground sm:px-6">
           <div className="flex items-center gap-2.5">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
             </span>
-            <span className="font-semibold text-[#384959]">{COLLEGE_SHORT}</span>
+            <span className="font-semibold text-[#384959] dark:text-foreground">{COLLEGE_SHORT}</span>
             <span className="hidden sm:inline">·</span>
-            <span className="hidden sm:inline text-[#6A89A7]">
+            <span className="hidden sm:inline text-[#6A89A7] dark:text-muted-foreground">
               Department of Training & Placement
             </span>
             <span className="hidden md:inline">·</span>
-            <span className="hidden md:inline text-[#6A89A7]">Autonomous Institute</span>
+            <span className="hidden md:inline text-[#6A89A7] dark:text-muted-foreground">Autonomous Institute</span>
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#c8dcf2] bg-white px-2.5 py-0.5 text-[11px] font-medium text-[#384959]">
-              <ShieldCheck className="h-3 w-3 text-[#6A89A7]" />
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#c8dcf2] dark:border-border bg-white dark:bg-card px-2.5 py-0.5 text-[11px] font-medium text-[#384959] dark:text-foreground">
+              <ShieldCheck className="h-3 w-3 text-[#6A89A7] dark:text-muted-foreground" />
               Academic Drive 2025–26
             </span>
             <a
               href="https://jssaten.ac.in"
               target="_blank"
               rel="noreferrer"
-              className="hidden items-center gap-1 text-[11px] text-[#6A89A7] transition-colors hover:text-[#384959] sm:flex"
+              className="hidden items-center gap-1 text-[11px] text-[#6A89A7] dark:text-muted-foreground transition-colors hover:text-[#384959] dark:hover:text-foreground sm:flex"
             >
               jssaten.ac.in
               <ExternalLink className="h-2.5 w-2.5" />
@@ -331,28 +331,28 @@ export default function CompanyPickerPage() {
       </div>
 
       {/* 2. Executive Navigation Header */}
-      <nav className="sticky top-0 z-40 border-b border-[#c8dcf2] bg-white/90 backdrop-blur-md">
+      <nav className="sticky top-0 z-40 border-b border-[#c8dcf2] dark:border-border bg-white/90 dark:bg-background/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
           <Link to="/" className="flex items-center gap-3 transition-opacity hover:opacity-90">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#88BDF2] bg-[#BDDDFC] font-heading text-sm font-bold text-[#384959] shadow-xs">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#88BDF2] dark:border-border bg-[#BDDDFC] dark:bg-card font-heading text-sm font-bold text-[#384959] dark:text-foreground shadow-xs">
               PI
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-heading text-lg font-bold tracking-tight text-[#384959]">
+                <span className="font-heading text-lg font-bold tracking-tight text-[#384959] dark:text-foreground">
                   {APP_NAME}
                 </span>
-                <span className="rounded-full border border-[#88BDF2] bg-[#BDDDFC] px-2 py-0.5 text-[10px] font-semibold text-[#384959]">
+                <span className="rounded-full border border-[#88BDF2] dark:border-primary/40 bg-[#BDDDFC] dark:bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-[#384959] dark:text-primary">
                   CAMPUS PRO
                 </span>
               </div>
-              <p className="text-[11px] text-[#6A89A7]">JSSATEN Placement Intelligence Hub</p>
+              <p className="text-[11px] text-[#6A89A7] dark:text-muted-foreground">JSSATEN Placement Intelligence Hub</p>
             </div>
           </Link>
 
           <div className="flex items-center gap-2 sm:gap-3">
             {currentUser ? (
-              <div className="flex items-center gap-2 rounded-xl border border-[#88BDF2] bg-[#e9f3fd] px-2.5 py-1 text-xs">
+              <div className="flex items-center gap-2 rounded-xl border border-[#88BDF2] dark:border-border bg-[#e9f3fd] dark:bg-card px-2.5 py-1 text-xs">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                 <span className="font-semibold text-[#384959]">{currentUser.name}</span>
                 <button
