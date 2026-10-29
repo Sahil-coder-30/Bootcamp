@@ -42,6 +42,13 @@ $color-text-disabled: var(--text-disabled);
 $font-sans: var(--font-sans);
 $font-mono: var(--font-mono);
 
+// Border Radius Tokens (Consistent 8px System)
+$radius-sm: var(--radius-sm, 8px);
+$radius-md: var(--radius-md, 10px);
+$radius-lg: var(--radius-lg, 12px);
+$radius-xl: var(--radius-xl, 16px);
+$radius-2xl: var(--radius-2xl, 20px);
+
 // Alpha Card Helpers
 $color-rgb-text: var(--color-rgb-text);
 $color-alpha-card: rgba(var(--color-rgb-text), 0.03);
@@ -62,6 +69,7 @@ $color-alpha-card-hover: rgba(var(--color-rgb-text), 0.06);
 
 @mixin card {
   background: var(--bg-card, var(--bg-surface));
+  color: var(--card-foreground, var(--text-primary));
   border: 1px solid $color-border;
   border-radius: 12px;
   padding: $space-6;
@@ -76,7 +84,7 @@ $color-alpha-card-hover: rgba(var(--color-rgb-text), 0.06);
 }
 
 @mixin skeleton {
-  background: linear-gradient(90deg, rgba(var(--color-rgb-text), 0.03) 25%, var(--bg-element) 50%, rgba(var(--color-rgb-text), 0.03) 75%);
+  background: linear-gradient(90deg, rgba(var(--color-rgb-text), 0.04) 25%, var(--bg-element) 50%, rgba(var(--color-rgb-text), 0.04) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite linear;
   border-radius: 6px;

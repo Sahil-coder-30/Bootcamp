@@ -3,7 +3,7 @@
 // These tokens and helper classes are for new feature components (theme class `.light-theme`).
 // Resets live in `@layer base` so they never override Tailwind utilities.
 
-/* ─── Dark Amber Theme ───────────────────────────────────────────── */
+/* --- Unified Indigo Dark Theme ----------------------------------- */
 :root,
 .dark,
 [data-theme="dark"] {
@@ -13,27 +13,44 @@
   --bg-card: #12141a;
   --bg-overlay: #171922;
   --bg-element: #1e222d;
-  --bg-active: rgba(249, 115, 22, 0.15);
+  --bg-active: rgba(99, 102, 241, 0.15);
+
+  --background: #0b0c0e;
+  --card: #12141a;
+  --card-sub: #171922;
+  --popover: #12141a;
 
   /* Border System */
   --border: #1e222d;
+  --border-sub: #252936;
   --border-strong: #2a2e3d;
-  --border-glow: rgba(249, 115, 22, 0.3);
+  --border-glow: rgba(99, 102, 241, 0.3);
 
-  /* Brand & Accent */
-  --brand-primary: #f97316; /* Amber Orange */
-  --brand-hover: #fb923c;
-  --brand-subtle: rgba(249, 115, 22, 0.12);
+  /* Unified Brand Primary (Tech Indigo) */
+  --brand-primary: #6366f1;
+  --brand-hover: #818cf8;
+  --brand-subtle: rgba(99, 102, 241, 0.15);
 
-  --accent-primary: #f59e0b; /* Warm Amber */
-  --accent-hover: #fbbf24;
-  --accent-subtle: rgba(245, 158, 11, 0.15);
+  --primary: #6366f1;
+  --primary-foreground: #ffffff;
+  --ring: #6366f1;
 
-  /* Typography Hierarchy (WCAG AAA/AA Compliant) */
+  --accent-primary: #818cf8;
+  --accent-hover: #a5b4fc;
+  --accent-subtle: rgba(99, 102, 241, 0.15);
+  --accent: #2e3856;
+  --accent-foreground: #e0e7ff;
+
+  /* Typography Hierarchy (High Contrast, WCAG AAA/AA Compliant) */
   --text-primary: #f3f4f6;
   --text-secondary: #e2e8f0;
   --text-muted: #94a3b8;
   --text-disabled: #64748b;
+
+  --foreground: #f3f4f6;
+  --card-foreground: #f3f4f6;
+  --popover-foreground: #f3f4f6;
+  --muted-foreground: #94a3b8;
 
   --color-rgb-text: 243, 244, 246;
 
@@ -41,7 +58,7 @@
   --font-mono: "JetBrains Mono", "Fira Code", monospace;
 }
 
-/* ─── 5-Layer Surface Codespace Light Theme ─────────────────────── */
+/* --- 5-Layer Surface Codespace Light Theme ----------------------- */
 :root.light-theme {
   --surface-canvas: #f8fafc;
   --surface-chrome: #ffffff;
@@ -56,8 +73,14 @@
   --bg-element: #f1f5f9;
   --bg-active: rgba(79, 70, 229, 0.08);
 
+  --background: #f8fafc;
+  --card: #ffffff;
+  --card-sub: #f1f5f9;
+  --popover: #ffffff;
+
   --border: #e2e8f0;
   --border-subtle: #f1f5f9;
+  --border-sub: #f1f5f9;
   --border-strong: #cbd5e1;
   --border-glow: rgba(79, 70, 229, 0.2);
 
@@ -65,19 +88,30 @@
   --brand-hover: #4338ca;
   --brand-subtle: rgba(79, 70, 229, 0.1);
 
-  --accent-primary: #f59e0b;
-  --accent-hover: #d97706;
-  --accent-subtle: rgba(245, 158, 11, 0.1);
+  --primary: #4f46e5;
+  --primary-foreground: #ffffff;
+  --ring: #4f46e5;
+
+  --accent-primary: #6366f1;
+  --accent-hover: #4f46e5;
+  --accent-subtle: rgba(79, 70, 229, 0.1);
+  --accent: #eef2ff;
+  --accent-foreground: #3730a3;
 
   --text-primary: #0f172a;
   --text-secondary: #334155;
   --text-muted: #64748b;
   --text-disabled: #94a3b8;
 
+  --foreground: #0f172a;
+  --card-foreground: #0f172a;
+  --popover-foreground: #0f172a;
+  --muted-foreground: #64748b;
+
   --color-rgb-text: 15, 23, 42;
 }
 
-/* ─── CSS Resets & Box Sizing ────────────────────────────────────── */
+/* --- CSS Resets & Box Sizing -------------------------------------- */
 @layer base {
   *,
   *::before,
@@ -92,8 +126,37 @@
   }
 }
 
-/* ─── Standard Action Controls ──────────────────────────────────── */
+/* --- Standard Action Controls & Surface Utilities ---------------- */
 @layer components {
+  .card {
+    background-color: var(--card, var(--bg-card));
+    color: var(--card-foreground, var(--text-primary));
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl, 12px);
+    padding: 24px;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+    &:hover {
+      border-color: var(--border-strong);
+    }
+  }
+
+  .card-sub {
+    background-color: var(--card-sub, var(--bg-element));
+    color: var(--card-foreground, var(--text-primary));
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg, 10px);
+    padding: 16px;
+  }
+
+  .skeleton {
+    background: linear-gradient(90deg, rgba(var(--color-rgb-text), 0.04) 25%, var(--bg-element) 50%, rgba(var(--color-rgb-text), 0.04) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite linear;
+    border-radius: var(--radius-sm, 6px);
+  }
+
   .btn-primary {
     background: linear-gradient(135deg, var(--brand-primary), var(--brand-hover));
     color: #ffffff;
@@ -138,7 +201,7 @@
   }
 }
 
-/* ─── Shimmer Keyframes ─────────────────────────────────────────── */
+/* --- Shimmer Keyframes ------------------------------------------- */
 @keyframes shimmer {
   0% {
     background-position: 200% 0;
@@ -148,7 +211,7 @@
   }
 }
 
-/* ─── Accessibility: Reduced Motion ──────────────────────────────── */
+/* --- Accessibility: Reduced Motion -------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
