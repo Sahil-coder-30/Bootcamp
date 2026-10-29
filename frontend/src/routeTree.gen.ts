@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CompaniesRouteImport } from './routes/companies'
 import { Route as CompanyRouteImport } from './routes/company'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as JdRouteImport } from './routes/jd'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as ResumeRouteImport } from './routes/resume'
@@ -43,6 +44,11 @@ const CompanyRoute = CompanyRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JdRoute = JdRouteImport.update({
+  id: '/jd',
+  path: '/jd',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -106,6 +112,7 @@ export interface FileRoutesByFullPath {
   '/companies': typeof CompaniesRoute
   '/company': typeof CompanyRouteWithChildren
   '/dashboard': typeof DashboardRoute
+  '/jd': typeof JdRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRouteWithChildren
   '/resume': typeof ResumeRoute
@@ -122,6 +129,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/companies': typeof CompaniesRoute
   '/dashboard': typeof DashboardRoute
+  '/jd': typeof JdRoute
   '/login': typeof LoginRoute
   '/resume': typeof ResumeRoute
   '/talent-check': typeof TalentCheckRoute
@@ -139,6 +147,7 @@ export interface FileRoutesById {
   '/companies': typeof CompaniesRoute
   '/company': typeof CompanyRouteWithChildren
   '/dashboard': typeof DashboardRoute
+  '/jd': typeof JdRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRouteWithChildren
   '/resume': typeof ResumeRoute
@@ -158,6 +167,7 @@ export interface FileRouteTypes {
     | '/companies'
     | '/company'
     | '/dashboard'
+    | '/jd'
     | '/login'
     | '/profile'
     | '/resume'
@@ -174,6 +184,7 @@ export interface FileRouteTypes {
     | '/'
     | '/companies'
     | '/dashboard'
+    | '/jd'
     | '/login'
     | '/resume'
     | '/talent-check'
@@ -190,6 +201,7 @@ export interface FileRouteTypes {
     | '/companies'
     | '/company'
     | '/dashboard'
+    | '/jd'
     | '/login'
     | '/profile'
     | '/resume'
@@ -208,6 +220,7 @@ export interface RootRouteChildren {
   CompaniesRoute: typeof CompaniesRoute
   CompanyRoute: typeof CompanyRouteWithChildren
   DashboardRoute: typeof DashboardRoute
+  JdRoute: typeof JdRoute
   LoginRoute: typeof LoginRoute
   ProfileRoute: typeof ProfileRouteWithChildren
   ResumeRoute: typeof ResumeRoute
@@ -243,6 +256,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/jd': {
+      id: '/jd'
+      path: '/jd'
+      fullPath: '/jd'
+      preLoaderRoute: typeof JdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -360,6 +380,7 @@ const rootRouteChildren: RootRouteChildren = {
   CompaniesRoute: CompaniesRoute,
   CompanyRoute: CompanyRouteWithChildren,
   DashboardRoute: DashboardRoute,
+  JdRoute: JdRoute,
   LoginRoute: LoginRoute,
   ProfileRoute: ProfileRouteWithChildren,
   ResumeRoute: ResumeRoute,

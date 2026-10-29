@@ -175,7 +175,7 @@ export function useGroupedSkills(
   levels: Record<string, number> | undefined,
 ) {
   return useMemo<CategoryGroup[]>(() => {
-    const order = [...CATEGORY_CODES, "OTHER"] as string[];
+    const order: string[] = [...CATEGORY_CODES];
     const groups = new Map<string, CategoryGroup>();
     for (const s of skills ?? []) {
       const code = order.includes(s.category_code) ? s.category_code : "OTHER";

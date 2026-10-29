@@ -17,6 +17,7 @@ import {
 import authReducer from "@/features/auth/slice/auth.slice";
 import companiesReducer from "@/features/companies/slice/companies.slice";
 import intelligenceReducer from "@/features/intelligence/slice/intelligence.slice";
+import jdReducer from "@/features/jd/slice/jd.slice";
 import profileReducer from "@/features/profile/slice/profile.slice";
 import skillsReducer from "@/features/skills/slice/skills.slice";
 import talentCheckReducer from "@/features/talentCheck/slice/talentCheck.slice";
@@ -28,6 +29,7 @@ export const makeStore = () =>
       auth: authReducer,
       companies: companiesReducer,
       intelligence: intelligenceReducer,
+      jd: jdReducer,
       profile: profileReducer,
       skills: skillsReducer,
       talentCheck: talentCheckReducer,
@@ -48,6 +50,7 @@ const APP_PATHS = [
   "/company/intelligence",
   "/company/skills",
   "/dashboard",
+  "/jd",
   "/login",
   "/profile",
   "/profile/new",
