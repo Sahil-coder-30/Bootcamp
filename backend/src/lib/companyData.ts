@@ -154,6 +154,8 @@ const toType = (v: unknown, name = "", category = "", id = 0): CompanyType => {
   )
     return "Standard";
 
+  if (!id) return "Regular";
+
   const tiers: CompanyType[] = [
     "Super Dream",
     "Dream",

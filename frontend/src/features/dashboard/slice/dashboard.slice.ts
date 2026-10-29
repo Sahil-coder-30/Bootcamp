@@ -18,7 +18,7 @@ export interface DashboardState {
 
 const initialState: DashboardState = {
   summary: null,
-  readinessScore: 62,
+  readinessScore: 0,
   topMatches: [],
   skills: [],
   studyPlan: [],

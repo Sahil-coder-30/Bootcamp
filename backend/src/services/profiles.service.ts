@@ -107,6 +107,10 @@ export function createProfilesService(
       return toStored(await mustFind(id));
     },
 
+    async getProfile(id: string): Promise<StoredProfile> {
+      return toStored(await mustFind(id));
+    },
+
     async create(p: CandidateProfileInput, src: ChangeSource = "form"): Promise<StoredProfile> {
       const existing = await repo.findByEmail(p.email);
       if (existing) throw duplicate(new DuplicateEmailError(existing.id));

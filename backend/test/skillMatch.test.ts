@@ -2,6 +2,11 @@ import { afterAll, beforeAll, beforeEach, describe, it, expect, vi } from "vites
 import { createServer, type IncomingMessage, type Server } from "node:http";
 import type { AddressInfo } from "node:net";
 
+vi.mock("../src/services/supabase.service.js", () => ({
+  supabase: null,
+  isSupabaseConfigured: false,
+}));
+
 interface SeenCall {
   method: string;
   url: string;

@@ -1,10 +1,10 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import {
   Search,
+  Sparkles,
   Sun,
   Bell,
-  Sparkles,
   Menu,
   Calendar,
   ChevronDown,
@@ -18,25 +18,41 @@ import { clearSession } from "@/lib/authStorage";
 
 interface DashboardHeaderProps {
   currentUser?: CandidateUser | null | undefined;
-  searchQuery: string;
-  onSearchChange: (q: string) => void;
+  searchQuery?: string;
+  onSearchChange?: (q: string) => void;
   onToggleMobileSidebar?: (() => void) | undefined;
 }
 
 export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   currentUser: propUser,
-  searchQuery,
-  onSearchChange,
+  searchQuery = "",
+  onSearchChange = () => {},
   onToggleMobileSidebar,
 }) => {
   const { theme, toggleTheme } = useTheme();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   const currentUser = propUser ?? getStoredUser();
   const candidateName = currentUser?.name || currentUser?.email?.split("@")[0] || "Candidate";
   const avatarText = currentUser?.avatarText || (candidateName[0] || "C").toUpperCase();
+
+  const getBreadcrumb = () => {
+    if (pathname === "/dashboard") return { title: "Dashboard", sub: "Placement Intelligence" };
+    if (pathname.startsWith("/profile")) return { title: "Candidate Profile", sub: "Bloom Radar & Verification" };
+    if (pathname.startsWith("/resume")) return { title: "Resume Parser", sub: "Deterministic ATS Extraction" };
+    if (pathname.startsWith("/jd")) return { title: "JD Analytics", sub: "12 RADIX Skill Mapping" };
+    if (pathname.startsWith("/talent-check")) return { title: "Talent Check", sub: "Hiring Bar & Readiness Analysis" };
+    if (pathname.startsWith("/skill-match")) return { title: "Skill Matching", sub: "JD vs Resume Gap Analysis" };
+    if (pathname.startsWith("/company/skills")) return { title: "Skill Intelligence", sub: "Company Skill Roadmaps" };
+    if (pathname.startsWith("/company/intelligence")) return { title: "Company Intelligence", sub: "Placement History & Hiring Bars" };
+    if (pathname.startsWith("/companies")) return { title: "Companies Directory", sub: "115 Recruiting Firms" };
+    if (pathname.startsWith("/flow")) return { title: "Guided Flow", sub: "JD to Skill Match Pipeline" };
+    return { title: "Dashboard", sub: "Placement Intelligence" };
+  };
+  const breadcrumb = getBreadcrumb();
 
   // Global hotkey: Ctrl+K or '/' to focus search
   useEffect(() => {
@@ -83,9 +99,9 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         </button>
 
         <div className="hidden sm:flex items-center gap-2 text-xs font-semibold text-muted-foreground">
-          <span className="text-foreground font-bold">Dashboard</span>
+          <span className="text-foreground font-bold">{breadcrumb.title}</span>
           <span className="text-muted-foreground/40">•</span>
-          <span className="text-muted-foreground">Placement Intelligence</span>
+          <span className="text-muted-foreground">{breadcrumb.sub}</span>
         </div>
       </div>
 

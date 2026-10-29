@@ -1,35 +1,119 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useSkillMatch, useSkillMatchMatrix } from "../Hooks/skillMatch.hooks";
 import { MatchScoreCard } from "./MatchScoreCard";
 import { GapList } from "./GapList";
 import { MatchLinksView } from "./MatchLinksView";
 import { HowComputedDrawer } from "./HowComputedDrawer";
 import { MatchMatrix } from "./MatchMatrix";
-
-const CANDIDATES = [
-  { id: "6f1c-ananya", name: "Systems / SWE Profile" },
-  { id: "6f1c-karthik", name: "Data Engineering Profile" },
-  { id: "6f1c-priya", name: "Support Analyst Profile" },
-  { id: "6f1c-rohan", name: "Full-Stack Generalist Profile" },
-];
-
-const JOB_POSTINGS = [
-  { id: "b2f4-google-swe", company: "Google LLC", role: "Software Engineer" },
-  { id: "c3a1-msft-data", company: "Microsoft Corporation", role: "Data Analyst" },
-  {
-    id: "d4e2-oracle-fss",
-    company: "Oracle Financial Services",
-    role: "Application Support Analyst",
-  },
-];
+import { useJdLibrary } from "@/features/jd/Hooks/jd.hooks";
+import { listProfilesAPI } from "@/features/profile/service/profile.api";
+import { getStoredUser } from "@/lib/auth";
+import { useAppSelector } from "@/store";
 
 export const SkillMatchPage: React.FC = () => {
   const { profileId, jdId, result, isLoading, error, fetchMatch, selectProfile, selectJd } =
     useSkillMatch();
 
-  const { matrix, isLoading: matrixLoading } = useSkillMatchMatrix();
+  const { matrix } = useSkillMatchMatrix();
   const [activeTab, setActiveTab] = useState<"gaps" | "links" | "matrix">("gaps");
   const [showDrawer, setShowDrawer] = useState(false);
+
+  // Dynamic candidate profiles state
+  const [candidates, setCandidates] = useState<Array<{ id: string; name: string }>>([]);
+  const [loadingCandidates, setLoadingCandidates] = useState<boolean>(true);
+
+  // Dynamic JDs from JD library
+  const { items: jdItems, isLoading: jdsLoading } = useJdLibrary();
+
+  const jobPostings = useMemo(() => {
+    return jdItems.map((j) => ({
+      id: j.jd_id,
+      company: j.company_name || "Company",
+      role: j.role || "Job Role",
+    }));
+  }, [jdItems]);
+
+  const authUser = useAppSelector((s) => s.auth.user);
+  const storedUser = getStoredUser();
+
+  // Load real candidate profiles dynamically
+  useEffect(() => {
+    let active = true;
+
+    async function loadCandidates() {
+      setLoadingCandidates(true);
+      try {
+        const data = await listProfilesAPI({ limit: 50 });
+        if (!active) return;
+
+        const list = (data.items || []).map((p) => ({
+          id: p.id,
+          name: p.name || p.email || "Candidate Profile",
+        }));
+
+        // Include logged-in candidate profile if available
+        const loggedInId =
+          authUser?.candidateProfileId ||
+          (storedUser?.id && storedUser.id !== "3a000000-0000-4000-8000-000000000001" ? storedUser.id : "") ||
+          (authUser?.id && authUser.id.startsWith("6f1c") ? authUser.id : "");
+        const loggedInName = authUser?.name || storedUser?.name || "My Profile";
+
+        if (loggedInId && !list.some((c) => c.id === loggedInId)) {
+          list.unshift({ id: loggedInId, name: `${loggedInName} (Current)` });
+        }
+
+        setCandidates(list);
+      } catch (err) {
+        console.warn("Could not list candidate profiles, checking auth fallback", err);
+        const loggedInId =
+          authUser?.candidateProfileId ||
+          (storedUser?.id && storedUser.id !== "3a000000-0000-4000-8000-000000000001" ? storedUser.id : "") ||
+          (authUser?.id && authUser.id.startsWith("6f1c") ? authUser.id : "");
+
+        if (loggedInId && active) {
+          setCandidates([
+            {
+              id: loggedInId,
+              name: authUser?.name || storedUser?.name || "Current Candidate",
+            },
+          ]);
+        }
+      } finally {
+        if (active) setLoadingCandidates(false);
+      }
+    }
+
+    loadCandidates();
+
+    return () => {
+      active = false;
+    };
+  }, [authUser?.candidateProfileId, authUser?.id, authUser?.name, storedUser?.id, storedUser?.name]);
+
+  // Dynamic default: select first candidate when candidates load if none selected
+  useEffect(() => {
+    if (candidates.length > 0) {
+      if (!profileId || !candidates.some((c) => c.id === profileId)) {
+        const first = candidates[0];
+        if (first) selectProfile(first.id);
+      }
+    }
+  }, [candidates, profileId, selectProfile]);
+
+  // Dynamic default: select first JD when JDs load if none selected
+  useEffect(() => {
+    if (jobPostings.length > 0) {
+      if (!jdId || !jobPostings.some((j) => j.id === jdId)) {
+        const first = jobPostings[0];
+        if (first) selectJd(first.id);
+      }
+    }
+  }, [jobPostings, jdId, selectJd]);
+
+  const selectedJd = useMemo(
+    () => jobPostings.find((j) => j.id === jdId),
+    [jobPostings, jdId],
+  );
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 space-y-6">
@@ -59,13 +143,20 @@ export const SkillMatchPage: React.FC = () => {
             <select
               value={profileId}
               onChange={(e) => selectProfile(e.target.value)}
-              className="rounded-lg border border-border bg-card px-3 py-1.5 text-xs text-foreground focus:outline-none focus:border-primary"
+              disabled={loadingCandidates || candidates.length === 0}
+              className="rounded-lg border border-border bg-card px-3 py-1.5 text-xs text-foreground focus:outline-none focus:border-primary disabled:opacity-50"
             >
-              {CANDIDATES.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
+              {candidates.length === 0 ? (
+                <option value="">
+                  {loadingCandidates ? "Loading profiles..." : "No candidates found"}
                 </option>
-              ))}
+              ) : (
+                candidates.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))
+              )}
             </select>
           </div>
 
@@ -76,20 +167,27 @@ export const SkillMatchPage: React.FC = () => {
             <select
               value={jdId}
               onChange={(e) => selectJd(e.target.value)}
-              className="rounded-lg border border-border bg-card px-3 py-1.5 text-xs text-foreground focus:outline-none focus:border-primary"
+              disabled={jdsLoading || jobPostings.length === 0}
+              className="rounded-lg border border-border bg-card px-3 py-1.5 text-xs text-foreground focus:outline-none focus:border-primary disabled:opacity-50"
             >
-              {JOB_POSTINGS.map((j) => (
-                <option key={j.id} value={j.id}>
-                  {j.company} - {j.role}
+              {jobPostings.length === 0 ? (
+                <option value="">
+                  {jdsLoading ? "Loading JDs..." : "No job postings found"}
                 </option>
-              ))}
+              ) : (
+                jobPostings.map((j) => (
+                  <option key={j.id} value={j.id}>
+                    {j.company} - {j.role}
+                  </option>
+                ))
+              )}
             </select>
           </div>
 
           <div className="self-end">
             <button
               onClick={() => fetchMatch(true)}
-              disabled={isLoading}
+              disabled={isLoading || !profileId || !jdId}
               className="rounded-lg border border-primary bg-primary px-3.5 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors shadow-xs cursor-pointer"
             >
               {isLoading ? "Matching..." : "Re-run"}
@@ -105,6 +203,31 @@ export const SkillMatchPage: React.FC = () => {
         </div>
       )}
 
+      {/* Loading state when match is loading and no result yet */}
+      {isLoading && !result && (
+        <div className="rounded-xl border border-border bg-card p-12 text-center space-y-3">
+          <div className="mx-auto h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+          <p className="text-xs text-muted-foreground">
+            Analyzing skills against job requirements...
+          </p>
+        </div>
+      )}
+
+      {/* Empty State when no profile or JD or waiting */}
+      {!result && !isLoading && !error && (
+        <div className="rounded-xl border border-dashed border-border bg-card/50 p-8 text-center">
+          <p className="text-sm font-medium text-foreground">
+            {loadingCandidates || jdsLoading
+              ? "Loading candidate profiles and job postings..."
+              : candidates.length === 0
+              ? "No candidate profiles found. Please upload a resume or create a profile to start matching."
+              : jobPostings.length === 0
+              ? "No job postings found. Please upload a JD to start matching."
+              : "Select a candidate profile and target job posting to view skill match analysis."}
+          </p>
+        </div>
+      )}
+
       {/* Main Content */}
       {result && (
         <div className="space-y-6">
@@ -113,8 +236,8 @@ export const SkillMatchPage: React.FC = () => {
             score={result.match_score}
             band={result.match_band}
             breakdown={result.score_breakdown}
-            roleName={JOB_POSTINGS.find((j) => j.id === jdId)?.role}
-            companyName={JOB_POSTINGS.find((j) => j.id === jdId)?.company}
+            roleName={selectedJd?.role}
+            companyName={selectedJd?.company}
           />
 
           {/* Tab Navigation */}
@@ -148,7 +271,10 @@ export const SkillMatchPage: React.FC = () => {
                     : "border-transparent text-muted-foreground hover:text-foreground"
                 }`}
               >
-                Compare Candidates (4 × 3 Matrix)
+                Compare Candidates{" "}
+                {candidates.length > 0 && jobPostings.length > 0
+                  ? `(${candidates.length} × ${jobPostings.length} Matrix)`
+                  : "(Matrix)"}
               </button>
             </div>
 

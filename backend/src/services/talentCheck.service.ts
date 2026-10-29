@@ -74,9 +74,12 @@ export const GOLDEN_PROFILES: Record<string, CandidateProfile> = {
 };
 
 export async function getProfile(profileId: string): Promise<CandidateProfile> {
-  // 0. Profiles saved through Role 3 (Supabase or the in-memory store)
+  // 0. Query real candidate profiles from the database / repository
   try {
-    const p = await profilesService.get(profileId);
+    const p =
+      typeof profilesService.getProfile === "function"
+        ? await profilesService.getProfile(profileId)
+        : await profilesService.get(profileId);
     return {
       id: p.id,
       name: p.name,
@@ -224,8 +227,21 @@ export async function runTalentCheck(params: {
 }
 
 export async function getMatrix(companyIds: number[]): Promise<any> {
-  const profileKeys = Object.keys(GOLDEN_PROFILES);
-  const profiles = await Promise.all(profileKeys.map((k) => getProfile(k)));
+  let profiles: CandidateProfile[] = [];
+  try {
+    const { items } = await profilesService.list({ limit: 4 });
+    if (items && items.length > 0) {
+      profiles = await Promise.all(items.map((it) => getProfile(it.id)));
+    }
+  } catch {
+    // continue to golden fallback
+  }
+
+  if (profiles.length === 0) {
+    const profileKeys = Object.keys(GOLDEN_PROFILES);
+    profiles = await Promise.all(profileKeys.map((k) => getProfile(k)));
+  }
+
   const bars = await Promise.all(companyIds.map((id) => getCompanyBar(id)));
 
   const payload = {

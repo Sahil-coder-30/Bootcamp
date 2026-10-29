@@ -4,6 +4,7 @@ import skillMatchReducer, {
   setMatchLoading,
   setSelectedProfileId,
   setSelectedJdId,
+  setSelection,
   setHoveredJdSkill,
   toggleMethodFilter,
 } from "./slice/skillMatch.slice";
@@ -65,11 +66,20 @@ const mockResult: SkillMatchResult = {
 };
 
 describe("Skill Match Redux Slice", () => {
-  it("initializes with default candidates and job postings", () => {
-    const state = skillMatchReducer(undefined, { type: "@@INIT" });
+  it("initializes with empty selection and allows dynamic selection", () => {
+    let state = skillMatchReducer(undefined, { type: "@@INIT" });
+    expect(state.selectedProfileId).toBe("");
+    expect(state.selectedJdId).toBe("");
+    expect(state.loadingKey).toBeNull();
+
+    state = skillMatchReducer(state, setSelectedProfileId("6f1c-ananya"));
+    state = skillMatchReducer(state, setSelectedJdId("b2f4-google-swe"));
     expect(state.selectedProfileId).toBe("6f1c-ananya");
     expect(state.selectedJdId).toBe("b2f4-google-swe");
-    expect(state.loadingKey).toBeNull();
+
+    state = skillMatchReducer(state, setSelection({ profileId: "new-p", jdId: "new-j" }));
+    expect(state.selectedProfileId).toBe("new-p");
+    expect(state.selectedJdId).toBe("new-j");
   });
 
   it("stores match result by compound key", () => {

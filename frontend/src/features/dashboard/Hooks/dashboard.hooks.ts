@@ -18,7 +18,7 @@ import {
 import { getCacheItem, setCacheItem, deleteCacheItem } from "@/services/dbService";
 
 export function useDashboard(
-  candidateId = "3a000000-0000-4000-8000-000000000001",
+  candidateId = "",
   candidateFallback?: { name?: string | undefined; email?: string | undefined; role?: string | undefined } | undefined,
 ) {
   const dispatch = useAppDispatch();
@@ -42,7 +42,7 @@ export function useDashboard(
       dispatch(setDashboardError(null));
 
       // 1. Try Dexie cache first for instant render
-      const cacheKey = `dashboard_${cid}_${companyId}`;
+      const cacheKey = `dashboard_${cid || candidateFallback?.email || "anon"}_${companyId}`;
       const cached = await getCacheItem<DashboardSummary>(cacheKey, "dashboard");
       if (cached) {
         const emailMismatch = candidateFallback?.email && cached.email && cached.email !== candidateFallback.email;

@@ -33,8 +33,8 @@ export const JDMatcherModal: React.FC<JDMatcherModalProps> = ({ isOpen, onClose 
   const storedUser = getStoredUser();
   const profileId =
     authUser?.candidateProfileId ||
-    (storedUser?.id && storedUser.id !== "3a000000-0000-4000-8000-000000000001" ? storedUser.id : "") ||
-    (authUser?.id && authUser.id.startsWith("6f1c") ? authUser.id : "");
+    (storedUser?.id && !storedUser.id.startsWith("candidate_") ? storedUser.id : "") ||
+    "";
 
   const [selectedJdId, setSelectedJdId] = useState<string>("b2f4-google-swe");
   const [customText, setCustomText] = useState(

@@ -28,8 +28,8 @@ const initialState: SkillMatchState = {
   matrix: null,
   matrixLoading: false,
   matrixError: null,
-  selectedProfileId: "6f1c-ananya",
-  selectedJdId: "b2f4-google-swe",
+  selectedProfileId: "",
+  selectedJdId: "",
   ui: {
     hoveredJdSkill: null,
     methodFilter: [],
@@ -76,6 +76,17 @@ export const skillMatchSlice = createSlice({
     setSelectedJdId: (state, action: PayloadAction<string>) => {
       state.selectedJdId = action.payload;
     },
+    setSelection: (
+      state,
+      action: PayloadAction<{ profileId?: string; jdId?: string }>,
+    ) => {
+      if (action.payload.profileId !== undefined) {
+        state.selectedProfileId = action.payload.profileId;
+      }
+      if (action.payload.jdId !== undefined) {
+        state.selectedJdId = action.payload.jdId;
+      }
+    },
     setHoveredJdSkill: (state, action: PayloadAction<string | null>) => {
       state.ui.hoveredJdSkill = action.payload;
     },
@@ -102,6 +113,7 @@ export const {
   setMatrixError,
   setSelectedProfileId,
   setSelectedJdId,
+  setSelection,
   setHoveredJdSkill,
   toggleMethodFilter,
   clearMethodFilter,

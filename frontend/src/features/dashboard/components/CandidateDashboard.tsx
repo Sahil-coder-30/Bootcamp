@@ -11,16 +11,12 @@ import {
   RefreshCw,
   Building2,
 } from "lucide-react";
-import { DashboardSidebar } from "./DashboardSidebar";
-import { DashboardHeader } from "./DashboardHeader";
+import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 import { SkillHistogramCard } from "./SkillHistogramCard";
 import { TopCompanyMatchesCard } from "./TopCompanyMatchesCard";
 import { PriorityRoadmapCard } from "./PriorityRoadmapCard";
-import { JDMatcherModal } from "./JDMatcherModal";
-import { ATSResumeModal } from "./ATSResumeModal";
 import { getStoredUser, subscribeToAuthChanges, formatNameFromEmail, type CandidateUser } from "@/lib/auth";
 import { useAuth } from "@/features/auth/Hooks/auth.hooks";
-import { useCompanies } from "@/features/companies/Hooks/companies.hooks";
 import { useDashboard } from "../Hooks/dashboard.hooks";
 import { useResume } from "@/features/resume/Hooks/resume.hooks";
 import { ResumeUploadCard } from "@/features/resume/components/ResumeUploadCard";
@@ -28,8 +24,6 @@ import { ResumeUploadCard } from "@/features/resume/components/ResumeUploadCard"
 export const CandidateDashboard: React.FC = () => {
   const { user: authUser } = useAuth();
   const [currentUser, setCurrentUser] = useState<CandidateUser | null>(() => getStoredUser());
-  const [searchQuery, setSearchQuery] = useState("");
-  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   // Sync auth state
   useEffect(() => {
@@ -41,7 +35,14 @@ export const CandidateDashboard: React.FC = () => {
   // Compute effective user: prioritize logged in user (or Google auth user)
   const effectiveUser = useMemo(() => {
     if (currentUser?.email) {
-      return currentUser;
+      const storedId =
+        currentUser.id && currentUser.id !== "3a000000-0000-4000-8000-000000000001"
+          ? currentUser.id
+          : "";
+      return {
+        ...currentUser,
+        id: authUser?.candidateProfileId || storedId,
+      };
     }
     if (authUser?.email) {
       const name = authUser.name || formatNameFromEmail(authUser.email);
@@ -51,8 +52,12 @@ export const CandidateDashboard: React.FC = () => {
         .join("")
         .slice(0, 2)
         .toUpperCase() || "CU";
+      const authId =
+        authUser.id && authUser.id !== "3a000000-0000-4000-8000-000000000001"
+          ? authUser.id
+          : "";
       return {
-        id: authUser.candidateProfileId || authUser.id,
+        id: authUser.candidateProfileId || authId,
         name,
         role: authUser.branch ? `${authUser.branch} (${authUser.college || "Campus"})` : (currentUser?.role || "Campus Candidate '26"),
         avatarText: initials,
@@ -62,7 +67,10 @@ export const CandidateDashboard: React.FC = () => {
     return currentUser;
   }, [currentUser, authUser]);
 
-  const candidateId = effectiveUser?.id || "";
+  const candidateId =
+    effectiveUser?.id && effectiveUser.id !== "3a000000-0000-4000-8000-000000000001"
+      ? effectiveUser.id
+      : "";
 
   // Hook-driven architecture: consume live dashboard API + Dexie caching + Redux modals
   const {
@@ -76,12 +84,6 @@ export const CandidateDashboard: React.FC = () => {
     loading: isDashboardLoading,
     error: dashboardError,
     refresh,
-    isJDModalOpen,
-    isATSModalOpen,
-    openJDModal,
-    closeJDModal,
-    openATSModal,
-    closeATSModal,
   } = useDashboard(candidateId, {
     name: effectiveUser?.name,
     email: effectiveUser?.email,
@@ -109,119 +111,32 @@ export const CandidateDashboard: React.FC = () => {
   const candidateEmail = effectiveUser?.email || summary?.email || "";
   const candidateRole = effectiveUser?.role || "Campus Candidate '26";
   const educationText =
-    summary?.education &&
-    summary.education !== "B.Tech CSE, XYZ Institute of Technology, 2026, 8.7 CGPA"
-      ? summary.education
-      : (candidateRole || "B.Tech CSE, Campus Placement Cohort '26");
+    (summary?.education && !summary.education.includes("XYZ Institute") ? summary.education : "") ||
+    candidateRole ||
+    "Campus Candidate '26";
   const targetRoles =
     summary?.preferredRoles && summary.preferredRoles.length > 0
       ? summary.preferredRoles.join(" · ")
       : "Software Engineer · Systems Architect";
 
-  // Search results from 115 companies if user types in search
-  const { data: companies = [] } = useCompanies();
-  const searchResults = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
-    if (!q) return [];
-    return companies
-      .filter((c) => c.name.toLowerCase().includes(q) || c.category.toLowerCase().includes(q))
-      .slice(0, 6);
-  }, [companies, searchQuery]);
-
   return (
-    <div className="h-screen w-full flex bg-background text-foreground overflow-hidden font-sans selection:bg-primary selection:text-white">
-      {/* 1. Left Sidebar Navigation */}
-      <div className="hidden md:block shrink-0">
-        <DashboardSidebar
-          currentUser={effectiveUser}
-          activeItem="dashboard"
-          onOpenJDMatcher={openJDModal}
-          onOpenATSModal={openATSModal}
-        />
-      </div>
-
-      {/* Mobile Drawer */}
-      {mobileSidebarOpen && (
-        <div className="fixed inset-0 z-50 flex md:hidden">
-          <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-xs"
-            onClick={() => setMobileSidebarOpen(false)}
-          />
-          <div className="relative z-10">
-            <DashboardSidebar
-              currentUser={effectiveUser}
-              activeItem="dashboard"
-              onOpenJDMatcher={() => {
-                setMobileSidebarOpen(false);
-                openJDModal();
-              }}
-              onOpenATSModal={() => {
-                setMobileSidebarOpen(false);
-                openATSModal();
-              }}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* 2. Main Work Area - Self-contained scroll */}
-      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
-        {/* Top Header */}
-        <DashboardHeader
-          currentUser={effectiveUser}
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          onToggleMobileSidebar={() => setMobileSidebarOpen(true)}
-        />
-
-        {/* Search Results Dropdown Overlay (if searching) */}
-        {searchResults.length > 0 && (
-          <div className="mx-4 sm:mx-8 mt-2 rounded-2xl border border-border bg-card p-4 shadow-xl z-20 animate-in fade-in-50">
-            <div className="flex items-center justify-between pb-2 border-b border-border text-xs font-semibold text-muted-foreground">
-              <span>Quick Matching Companies ({searchResults.length})</span>
-              <button
-                onClick={() => setSearchQuery("")}
-                className="text-foreground font-bold hover:underline cursor-pointer"
-              >
-                Clear
-              </button>
+    <DashboardLayout>
+      <div className="px-4 sm:px-8 py-6 space-y-6">
+        {/* Error Banner if any */}
+        {dashboardError && (
+          <div className="flex items-center justify-between gap-3 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-xs text-red-500">
+            <div className="flex items-center gap-2">
+              <AlertCircle className="h-4 w-4 shrink-0" />
+              <span>Notice: {dashboardError}. Displaying cached snapshot.</span>
             </div>
-            <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-              {searchResults.map((c) => (
-                <Link
-                  key={c.id}
-                  to="/companies"
-                  onClick={() => setSearchQuery("")}
-                  className="flex items-center justify-between p-2.5 rounded-xl border border-border bg-card-sub hover:border-primary hover:bg-muted transition-colors"
-                >
-                  <div className="truncate">
-                    <p className="font-semibold text-xs text-foreground truncate">{c.name}</p>
-                    <p className="text-[10px] text-muted-foreground">{c.category}</p>
-                  </div>
-                  <span className="text-[10px] font-bold text-foreground">{c.companyType}</span>
-                </Link>
-              ))}
-            </div>
+            <button
+              onClick={refresh}
+              className="inline-flex items-center gap-1 font-bold hover:underline cursor-pointer"
+            >
+              <RefreshCw className="h-3 w-3" /> Retry
+            </button>
           </div>
         )}
-
-        {/* Dashboard Main Content Body */}
-        <main className="flex-1 px-4 sm:px-8 py-6 space-y-6 overflow-y-auto">
-          {/* Error Banner if any */}
-          {dashboardError && (
-            <div className="flex items-center justify-between gap-3 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-xs text-red-500">
-              <div className="flex items-center gap-2">
-                <AlertCircle className="h-4 w-4 shrink-0" />
-                <span>Notice: {dashboardError}. Displaying cached snapshot.</span>
-              </div>
-              <button
-                onClick={refresh}
-                className="inline-flex items-center gap-1 font-bold hover:underline cursor-pointer"
-              >
-                <RefreshCw className="h-3 w-3" /> Retry
-              </button>
-            </div>
-          )}
 
           {/* Greeting Banner */}
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 rounded-3xl border border-border bg-card p-5 sm:p-6 shadow-xs">
@@ -505,13 +420,8 @@ export const CandidateDashboard: React.FC = () => {
               </div>
             </>
           )}
-        </main>
       </div>
-
-      {/* Global Modals for JD Matcher & ATS Resume */}
-      <JDMatcherModal isOpen={isJDModalOpen} onClose={closeJDModal} />
-      <ATSResumeModal isOpen={isATSModalOpen} onClose={closeATSModal} />
-    </div>
+    </DashboardLayout>
   );
 };
 

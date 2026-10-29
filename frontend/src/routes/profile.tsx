@@ -1,7 +1,8 @@
 import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
-import { ArrowLeft, UserCheck } from "lucide-react";
+import { UserCheck } from "lucide-react";
 import { APP_NAME } from "@/lib/college";
 import { requireSignIn } from "@/lib/requireSignIn";
+import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 
 export const Route = createFileRoute("/profile")({
   beforeLoad: ({ location }) => {
@@ -13,25 +14,17 @@ export const Route = createFileRoute("/profile")({
 
 function ProfileLayout() {
   return (
-    <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-30 border-b border-border/80 bg-background/95 backdrop-blur-md">
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4">
-          <Link
-            to="/dashboard"
-            className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-semibold text-foreground transition-all hover:bg-muted shadow-2xs"
-          >
-            <ArrowLeft className="h-3.5 w-3.5 text-muted-foreground" aria-hidden /> Back to Dashboard
-          </Link>
+    <DashboardLayout>
+      <div className="mx-auto max-w-6xl px-4 py-6 space-y-6">
+        <div className="flex items-center justify-between pb-2 border-b border-border">
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl border border-border bg-card text-foreground shadow-2xs">
               <UserCheck className="h-3.5 w-3.5 text-primary" aria-hidden /> Candidate Profile
             </span>
           </div>
         </div>
-      </header>
-      <main className="mx-auto max-w-6xl px-4 py-6">
         <Outlet />
-      </main>
-    </div>
+      </div>
+    </DashboardLayout>
   );
 }

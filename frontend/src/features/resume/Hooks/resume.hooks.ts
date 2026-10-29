@@ -84,7 +84,7 @@ export function useResume() {
           const userId = authUser?.id;
           const profileId =
             authUser?.candidateProfileId ||
-            (storedUser?.id && storedUser.id !== "3a000000-0000-4000-8000-000000000001"
+            (storedUser?.id && !storedUser.id.startsWith("candidate_")
               ? storedUser.id
               : undefined);
 

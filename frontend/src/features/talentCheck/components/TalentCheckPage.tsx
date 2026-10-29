@@ -5,7 +5,12 @@
  * Gap Bars, Skill Radar, What-If simulator, Study Plan, and 115-company rankings.
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { useRouter } from "@tanstack/react-router";
+import { DashboardLayout } from "@/components/Layout/DashboardLayout";
+import { getStoredUser } from "@/lib/auth";
+import { listProfilesAPI } from "@/features/profile/service/profile.api";
+import { useCompanies } from "@/features/companies/Hooks/companies.hooks";
 import {
   useTalentCheck,
   useWhatIf,
@@ -33,22 +38,127 @@ import {
   Sparkles,
 } from "lucide-react";
 
-const CANDIDATES = [
-  { id: "6f1c-ananya", name: "Systems / SWE", role: "Systems / Cloud Focus" },
-  { id: "6f1c-karthik", name: "Data Eng.", role: "Data Engineering Focus" },
-  { id: "6f1c-priya", name: "App Support", role: "Entry Support Focus" },
-  { id: "6f1c-rohan", name: "Full-Stack", role: "All-Rounder Generalist" },
-];
-
-const COMPANIES = [
-  { id: 4, name: "Google LLC", tier: "High Bar (Mean 8.0)" },
-  { id: 78, name: "Microsoft Corporation", tier: "High Bar (Mean 7.8)" },
-  { id: 24, name: "Oracle Financial Services", tier: "Core Bar (Mean 5.7)" },
-];
+interface CandidateOption {
+  id: string;
+  name: string;
+  role: string;
+}
 
 export const TalentCheckPage: React.FC = () => {
-  const [selectedCandidate, setSelectedCandidate] = useState(CANDIDATES[0]!.id);
-  const [selectedCompany, setSelectedCompany] = useState<number>(COMPANIES[0]!.id);
+  const storedUser = getStoredUser();
+  const [profileList, setProfileList] = useState<CandidateOption[]>([]);
+  const { data: companies = [] } = useCompanies();
+
+  // Combine dynamic profiles with logged-in user if available
+  const candidates = useMemo<CandidateOption[]>(() => {
+    const list = [...profileList];
+    if (storedUser?.id && !list.some((c) => c.id === storedUser.id)) {
+      list.unshift({
+        id: storedUser.id,
+        name: storedUser.name || "My Profile",
+        role: storedUser.role || "Logged-in Candidate",
+      });
+    }
+    return list;
+  }, [profileList, storedUser]);
+
+  // Fallback candidate list if database is empty or still loading
+  const displayedCandidates = useMemo<CandidateOption[]>(() => {
+    if (candidates.length > 0) return candidates;
+    return [
+      { id: "6f1c-ananya", name: "Systems / SWE", role: "Systems / Cloud Focus" },
+      { id: "6f1c-karthik", name: "Data Eng.", role: "Data Engineering Focus" },
+      { id: "6f1c-priya", name: "App Support", role: "Entry Support Focus" },
+      { id: "6f1c-rohan", name: "Full-Stack", role: "All-Rounder Generalist" },
+    ];
+  }, [candidates]);
+
+  // Selected candidate state defaulting to logged-in user or first available real candidate
+  const [selectedCandidate, setSelectedCandidate] = useState<string>(() => {
+    return storedUser?.id || "6f1c-ananya";
+  });
+
+  // Selected company state defaulting to first available real company
+  const [selectedCompany, setSelectedCompany] = useState<number>(() => {
+    return companies.length > 0 ? companies[0]!.id : 4;
+  });
+
+  // Load real candidates dynamically from API
+  useEffect(() => {
+    let mounted = true;
+    listProfilesAPI({ limit: 20 })
+      .then((data: any) => {
+        if (!mounted) return;
+        const raw = Array.isArray(data) ? data : data?.items ?? [];
+        const mapped: CandidateOption[] = raw.map((p: any) => ({
+          id: p.id,
+          name: p.name || "Candidate",
+          role:
+            (Array.isArray(p.preferred_roles) && p.preferred_roles[0]) ||
+            p.role ||
+            "Candidate Profile",
+        }));
+        setProfileList(mapped);
+      })
+      .catch((err) => {
+        console.warn("Failed to load candidate profiles:", err);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  // Update selectedCandidate when real candidates load
+  useEffect(() => {
+    if (candidates.length > 0) {
+      const exists = candidates.some((c) => c.id === selectedCandidate);
+      if (!exists) {
+        const matchStored = storedUser?.id && candidates.find((c) => c.id === storedUser.id);
+        setSelectedCandidate(matchStored ? matchStored.id : candidates[0]!.id);
+      }
+    }
+  }, [candidates, storedUser?.id, selectedCandidate]);
+
+  // Update selectedCompany when live companies load
+  useEffect(() => {
+    if (companies.length > 0) {
+      const exists = companies.some((c) => c.id === selectedCompany);
+      if (!exists) {
+        setSelectedCompany(companies[0]!.id);
+      }
+    }
+  }, [companies, selectedCompany]);
+
+  // Dynamic companies for quick selector
+  const displayedCompanies = useMemo(() => {
+    if (companies.length === 0) {
+      return [
+        { id: 4, name: "Google LLC", tier: "High Bar (Mean 8.0)" },
+        { id: 78, name: "Microsoft Corporation", tier: "High Bar (Mean 7.8)" },
+        { id: 24, name: "Oracle Financial Services", tier: "Core Bar (Mean 5.7)" },
+      ];
+    }
+    const top = companies.slice(0, 3).map((comp) => ({
+      id: comp.id,
+      name: comp.name,
+      tier: comp.companyType ? `${comp.companyType} Bar` : comp.category || "Hiring Bar",
+    }));
+    if (selectedCompany && !top.some((c) => c.id === selectedCompany)) {
+      const active = companies.find((c) => c.id === selectedCompany);
+      if (active) {
+        return [
+          {
+            id: active.id,
+            name: active.name,
+            tier: active.companyType ? `${active.companyType} Bar` : active.category || "Hiring Bar",
+          },
+          ...top.slice(0, 2),
+        ];
+      }
+    }
+    return top;
+  }, [companies, selectedCompany]);
+
   const [activeTab, setActiveTab] = useState<
     "analysis" | "whatif" | "study" | "ranking" | "matrix"
   >("analysis");
@@ -58,17 +168,29 @@ export const TalentCheckPage: React.FC = () => {
   // Core Hooks
   const { result, run, isLoading, error } = useTalentCheck(selectedCandidate, selectedCompany);
   const whatIf = useWhatIf(result);
-  const { matrix, run: runMatrix } = useTalentMatrix([4, 78, 24]);
+
+  const matrixCompanyIds = useMemo(() => {
+    if (companies.length >= 3) {
+      return companies.slice(0, 3).map((c) => c.id);
+    }
+    return [4, 78, 24];
+  }, [companies]);
+
+  const { matrix, run: runMatrix } = useTalentMatrix(matrixCompanyIds);
   const {
     ranking,
     run: runRanking,
     isLoading: isRankingLoading,
   } = useCompanyRanking(selectedCandidate);
 
-  const candidateObj = CANDIDATES.find((c) => c.id === selectedCandidate);
-  const companyObj = COMPANIES.find((c) => c.id === selectedCompany);
+  const candidateObj = displayedCandidates.find((c) => c.id === selectedCandidate);
+  const companyObj =
+    companies.find((c) => c.id === selectedCompany) ||
+    displayedCompanies.find((c) => c.id === selectedCompany);
 
-  return (
+  const router = useRouter({ warn: false });
+
+  const content = (
     <div className="min-h-screen bg-background text-foreground p-4 sm:p-8 space-y-6 selection:bg-primary selection:text-white">
       {/* Top Breadcrumb Header */}
       <div className="flex items-center justify-between border-b border-border pb-4">
@@ -143,7 +265,7 @@ export const TalentCheckPage: React.FC = () => {
             <User className="w-3.5 h-3.5 text-primary" /> Select Candidate Profile
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            {CANDIDATES.map((c) => (
+            {displayedCandidates.slice(0, 4).map((c) => (
               <button
                 key={c.id}
                 onClick={() => setSelectedCandidate(c.id)}
@@ -153,11 +275,25 @@ export const TalentCheckPage: React.FC = () => {
                     : "bg-background border-border text-muted-foreground hover:text-foreground hover:border-border-strong"
                 }`}
               >
-                <div className="text-xs font-bold leading-tight">{c.name}</div>
+                <div className="text-xs font-bold leading-tight truncate">{c.name}</div>
                 <div className="text-[10px] text-muted-foreground truncate mt-0.5">{c.role}</div>
               </button>
             ))}
           </div>
+          {displayedCandidates.length > 4 && (
+            <select
+              aria-label="Select candidate profile"
+              value={selectedCandidate}
+              onChange={(e) => setSelectedCandidate(e.target.value)}
+              className="w-full mt-2 rounded-xl border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-hidden focus:ring-1 focus:ring-primary cursor-pointer"
+            >
+              {displayedCandidates.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name} ({c.role})
+                </option>
+              ))}
+            </select>
+          )}
         </div>
 
         {/* Company Bar Selector */}
@@ -166,7 +302,7 @@ export const TalentCheckPage: React.FC = () => {
             <Building2 className="w-3.5 h-3.5 text-primary" /> Select Employer Hiring Bar
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-            {COMPANIES.map((comp) => (
+            {displayedCompanies.map((comp) => (
               <button
                 key={comp.id}
                 onClick={() => setSelectedCompany(comp.id)}
@@ -176,11 +312,25 @@ export const TalentCheckPage: React.FC = () => {
                     : "bg-background border-border text-muted-foreground hover:text-foreground hover:border-border-strong"
                 }`}
               >
-                <div className="text-xs font-bold leading-tight">{comp.name}</div>
+                <div className="text-xs font-bold leading-tight truncate">{comp.name}</div>
                 <div className="text-[10px] text-muted-foreground truncate mt-0.5">{comp.tier}</div>
               </button>
             ))}
           </div>
+          {companies.length > 0 && (
+            <select
+              aria-label="Select employer hiring bar from all companies"
+              value={selectedCompany}
+              onChange={(e) => setSelectedCompany(Number(e.target.value))}
+              className="w-full mt-2 rounded-xl border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-hidden focus:ring-1 focus:ring-primary cursor-pointer"
+            >
+              {companies.map((comp) => (
+                <option key={comp.id} value={comp.id}>
+                  {comp.name} {comp.companyType ? `(${comp.companyType})` : ""}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
       </div>
 
@@ -391,4 +541,6 @@ export const TalentCheckPage: React.FC = () => {
       )}
     </div>
   );
+
+  return router ? <DashboardLayout>{content}</DashboardLayout> : content;
 };

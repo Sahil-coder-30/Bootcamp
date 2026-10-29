@@ -8,12 +8,17 @@ import {
   ShieldCheck,
   GraduationCap,
   Building2,
+  Workflow,
+  Sparkles,
   LogOut,
 } from "lucide-react";
 import { APP_NAME, COLLEGE_SHORT } from "@/lib/college";
 import { clearStoredUser, formatNameFromEmail, type CandidateUser } from "@/lib/auth";
 import { clearSession } from "@/lib/authStorage";
-import { useAppSelector } from "@/store";
+import { useCompany } from "@/features/companies/Hooks/companies.hooks";
+import { CompanyLogo } from "@/components/CompanyLogo";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { setJDModalOpen, setATSModalOpen } from "@/features/dashboard/slice/dashboard.slice";
 import { cn } from "@/lib/utils";
 
 interface DashboardSidebarProps {
@@ -21,6 +26,7 @@ interface DashboardSidebarProps {
   activeItem?: string | undefined;
   onOpenJDMatcher?: () => void;
   onOpenATSModal?: () => void;
+  onNavigate?: () => void;
 }
 
 export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
@@ -28,17 +34,21 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
   activeItem,
   onOpenJDMatcher,
   onOpenATSModal,
+  onNavigate,
 }) => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   // Redux-connected states
   const authUser = useAppSelector((s) => s.auth.user);
   const companiesCount = useAppSelector((s) => s.companies.list.length);
+  const { selected } = useCompany();
 
   const handleLogout = () => {
     clearStoredUser();
     clearSession();
+    onNavigate?.();
     navigate({ to: "/" });
   };
 
@@ -71,18 +81,50 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             ? "jd"
             : pathname.startsWith("/talent-check")
               ? "talent-check"
-              : pathname.startsWith("/skill-match") || pathname.startsWith("/company/skills")
-                ? "skills"
-                : pathname.startsWith("/companies") || pathname.startsWith("/company")
-                  ? "companies"
-                  : "dashboard");
+              : pathname.startsWith("/skill-match")
+                ? "skill-match"
+                : pathname.startsWith("/company/skills")
+                  ? "company-skills"
+                  : pathname.startsWith("/company/intelligence")
+                    ? "company-intelligence"
+                    : pathname.startsWith("/companies") || pathname.startsWith("/company")
+                      ? "companies"
+                      : pathname.startsWith("/flow")
+                        ? "flow"
+                        : "dashboard");
+
+  const handleATSClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onNavigate?.();
+    if (onOpenATSModal) {
+      onOpenATSModal();
+    } else {
+      dispatch(setATSModalOpen(true));
+    }
+  };
+
+  const handleJDClick = (e: React.MouseEvent) => {
+    if (onOpenJDMatcher) {
+      e.preventDefault();
+      e.stopPropagation();
+      onNavigate?.();
+      onOpenJDMatcher();
+    } else if (effectiveActive === "dashboard") {
+      e.preventDefault();
+      e.stopPropagation();
+      onNavigate?.();
+      dispatch(setJDModalOpen(true));
+    }
+  };
 
   return (
     <aside className="w-64 shrink-0 flex flex-col justify-between border-r border-sidebar-border bg-sidebar p-4 h-screen overflow-y-auto overflow-x-hidden select-none transition-colors sticky top-0">
       {/* 1. Top Brand Block */}
       <div>
         <Link
-          to="/"
+          to="/dashboard"
+          onClick={onNavigate}
           className="flex items-center gap-3 p-2 rounded-2xl hover:bg-sidebar-accent/50 transition-colors"
         >
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-card border border-border text-foreground font-heading text-xs font-bold shadow-xs">
@@ -104,8 +146,59 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
           </div>
         </Link>
 
-        {/* 2. Middle Navigation Items - Core Modules without Duplication */}
-        <nav className="mt-6 space-y-1">
+        {/* Selected Company Quick Glance if selected */}
+        {selected && (
+          <div className="mt-4 mb-2 rounded-xl border border-sidebar-border/70 bg-card/60 p-2.5 shadow-2xs">
+            <div className="flex items-center gap-2.5">
+              <CompanyLogo
+                name={selected.companyName}
+                logoUrl={selected.logoUrl}
+                className="h-8 w-8"
+              />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-xs font-semibold text-foreground">
+                  {selected.companyName}
+                </p>
+                <Link
+                  to="/companies"
+                  onClick={onNavigate}
+                  className="inline-flex items-center text-[10px] font-medium text-primary hover:underline"
+                >
+                  Change Company
+                </Link>
+              </div>
+            </div>
+            <div className="mt-2 flex items-center gap-1.5 pt-2 border-t border-border/50 text-[10px]">
+              <Link
+                to="/company/intelligence"
+                onClick={onNavigate}
+                className={cn(
+                  "flex-1 text-center py-1 rounded-md font-medium transition-colors",
+                  effectiveActive === "company-intelligence"
+                    ? "bg-primary text-primary-foreground font-semibold"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                )}
+              >
+                Intel
+              </Link>
+              <Link
+                to="/company/skills"
+                onClick={onNavigate}
+                className={cn(
+                  "flex-1 text-center py-1 rounded-md font-medium transition-colors",
+                  effectiveActive === "company-skills"
+                    ? "bg-primary text-primary-foreground font-semibold"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                )}
+              >
+                Skills
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {/* 2. Navigation Items */}
+        <nav className="mt-5 space-y-1">
           <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">
             Core Modules
           </p>
@@ -113,6 +206,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
           {/* 1. Dashboard */}
           <Link
             to="/dashboard"
+            onClick={onNavigate}
             className={cn(
               "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all",
               effectiveActive === "dashboard"
@@ -132,6 +226,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
           {/* 2. Candidate Profile */}
           <Link
             to="/profile"
+            onClick={onNavigate}
             className={cn(
               "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all",
               effectiveActive === "profile"
@@ -155,6 +250,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
           <div className="flex items-center justify-between group rounded-xl">
             <Link
               to="/resume"
+              onClick={onNavigate}
               className={cn(
                 "flex-1 flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all",
                 effectiveActive === "resume"
@@ -170,14 +266,8 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
               />
               <span>Resume Parsing</span>
               <span
-                onClick={(e) => {
-                  if (onOpenATSModal) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onOpenATSModal();
-                  }
-                }}
-                title={onOpenATSModal ? "Click to open ATS Compliance Audit" : "ATS Validated"}
+                onClick={handleATSClick}
+                title="Click to open ATS Compliance Audit"
                 className="ml-auto text-[10px] font-mono rounded-full bg-muted border border-border px-2 py-0.5 text-muted-foreground font-semibold hover:border-primary/50 transition-colors"
               >
                 ATS
@@ -185,11 +275,12 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             </Link>
           </div>
 
-          {/* 3. JD Matcher */}
+          {/* 4. JD Matcher */}
           <div className="flex items-center justify-between group rounded-xl">
             <Link
               to="/jd"
               onClick={(e) => {
+                onNavigate?.();
                 if (onOpenJDMatcher && effectiveActive === "dashboard") {
                   e.preventDefault();
                   onOpenJDMatcher();
@@ -208,16 +299,10 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                   effectiveActive === "jd" ? "text-primary" : "text-muted-foreground",
                 )}
               />
-              <span>JD Matcher</span>
+              <span>JD Analytics</span>
               <span
-                onClick={(e) => {
-                  if (onOpenJDMatcher) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onOpenJDMatcher();
-                  }
-                }}
-                title={onOpenJDMatcher ? "Quick JD Matcher modal" : "Beta Feature"}
+                onClick={handleJDClick}
+                title="Quick JD Matcher modal"
                 className="ml-auto text-[10px] font-semibold text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full hover:bg-primary/20 transition-colors cursor-pointer"
               >
                 Beta
@@ -225,9 +310,10 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             </Link>
           </div>
 
-          {/* 4. Talent Check */}
+          {/* 5. Talent Check */}
           <Link
             to="/talent-check"
+            onClick={onNavigate}
             className={cn(
               "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all",
               effectiveActive === "talent-check"
@@ -244,12 +330,13 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             <span>Talent Check</span>
           </Link>
 
-          {/* 5. Skill Matching */}
+          {/* 6. Skill Matching */}
           <Link
             to="/skill-match"
+            onClick={onNavigate}
             className={cn(
               "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all",
-              effectiveActive === "skills"
+              effectiveActive === "skill-match"
                 ? "border-l-2 border-primary bg-primary/10 text-foreground font-bold shadow-xs"
                 : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground",
             )}
@@ -257,15 +344,40 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             <GraduationCap
               className={cn(
                 "h-4 w-4",
-                effectiveActive === "skills" ? "text-primary" : "text-muted-foreground",
+                effectiveActive === "skill-match" ? "text-primary" : "text-muted-foreground",
               )}
             />
             <span>Skill Matching</span>
           </Link>
 
-          {/* 6. 115 Company Data */}
+          {/* 7. Guided Flow */}
+          <Link
+            to="/flow"
+            onClick={onNavigate}
+            className={cn(
+              "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all",
+              effectiveActive === "flow"
+                ? "border-l-2 border-primary bg-primary/10 text-foreground font-bold shadow-xs"
+                : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground",
+            )}
+          >
+            <Workflow
+              className={cn(
+                "h-4 w-4",
+                effectiveActive === "flow" ? "text-primary" : "text-muted-foreground",
+              )}
+            />
+            <span>Guided Flow</span>
+          </Link>
+
+          <p className="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">
+            Company Intelligence
+          </p>
+
+          {/* 8. 115 Company Data */}
           <Link
             to="/companies"
+            onClick={onNavigate}
             className={cn(
               "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all",
               effectiveActive === "companies"
@@ -279,10 +391,30 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                 effectiveActive === "companies" ? "text-primary" : "text-muted-foreground",
               )}
             />
-            <span>115 Company Data</span>
+            <span>115 Companies</span>
             <span className="ml-auto text-[10px] font-mono rounded-full bg-muted border border-border px-2 py-0.5 text-muted-foreground font-semibold">
               {companiesCount > 0 ? `${companiesCount}+` : "115+"}
             </span>
+          </Link>
+
+          {/* 9. Skill Intelligence */}
+          <Link
+            to="/company/skills"
+            onClick={onNavigate}
+            className={cn(
+              "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all",
+              effectiveActive === "company-skills"
+                ? "border-l-2 border-primary bg-primary/10 text-foreground font-bold shadow-xs"
+                : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground",
+            )}
+          >
+            <Sparkles
+              className={cn(
+                "h-4 w-4",
+                effectiveActive === "company-skills" ? "text-primary" : "text-muted-foreground",
+              )}
+            />
+            <span>Skill Intelligence</span>
           </Link>
         </nav>
       </div>
@@ -292,13 +424,16 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
         <div className="flex items-center justify-between gap-2 rounded-2xl bg-card p-2.5 border border-border shadow-xs">
           <Link
             to="/profile"
+            onClick={onNavigate}
             className="flex items-center gap-2.5 truncate hover:opacity-85 transition-opacity group cursor-pointer"
           >
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-muted text-foreground font-heading text-xs font-bold border border-border group-hover:border-primary/50 transition-colors">
               {avatarText}
             </div>
             <div className="truncate text-left">
-              <p className="font-bold text-xs text-foreground group-hover:text-primary transition-colors truncate">{displayName}</p>
+              <p className="font-bold text-xs text-foreground group-hover:text-primary transition-colors truncate">
+                {displayName}
+              </p>
               <p className="text-[10px] text-muted-foreground truncate">{displayRole}</p>
             </div>
           </Link>

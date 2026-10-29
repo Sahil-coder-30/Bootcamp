@@ -8,7 +8,8 @@ import { supabase } from "./supabase.service.js";
 import { callAgent } from "./agent.service.js";
 import { getProfile, type CandidateProfile, GOLDEN_PROFILES } from "./talentCheck.service.js";
 import { getTopicsByCategory } from "./topics.service.js";
-import { getJd } from "./jd.service.js";
+import { getJd, listJds } from "./jd.service.js";
+import { profilesService } from "./profiles.service.js";
 import { HttpError } from "../middlewares/errorHandler.js";
 
 export const MATCHING_VERSION = "sm-1.0";
@@ -327,8 +328,36 @@ export async function getSkillMatchMatrix(params: {
   jdIds?: string[];
   refresh?: boolean;
 }): Promise<any> {
-  const pIds = params.profileIds && params.profileIds.length > 0 ? params.profileIds : Object.keys(GOLDEN_PROFILES);
-  const jIds = params.jdIds && params.jdIds.length > 0 ? params.jdIds : Object.keys(GOLDEN_JDS);
+  let pIds = params.profileIds && params.profileIds.length > 0 ? params.profileIds : [];
+  let jIds = params.jdIds && params.jdIds.length > 0 ? params.jdIds : [];
+
+  if (pIds.length === 0) {
+    try {
+      const realProfiles = await profilesService.list({ limit: 20 });
+      if (realProfiles?.items && realProfiles.items.length > 0) {
+        pIds = realProfiles.items.map((p) => p.id);
+      }
+    } catch {
+      // fallback
+    }
+    if (pIds.length === 0) {
+      pIds = Object.keys(GOLDEN_PROFILES);
+    }
+  }
+
+  if (jIds.length === 0) {
+    try {
+      const realJds = await listJds();
+      if (realJds && realJds.length > 0) {
+        jIds = realJds.map((j) => j.jd_id);
+      }
+    } catch {
+      // fallback
+    }
+    if (jIds.length === 0) {
+      jIds = Object.keys(GOLDEN_JDS);
+    }
+  }
 
   const candidates = await Promise.all(pIds.map((id) => getProfile(id)));
   const jds = await Promise.all(jIds.map((id) => getJdExtraction(id)));

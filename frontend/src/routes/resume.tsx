@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { requireSignIn } from "@/lib/requireSignIn";
 import { ResumeParsePage } from "@/features/resume/components/ResumeParsePage";
+import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 
 export const Route = createFileRoute("/resume")({
   beforeLoad: ({ location }) => {
@@ -16,5 +17,11 @@ export const Route = createFileRoute("/resume")({
       },
     ],
   }),
-  component: ResumeParsePage,
+  component: function Resume() {
+    return (
+      <DashboardLayout>
+        <ResumeParsePage />
+      </DashboardLayout>
+    );
+  },
 });

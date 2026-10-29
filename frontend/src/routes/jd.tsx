@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { requireSignIn } from "@/lib/requireSignIn";
 import { JdPage } from "@/features/jd/components/JdPage";
+import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 
 export const Route = createFileRoute("/jd")({
   beforeLoad: ({ location }) => {
@@ -16,5 +17,11 @@ export const Route = createFileRoute("/jd")({
       },
     ],
   }),
-  component: JdPage,
+  component: function Jd() {
+    return (
+      <DashboardLayout>
+        <JdPage />
+      </DashboardLayout>
+    );
+  },
 });

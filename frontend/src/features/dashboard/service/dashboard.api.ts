@@ -162,11 +162,10 @@ export const getDashboardSummaryAPI = async (
   let profile: BackendProfile | null = null;
   let resolvedId = candidateId;
 
-  const isSeedAnanya = candidateId === "3a000000-0000-4000-8000-000000000001";
   const userEmail = candidateFallback?.email;
 
-  // Try direct lookup by candidateId if it's not the seed Ananya, OR if the candidateFallback is explicitly Ananya
-  if (candidateId && (!isSeedAnanya || !userEmail || userEmail === "ananya.rao@example.com")) {
+  // Try direct lookup by candidateId if provided and non-empty
+  if (candidateId) {
     try {
       const profileRes = await apiClient.get<BackendProfile>(
         `/profiles/${encodeURIComponent(candidateId)}`,
@@ -213,10 +212,17 @@ export const getDashboardSummaryAPI = async (
   if (!hasProfile) {
     return {
       hasData: false,
-      candidateId: resolvedId || candidateId,
+      candidateId: resolvedId || candidateId || "",
       candidateName: candidateFallback?.name || profile?.name || "Candidate",
       email: candidateFallback?.email || profile?.email || "",
-      education: candidateFallback?.role || profile?.education || "Campus Candidate",
+      education:
+        (candidateFallback?.role && !candidateFallback.role.includes("XYZ Institute")
+          ? candidateFallback.role
+          : "") ||
+        (profile?.education && !profile.education.includes("XYZ Institute")
+          ? profile.education
+          : "") ||
+        "Campus Candidate",
       preferredRoles: profile?.preferred_roles || [],
       completeness: 0,
       tier1ReadinessPercent: 0,
@@ -377,7 +383,14 @@ export const getDashboardSummaryAPI = async (
     candidateId: resolvedId || candidateId,
     candidateName: profile?.name || candidateFallback?.name || "Candidate",
     email: profile?.email || candidateFallback?.email || "",
-    education: profile?.education || candidateFallback?.role || "Campus Candidate",
+    education:
+      (profile?.education && !profile.education.includes("XYZ Institute")
+        ? profile.education
+        : "") ||
+      (candidateFallback?.role && !candidateFallback.role.includes("XYZ Institute")
+        ? candidateFallback.role
+        : "") ||
+      "Campus Candidate",
     preferredRoles: profile?.preferred_roles || ["Software Engineer"],
     completeness: profile?.completeness ?? Math.min(100, Math.round((skills.filter((s) => s.candidateLevel > 0).length / 12) * 100)),
     tier1ReadinessPercent: readinessScore,
@@ -404,41 +417,3 @@ export const getDashboardSummaryAPI = async (
     verifiedAt: new Date().toISOString(),
   };
 };
-
-function getDefaultMatches(): CompanyMatchItem[] {
-  return [
-    {
-      id: 1,
-      name: "Accenture plc",
-      tier: "Standard",
-      packageLPA: "12 - 16 LPA",
-      matchScore: 97,
-      verdict: "ready",
-    },
-    {
-      id: 22,
-      name: "Tata Consultancy Services",
-      tier: "Standard",
-      packageLPA: "12 - 16 LPA",
-      matchScore: 97,
-      verdict: "ready",
-    },
-    {
-      id: 4,
-      name: "Google LLC",
-      tier: "Super Dream",
-      packageLPA: "34 - 42 LPA",
-      matchScore: 62,
-      verdict: "almost",
-      gapCategory: "Cloud & DevOps",
-    },
-    {
-      id: 8,
-      name: "Cognizant Technology Solutions",
-      tier: "Standard",
-      packageLPA: "12 - 14 LPA",
-      matchScore: 95,
-      verdict: "ready",
-    },
-  ];
-}
