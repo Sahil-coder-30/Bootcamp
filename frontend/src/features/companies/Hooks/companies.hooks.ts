@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { toErrorMessage } from "@/services/apiClient";
 import { getCompaniesAPI } from "../service/companies.api";
+import { toType } from "@/lib/companyData";
 import {
   setCompaniesError,
   setCompaniesList,
@@ -43,8 +44,12 @@ export function useCompanies() {
     dispatch(setCompaniesLoading(true));
     try {
       const data = await getCompaniesAPI();
-      dispatch(setCompaniesList(data));
-      return data;
+      const normalized = data.map((c) => ({
+        ...c,
+        companyType: toType(c.companyType, c.name, c.category, c.id),
+      }));
+      dispatch(setCompaniesList(normalized));
+      return normalized;
     } catch (err) {
       dispatch(setCompaniesError(toErrorMessage(err, "Unable to retrieve company records.")));
       return null;

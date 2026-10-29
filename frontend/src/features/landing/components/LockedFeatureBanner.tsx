@@ -26,7 +26,7 @@ export const LockedFeatureBanner: React.FC<LockedFeatureBannerProps> = ({
   onOpenAuth,
 }) => {
   return (
-    <section className="relative scroll-mt-20 py-12 md:py-16 border-t border-border">
+    <section id="companies" className="relative scroll-mt-20 py-12 md:py-16 border-t border-border">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         {currentUser ? (
           /* LOGGED IN: Full Access Banner */

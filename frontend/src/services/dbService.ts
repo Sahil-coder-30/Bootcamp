@@ -94,6 +94,25 @@ export const setCacheItem = async <T = unknown>(
   }
 };
 
+export const deleteCacheItem = async (
+  key: string,
+  scope = "global",
+): Promise<void> => {
+  try {
+    await db.cache.delete([key, scope]);
+  } catch (err) {
+    console.warn("[dbService] deleteCacheItem error:", err);
+  }
+};
+
+export const clearDashboardCache = async (): Promise<void> => {
+  try {
+    await db.cache.where("scope").equals("dashboard").delete();
+  } catch (err) {
+    console.warn("[dbService] clearDashboardCache error:", err);
+  }
+};
+
 export const clearAppCache = async (): Promise<void> => {
   try {
     await db.cache.clear();

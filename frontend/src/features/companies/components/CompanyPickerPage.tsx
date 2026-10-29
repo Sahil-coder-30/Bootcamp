@@ -1,22 +1,18 @@
 import { useNavigate, Link } from "@tanstack/react-router";
 import { memo, useEffect, useMemo, useRef, useState } from "react";
 import {
+  ArrowLeft,
   ArrowRight,
   ArrowUpDown,
-  Award,
-  Briefcase,
   Building2,
   CheckCircle2,
   Compass,
-  ExternalLink,
   GraduationCap,
-  Layers,
   LayoutGrid,
   ListFilter,
   MapPin,
   Search,
   ShieldCheck,
-  Sparkles,
   TrendingDown,
   TrendingUp,
   Trophy,
@@ -28,14 +24,20 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCompany } from "@/features/companies/Hooks/companies.hooks";
 import { useCompanies } from "../Hooks/companies.hooks";
-import { useAuth } from "@/features/auth/Hooks/auth.hooks";
 import { isNullish, type CompanySummary, type CompanyType } from "@/lib/companyData";
-import { APP_NAME, COLLEGE_NAME, COLLEGE_SHORT, PORTAL_TITLE } from "@/lib/college";
+import { APP_NAME } from "@/lib/college";
 import { cn } from "@/lib/utils";
 
 const FILTERS: ("All" | CompanyType)[] = ["All", "Super Dream", "Dream", "Standard", "Regular"];
 
-// Monochromatic, luxury black-and-zinc styling (strictly no blue)
+const TIER_CTC: Record<CompanyType, string> = {
+  "Super Dream": "₹18+ LPA",
+  Dream: "₹10–18 LPA",
+  Standard: "₹6–10 LPA",
+  Regular: "< ₹6 LPA",
+};
+
+// Monochromatic, luxury black-and-zinc styling
 const TYPE_STYLES: Record<CompanyType, string> = {
   "Super Dream":
     "bg-orange-500/10 dark:bg-primary/15 text-orange-600 dark:text-primary border-orange-500/30 dark:border-primary/40 shadow-xs",
@@ -54,20 +56,17 @@ const TYPE_DOTS: Record<CompanyType, string> = {
 
 const ACTIVE_STYLES: Record<string, string> = {
   All: "bg-primary text-white border-transparent shadow-xs font-semibold",
-  "Super Dream": "bg-primary text-white border-transparent shadow-xs font-semibold",
+  "Super Dream": "bg-orange-600 text-white border-transparent shadow-xs font-semibold",
   Dream: "bg-primary text-white border-transparent shadow-xs font-semibold",
   Standard: "bg-emerald-600 text-white border-transparent shadow-xs font-semibold",
   Regular: "bg-amber-600 text-white border-transparent shadow-xs font-semibold",
 };
 
 function Val({ v }: { v: string }) {
-  return isNullish(v) ? (
-    <span className="italic text-muted-foreground">not publicly available</span>
-  ) : (
-    <>{v}</>
-  );
+  return isNullish(v) ? null : <>{v}</>;
 }
 
+// Clean Modern Company Card (Eliminates the chunky "postcard" look & removes empty grey boxes)
 const CompanyCard = memo(function CompanyCard({
   company,
   onSelect,
@@ -76,6 +75,10 @@ const CompanyCard = memo(function CompanyCard({
   onSelect: (c: CompanySummary) => void;
 }) {
   const down = company.yoyGrowthRate.trim().startsWith("-");
+  const hasHeadquarters = !isNullish(company.headquarters);
+  const hasEmployees = !isNullish(company.employeeSize);
+  const hasMomentum = !isNullish(company.yoyGrowthRate);
+
   return (
     <div
       onClick={() => onSelect(company)}
@@ -87,85 +90,96 @@ const CompanyCard = memo(function CompanyCard({
           onSelect(company);
         }
       }}
-      className="group relative flex flex-col justify-between rounded-2xl border border-border bg-card p-5 text-left shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:bg-card-sub hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+      className="group relative flex flex-col justify-between rounded-xl border border-border bg-card p-4.5 text-left shadow-2xs transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/60 hover:bg-card-sub hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
     >
-      {/* Top subtle highlight shimmer on hover */}
-      <div className="absolute inset-x-0 top-0 h-[2px] rounded-t-2xl bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-
-      <div className="space-y-4">
-        {/* Header: Logo + Tier Badge */}
+      <div>
+        {/* Top Header: Logo + Company Name & Domain + Tier Pill */}
         <div className="flex items-start justify-between gap-3">
-          <CompanyLogo
-            name={company.name}
-            logoUrl={company.logoUrl}
-            websiteUrl={company.websiteUrl}
-            className="h-13 w-13 rounded-xl border border-border bg-card shadow-xs"
-          />
-          <div className="flex flex-col items-end gap-1.5">
+          <div className="flex items-center gap-3 min-w-0">
+            <CompanyLogo
+              name={company.name}
+              logoUrl={company.logoUrl}
+              websiteUrl={company.websiteUrl}
+              className="h-11 w-11 shrink-0 rounded-xl border border-border bg-card shadow-2xs"
+            />
+            <div className="min-w-0">
+              <h3 className="font-heading text-base font-bold leading-snug tracking-tight text-foreground transition-colors duration-200 group-hover:text-primary truncate">
+                {company.name}
+              </h3>
+              <div className="flex items-center gap-2 mt-0.5">
+                {company.shortName && company.shortName !== company.name && (
+                  <span className="text-xs text-muted-foreground font-medium truncate">
+                    {company.shortName}
+                  </span>
+                )}
+                {company.category && (
+                  <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground border border-border/70 truncate max-w-[120px]">
+                    {company.category}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Tier Badge & Salary Bracket */}
+          <div className="shrink-0 text-right">
             <span
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold tracking-wide",
+                "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-semibold",
                 TYPE_STYLES[company.companyType],
               )}
             >
               <span className={cn("h-1.5 w-1.5 rounded-full", TYPE_DOTS[company.companyType])} />
               {company.companyType}
             </span>
-            {company.category && (
-              <span className="max-w-[150px] truncate rounded-md bg-muted px-2 py-0.5 text-[10px] font-medium text-foreground border border-border">
-                {company.category}
+            <div className="text-[10px] font-mono text-muted-foreground mt-0.5 font-medium">
+              {TIER_CTC[company.companyType]}
+            </div>
+          </div>
+        </div>
+
+        {/* Crisp Metadata Chips (Rendered cleanly without nested gray boxes or "not publicly available" clutter) */}
+        {(hasHeadquarters || hasEmployees || hasMomentum) && (
+          <div className="mt-3.5 flex flex-wrap items-center gap-1.5 pt-3 border-t border-border/60 text-xs">
+            {hasHeadquarters && (
+              <span className="inline-flex items-center gap-1 rounded-md bg-muted/60 px-2 py-0.5 text-[11px] text-muted-foreground">
+                <MapPin className="h-3 w-3 text-muted-foreground/80 shrink-0" />
+                <span className="truncate max-w-[120px]">{company.headquarters}</span>
+              </span>
+            )}
+            {hasEmployees && (
+              <span className="inline-flex items-center gap-1 rounded-md bg-muted/60 px-2 py-0.5 text-[11px] text-muted-foreground">
+                <Users className="h-3 w-3 text-muted-foreground/80 shrink-0" />
+                <span>{company.employeeSize}</span>
+              </span>
+            )}
+            {hasMomentum && (
+              <span
+                className={cn(
+                  "inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-medium",
+                  down
+                    ? "bg-rose-500/10 text-rose-600 dark:text-rose-400"
+                    : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+                )}
+              >
+                {down ? (
+                  <TrendingDown className="h-3 w-3 shrink-0" />
+                ) : (
+                  <TrendingUp className="h-3 w-3 shrink-0" />
+                )}
+                <span>YoY {company.yoyGrowthRate}</span>
               </span>
             )}
           </div>
-        </div>
-
-        {/* Title */}
-        <div>
-          <h3 className="font-heading text-lg font-bold leading-snug tracking-tight text-foreground transition-colors duration-200 group-hover:text-primary">
-            {company.name}
-          </h3>
-          <p className="text-xs font-medium text-muted-foreground">{company.shortName}</p>
-        </div>
-
-        {/* Key Metrics Capsule */}
-        <div className="space-y-2 rounded-xl border border-border bg-card-sub p-3 text-xs text-foreground">
-          <div className="flex items-center gap-2">
-            <MapPin className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-            <span className="truncate">
-              <Val v={company.headquarters} />
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Users className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-            <span className="truncate">
-              <Val v={company.employeeSize} />
-            </span>
-          </div>
-          <div
-            className={cn(
-              "flex items-center gap-1.5 font-medium",
-              down ? "text-rose-600 dark:text-rose-400" : "text-emerald-700 dark:text-emerald-400",
-            )}
-          >
-            {down ? (
-              <TrendingDown className="h-3.5 w-3.5 shrink-0" />
-            ) : (
-              <TrendingUp className="h-3.5 w-3.5 shrink-0" />
-            )}
-            <span>
-              YoY Momentum <Val v={company.yoyGrowthRate} />
-            </span>
-          </div>
-        </div>
+        )}
       </div>
 
-      {/* Footer Action */}
-      <div className="mt-4 flex items-center justify-between border-t border-border pt-3 text-xs font-semibold text-muted-foreground transition-colors group-hover:text-primary">
-        <span className="flex items-center gap-1.5">
-          <Briefcase className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary" />
-          Explore Intelligence Profile
-        </span>
-        <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform duration-200 group-hover:translate-x-1 group-hover:text-primary" />
+      {/* Select Company Action Bar */}
+      <div className="mt-4 pt-1">
+        <div className="flex h-9 w-full items-center justify-between rounded-lg border border-border bg-card-sub px-3 text-xs font-semibold text-foreground transition-all duration-200 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground shadow-2xs">
+          <span>Select Company</span>
+          <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+        </div>
       </div>
     </div>
   );
@@ -174,8 +188,6 @@ const CompanyCard = memo(function CompanyCard({
 export default function CompanyPickerPage() {
   const navigate = useNavigate();
   const { selectCompany } = useCompany();
-  const { user: currentUser, signOut } = useAuth();
-  const handleLogout = () => void signOut();
   const [query, setQuery] = useState("");
   const [debounced, setDebounced] = useState("");
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("All");
@@ -221,8 +233,8 @@ export default function CompanyPickerPage() {
     const result = companies.filter((c) => {
       const matchesSearch =
         !debounced ||
-        [c.name, c.shortName, c.headquarters, c.category, c.companyType].some((s) =>
-          s.toLowerCase().includes(debounced),
+        [c.name, c.shortName, c.headquarters, c.category, c.companyType].some(
+          (s) => Boolean(s && typeof s === "string" && s.toLowerCase().includes(debounced)),
         );
       const matchesCategory = selectedCategory === "All" || c.category === selectedCategory;
 
@@ -272,267 +284,152 @@ export default function CompanyPickerPage() {
   // Metrics summary
   const superDreamCount = companies.filter((c) => c.companyType === "Super Dream").length;
   const dreamCount = companies.filter((c) => c.companyType === "Dream").length;
-  const standardRegularCount = companies.filter(
-    (c) => c.companyType === "Standard" || c.companyType === "Regular",
-  ).length;
+  const standardCount = companies.filter((c) => c.companyType === "Standard").length;
+  const regularCount = companies.filter((c) => c.companyType === "Regular").length;
 
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-primary/20 selection:text-primary">
-      {/* 1. Institutional Top Status Bar */}
-      <div className="border-b border-border bg-card-sub py-2">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 text-xs font-medium text-muted-foreground sm:px-6">
-          <div className="flex items-center gap-2.5">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-            </span>
-            <span className="font-semibold text-foreground">{COLLEGE_SHORT}</span>
-            <span className="hidden sm:inline">·</span>
-            <span className="hidden sm:inline text-muted-foreground">
-              Department of Training & Placement
-            </span>
-            <span className="hidden md:inline">·</span>
-            <span className="hidden md:inline text-muted-foreground">Autonomous Institute</span>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2.5 py-0.5 text-[11px] font-medium text-foreground">
-              <ShieldCheck className="h-3 w-3 text-muted-foreground" />
-              Academic Drive 2025–26
-            </span>
-            <a
-              href="https://jssaten.ac.in"
-              target="_blank"
-              rel="noreferrer"
-              className="hidden items-center gap-1 text-[11px] text-muted-foreground transition-colors hover:text-foreground sm:flex"
-            >
-              jssaten.ac.in
-              <ExternalLink className="h-2.5 w-2.5" />
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* 2. Executive Navigation Header */}
-      <nav className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur-md">
+      {/* 1. Service Navigation Top Bar: Prominent Back to Dashboard */}
+      <nav className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
-          <Link to="/" className="flex items-center gap-3 transition-opacity hover:opacity-90">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 font-heading text-sm font-bold text-primary shadow-xs">
-              PI
-            </div>
-            <div className="hidden sm:block">
-              <div className="flex items-center gap-2">
-                <span className="font-heading text-lg font-bold tracking-tight text-foreground">
-                  {APP_NAME}
-                </span>
-                <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
-                  CAMPUS PRO
-                </span>
-              </div>
-              <p className="text-[11px] text-muted-foreground">
-                JSSATEN Placement Intelligence Hub
-              </p>
-            </div>
+          <Link
+            to="/dashboard"
+            className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-3.5 py-2 text-xs font-semibold text-foreground transition-all hover:bg-muted hover:border-primary/40 shadow-2xs"
+          >
+            <ArrowLeft className="h-4 w-4 text-muted-foreground" />
+            <span>Back to Dashboard</span>
           </Link>
 
-          <div className="flex items-center gap-2 sm:gap-3">
-            {currentUser ? (
-              <div className="flex items-center gap-2 rounded-xl border border-border bg-card-sub px-2.5 py-1 text-xs">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                <span className="font-semibold text-foreground">{currentUser.name}</span>
-                <button
-                  onClick={handleLogout}
-                  className="ml-1 text-[11px] font-semibold text-rose-500 hover:text-rose-700 transition-colors cursor-pointer"
-                >
-                  Log Out
-                </button>
+          <div className="flex items-center gap-2.5">
+            <Link to="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-90">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 font-heading text-xs font-bold text-primary shadow-xs">
+                PI
               </div>
-            ) : (
-              <Link
-                to="/"
-                className="rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:border-primary/40 hover:bg-card-sub inline-flex items-center gap-1.5 whitespace-nowrap"
-              >
-                ← Landing Page
-              </Link>
-            )}
-            <a
-              href="#directory"
-              className="hidden rounded-xl border border-border bg-card px-3.5 py-2 text-xs font-semibold text-foreground transition-colors hover:border-primary/40 hover:bg-card-sub sm:inline-flex items-center gap-1.5"
-            >
-              <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
-              Recruiters ({companies.length})
-            </a>
-            <Link
-              to="/dashboard"
-              className="rounded-xl border border-primary/30 bg-primary/10 px-3.5 py-2 text-xs font-semibold text-primary transition-colors hover:bg-primary/20 inline-flex items-center gap-1.5 whitespace-nowrap shadow-2xs"
-            >
-              <Briefcase className="h-3.5 w-3.5 text-primary" />
-              Candidate Dashboard
-            </Link>
-            <Link
-              to="/talent-check"
-              className="hidden sm:inline-flex rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-2 text-xs font-semibold text-emerald-700 dark:text-emerald-400 transition-colors hover:bg-emerald-500/20 items-center gap-1.5 whitespace-nowrap shadow-2xs"
-            >
-              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-              Talent Check
-            </Link>
-            <Link
-              to="/resume"
-              className="hidden md:inline-flex rounded-xl border border-border bg-card px-3.5 py-2 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground hover:bg-muted items-center gap-1.5"
-            >
-              Resume ATS
+              <span className="font-heading text-sm font-bold tracking-tight text-foreground hidden sm:inline">
+                {APP_NAME}
+              </span>
             </Link>
           </div>
         </div>
       </nav>
 
-      {/* 3. Hero Section (Sleek Theme-Aware Ambient Banner) */}
-      <header className="relative overflow-hidden border-b border-border bg-gradient-to-b from-card via-background to-card-sub dark:from-[#050506] dark:via-[#09090b] dark:to-[#050506] py-12 sm:py-16">
-        {/* Subtle Grid Background */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(currentColor_1px,transparent_1px)] [background-size:24px_24px] opacity-[0.03] dark:opacity-40 text-foreground dark:text-zinc-600" />
-
-        {/* Soft overhead light cone */}
-        <div className="pointer-events-none absolute -top-40 left-1/2 -z-10 h-96 w-[700px] -translate-x-1/2 rounded-full bg-gradient-to-b from-primary/10 dark:from-white/[0.08] to-transparent blur-3xl" />
-
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
-          <div className="max-w-3xl">
-            {/* Pill */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-border dark:border-zinc-700/80 bg-card/90 dark:bg-zinc-900/90 px-3.5 py-1 text-xs font-medium text-foreground dark:text-zinc-300 shadow-xs backdrop-blur-sm">
-              <Sparkles className="h-3.5 w-3.5 text-primary" />
-              <span>JSSATEN Placement Intelligence Engine · Session 2025–26</span>
-            </div>
-
-            {/* Title */}
-            <h1 className="mt-4 font-heading text-3xl font-extrabold tracking-tight text-foreground dark:text-white sm:text-5xl lg:text-6xl">
-              Campus Placement <br />
-              <span className="bg-gradient-to-r from-foreground via-foreground/90 to-muted-foreground dark:from-white dark:via-zinc-200 dark:to-zinc-400 bg-clip-text text-transparent">
-                Intelligence & Benchmarking
+      {/* 2. Main Service Container */}
+      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 space-y-6">
+        {/* Service Header */}
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between pb-1">
+          <div>
+            <div className="flex items-center gap-2.5">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary shadow-xs">
+                <Building2 className="h-5 w-5" />
+              </div>
+              <h1 className="font-heading text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+                Select Company
+              </h1>
+              <span className="rounded-full bg-primary/10 border border-primary/20 px-2.5 py-0.5 text-xs font-mono font-bold text-primary">
+                {companies.length} Total
               </span>
-            </h1>
-
-            {/* Description */}
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground dark:text-zinc-300 sm:text-base">
-              Corporate dossiers, salary tier analytics, and Bloom&apos;s Taxonomy technical skill
-              ladders designed to give students and recruiters at{" "}
-              <span className="font-semibold text-foreground dark:text-zinc-100">
-                {COLLEGE_NAME}
-              </span>{" "}
-              an institutional strategic edge.
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Select a target recruiting company to inspect interview intelligence, Bloom&apos;s skill ladders, and hiring benchmarks.
             </p>
-
-            {/* Hero Quick Action Buttons */}
-            <div className="mt-6 flex flex-wrap items-center gap-3">
-              <a
-                href="#directory"
-                className="inline-flex items-center gap-2 rounded-xl border border-primary bg-primary px-4 py-2.5 text-xs font-bold text-primary-foreground shadow-xs transition-all hover:bg-primary/90"
-              >
-                <Briefcase className="h-4 w-4" />
-                Explore Recruiting Companies
-              </a>
-              <Link
-                to="/company/skills"
-                className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-xs font-semibold text-foreground shadow-xs transition-colors hover:border-primary/40 hover:bg-card-sub"
-              >
-                <Layers className="h-4 w-4 text-muted-foreground" />
-                View Skill Matrix
-              </Link>
-              <Link
-                to="/talent-check"
-                className="inline-flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-2.5 text-xs font-semibold text-emerald-700 dark:text-emerald-300 shadow-xs transition-colors hover:bg-emerald-500/20"
-              >
-                <ShieldCheck className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-                Talent Check & Readiness
-              </Link>
-            </div>
-          </div>
-
-          {/* 4. Executive KPI Dashboard Bar */}
-          <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-            {/* Recruiters Card */}
-            <div className="group relative rounded-2xl border border-border bg-card dark:border-zinc-800 dark:bg-[#0b0b0d] p-4.5 shadow-xs transition-all duration-300 hover:border-primary/50 dark:hover:border-zinc-600 hover:bg-card-sub dark:hover:bg-[#111114]">
-              <div className="flex items-center justify-between text-muted-foreground dark:text-zinc-400">
-                <span className="text-xs font-semibold tracking-wide">Recruiting Partners</span>
-                <Building2 className="h-4 w-4 text-primary" />
-              </div>
-              <p className="mt-2.5 font-heading text-3xl font-extrabold tracking-tight text-foreground dark:text-white">
-                {companies.length}
-              </p>
-              <p className="mt-1 text-[11px] font-medium text-muted-foreground dark:text-zinc-400">
-                Active Campus Recruiters
-              </p>
-            </div>
-
-            {/* Super Dream Card */}
-            <div className="group relative rounded-2xl border border-border bg-card dark:border-zinc-800 dark:bg-[#0b0b0d] p-4.5 shadow-xs transition-all duration-300 hover:border-primary/50 dark:hover:border-zinc-500 hover:bg-card-sub dark:hover:bg-[#111114]">
-              <div className="flex items-center justify-between text-orange-600 dark:text-orange-400">
-                <span className="text-xs font-semibold tracking-wide">Super Dream Roles</span>
-                <Trophy className="h-4 w-4 text-orange-600 dark:text-orange-400" />
-              </div>
-              <p className="mt-2.5 font-heading text-3xl font-extrabold tracking-tight text-foreground dark:text-white">
-                {superDreamCount}
-              </p>
-              <p className="mt-1 text-[11px] font-medium text-muted-foreground dark:text-zinc-400">
-                ₹18+ LPA Premium Tier
-              </p>
-            </div>
-
-            {/* Dream Card */}
-            <div className="group relative rounded-2xl border border-border bg-card dark:border-zinc-800 dark:bg-[#0b0b0d] p-4.5 shadow-xs transition-all duration-300 hover:border-primary/50 dark:hover:border-zinc-500 hover:bg-card-sub dark:hover:bg-[#111114]">
-              <div className="flex items-center justify-between text-primary">
-                <span className="text-xs font-semibold tracking-wide">Dream Roles</span>
-                <GraduationCap className="h-4 w-4 text-primary" />
-              </div>
-              <p className="mt-2.5 font-heading text-3xl font-extrabold tracking-tight text-foreground dark:text-white">
-                {dreamCount}
-              </p>
-              <p className="mt-1 text-[11px] font-medium text-muted-foreground dark:text-zinc-400">
-                ₹10–18 LPA High CTC
-              </p>
-            </div>
-
-            {/* Standard & Regular Card */}
-            <div className="group relative rounded-2xl border border-border bg-card dark:border-zinc-800 dark:bg-[#0b0b0d] p-4.5 shadow-xs transition-all duration-300 hover:border-primary/50 dark:hover:border-zinc-600 hover:bg-card-sub dark:hover:bg-[#111114]">
-              <div className="flex items-center justify-between text-emerald-600 dark:text-emerald-400">
-                <span className="text-xs font-semibold tracking-wide">Standard & Regular</span>
-                <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-              </div>
-              <p className="mt-2.5 font-heading text-3xl font-extrabold tracking-tight text-foreground dark:text-white">
-                {standardRegularCount}
-              </p>
-              <p className="mt-1 text-[11px] font-medium text-muted-foreground dark:text-zinc-400">
-                Core IT & Consulting
-              </p>
-            </div>
           </div>
         </div>
-      </header>
 
-      {/* 5. Spotlight Highlights Strip */}
-      <section className="border-b border-border bg-card-sub/60 dark:bg-[#09090b]/80 py-3">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 text-xs text-muted-foreground dark:text-zinc-400 sm:px-6">
-          <div className="flex items-center gap-2">
-            <Award className="h-4 w-4 text-primary" />
-            <span className="font-semibold text-foreground dark:text-zinc-200">
-              Placement Preparation Protocol:
-            </span>
-            <span>
-              Review technical competencies, system design requirements, and past hiring patterns.
-            </span>
-          </div>
-          <div className="flex items-center gap-4 text-muted-foreground dark:text-zinc-500">
-            <span>Verified Data Sources</span>
-            <span>·</span>
-            <span>Live Sync Supabase</span>
-            <span>·</span>
-            <span className="text-foreground dark:text-zinc-400 font-medium">
-              JSSATEN T&P Verified
-            </span>
-          </div>
+        {/* Placement Tier Summary & 1-Click Filter Cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          {/* Super Dream */}
+          <button
+            type="button"
+            aria-label="Filter by Super Dream tier"
+            onClick={() => setFilter(filter === "Super Dream" ? "All" : "Super Dream")}
+            className={cn(
+              "p-4 rounded-2xl border text-left transition-all cursor-pointer shadow-2xs group relative overflow-hidden",
+              filter === "Super Dream"
+                ? "border-orange-500 bg-orange-500/10 ring-1 ring-orange-500"
+                : "border-border bg-card hover:border-orange-500/50 hover:bg-card-sub",
+            )}
+          >
+            <div className="flex items-center justify-between text-orange-600 dark:text-orange-400">
+              <span className="text-xs font-bold uppercase tracking-wider">Super Dream</span>
+              <Trophy className="h-4 w-4" />
+            </div>
+            <div className="mt-2.5 flex items-baseline gap-2">
+              <span className="font-heading text-3xl font-black text-foreground">{superDreamCount}</span>
+              <span className="text-xs text-orange-600 dark:text-orange-400 font-semibold">₹18+ LPA</span>
+            </div>
+            <p className="mt-1 text-[11px] text-muted-foreground truncate">Premier Tech & Global Roles</p>
+          </button>
+
+          {/* Dream */}
+          <button
+            type="button"
+            aria-label="Filter by Dream tier"
+            onClick={() => setFilter(filter === "Dream" ? "All" : "Dream")}
+            className={cn(
+              "p-4 rounded-2xl border text-left transition-all cursor-pointer shadow-2xs group relative overflow-hidden",
+              filter === "Dream"
+                ? "border-primary bg-primary/10 ring-1 ring-primary"
+                : "border-border bg-card hover:border-primary/50 hover:bg-card-sub",
+            )}
+          >
+            <div className="flex items-center justify-between text-primary">
+              <span className="text-xs font-bold uppercase tracking-wider">Dream</span>
+              <GraduationCap className="h-4 w-4" />
+            </div>
+            <div className="mt-2.5 flex items-baseline gap-2">
+              <span className="font-heading text-3xl font-black text-foreground">{dreamCount}</span>
+              <span className="text-xs text-primary font-semibold">₹10–18 LPA</span>
+            </div>
+            <p className="mt-1 text-[11px] text-muted-foreground truncate">Product Engineering & High CTC</p>
+          </button>
+
+          {/* Standard */}
+          <button
+            type="button"
+            aria-label="Filter by Standard tier"
+            onClick={() => setFilter(filter === "Standard" ? "All" : "Standard")}
+            className={cn(
+              "p-4 rounded-2xl border text-left transition-all cursor-pointer shadow-2xs group relative overflow-hidden",
+              filter === "Standard"
+                ? "border-emerald-500 bg-emerald-500/10 ring-1 ring-emerald-500"
+                : "border-border bg-card hover:border-emerald-500/50 hover:bg-card-sub",
+            )}
+          >
+            <div className="flex items-center justify-between text-emerald-600 dark:text-emerald-400">
+              <span className="text-xs font-bold uppercase tracking-wider">Standard</span>
+              <ShieldCheck className="h-4 w-4" />
+            </div>
+            <div className="mt-2.5 flex items-baseline gap-2">
+              <span className="font-heading text-3xl font-black text-foreground">{standardCount}</span>
+              <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">₹6–10 LPA</span>
+            </div>
+            <p className="mt-1 text-[11px] text-muted-foreground truncate">Mid-Market Tech & FinTech</p>
+          </button>
+
+          {/* Regular */}
+          <button
+            type="button"
+            aria-label="Filter by Regular tier"
+            onClick={() => setFilter(filter === "Regular" ? "All" : "Regular")}
+            className={cn(
+              "p-4 rounded-2xl border text-left transition-all cursor-pointer shadow-2xs group relative overflow-hidden",
+              filter === "Regular"
+                ? "border-amber-500 bg-amber-500/10 ring-1 ring-amber-500"
+                : "border-border bg-card hover:border-amber-500/50 hover:bg-card-sub",
+            )}
+          >
+            <div className="flex items-center justify-between text-amber-600 dark:text-amber-400">
+              <span className="text-xs font-bold uppercase tracking-wider">Regular</span>
+              <CheckCircle2 className="h-4 w-4" />
+            </div>
+            <div className="mt-2.5 flex items-baseline gap-2">
+              <span className="font-heading text-3xl font-black text-foreground">{regularCount}</span>
+              <span className="text-xs text-amber-600 dark:text-amber-400 font-semibold">&lt; ₹6 LPA</span>
+            </div>
+            <p className="mt-1 text-[11px] text-muted-foreground truncate">Core IT Services & Consulting</p>
+          </button>
         </div>
-      </section>
 
-      {/* 6. Main Directory & Controls */}
-      <main id="directory" className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
         {/* Controls Bar: Search & Sort & View */}
         <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card dark:border-zinc-800/80 dark:bg-[#0c0c0e] p-4 shadow-xs sm:flex-row sm:items-center">
           {/* Omni Search Bar */}
@@ -655,7 +552,7 @@ export default function CompanyPickerPage() {
         </div>
 
         {/* Tier Filter Tabs */}
-        <div className="no-scrollbar mt-5 flex items-center gap-2 overflow-x-auto pb-2">
+        <div className="no-scrollbar flex items-center gap-2 overflow-x-auto pb-1">
           {FILTERS.map((f) => {
             const active = filter === f;
             return (
@@ -689,10 +586,10 @@ export default function CompanyPickerPage() {
 
         {/* Search status & reset */}
         {(debounced || selectedCategory !== "All" || filter !== "All") && (
-          <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span>
               Showing <strong className="text-foreground">{visible.length}</strong> of{" "}
-              {companies.length} recruiting partners
+              {companies.length} recruiting companies
             </span>
             <button
               onClick={reset}
@@ -704,18 +601,18 @@ export default function CompanyPickerPage() {
         )}
 
         {/* Content State Rendering */}
-        <div className="mt-6">
+        <div className="mt-4">
           {isLoading ? (
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="rounded-2xl border border-border bg-card p-5 space-y-4">
+                <div key={i} className="rounded-xl border border-border bg-card p-4 space-y-3">
                   <div className="flex items-center justify-between">
-                    <Skeleton className="h-12 w-12 rounded-xl" />
-                    <Skeleton className="h-6 w-24 rounded-full" />
+                    <Skeleton className="h-11 w-11 rounded-xl" />
+                    <Skeleton className="h-6 w-20 rounded-full" />
                   </div>
-                  <Skeleton className="h-6 w-3/4" />
+                  <Skeleton className="h-5 w-3/4" />
                   <Skeleton className="h-4 w-1/2" />
-                  <Skeleton className="h-24 w-full rounded-xl" />
+                  <Skeleton className="h-9 w-full rounded-lg" />
                 </div>
               ))}
             </div>
@@ -730,7 +627,7 @@ export default function CompanyPickerPage() {
               <Button
                 variant="outline"
                 className="mt-4 border-border bg-card text-foreground hover:bg-muted"
-                onClick={() => refetch()}
+                onClick={() => void refetch()}
               >
                 Retry Request
               </Button>
@@ -756,14 +653,14 @@ export default function CompanyPickerPage() {
               </Button>
             </div>
           ) : viewMode === "grid" ? (
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {visible.map((c) => (
                 <CompanyCard key={c.id} company={c} onSelect={onSelect} />
               ))}
             </div>
           ) : (
             /* Enterprise Table View Mode */
-            <div className="overflow-hidden rounded-2xl border border-border bg-card dark:border-zinc-800 dark:bg-[#0c0c0e] shadow-xs">
+            <div className="overflow-hidden rounded-xl border border-border bg-card dark:border-zinc-800 dark:bg-[#0c0c0e] shadow-2xs">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm text-foreground">
                   <thead className="border-b border-border bg-card-sub dark:border-zinc-800 dark:bg-[#121215] text-[11px] font-semibold uppercase tracking-wider text-muted-foreground dark:text-zinc-400">
@@ -774,25 +671,28 @@ export default function CompanyPickerPage() {
                       <th className="px-5 py-3.5">Headquarters</th>
                       <th className="px-5 py-3.5">Workforce Scale</th>
                       <th className="px-5 py-3.5">YoY Momentum</th>
-                      <th className="px-5 py-3.5 text-right">Dossier</th>
+                      <th className="px-5 py-3.5 text-right">Action</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border dark:divide-zinc-800/70">
                     {visible.map((c) => {
                       const down = c.yoyGrowthRate.trim().startsWith("-");
+                      const hasHeadquarters = !isNullish(c.headquarters);
+                      const hasEmployees = !isNullish(c.employeeSize);
+                      const hasMomentum = !isNullish(c.yoyGrowthRate);
                       return (
                         <tr
                           key={c.id}
                           onClick={() => onSelect(c)}
                           className="cursor-pointer transition-colors duration-150 hover:bg-card-sub/80 dark:hover:bg-zinc-900/60"
                         >
-                          <td className="px-5 py-4 font-medium">
+                          <td className="px-5 py-3.5 font-medium">
                             <div className="flex items-center gap-3">
                               <CompanyLogo
                                 name={c.name}
                                 logoUrl={c.logoUrl}
                                 websiteUrl={c.websiteUrl}
-                                className="h-10 w-10 rounded-lg border border-border bg-card dark:border-zinc-800 dark:bg-zinc-950"
+                                className="h-9 w-9 rounded-lg border border-border bg-card dark:border-zinc-800 dark:bg-zinc-950"
                               />
                               <div>
                                 <p className="font-heading font-semibold text-foreground">
@@ -802,7 +702,7 @@ export default function CompanyPickerPage() {
                               </div>
                             </div>
                           </td>
-                          <td className="px-5 py-4 text-xs text-muted-foreground">
+                          <td className="px-5 py-3.5 text-xs text-muted-foreground">
                             {c.category ? (
                               <span className="rounded bg-muted px-2 py-0.5 border border-border text-foreground">
                                 {c.category}
@@ -811,7 +711,7 @@ export default function CompanyPickerPage() {
                               "—"
                             )}
                           </td>
-                          <td className="px-5 py-4">
+                          <td className="px-5 py-3.5">
                             <span
                               className={cn(
                                 "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold",
@@ -824,36 +724,40 @@ export default function CompanyPickerPage() {
                               {c.companyType}
                             </span>
                           </td>
-                          <td className="px-5 py-4 text-xs text-muted-foreground">
-                            <Val v={c.headquarters} />
+                          <td className="px-5 py-3.5 text-xs text-muted-foreground">
+                            {hasHeadquarters ? c.headquarters : "—"}
                           </td>
-                          <td className="px-5 py-4 text-xs text-muted-foreground">
-                            <Val v={c.employeeSize} />
+                          <td className="px-5 py-3.5 text-xs text-muted-foreground">
+                            {hasEmployees ? c.employeeSize : "—"}
                           </td>
-                          <td className="px-5 py-4 text-xs">
-                            <span
-                              className={cn(
-                                "inline-flex items-center gap-1 font-semibold",
-                                down
-                                  ? "text-rose-600 dark:text-rose-400"
-                                  : "text-emerald-700 dark:text-emerald-400",
-                              )}
-                            >
-                              {down ? (
-                                <TrendingDown className="h-3.5 w-3.5" />
-                              ) : (
-                                <TrendingUp className="h-3.5 w-3.5" />
-                              )}
-                              <Val v={c.yoyGrowthRate} />
-                            </span>
+                          <td className="px-5 py-3.5 text-xs">
+                            {hasMomentum ? (
+                              <span
+                                className={cn(
+                                  "inline-flex items-center gap-1 font-semibold",
+                                  down
+                                    ? "text-rose-600 dark:text-rose-400"
+                                    : "text-emerald-700 dark:text-emerald-400",
+                                )}
+                              >
+                                {down ? (
+                                  <TrendingDown className="h-3.5 w-3.5" />
+                                ) : (
+                                  <TrendingUp className="h-3.5 w-3.5" />
+                                )}
+                                <Val v={c.yoyGrowthRate} />
+                              </span>
+                            ) : (
+                              "—"
+                            )}
                           </td>
-                          <td className="px-5 py-4 text-right">
+                          <td className="px-5 py-3.5 text-right">
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
+                              className="rounded-lg text-primary hover:bg-primary/10 hover:text-primary font-semibold"
                             >
-                              View
+                              Select
                               <ArrowRight className="ml-1 h-3.5 w-3.5" />
                             </Button>
                           </td>
@@ -866,107 +770,7 @@ export default function CompanyPickerPage() {
             </div>
           )}
         </div>
-
-        {/* 7. Strategic Placement Preparation Callout */}
-        <div className="mt-16 rounded-3xl border border-border bg-gradient-to-b from-card to-card-sub dark:border-zinc-800 dark:from-[#111114] dark:to-[#070709] p-8 shadow-xs sm:p-10">
-          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            <div className="max-w-2xl space-y-2">
-              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card dark:border-zinc-700 dark:bg-zinc-900 px-3 py-1 text-xs font-semibold text-foreground dark:text-zinc-300">
-                <GraduationCap className="h-3.5 w-3.5 text-primary dark:text-zinc-200" />
-                Strategic Career Intelligence
-              </div>
-              <h2 className="font-heading text-2xl font-bold tracking-tight text-foreground dark:text-white sm:text-3xl">
-                Ready to evaluate company requirements?
-              </h2>
-              <p className="text-sm leading-relaxed text-muted-foreground dark:text-zinc-400">
-                Inspect structured Bloom&apos;s Taxonomy skill ladders, difficulty benchmarks, and
-                corporate culture dossiers to sharpen your preparation before sitting for technical
-                interviews.
-              </p>
-            </div>
-
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Link
-                to="/company/skills"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-primary bg-primary px-5 py-3 text-xs font-bold text-primary-foreground shadow-xs transition-colors hover:bg-primary/90"
-              >
-                <Layers className="h-4 w-4" />
-                Explore Skill Ladders
-              </Link>
-            </div>
-          </div>
-        </div>
       </main>
-
-      {/* 8. Institutional Footer */}
-      <footer className="mt-16 border-t border-border bg-card-sub dark:border-zinc-800/80 dark:bg-[#050506] py-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            <div>
-              <div className="flex items-center gap-2.5">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 font-heading text-xs font-bold text-primary">
-                  PI
-                </div>
-                <span className="font-heading text-base font-bold text-foreground">{APP_NAME}</span>
-              </div>
-              <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-                {COLLEGE_NAME} (JSSATEN)
-                <br />
-                Department of Training and Placement
-                <br />
-                C-20/1, Sector 62, Noida, Uttar Pradesh 201301
-              </p>
-            </div>
-
-            <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-foreground dark:text-zinc-300">
-                Quick Navigation
-              </h4>
-              <ul className="mt-3 space-y-2 text-xs text-muted-foreground">
-                <li>
-                  <a href="#directory" className="transition-colors hover:text-foreground">
-                    Recruiter Directory
-                  </a>
-                </li>
-                <li>
-                  <Link to="/company/skills" className="transition-colors hover:text-foreground">
-                    Skill Matrix & Cognitive Levels
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/company/intelligence"
-                    className="transition-colors hover:text-foreground"
-                  >
-                    Corporate Dossiers
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/talent-check"
-                    className="transition-colors hover:text-foreground text-emerald-600 dark:text-emerald-400 font-medium"
-                  >
-                    Talent Check & Readiness Benchmarking
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-foreground dark:text-zinc-300">
-                Accreditation & Standards
-              </h4>
-              <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-                Approved by AICTE, Ministry of Education, Govt. of India. Affiliated to Dr. A.P.J.
-                Abdul Kalam Technical University (AKTU), Lucknow.
-              </p>
-              <p className="mt-3 text-[11px] text-muted-foreground">
-                © {new Date().getFullYear()} {APP_NAME} · JSSATEN T&P Cell. All rights reserved.
-              </p>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

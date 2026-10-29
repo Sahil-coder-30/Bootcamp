@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import {
   X,
   User,
@@ -13,40 +14,10 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { type CandidateUser, saveStoredUser } from "@/lib/auth";
+import { type CandidateUser, saveStoredUser, formatNameFromEmail } from "@/lib/auth";
+import { writeSession } from "@/lib/authStorage";
 
 export type { CandidateUser };
-
-const DEMO_PROFILES: CandidateUser[] = [
-  {
-    id: "6f1c-ananya",
-    name: "Ananya Rao",
-    role: "Systems / SWE Focus",
-    avatarText: "AR",
-    email: "ananya.rao@jssaten.ac.in",
-  },
-  {
-    id: "6f1c-karthik",
-    name: "Karthik Verma",
-    role: "Data Engineering Focus",
-    avatarText: "KV",
-    email: "karthik.v@jssaten.ac.in",
-  },
-  {
-    id: "6f1c-rohan",
-    name: "Rohan Mehta",
-    role: "All-Rounder Generalist",
-    avatarText: "RM",
-    email: "rohan.mehta@jssaten.ac.in",
-  },
-  {
-    id: "6f1c-priya",
-    name: "Priya Sharma",
-    role: "Entry-Level Support Focus",
-    avatarText: "PS",
-    email: "priya.s@jssaten.ac.in",
-  },
-];
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -61,6 +32,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   initialTab = "login",
   onLoginSuccess,
 }) => {
+  const navigate = useNavigate();
   const [tab, setTab] = useState<"login" | "register" | "demo">(initialTab);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -76,16 +48,28 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setSubmitting(true);
     setTimeout(() => {
       setSubmitting(false);
+      const name = formatNameFromEmail(email);
+      const initials = name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase() || (email[0] || "C").toUpperCase();
       const user: CandidateUser = {
-        id: "candidate-custom",
-        name: email ? email.split("@")[0] || "Candidate" : "Demo Student",
-        role: "Aspiring Software Engineer",
-        avatarText: (email[0] || "C").toUpperCase(),
+        id: `candidate_${Date.now()}`,
+        name,
+        role: "Campus Candidate '26",
+        avatarText: initials,
         email: email || "student@jssaten.ac.in",
       };
       saveStoredUser(user);
+      writeSession({
+        accessToken: `demo_session_${user.id}`,
+        refreshToken: `demo_refresh_${user.id}`,
+      });
       onLoginSuccess(user);
       onClose();
+      void navigate({ to: "/dashboard" });
     }, 600);
   };
 
@@ -94,31 +78,32 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setSubmitting(true);
     setTimeout(() => {
       setSubmitting(false);
+      const name = fullName.trim() || formatNameFromEmail(email);
+      const initials = name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase() || "CU";
       const user: CandidateUser = {
-        id: "candidate-new",
-        name: fullName || "Candidate User",
+        id: `candidate_${Date.now()}`,
+        name,
         role: targetRole,
-        avatarText: fullName
-          ? fullName
-              .split(" ")
-              .map((n) => n[0])
-              .join("")
-              .slice(0, 2)
-              .toUpperCase()
-          : "CU",
+        avatarText: initials,
         email: email || "student@jssaten.ac.in",
       };
       saveStoredUser(user);
+      writeSession({
+        accessToken: `demo_session_${user.id}`,
+        refreshToken: `demo_refresh_${user.id}`,
+      });
       onLoginSuccess(user);
       onClose();
+      void navigate({ to: "/dashboard" });
     }, 700);
   };
 
-  const handleSelectDemo = (profile: CandidateUser) => {
-    saveStoredUser(profile);
-    onLoginSuccess(profile);
-    onClose();
-  };
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -151,22 +136,16 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             </span>
           </div>
           <h3 className="mt-1 font-heading text-xl font-bold text-foreground">
-            {tab === "login"
-              ? "Welcome Back"
-              : tab === "register"
-                ? "Create Candidate Profile"
-                : "Instant Demo Profile"}
+            {tab === "login" ? "Welcome Back" : "Create Candidate Profile"}
           </h3>
           <p className="mt-1 text-xs text-muted-foreground">
             {tab === "login"
               ? "Access your saved skill gap evaluations and company applications."
-              : tab === "register"
-                ? "Benchmark your resume against 115 corporate hiring bars."
-                : "Select a pre-configured candidate profile to test matching instantly."}
+              : "Benchmark your resume against 115 corporate hiring bars."}
           </p>
 
           {/* Navigation Tabs */}
-          <div className="mt-5 grid grid-cols-3 rounded-xl border border-border bg-muted p-1 text-xs font-medium">
+          <div className="mt-5 grid grid-cols-2 rounded-xl border border-border bg-muted p-1 text-xs font-medium">
             <button
               onClick={() => setTab("login")}
               className={`rounded-lg py-1.5 transition-all ${
@@ -186,17 +165,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               }`}
             >
               Create Profile
-            </button>
-            <button
-              onClick={() => setTab("demo")}
-              className={`rounded-lg py-1.5 transition-all flex items-center justify-center gap-1 ${
-                tab === "demo"
-                  ? "bg-primary/10 text-primary font-semibold border border-primary/20"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <Sparkles className="h-3 w-3 text-primary" />
-              Demo (1-Click)
             </button>
           </div>
         </div>
@@ -353,46 +321,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             </form>
           )}
 
-          {/* TAB 3: 1-CLICK DEMO PROFILES */}
-          {tab === "demo" && (
-            <div className="space-y-2.5">
-              <p className="text-xs text-muted-foreground">
-                Choose a pre-validated candidate profile to explore the skill comparison console
-                instantly without entering details:
-              </p>
 
-              {DEMO_PROFILES.map((profile) => (
-                <button
-                  key={profile.id}
-                  onClick={() => handleSelectDemo(profile)}
-                  className="group flex w-full items-center justify-between rounded-2xl border border-border bg-card-sub p-3 text-left transition-all hover:border-primary/60 hover:bg-muted cursor-pointer shadow-2xs"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-primary/30 bg-primary/10 font-mono text-xs font-bold text-primary group-hover:scale-105 transition-transform">
-                      {profile.avatarText}
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-foreground group-hover:text-primary transition-colors">
-                        {profile.name}
-                      </h4>
-                      <p className="text-[11px] text-muted-foreground">{profile.role}</p>
-                    </div>
-                  </div>
-                  <span className="rounded-lg border border-border bg-card px-2 py-1 text-[11px] font-medium text-foreground group-hover:border-primary/40 group-hover:text-primary">
-                    Select &rarr;
-                  </span>
-                </button>
-              ))}
-
-              <div className="mt-3 rounded-xl border border-orange-500/20 bg-orange-500/5 p-2.5 text-[11px] text-muted-foreground flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-orange-500 shrink-0" />
-                <span>
-                  Simulates full candidate profile state with live Bloom scores across 115
-                  companies.
-                </span>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>

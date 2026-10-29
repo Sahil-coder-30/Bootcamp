@@ -1,8 +1,15 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import LandingPage from "@/features/landing/components/LandingPage";
 import { APP_NAME, COLLEGE_SHORT } from "@/lib/college";
+import { isSignedIn } from "@/lib/authStorage";
+import { getStoredUser } from "@/lib/auth";
 
 export const Route = createFileRoute("/")({
+  beforeLoad: () => {
+    if (isSignedIn() || getStoredUser()) {
+      throw redirect({ to: "/dashboard" });
+    }
+  },
   head: () => ({
     meta: [
       { title: `${APP_NAME} | ${COLLEGE_SHORT} Placement Intelligence & Benchmarking` },

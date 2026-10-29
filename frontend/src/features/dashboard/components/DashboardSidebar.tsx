@@ -1,35 +1,39 @@
 import React from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard,
   FileText,
   Target,
   ShieldCheck,
   GraduationCap,
-  FileCheck2,
   Building2,
   LogOut,
-  Sparkles,
 } from "lucide-react";
-import { APP_NAME, COLLEGE_NAME, COLLEGE_SHORT } from "@/lib/college";
-import { clearStoredUser, type CandidateUser } from "@/lib/auth";
+import { APP_NAME, COLLEGE_SHORT } from "@/lib/college";
+import { clearStoredUser, formatNameFromEmail, type CandidateUser } from "@/lib/auth";
 import { clearSession } from "@/lib/authStorage";
+import { useAppSelector } from "@/store";
 import { cn } from "@/lib/utils";
 
 interface DashboardSidebarProps {
-  currentUser: CandidateUser | null;
+  currentUser?: CandidateUser | null;
   activeItem?: string | undefined;
-  onOpenJDMatcher: () => void;
-  onOpenATSModal: () => void;
+  onOpenJDMatcher?: () => void;
+  onOpenATSModal?: () => void;
 }
 
 export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
-  currentUser,
-  activeItem = "dashboard",
+  currentUser: propUser,
+  activeItem,
   onOpenJDMatcher,
   onOpenATSModal,
 }) => {
   const navigate = useNavigate();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  // Redux-connected states
+  const authUser = useAppSelector((s) => s.auth.user);
+  const companiesCount = useAppSelector((s) => s.companies.list.length);
 
   const handleLogout = () => {
     clearStoredUser();
@@ -37,9 +41,38 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
     navigate({ to: "/" });
   };
 
-  const displayName = currentUser?.name || "Ananya Rao";
-  const displayRole = currentUser?.role || "B.Tech CSE '26";
-  const avatarText = currentUser?.avatarText || "AR";
+  const displayName =
+    propUser?.name ||
+    authUser?.name ||
+    (propUser?.email ? formatNameFromEmail(propUser.email) : "") ||
+    (authUser?.email ? formatNameFromEmail(authUser.email) : "") ||
+    "Candidate";
+  const displayRole =
+    propUser?.role ||
+    authUser?.branch ||
+    propUser?.email ||
+    authUser?.email ||
+    "Campus Candidate";
+  const avatarText =
+    propUser?.avatarText ||
+    (displayName ? displayName.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase() : "CU");
+
+  // Derive active item from router state or prop
+  const effectiveActive =
+    activeItem ??
+    (pathname === "/dashboard"
+      ? "dashboard"
+      : pathname.startsWith("/resume")
+        ? "resume"
+        : pathname.startsWith("/jd")
+          ? "jd"
+          : pathname.startsWith("/talent-check")
+            ? "talent-check"
+            : pathname.startsWith("/skill-match") || pathname.startsWith("/company/skills")
+              ? "skills"
+              : pathname.startsWith("/companies") || pathname.startsWith("/company")
+                ? "companies"
+                : "dashboard");
 
   return (
     <aside className="w-64 shrink-0 flex flex-col justify-between border-r border-sidebar-border bg-sidebar p-4 h-screen overflow-y-auto overflow-x-hidden select-none transition-colors sticky top-0">
@@ -68,18 +101,18 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
           </div>
         </Link>
 
-        {/* 2. Middle Navigation Items */}
+        {/* 2. Middle Navigation Items - Core Modules without Duplication */}
         <nav className="mt-6 space-y-1">
           <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">
             Core Modules
           </p>
 
-          {/* Dashboard */}
+          {/* 1. Dashboard */}
           <Link
             to="/dashboard"
             className={cn(
               "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all",
-              activeItem === "dashboard"
+              effectiveActive === "dashboard"
                 ? "border-l-2 border-primary bg-primary/10 text-foreground font-bold shadow-xs"
                 : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground",
             )}
@@ -87,53 +120,92 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             <LayoutDashboard
               className={cn(
                 "h-4 w-4",
-                activeItem === "dashboard" ? "text-primary" : "text-muted-foreground",
+                effectiveActive === "dashboard" ? "text-primary" : "text-muted-foreground",
               )}
             />
             <span>Dashboard</span>
           </Link>
 
-          {/* 115 Company Data */}
-          <Link
-            to="/companies"
-            className={cn(
-              "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all",
-              activeItem === "resume"
-                ? "border-l-2 border-primary bg-primary/10 text-foreground font-bold shadow-xs"
-                : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground",
-            )}
-          >
-            <FileText
+          {/* 2. Resume Parsing */}
+          <div className="flex items-center justify-between group rounded-xl">
+            <Link
+              to="/resume"
               className={cn(
-                "h-4 w-4",
-                activeItem === "resume" ? "text-primary" : "text-muted-foreground",
+                "flex-1 flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all",
+                effectiveActive === "resume"
+                  ? "border-l-2 border-primary bg-primary/10 text-foreground font-bold shadow-xs"
+                  : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground",
               )}
-            />
-            <span>Resume Parsing</span>
-            <span className="ml-auto text-[10px] font-mono rounded-full bg-muted border border-border px-2 py-0.5 text-muted-foreground font-semibold">
-              128
-            </span>
-          </Link>
+            >
+              <FileText
+                className={cn(
+                  "h-4 w-4",
+                  effectiveActive === "resume" ? "text-primary" : "text-muted-foreground",
+                )}
+              />
+              <span>Resume Parsing</span>
+              <span
+                onClick={(e) => {
+                  if (onOpenATSModal) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onOpenATSModal();
+                  }
+                }}
+                title={onOpenATSModal ? "Click to open ATS Compliance Audit" : "ATS Validated"}
+                className="ml-auto text-[10px] font-mono rounded-full bg-muted border border-border px-2 py-0.5 text-muted-foreground font-semibold hover:border-primary/50 transition-colors"
+              >
+                ATS
+              </span>
+            </Link>
+          </div>
 
-          {/* JD Matcher */}
-          <button
-            type="button"
-            onClick={onOpenJDMatcher}
-            className="w-full flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground transition-all text-left cursor-pointer"
-          >
-            <Target className="h-4 w-4 text-muted-foreground" />
-            <span>JD Matcher</span>
-            <span className="ml-auto text-[10px] font-semibold text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full">
-              Beta
-            </span>
-          </button>
+          {/* 3. JD Matcher */}
+          <div className="flex items-center justify-between group rounded-xl">
+            <Link
+              to="/jd"
+              onClick={(e) => {
+                if (onOpenJDMatcher && effectiveActive === "dashboard") {
+                  e.preventDefault();
+                  onOpenJDMatcher();
+                }
+              }}
+              className={cn(
+                "flex-1 flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all",
+                effectiveActive === "jd"
+                  ? "border-l-2 border-primary bg-primary/10 text-foreground font-bold shadow-xs"
+                  : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground",
+              )}
+            >
+              <Target
+                className={cn(
+                  "h-4 w-4",
+                  effectiveActive === "jd" ? "text-primary" : "text-muted-foreground",
+                )}
+              />
+              <span>JD Matcher</span>
+              <span
+                onClick={(e) => {
+                  if (onOpenJDMatcher) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onOpenJDMatcher();
+                  }
+                }}
+                title={onOpenJDMatcher ? "Quick JD Matcher modal" : "Beta Feature"}
+                className="ml-auto text-[10px] font-semibold text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full hover:bg-primary/20 transition-colors cursor-pointer"
+              >
+                Beta
+              </span>
+            </Link>
+          </div>
 
-          {/* Talent Check */}
+          {/* 4. Talent Check */}
           <Link
             to="/talent-check"
             className={cn(
               "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all",
-              activeItem === "talent-check"
+              effectiveActive === "talent-check"
                 ? "border-l-2 border-primary bg-primary/10 text-foreground font-bold shadow-xs"
                 : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground",
             )}
@@ -141,35 +213,18 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             <ShieldCheck
               className={cn(
                 "h-4 w-4",
-                activeItem === "talent-check" ? "text-primary" : "text-muted-foreground",
+                effectiveActive === "talent-check" ? "text-primary" : "text-muted-foreground",
               )}
             />
             <span>Talent Check</span>
           </Link>
 
-          {/* Resume Parsing */}
+          {/* 5. Skill Matching */}
           <Link
-            to="/resume"
-            className={cn(
-              "flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-xs font-semibold transition-all cursor-pointer",
-              activeItem === "resume"
-                ? "bg-primary text-primary-foreground shadow-sm font-bold"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground",
-            )}
-          >
-            <FileText className="h-4 w-4" />
-            <span>Resume Parsing</span>
-            <span className="ml-auto text-[10px] font-mono rounded-full bg-card-sub border border-border px-2 py-0.5 text-muted-foreground font-semibold">
-              ATS
-            </span>
-          </Link>
-
-          {/* Skill Matching / Ladders */}
-          <Link
-            to="/company/skills"
+            to="/skill-match"
             className={cn(
               "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all",
-              activeItem === "skills"
+              effectiveActive === "skills"
                 ? "border-l-2 border-primary bg-primary/10 text-foreground font-bold shadow-xs"
                 : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground",
             )}
@@ -177,44 +232,18 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             <GraduationCap
               className={cn(
                 "h-4 w-4",
-                activeItem === "skills" ? "text-primary" : "text-muted-foreground",
+                effectiveActive === "skills" ? "text-primary" : "text-muted-foreground",
               )}
             />
             <span>Skill Matching</span>
           </Link>
 
-          {/* JD Matcher */}
-          <button
-            type="button"
-            onClick={onOpenJDMatcher}
-            className="w-full flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-xs font-semibold text-muted-foreground hover:bg-muted hover:text-foreground transition-all text-left cursor-pointer"
-          >
-            <Target className="h-4 w-4" />
-            <span>JD Matcher</span>
-            <span className="ml-auto text-[10px] font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-              Beta
-            </span>
-          </button>
-
-          {/* ATS Resume Audit */}
-          <button
-            type="button"
-            onClick={onOpenATSModal}
-            className="w-full flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground transition-all text-left cursor-pointer"
-          >
-            <FileCheck2 className="h-4 w-4 text-muted-foreground" />
-            <span>ATS Resume</span>
-            <span className="ml-auto text-[10px] font-mono font-bold text-muted-foreground bg-muted border border-border px-2 py-0.5 rounded-full">
-              91
-            </span>
-          </button>
-
-          {/* 118 Company Data */}
+          {/* 6. 115 Company Data */}
           <Link
             to="/companies"
             className={cn(
               "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all",
-              activeItem === "companies"
+              effectiveActive === "companies"
                 ? "border-l-2 border-primary bg-primary/10 text-foreground font-bold shadow-xs"
                 : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground",
             )}
@@ -222,12 +251,12 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             <Building2
               className={cn(
                 "h-4 w-4",
-                activeItem === "companies" ? "text-primary" : "text-muted-foreground",
+                effectiveActive === "companies" ? "text-primary" : "text-muted-foreground",
               )}
             />
-            <span>118 Company Data</span>
+            <span>115 Company Data</span>
             <span className="ml-auto text-[10px] font-mono rounded-full bg-muted border border-border px-2 py-0.5 text-muted-foreground font-semibold">
-              115+
+              {companiesCount > 0 ? `${companiesCount}+` : "115+"}
             </span>
           </Link>
         </nav>

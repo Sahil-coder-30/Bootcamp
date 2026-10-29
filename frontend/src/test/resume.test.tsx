@@ -106,31 +106,20 @@ describe("Resume Parsing Feature Components", () => {
     },
   };
 
-  it("renders ResumeUploadCard with sample pills and responds to clicks", () => {
+  it("renders ResumeUploadCard with clean full-width dropzone", () => {
     const handleUpload = vi.fn();
-    const handleSelectSample = vi.fn();
 
     render(
       <ResumeUploadCard
         onFileUpload={handleUpload}
-        onSelectSample={handleSelectSample}
         isLoading={false}
-        currentCandidateName="Ananya Rao"
+        currentCandidateName="Sample Candidate"
       />,
     );
 
     expect(screen.getByText(/Resume Ingestion & Deterministic Parser/i)).toBeInTheDocument();
     expect(screen.getByText(/Zero PII Sent: Contacts Redacted/i)).toBeInTheDocument();
-
-    // Check candidate pills
-    const ananyaButton = screen.getByRole("button", { name: /Ananya Rao/i });
-    expect(ananyaButton).toBeInTheDocument();
-    fireEvent.click(ananyaButton);
-    expect(handleSelectSample).toHaveBeenCalledWith("ananya");
-
-    const karthikButton = screen.getByRole("button", { name: /Karthik Sub/i });
-    fireEvent.click(karthikButton);
-    expect(handleSelectSample).toHaveBeenCalledWith("karthik");
+    expect(screen.getByText(/Drop candidate resume here, or browse/i)).toBeInTheDocument();
   });
 
   it("renders SkillChips with evidence and category badges", () => {
@@ -162,10 +151,10 @@ describe("Resume Parsing Feature Components", () => {
     expect(screen.getByText(/Skill Jaccard Overlap/i)).toBeInTheDocument();
     expect(screen.getByText(/Level MAE Difference/i)).toBeInTheDocument();
 
-    // Switch to Karthik proof
-    const karthikTab = screen.getByRole("button", { name: "Karthik" });
-    fireEvent.click(karthikTab);
-    expect(screen.getByText(/Karthik Subramaniam/i)).toBeInTheDocument();
+    // Switch to Archetype B proof
+    const archetypeBTab = screen.getByRole("button", { name: /Archetype B/i });
+    fireEvent.click(archetypeBTab);
+    expect(screen.getByText(/Archetype B \(Data\)/i)).toBeInTheDocument();
   });
 
   it("renders HowWeGotThisDrawer with privacy and telemetry audit", () => {

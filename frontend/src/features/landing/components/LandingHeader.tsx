@@ -82,7 +82,7 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ currentUser, onUse
           </Link>
 
           {/* Crisp, Uncluttered Center Navigation Links */}
-          <nav className="hidden items-center gap-1.5 md:flex">
+          <nav className="hidden items-center gap-6 md:flex">
             {currentUser ? (
               <>
                 <Link
@@ -113,13 +113,6 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ currentUser, onUse
                   <FileText className="h-3.5 w-3.5 text-sky-500 dark:text-sky-400" />
                   Resume Parser
                 </Link>
-                <Link
-                  to="/company/skills"
-                  className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <GraduationCap className="h-3.5 w-3.5 text-muted-foreground" />
-                  Skill Ladders
-                </Link>
                 <a
                   href="#tiers"
                   className="rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
@@ -129,44 +122,27 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ currentUser, onUse
               </>
             ) : (
               <>
-                <Link
-                  to="/login"
-                  search={{ redirect: "/dashboard" }}
-                  className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold text-primary bg-primary/10 transition-colors hover:bg-primary/20"
+                <a
+                  href="#how-it-works"
+                  className="text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  <LayoutDashboard className="h-3.5 w-3.5" />
-                  Dashboard
-                </Link>
-                <Link
-                  to="/companies"
-                  className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  How It Works
+                </a>
+                <a
+                  href="#companies"
+                  className="text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  <Building2 className="h-3.5 w-3.5 text-primary" />
-                  Companies (115)
-                </Link>
-                <Link
-                  to="/talent-check"
-                  className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 transition-colors hover:bg-emerald-500/10"
-                >
-                  <UserCheck className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-                  Talent Check
-                </Link>
-                <Link
-                  to="/resume"
-                  className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  <FileText className="h-3.5 w-3.5 text-sky-500 dark:text-sky-400" />
-                  Resume Parser
-                </Link>
+                  Hiring Bars
+                </a>
                 <a
                   href="#tiers"
-                  className="rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  className="text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
                 >
                   Salary Tiers
                 </a>
                 <a
                   href="#faq"
-                  className="rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  className="text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
                 >
                   FAQ
                 </a>
@@ -256,7 +232,7 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ currentUser, onUse
                 )}
               </div>
             ) : (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <button
                   onClick={toggleTheme}
                   title={`Switch to ${theme === "dark" ? "Light Theme" : "Dark Amber Theme"}`}
@@ -271,21 +247,11 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ currentUser, onUse
 
                 <Link to="/login" search={{ redirect: "/dashboard" }}>
                   <Button
-                    variant="ghost"
                     size="sm"
-                    className="h-8.5 rounded-lg text-xs font-semibold text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer"
-                  >
-                    Sign In
-                  </Button>
-                </Link>
-
-                <Link to="/login" search={{ redirect: "/dashboard" }}>
-                  <Button
-                    size="sm"
-                    className="h-8.5 rounded-xl border border-primary/40 bg-gradient-to-r from-indigo-500 to-indigo-600 px-3.5 text-xs font-bold text-white shadow-[0_0_15px_rgba(99,102,241,0.25)] transition-all hover:brightness-110 cursor-pointer"
+                    className="h-9 rounded-xl border border-primary/40 bg-gradient-to-r from-indigo-500 to-indigo-600 px-4 text-xs font-bold text-white shadow-[0_0_15px_rgba(99,102,241,0.25)] transition-all hover:brightness-110 cursor-pointer"
                   >
                     <User className="mr-1.5 h-3.5 w-3.5 text-white" />
-                    Access Dashboard
+                    Sign In
                   </Button>
                 </Link>
               </div>
@@ -370,57 +336,31 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ currentUser, onUse
                 </>
               ) : (
                 <>
-                  <Link
-                    to="/login"
-                    search={{ redirect: "/dashboard" }}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-2 rounded-lg bg-primary/10 px-3 py-2 text-sm font-bold text-primary hover:bg-primary/20"
-                  >
-                    <LayoutDashboard className="h-4 w-4" />
-                    Candidate Dashboard
-                  </Link>
-                  <Link
-                    to="/companies"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-foreground hover:bg-muted"
-                  >
-                    <Building2 className="h-4 w-4 text-primary" />
-                    Companies (115)
-                  </Link>
-                  <Link
-                    to="/talent-check"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10"
-                  >
-                    <UserCheck className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-                    Talent Check
-                  </Link>
-                  <Link
-                    to="/resume"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-foreground hover:bg-muted"
-                  >
-                    <FileText className="h-4 w-4 text-sky-500 dark:text-sky-400" />
-                    Resume Parser
-                  </Link>
                   <a
                     href="#how-it-works"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+                    className="rounded-lg px-3 py-2 text-sm font-semibold text-muted-foreground hover:bg-muted hover:text-foreground"
                   >
                     How It Works
                   </a>
                   <a
+                    href="#companies"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="rounded-lg px-3 py-2 text-sm font-semibold text-muted-foreground hover:bg-muted hover:text-foreground"
+                  >
+                    Hiring Bars
+                  </a>
+                  <a
                     href="#tiers"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+                    className="rounded-lg px-3 py-2 text-sm font-semibold text-muted-foreground hover:bg-muted hover:text-foreground"
                   >
                     Salary Tiers
                   </a>
                   <a
                     href="#faq"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+                    className="rounded-lg px-3 py-2 text-sm font-semibold text-muted-foreground hover:bg-muted hover:text-foreground"
                   >
                     FAQ
                   </a>
@@ -440,19 +380,17 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ currentUser, onUse
                     </button>
                   </div>
                 ) : (
-                  <>
-                    <Link
-                      to="/login"
-                      search={{ redirect: "/dashboard" }}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="w-full"
-                    >
-                      <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold text-xs h-10 rounded-xl shadow-xs">
-                        <User className="mr-2 h-4 w-4" />
-                        Sign In & Access Dashboard
-                      </Button>
-                    </Link>
-                  </>
+                  <Link
+                    to="/login"
+                    search={{ redirect: "/dashboard" }}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full"
+                  >
+                    <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold text-xs h-10 rounded-xl shadow-xs">
+                      <User className="mr-2 h-4 w-4" />
+                      Sign In
+                    </Button>
+                  </Link>
                 )}
               </div>
             </div>

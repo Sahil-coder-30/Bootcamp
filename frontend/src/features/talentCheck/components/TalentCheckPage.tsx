@@ -34,10 +34,10 @@ import {
 } from "lucide-react";
 
 const CANDIDATES = [
-  { id: "6f1c-ananya", name: "Ananya Rao", role: "Systems / SWE Focus" },
-  { id: "6f1c-karthik", name: "Karthik", role: "Data Engineering Focus" },
-  { id: "6f1c-priya", name: "Priya", role: "Entry-Level Support Focus" },
-  { id: "6f1c-rohan", name: "Rohan", role: "All-Rounder Generalist" },
+  { id: "6f1c-ananya", name: "Systems / SWE", role: "Systems / Cloud Focus" },
+  { id: "6f1c-karthik", name: "Data Eng.", role: "Data Engineering Focus" },
+  { id: "6f1c-priya", name: "App Support", role: "Entry Support Focus" },
+  { id: "6f1c-rohan", name: "Full-Stack", role: "All-Rounder Generalist" },
 ];
 
 const COMPANIES = [

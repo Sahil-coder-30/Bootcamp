@@ -85,33 +85,6 @@ export const SkillFingerprintRadar: React.FC<SkillFingerprintRadarProps> = ({
           </p>
         </div>
 
-        {/* Overlay comparison selector */}
-        {onSelectCompare && (
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">Compare with:</span>
-            <select
-              value={
-                compare?.candidate.name?.toLowerCase().includes("karthik")
-                  ? "karthik"
-                  : compare?.candidate.name?.toLowerCase().includes("priya")
-                    ? "priya"
-                    : compare?.candidate.name?.toLowerCase().includes("rohan")
-                      ? "rohan"
-                      : compare?.candidate.name?.toLowerCase().includes("ananya")
-                        ? "ananya"
-                        : ""
-              }
-              onChange={(e) => onSelectCompare(e.target.value || null)}
-              className="rounded-lg border border-border bg-background px-2.5 py-1 text-xs text-foreground outline-none focus:border-primary"
-            >
-              <option value="">None (Single)</option>
-              <option value="ananya">Ananya Rao (Systems)</option>
-              <option value="karthik">Karthik (Data)</option>
-              <option value="priya">Priya (Support)</option>
-              <option value="rohan">Rohan (All-Rounder)</option>
-            </select>
-          </div>
-        )}
       </div>
 
       <div className="mt-4 h-[350px] w-full">

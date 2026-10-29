@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { authRequiredEverywhere, requireSignIn } from "@/lib/requireSignIn";
+import { requireSignIn } from "@/lib/requireSignIn";
 import { TalentCheckPage } from "@/features/talentCheck/components/TalentCheckPage";
 
 export const Route = createFileRoute("/talent-check")({
   beforeLoad: ({ location }) => {
-    if (authRequiredEverywhere()) requireSignIn(location);
+    requireSignIn(location);
   },
   head: () => ({
     meta: [

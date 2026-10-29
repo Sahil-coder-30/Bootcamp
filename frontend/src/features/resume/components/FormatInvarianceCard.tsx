@@ -24,8 +24,8 @@ interface FormatComparisonData {
 }
 
 const INVARIANCE_PROOFS: Record<string, FormatComparisonData> = {
-  ananya: {
-    candidate: "Ananya Rao",
+  sample_a: {
+    candidate: "Archetype A (Systems)",
     jaccard: 0.94,
     levelMae: 0.17,
     maxDiff: 0,
@@ -39,8 +39,8 @@ const INVARIANCE_PROOFS: Record<string, FormatComparisonData> = {
       { category: "COMM", pdfLevel: 4, docxLevel: 4 },
     ],
   },
-  karthik: {
-    candidate: "Karthik Subramaniam",
+  sample_b: {
+    candidate: "Archetype B (Data)",
     jaccard: 0.92,
     levelMae: 0.25,
     maxDiff: 1,
@@ -54,8 +54,8 @@ const INVARIANCE_PROOFS: Record<string, FormatComparisonData> = {
       { category: "APTI", pdfLevel: 5, docxLevel: 5 },
     ],
   },
-  priya: {
-    candidate: "Priya Menon",
+  sample_c: {
+    candidate: "Archetype C (Support)",
     jaccard: 0.95,
     levelMae: 0.08,
     maxDiff: 0,
@@ -69,8 +69,8 @@ const INVARIANCE_PROOFS: Record<string, FormatComparisonData> = {
       { category: "SYSD", pdfLevel: 1, docxLevel: 1 },
     ],
   },
-  rohan: {
-    candidate: "Rohan Verma",
+  sample_d: {
+    candidate: "Archetype D (Generalist)",
     jaccard: 0.91,
     levelMae: 0.25,
     maxDiff: 1,
@@ -87,8 +87,8 @@ const INVARIANCE_PROOFS: Record<string, FormatComparisonData> = {
 };
 
 export const FormatInvarianceCard: React.FC = () => {
-  const [selectedKey, setSelectedKey] = useState<string>("ananya");
-  const data = INVARIANCE_PROOFS[selectedKey] ?? INVARIANCE_PROOFS["ananya"]!;
+  const [selectedKey, setSelectedKey] = useState<string>("sample_a");
+  const data = INVARIANCE_PROOFS[selectedKey] ?? INVARIANCE_PROOFS["sample_a"]!;
 
   return (
     <div className="rounded-2xl border border-border bg-card p-6 shadow-xs">
@@ -107,7 +107,7 @@ export const FormatInvarianceCard: React.FC = () => {
           </p>
         </div>
 
-        {/* Candidate Selector Pills */}
+        {/* Benchmark Archetype Selector Pills */}
         <div className="flex items-center gap-1.5 self-start sm:self-auto bg-card-sub p-1 rounded-xl border border-border">
           {Object.entries(INVARIANCE_PROOFS).map(([key, item]) => (
             <button
@@ -120,7 +120,7 @@ export const FormatInvarianceCard: React.FC = () => {
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {item.candidate.split(" ")[0]}
+              {item.candidate.split(" (")[0]}
             </button>
           ))}
         </div>

@@ -27,6 +27,14 @@ describe("LandingPage", () => {
     ];
     expect(authCTAs.length).toBeGreaterThan(0);
 
+    // Clean, decluttered landing page navigation links
+    expect(screen.getByRole("link", { name: /^How It Works$/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Hiring Bars$/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^Salary Tiers$/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^FAQ$/i })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /^Companies \(115\)$/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /^Resume Parser$/i })).not.toBeInTheDocument();
+
     // Locked feature banner for public visitors
     expect(
       screen.getByRole("heading", {

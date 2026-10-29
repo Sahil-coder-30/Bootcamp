@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { LandingHeader } from "./LandingHeader";
 import { HeroSection } from "./HeroSection";
 import { LockedFeatureBanner } from "./LockedFeatureBanner";
@@ -15,11 +16,19 @@ import {
   clearStoredUser,
   subscribeToAuthChanges,
 } from "@/lib/auth";
+import { isSignedIn } from "@/lib/authStorage";
 
 export const LandingPage: React.FC = () => {
+  const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState<CandidateUser | null>(() => getStoredUser());
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authInitialTab, setAuthInitialTab] = useState<"login" | "register" | "demo">("register");
+
+  useEffect(() => {
+    if (currentUser || isSignedIn()) {
+      void navigate({ to: "/dashboard" });
+    }
+  }, [currentUser, navigate]);
 
   useEffect(() => {
     return subscribeToAuthChanges((user) => {
@@ -30,6 +39,7 @@ export const LandingPage: React.FC = () => {
   const handleUserChange = (user: CandidateUser | null) => {
     if (user) {
       saveStoredUser(user);
+      void navigate({ to: "/dashboard" });
     } else {
       clearStoredUser();
     }

@@ -1,8 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { requireSignIn } from "@/lib/requireSignIn";
 import CompanyPickerPage from "@/features/companies/components/CompanyPickerPage";
 import { APP_NAME, COLLEGE_SHORT } from "@/lib/college";
 
 export const Route = createFileRoute("/companies")({
+  beforeLoad: ({ location }) => {
+    requireSignIn(location);
+  },
   head: () => ({
     meta: [
       { title: `Companies Directory | ${APP_NAME} | ${COLLEGE_SHORT}` },

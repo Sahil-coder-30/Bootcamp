@@ -7,15 +7,20 @@ import {
   toggleStudyStep,
   setDashboardLoading,
   setDashboardError,
+  setJDModalOpen,
+  setATSModalOpen,
 } from "../slice/dashboard.slice";
 import {
   getDashboardSummaryAPI,
   type DashboardSummary,
   type SkillGapItem,
 } from "../service/dashboard.api";
-import { getCacheItem, setCacheItem } from "@/services/dbService";
+import { getCacheItem, setCacheItem, deleteCacheItem } from "@/services/dbService";
 
-export function useDashboard(candidateId = "3a000000-0000-4000-8000-000000000001") {
+export function useDashboard(
+  candidateId = "3a000000-0000-4000-8000-000000000001",
+  candidateFallback?: { name?: string | undefined; email?: string | undefined; role?: string | undefined } | undefined,
+) {
   const dispatch = useAppDispatch();
   const {
     summary,
@@ -27,6 +32,8 @@ export function useDashboard(candidateId = "3a000000-0000-4000-8000-000000000001
     targetCompanyId,
     loading,
     error,
+    isJDModalOpen,
+    isATSModalOpen,
   } = useAppSelector((s) => s.dashboard);
 
   const fetchDashboardData = useCallback(
@@ -38,15 +45,24 @@ export function useDashboard(candidateId = "3a000000-0000-4000-8000-000000000001
       const cacheKey = `dashboard_${cid}_${companyId}`;
       const cached = await getCacheItem<DashboardSummary>(cacheKey, "dashboard");
       if (cached) {
-        dispatch(setDashboardSummary(cached));
+        const emailMismatch = candidateFallback?.email && cached.email && cached.email !== candidateFallback.email;
+        if (emailMismatch || cached.hasData === false) {
+          await deleteCacheItem(cacheKey, "dashboard");
+        } else {
+          dispatch(setDashboardSummary(cached));
+        }
       }
 
       // 2. Fetch fresh from real backend APIs
       try {
-        const data = await getDashboardSummaryAPI(cid, companyId);
+        const data = await getDashboardSummaryAPI(cid, companyId, candidateFallback);
         dispatch(setDashboardSummary(data));
-        // Persist to Dexie for offline support
-        await setCacheItem(cacheKey, data, "dashboard");
+        // Persist to Dexie only when data exists
+        if (data.hasData) {
+          await setCacheItem(cacheKey, data, "dashboard");
+        } else {
+          await deleteCacheItem(cacheKey, "dashboard");
+        }
       } catch (err) {
         const msg = err instanceof Error ? err.message : "Failed to load dashboard data";
         dispatch(setDashboardError(msg));
@@ -54,7 +70,7 @@ export function useDashboard(candidateId = "3a000000-0000-4000-8000-000000000001
         dispatch(setDashboardLoading(false));
       }
     },
-    [dispatch, targetCompanyId],
+    [dispatch, targetCompanyId, candidateFallback?.name, candidateFallback?.email, candidateFallback?.role],
   );
 
   useEffect(() => {
@@ -82,6 +98,11 @@ export function useDashboard(candidateId = "3a000000-0000-4000-8000-000000000001
     [dispatch],
   );
 
+  const openJDModal = useCallback(() => dispatch(setJDModalOpen(true)), [dispatch]);
+  const closeJDModal = useCallback(() => dispatch(setJDModalOpen(false)), [dispatch]);
+  const openATSModal = useCallback(() => dispatch(setATSModalOpen(true)), [dispatch]);
+  const closeATSModal = useCallback(() => dispatch(setATSModalOpen(false)), [dispatch]);
+
   return {
     summary,
     readinessScore,
@@ -92,6 +113,12 @@ export function useDashboard(candidateId = "3a000000-0000-4000-8000-000000000001
     targetCompanyId,
     loading,
     error,
+    isJDModalOpen,
+    isATSModalOpen,
+    openJDModal,
+    closeJDModal,
+    openATSModal,
+    closeATSModal,
     selectSkill,
     switchCompany,
     toggleStep,

@@ -326,7 +326,7 @@ export const JobSkillComparator: React.FC<JobSkillComparatorProps> = ({
                   <div className="rounded-xl border border-border bg-card-sub px-3 py-1.5 text-xs text-foreground flex items-center gap-2">
                     <span className="h-2 w-2 rounded-full bg-emerald-500" />
                     <span>
-                      Profile: <strong>{currentUser ? currentUser.name : "Ananya Rao"}</strong>
+                      Profile: <strong>{currentUser ? currentUser.name : "Candidate Profile"}</strong>
                     </span>
                   </div>
                   {!currentUser && (

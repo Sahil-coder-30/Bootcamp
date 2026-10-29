@@ -27,6 +27,7 @@ export interface RoadmapStepItem {
 }
 
 export interface DashboardSummary {
+  hasData?: boolean;
   candidateId: string;
   candidateName: string;
   email: string;
@@ -151,23 +152,95 @@ interface BackendTalentCheckResult {
 export const getDashboardSummaryAPI = async (
   candidateId: string,
   targetCompanyId = 4,
+  candidateFallback?: {
+    name?: string | undefined;
+    email?: string | undefined;
+    role?: string | undefined;
+  } | undefined,
 ): Promise<DashboardSummary> => {
-  // 1. Fetch live Candidate Profile from /api/profiles/:id
-  let profile: BackendProfile = { id: candidateId };
-  try {
-    const profileRes = await apiClient.get<BackendProfile>(
-      `/profiles/${encodeURIComponent(candidateId)}`,
-    );
-    profile = profileRes.data;
-  } catch {
-    // If not found, use default candidate name
-    profile = {
-      id: candidateId,
-      name: "Ananya Rao",
-      email: "ananya.rao@example.com",
-      education: "B.Tech CSE, XYZ Institute of Technology, 2026, 8.7 CGPA",
-      preferred_roles: ["Software Engineer", "Systems Architect"],
-      completeness: 90,
+  // 1. Fetch live Candidate Profile from /api/profiles/:id or by email
+  let profile: BackendProfile | null = null;
+  let resolvedId = candidateId;
+
+  const isSeedAnanya = candidateId === "3a000000-0000-4000-8000-000000000001";
+  const userEmail = candidateFallback?.email;
+
+  // Try direct lookup by candidateId if it's not the seed Ananya, OR if the candidateFallback is explicitly Ananya
+  if (candidateId && (!isSeedAnanya || !userEmail || userEmail === "ananya.rao@example.com")) {
+    try {
+      const profileRes = await apiClient.get<BackendProfile>(
+        `/profiles/${encodeURIComponent(candidateId)}`,
+      );
+      if (profileRes.data && profileRes.data.id) {
+        profile = profileRes.data;
+        resolvedId = profile.id;
+      }
+    } catch {
+      // not found by id
+    }
+  }
+
+  // If not found by candidateId, try finding by candidateFallback.email
+  if (!profile && userEmail) {
+    try {
+      const listRes = await apiClient.get<{ items: Array<{ id: string; email: string }> }>(
+        "/profiles",
+        { params: { email: userEmail, limit: 1 } },
+      );
+      const matched = listRes.data?.items?.[0];
+      if (matched?.id) {
+        resolvedId = matched.id;
+        const profileRes = await apiClient.get<BackendProfile>(
+          `/profiles/${encodeURIComponent(resolvedId)}`,
+        );
+        if (profileRes.data) {
+          profile = profileRes.data;
+        }
+      }
+    } catch {
+      // not found by email
+    }
+  }
+
+  // If candidate has no parsed resume or profile in the database:
+  const hasProfile = Boolean(
+    profile &&
+    profile.id &&
+    ((profile.skill_levels && Object.keys(profile.skill_levels).length > 0) ||
+      ((profile as any).skills && (profile as any).skills.length > 0))
+  );
+
+  if (!hasProfile) {
+    return {
+      hasData: false,
+      candidateId: resolvedId || candidateId,
+      candidateName: candidateFallback?.name || profile?.name || "Candidate",
+      email: candidateFallback?.email || profile?.email || "",
+      education: candidateFallback?.role || profile?.education || "Campus Candidate",
+      preferredRoles: profile?.preferred_roles || [],
+      completeness: 0,
+      tier1ReadinessPercent: 0,
+      readinessScore: 0,
+      readinessRange: { low: 0, high: 0 },
+      levelsCovered: 0,
+      levelsNeeded: 0,
+      categoriesMet: 0,
+      targetCompany: {
+        id: targetCompanyId,
+        name: "Google LLC",
+        verdict: "not_uploaded",
+        explanation: "Upload your resume to calculate your AST placement readiness.",
+        blockingGaps: [],
+      },
+      skills: [],
+      studyPlan: {
+        totalHours: 0,
+        totalSteps: 0,
+        summary: "No study plan available. Upload your resume to generate a personalized roadmap.",
+        steps: [],
+      },
+      topMatches: [],
+      verifiedAt: new Date().toISOString(),
     };
   }
 
@@ -175,7 +248,7 @@ export const getDashboardSummaryAPI = async (
   let rankRows: BackendRankRow[] = [];
   try {
     const rankRes = await apiClient.get<BackendRankRow[]>("/talent-check/rank", {
-      params: { profile_id: candidateId, limit: 5 },
+      params: { profile_id: resolvedId, limit: 5 },
     });
     rankRows = rankRes.data || [];
   } catch (err) {
@@ -186,63 +259,58 @@ export const getDashboardSummaryAPI = async (
   let tc: BackendTalentCheckResult;
   try {
     const tcRes = await apiClient.post<BackendTalentCheckResult>("/talent-check", {
-      profile_id: candidateId,
+      profile_id: resolvedId,
       company_id: targetCompanyId,
     });
     tc = tcRes.data;
   } catch {
-    // Fallback if microservice takes longer than wait timeout
+    // Deterministic fallback derived from candidate's real skill_levels
+    const userLevels = (profile?.skill_levels || {}) as Record<string, any>;
+    let covered = 0;
+    const skillset_gap = Object.keys(RADIX_CATEGORY_META).map((code) => {
+      const entry = userLevels[code];
+      const lvl = typeof entry === "number" ? entry : (entry?.level || 0);
+      covered += lvl;
+      return {
+        category_code: code,
+        required_level: 6,
+        candidate_level: lvl,
+        gap: lvl < 6,
+        shortfall: Math.max(0, 6 - lvl),
+        required_bloom: "EV",
+        candidate_bloom: lvl >= 7 ? "CR" : lvl >= 5 ? "EV" : lvl >= 3 ? "AP" : "CU",
+        weight: 0.083,
+        blocking: lvl < 4,
+        next_topics: [{ level: lvl + 1, topics: `Advance ${RADIX_CATEGORY_META[code]?.name || code} proficiency` }],
+      };
+    });
+
+    const calculatedScore = Math.min(100, Math.round((covered / 72) * 100));
+
     tc = {
       company: "Google LLC",
-      company_id: 4,
-      readiness_score: 62,
-      verdict: "almost",
-      top_gaps: ["CLOUD", "NETW", "SQL", "AI", "APTI"],
-      explanation: `${profile.name || "Candidate"} covers 52 of 84 skill levels Google LLC expects above the baseline.`,
-      readiness_range: { low: 60, high: 64 },
-      blocking_gaps: ["CLOUD", "NETW", "SQL", "AI", "APTI"],
-      levels_covered: 52,
-      levels_needed: 84,
-      categories_met: 1,
-      skillset_gap: Object.keys(RADIX_CATEGORY_META).map((code) => ({
-        category_code: code,
-        required_level: 8,
-        candidate_level: 6,
-        gap: code !== "SYSD",
-        shortfall: code === "SYSD" ? 0 : 2,
-        required_bloom: "EV",
-        candidate_bloom: "AS",
-        weight: 0.083,
-        blocking: ["CLOUD", "NETW", "SQL"].includes(code),
-        next_topics: [{ level: 7, topics: "Core system optimization and architecture" }],
-      })),
+      company_id: targetCompanyId,
+      readiness_score: calculatedScore,
+      verdict: calculatedScore >= 75 ? "ready" : calculatedScore >= 50 ? "almost" : "not_yet",
+      top_gaps: skillset_gap.filter((g) => g.gap).map((g) => g.category_code).slice(0, 4),
+      explanation: `${profile?.name || "Candidate"} covers ${covered} skill levels across 12 categories.`,
+      readiness_range: { low: Math.max(0, calculatedScore - 2), high: Math.min(100, calculatedScore + 2) },
+      blocking_gaps: skillset_gap.filter((g) => g.blocking).map((g) => g.category_code),
+      levels_covered: covered,
+      levels_needed: 72,
+      categories_met: skillset_gap.filter((g) => !g.gap).length,
+      skillset_gap,
       study_plan: {
-        total_steps: 12,
-        total_hours: 192,
-        summary: "12 level steps, about 192 h (~6 weeks at 30 h/week) to reach Ready",
-        steps: [
-          {
-            category_code: "CLOUD",
-            from_level: 5,
-            to_level: 8,
-            hours: 52,
-            topics: "Kubernetes fundamentals: Pods, Deployments, Services; Infrastructure as Code",
-          },
-          {
-            category_code: "SQL",
-            from_level: 4,
-            to_level: 6,
-            hours: 24,
-            topics: "Database normalization (1NF-3NF); Stored procedures basics; Window functions",
-          },
-          {
-            category_code: "APTI",
-            from_level: 6,
-            to_level: 8,
-            hours: 40,
-            topics: "Critical reasoning, statement-assumption, argument evaluation",
-          },
-        ],
+        total_steps: skillset_gap.filter((g) => g.gap).length,
+        total_hours: skillset_gap.filter((g) => g.gap).reduce((acc, g) => acc + g.shortfall * 12, 0),
+        summary: "Targeted skill enhancement roadmap based on current profile.",
+        steps: skillset_gap.filter((g) => g.gap).map((g) => ({
+          category_code: g.category_code,
+          from_level: g.candidate_level,
+          to_level: g.required_level,
+          hours: g.shortfall * 12,
+          topics: `Enhance proficiency in ${RADIX_CATEGORY_META[g.category_code]?.name || g.category_code}`,
+        })),
       },
     };
   }
@@ -305,18 +373,19 @@ export const getDashboardSummaryAPI = async (
   const readinessScore = tc.readiness_score;
 
   return {
-    candidateId,
-    candidateName: profile.name || "Candidate",
-    email: profile.email || "",
-    education: profile.education || "B.Tech CSE '26",
-    preferredRoles: profile.preferred_roles || ["Software Engineer"],
-    completeness: profile.completeness ?? 90,
+    hasData: true,
+    candidateId: resolvedId || candidateId,
+    candidateName: profile?.name || candidateFallback?.name || "Candidate",
+    email: profile?.email || candidateFallback?.email || "",
+    education: profile?.education || candidateFallback?.role || "Campus Candidate",
+    preferredRoles: profile?.preferred_roles || ["Software Engineer"],
+    completeness: profile?.completeness ?? Math.min(100, Math.round((skills.filter((s) => s.candidateLevel > 0).length / 12) * 100)),
     tier1ReadinessPercent: readinessScore,
     readinessScore,
-    readinessRange: tc.readiness_range || { low: readinessScore - 2, high: readinessScore + 2 },
-    levelsCovered: tc.levels_covered ?? 52,
-    levelsNeeded: tc.levels_needed ?? 84,
-    categoriesMet: tc.categories_met ?? 1,
+    readinessRange: tc.readiness_range || { low: Math.max(0, readinessScore - 2), high: Math.min(100, readinessScore + 2) },
+    levelsCovered: tc.levels_covered ?? 0,
+    levelsNeeded: tc.levels_needed ?? 72,
+    categoriesMet: tc.categories_met ?? 0,
     targetCompany: {
       id: tc.company_id,
       name: tc.company,
@@ -331,7 +400,7 @@ export const getDashboardSummaryAPI = async (
       summary: tc.study_plan?.summary || "",
       steps: studySteps,
     },
-    topMatches: topMatches.length > 0 ? topMatches : getDefaultMatches(),
+    topMatches: topMatches,
     verifiedAt: new Date().toISOString(),
   };
 };

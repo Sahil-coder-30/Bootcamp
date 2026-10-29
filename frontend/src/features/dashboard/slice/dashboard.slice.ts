@@ -12,6 +12,8 @@ export interface DashboardState {
   targetCompanyId: number;
   loading: boolean;
   error: string | null;
+  isJDModalOpen: boolean;
+  isATSModalOpen: boolean;
 }
 
 const initialState: DashboardState = {
@@ -24,6 +26,8 @@ const initialState: DashboardState = {
   targetCompanyId: 4,
   loading: false,
   error: null,
+  isJDModalOpen: false,
+  isATSModalOpen: false,
 };
 
 export const dashboardSlice = createSlice({
@@ -66,6 +70,12 @@ export const dashboardSlice = createSlice({
     setDashboardError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
+    setJDModalOpen: (state, action: PayloadAction<boolean>) => {
+      state.isJDModalOpen = action.payload;
+    },
+    setATSModalOpen: (state, action: PayloadAction<boolean>) => {
+      state.isATSModalOpen = action.payload;
+    },
   },
 });
 
@@ -78,6 +88,8 @@ export const {
   toggleStudyStep,
   setDashboardLoading,
   setDashboardError,
+  setJDModalOpen,
+  setATSModalOpen,
 } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;

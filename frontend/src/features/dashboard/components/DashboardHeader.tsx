@@ -12,47 +12,18 @@ import {
   Check,
 } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
-import { getStoredUser, saveStoredUser, clearStoredUser, type CandidateUser } from "@/lib/auth";
+import { getStoredUser, clearStoredUser, type CandidateUser } from "@/lib/auth";
 import { clearSession } from "@/lib/authStorage";
 
-const CANDIDATES: CandidateUser[] = [
-  {
-    id: "3a000000-0000-4000-8000-000000000001",
-    name: "Ananya Rao",
-    role: "Systems & Cloud (Super Dream)",
-    avatarText: "AR",
-    email: "ananya.rao@example.com",
-  },
-  {
-    id: "3a000000-0000-4000-8000-000000000002",
-    name: "Karthik Subramaniam",
-    role: "Data Engineering & Analytics Focus",
-    avatarText: "KS",
-    email: "karthik.subramaniam@example.com",
-  },
-  {
-    id: "3a000000-0000-4000-8000-000000000004",
-    name: "Rohan Verma",
-    role: "Senior Full Stack & Systems",
-    avatarText: "RV",
-    email: "rohan.verma@example.com",
-  },
-  {
-    id: "3a000000-0000-4000-8000-000000000003",
-    name: "Priya Menon",
-    role: "Application Support Analyst",
-    avatarText: "PM",
-    email: "priya.menon@example.com",
-  },
-];
-
 interface DashboardHeaderProps {
+  currentUser?: CandidateUser | null | undefined;
   searchQuery: string;
   onSearchChange: (q: string) => void;
   onToggleMobileSidebar?: (() => void) | undefined;
 }
 
 export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
+  currentUser: propUser,
   searchQuery,
   onSearchChange,
   onToggleMobileSidebar,
@@ -62,9 +33,9 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const currentUser = getStoredUser();
-  const avatarText = currentUser?.avatarText || "AR";
-  const candidateName = currentUser?.name || "Ananya Rao";
+  const currentUser = propUser ?? getStoredUser();
+  const candidateName = currentUser?.name || currentUser?.email?.split("@")[0] || "Candidate";
+  const avatarText = currentUser?.avatarText || (candidateName[0] || "C").toUpperCase();
 
   // Global hotkey: Ctrl+K or '/' to focus search
   useEffect(() => {
@@ -91,11 +62,6 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  const handleSelectCandidate = (candidate: CandidateUser) => {
-    saveStoredUser(candidate);
-    setUserDropdownOpen(false);
-  };
 
   const handleLogout = () => {
     clearStoredUser();
@@ -198,38 +164,21 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           {/* Dropdown Candidate Picker */}
           {userDropdownOpen && (
             <div className="absolute right-0 mt-2 w-64 rounded-2xl border border-border bg-card p-2 shadow-xl z-50 animate-in fade-in-50 zoom-in-95">
-              <div className="px-3 py-2 border-b border-border text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
-                Switch Candidate Profile
-              </div>
+              {currentUser && (
+                <div className="p-2.5 border-b border-border bg-card-sub rounded-xl mb-1.5">
+                  <div className="flex items-center gap-2.5">
+                    <div className="h-7 w-7 rounded-lg bg-primary/20 text-primary flex items-center justify-center text-xs font-bold font-mono">
+                      {avatarText}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold text-foreground truncate">{candidateName}</p>
+                      <p className="text-[10px] text-muted-foreground truncate">{currentUser.email || currentUser.role}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
-              <div className="mt-1 space-y-1">
-                {CANDIDATES.map((cand) => {
-                  const isCurrent =
-                    (currentUser?.id || "3a000000-0000-4000-8000-000000000001") === cand.id;
-                  return (
-                    <button
-                      key={cand.id}
-                      onClick={() => handleSelectCandidate(cand)}
-                      className="w-full flex items-center justify-between p-2 rounded-xl text-left text-xs transition-colors hover:bg-muted cursor-pointer"
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <div className="h-7 w-7 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center text-[10px] font-bold text-primary">
-                          {cand.avatarText}
-                        </div>
-                        <div>
-                          <div className="font-semibold text-foreground">{cand.name}</div>
-                          <div className="text-[10px] text-muted-foreground truncate max-w-[130px]">
-                            {cand.role}
-                          </div>
-                        </div>
-                      </div>
-                      {isCurrent && <Check className="h-4 w-4 text-primary" />}
-                    </button>
-                  );
-                })}
-              </div>
-
-              <div className="mt-2 pt-2 border-t border-border">
+              <div className="pt-1">
                 <button
                   onClick={handleLogout}
                   className="w-full flex items-center gap-2 p-2 rounded-xl text-left text-xs text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"

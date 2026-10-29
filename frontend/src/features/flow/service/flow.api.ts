@@ -21,7 +21,19 @@ export interface FlowProfile {
   };
 }
 
-export async function saveFlowProfileAPI(extraction: ResumeExtraction): Promise<FlowProfile> {
-  const { data } = await apiClient.post<FlowProfile>("/flow/profile", { extraction });
+export async function saveFlowProfileAPI(
+  extraction: ResumeExtraction,
+  meta?: {
+    email?: string | undefined;
+    userId?: string | undefined;
+    profileId?: string | undefined;
+  },
+): Promise<FlowProfile> {
+  const { data } = await apiClient.post<FlowProfile>("/flow/profile", {
+    extraction,
+    email: meta?.email,
+    user_id: meta?.userId,
+    profile_id: meta?.profileId,
+  });
   return data;
 }

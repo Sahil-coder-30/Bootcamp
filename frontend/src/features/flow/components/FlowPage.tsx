@@ -11,12 +11,7 @@ import { Button } from "@/components/ui/button";
 import { useCompanies } from "@/features/companies/Hooks/companies.hooks";
 import { useFlow } from "../Hooks/flow.hooks";
 
-const SAMPLES = [
-  { key: "ananya", label: "Ananya (SWE)" },
-  { key: "karthik", label: "Karthik (Data)" },
-  { key: "priya", label: "Priya (Support)" },
-  { key: "rohan", label: "Rohan (All-rounder)" },
-];
+
 
 function Step({
   n,
@@ -140,7 +135,7 @@ export const FlowPage: React.FC = () => {
           </p>
         ) : (
           <p className="text-muted-foreground">
-            Upload a resume (levels are inferred) or use a sample candidate.
+            Upload a resume to automatically infer levels and build your profile.
           </p>
         )}
         <input
@@ -160,17 +155,6 @@ export const FlowPage: React.FC = () => {
             {flow.busy === "resume" && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Upload resume
           </Button>
-          {SAMPLES.map((s) => (
-            <Button
-              key={s.key}
-              size="sm"
-              variant="secondary"
-              disabled={flow.busy === "resume"}
-              onClick={() => void flow.useSample(s.key)}
-            >
-              {s.label}
-            </Button>
-          ))}
         </div>
       </Step>
 

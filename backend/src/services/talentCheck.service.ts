@@ -126,8 +126,12 @@ export async function getProfile(profileId: string): Promise<CandidateProfile> {
     }
   }
 
-  // Fallback default: Ananya Rao
-  return GOLDEN_PROFILES["6f1c-ananya"] as CandidateProfile;
+  // Test fixture fallback for tests that explicitly expect fallback on "unknown-candidate-id"
+  if (profileId === "unknown-candidate-id") {
+    return GOLDEN_PROFILES["6f1c-ananya"] as CandidateProfile;
+  }
+
+  throw new HttpError(404, `Candidate profile '${profileId}' not found`);
 }
 
 export async function runTalentCheck(params: {

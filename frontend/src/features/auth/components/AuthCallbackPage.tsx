@@ -22,7 +22,7 @@ export default function AuthCallbackPage() {
       return;
     }
     void completeSignIn(accessToken, refreshToken).then((ok) => {
-      if (ok) void navigate({ to: safeRedirect(params.get("redirect") ?? undefined) });
+      if (ok) void navigate({ to: safeRedirect(params.get("redirect") ?? undefined, "/dashboard") });
       else void navigate({ to: "/login", search: { error: "Sign-in failed, please try again" } });
     });
   }, [completeSignIn, navigate]);

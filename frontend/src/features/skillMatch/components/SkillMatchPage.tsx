@@ -7,10 +7,10 @@ import { HowComputedDrawer } from "./HowComputedDrawer";
 import { MatchMatrix } from "./MatchMatrix";
 
 const CANDIDATES = [
-  { id: "6f1c-ananya", name: "Ananya Rao" },
-  { id: "6f1c-karthik", name: "Karthik" },
-  { id: "6f1c-priya", name: "Priya" },
-  { id: "6f1c-rohan", name: "Rohan" },
+  { id: "6f1c-ananya", name: "Systems / SWE Profile" },
+  { id: "6f1c-karthik", name: "Data Engineering Profile" },
+  { id: "6f1c-priya", name: "Support Analyst Profile" },
+  { id: "6f1c-rohan", name: "Full-Stack Generalist Profile" },
 ];
 
 const JOB_POSTINGS = [

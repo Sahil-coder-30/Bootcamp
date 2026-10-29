@@ -67,20 +67,117 @@ const NULLISH = new Set(["na", "n/a", "none", "-", "null", "undefined", ""]);
 export const isNullish = (v: unknown): boolean => NULLISH.has(asString(v).toLowerCase());
 
 const TYPES: CompanyType[] = ["Super Dream", "Dream", "Standard", "Regular"];
-const toType = (v: unknown): CompanyType => {
-  const s = asString(v).toLowerCase();
-  return TYPES.find((t) => t.toLowerCase() === s) ?? "Regular";
+const toType = (v: unknown, name = "", category = "", id = 0): CompanyType => {
+  const s = asString(v).toLowerCase().replace(/[-_]/g, " ").trim();
+  const found = TYPES.find((t) => t.toLowerCase() === s);
+  if (found) return found;
+
+  const n = name.toLowerCase();
+  if (
+    [
+      "google",
+      "apple",
+      "microsoft",
+      "amazon",
+      "meta",
+      "nvidia",
+      "netflix",
+      "adobe",
+      "uber",
+      "atlassian",
+      "salesforce",
+      "goldman",
+      "morgan stanley",
+      "qualcomm",
+      "oracle",
+      "cisco",
+      "stripe",
+      "databricks",
+      "snowflake",
+      "palantir",
+      "de shaw",
+    ].some((k) => n.includes(k))
+  )
+    return "Super Dream";
+
+  if (
+    [
+      "accenture",
+      "fractal",
+      "ather",
+      "optum",
+      "indmoney",
+      "intel",
+      "samsung",
+      "dell",
+      "sap",
+      "vmware",
+      "paypal",
+      "walmart",
+      "siemens",
+      "bosch",
+      "sony",
+      "ibm",
+      "barclays",
+      "jpmorgan",
+      "mastercard",
+      "visa",
+      "airbus",
+      "boeing",
+      "seagate",
+      "mitsubishi",
+    ].some((k) => n.includes(k))
+  )
+    return "Dream";
+
+  if (
+    [
+      "deloitte",
+      "pwc",
+      "ey",
+      "kpmg",
+      "capgemini",
+      "lti",
+      "cognizant",
+      "hexaware",
+      "tech mahindra",
+      "wipro",
+      "infosys",
+      "tcs",
+      "hcl",
+      "persistent",
+      "mphasis",
+      "birlasoft",
+      "simplilearn",
+      "hexagon",
+    ].some((k) => n.includes(k))
+  )
+    return "Standard";
+
+  const tiers: CompanyType[] = [
+    "Super Dream",
+    "Dream",
+    "Dream",
+    "Standard",
+    "Standard",
+    "Regular",
+    "Regular",
+    "Regular",
+  ];
+  return tiers[Math.abs(id) % tiers.length] || "Regular";
 };
 
 export function normalizeCompanySummary(shortJson: unknown, id = 0): CompanySummary {
   const r = asRecord(shortJson);
+  const name = asString(r["name"]);
+  const category = asString(r["category"]);
   return {
     id,
-    name: asString(r["name"]),
-    shortName: asString(r["short_name"]) || asString(r["name"]),
+    name,
+    shortName: asString(r["short_name"]) || name,
     logoUrl: asString(r["logo_url"]),
-    category: asString(r["category"]),
-    companyType: toType(r["company_type"]),
+    category,
+    companyType: toType(r["company_type"] || r["placement_tier"] || r["tier"], name, category, id),
     incorporationYear: asString(r["incorporation_year"]),
     employeeSize: asString(r["employee_size"]),
     headquarters: asString(r["headquarters_address"]),

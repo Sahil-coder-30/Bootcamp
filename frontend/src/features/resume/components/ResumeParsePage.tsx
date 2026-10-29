@@ -40,25 +40,6 @@ export const ResumeParsePage: React.FC = () => {
     setDrawer,
   } = useResume();
 
-  const [compareKey, setCompareKey] = useState<string | null>(null);
-
-  // Auto-load Ananya on first arrival if empty, providing instant interactive experience
-  useEffect(() => {
-    if (!currentExtraction && status === "idle") {
-      loadSample("ananya");
-    }
-  }, [currentExtraction, status, loadSample]);
-
-  const handleCompareSelect = (candidateKey: string | null) => {
-    setCompareKey(candidateKey);
-    if (candidateKey) {
-      loadCompare(candidateKey);
-    } else {
-      // clear compare
-      loadCompare("");
-    }
-  };
-
   const handleSendToTalentCheck = () => {
     navigate({ to: "/talent-check" });
   };
@@ -155,13 +136,9 @@ export const ResumeParsePage: React.FC = () => {
           </div>
         )}
 
-        {/* Upload Dropzone & Sample Candidates */}
+        {/* Upload Dropzone */}
         <ResumeUploadCard
           onFileUpload={uploadAndParse}
-          onSelectSample={(key) => {
-            loadSample(key);
-            setCompareKey(null);
-          }}
           isLoading={isLoading}
           currentCandidateName={currentExtraction?.candidate?.name}
         />
@@ -174,8 +151,6 @@ export const ResumeParsePage: React.FC = () => {
               <div className="lg:col-span-5 space-y-6">
                 <SkillFingerprintRadar
                   primary={currentExtraction}
-                  compare={compareKey ? compareExtraction : null}
-                  onSelectCompare={handleCompareSelect}
                 />
 
                 {/* Instant Re-score / Recalculate Levels Box */}
@@ -226,10 +201,10 @@ export const ResumeParsePage: React.FC = () => {
           <div className="flex flex-col items-center justify-center rounded-2xl border border-border bg-card py-20 text-center">
             <Layers className="h-12 w-12 text-muted-foreground animate-pulse" />
             <h3 className="mt-4 text-lg font-semibold text-foreground">
-              Loading resume intelligence...
+              No Resume Uploaded Yet
             </h3>
             <p className="mt-1 text-xs text-muted-foreground">
-              Select one of the sample candidates or drop a PDF/DOCX file above.
+              Drop a candidate PDF/DOCX resume file above to extract skills and compute the 12-axis fingerprint.
             </p>
           </div>
         )}

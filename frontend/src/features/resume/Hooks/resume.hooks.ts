@@ -4,7 +4,12 @@
  */
 
 import { useCallback } from "react";
-import { useAppDispatch, useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector, store } from "@/store";
+import { saveFlowProfileAPI } from "@/features/flow/service/flow.api";
+import { getStoredUser, saveStoredUser } from "@/lib/auth";
+import { setAuthUser } from "@/features/auth/slice/auth.slice";
+import { updateMeAPI } from "@/features/auth/service/auth.api";
+import { clearDashboardCache } from "@/services/dbService";
 import {
   parseResumeAPI,
   getSampleResumeAPI,
@@ -79,6 +84,48 @@ export function useResume() {
             mime: file.type || "application/pdf",
           });
           dispatch(setResumeExtraction(result));
+
+          // Automatically persist parsed resume as a candidate profile in the DB
+          try {
+            const authUser = store.getState().auth.user;
+            const storedUser = getStoredUser();
+            const userEmail = authUser?.email || storedUser?.email;
+            const userId = authUser?.id;
+            const profileId =
+              authUser?.candidateProfileId ||
+              (storedUser?.id && storedUser.id !== "3a000000-0000-4000-8000-000000000001"
+                ? storedUser.id
+                : undefined);
+
+            const saved = await saveFlowProfileAPI(result, {
+              email: userEmail,
+              userId: userId,
+              profileId: profileId,
+            });
+
+            if (saved?.profile_id) {
+              if (storedUser) {
+                saveStoredUser({
+                  ...storedUser,
+                  id: saved.profile_id,
+                  name: saved.profile?.name || storedUser.name,
+                  email: saved.profile?.email || storedUser.email,
+                });
+              }
+              if (authUser) {
+                dispatch(
+                  setAuthUser({
+                    ...authUser,
+                    candidateProfileId: saved.profile_id,
+                  }),
+                );
+                void updateMeAPI({ candidateProfileId: saved.profile_id }).catch(() => {});
+              }
+              await clearDashboardCache();
+            }
+          } catch (saveErr) {
+            console.warn("[resume.hooks] Auto-save profile to DB notice:", saveErr);
+          }
         } catch (err) {
           dispatch(
             setResumeError(err instanceof Error ? err.message : "Failed to parse resume document"),
