@@ -3,7 +3,12 @@
 import type { ProfileValues } from "./schema";
 
 export type Step =
-  "start" | "basics" | "education" | "experience" | "achievements" | "skills" | "levels";
+  | "basics"
+  | "education"
+  | "experience"
+  | "achievements"
+  | "skills"
+  | "levels";
 
 export interface Hint {
   step: Step;
@@ -45,7 +50,7 @@ export function computeCompleteness(p: ProfileValues): { score: number; hints: H
     step: "basics",
     text: "Pick target roles so we can match JDs",
   });
-  award(Boolean(p.cv_file), 10, { step: "start", text: "Upload your CV" });
+  award(Boolean(p.cv_file), 10, { step: "basics", text: "Upload your CV" });
   const untouchedLow = Object.values(p.skill_levels).filter(
     (l) => l.confidence === "low" && l.source === "resume_inferred",
   ).length;

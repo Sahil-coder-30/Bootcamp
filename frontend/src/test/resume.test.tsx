@@ -1,10 +1,13 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { ResumeUploadCard } from "@/features/resume/components/ResumeUploadCard";
 import { SkillChips } from "@/features/resume/components/SkillChips";
 import { FormatInvarianceCard } from "@/features/resume/components/FormatInvarianceCard";
 import { HowWeGotThisDrawer } from "@/features/resume/components/HowWeGotThisDrawer";
+import { ResumeParsePage } from "@/features/resume/components/ResumeParsePage";
 import type { ResumeExtraction } from "@/features/resume/service/resume.api";
+import { makeStore, renderPage } from "./utils";
+import { setResumeExtraction } from "@/features/resume/slice/resume.slice";
 
 describe("Resume Parsing Feature Components", () => {
   const dummyExtraction: ResumeExtraction = {
@@ -122,6 +125,25 @@ describe("Resume Parsing Feature Components", () => {
     expect(screen.getByText(/Drop candidate resume here, or browse/i)).toBeInTheDocument();
   });
 
+  it("renders ResumeUploadCard with Next button when candidate is present and onNext is provided", () => {
+    const handleUpload = vi.fn();
+    const handleNext = vi.fn();
+
+    render(
+      <ResumeUploadCard
+        onFileUpload={handleUpload}
+        isLoading={false}
+        currentCandidateName="Sample Candidate"
+        onNext={handleNext}
+      />,
+    );
+
+    const nextButton = screen.getByRole("button", { name: /Next/i });
+    expect(nextButton).toBeInTheDocument();
+    fireEvent.click(nextButton);
+    expect(handleNext).toHaveBeenCalledTimes(1);
+  });
+
   it("renders SkillChips with evidence and category badges", () => {
     const handleClick = vi.fn();
 
@@ -167,5 +189,26 @@ describe("Resume Parsing Feature Components", () => {
     expect(screen.getByText(/142 ms/i)).toBeInTheDocument();
     expect(screen.getByText(/Two Column Gutter/i)).toBeInTheDocument();
     expect(screen.getByText(/96% grounded/i)).toBeInTheDocument();
+  });
+
+  it("renders Next button when parsing is done on ResumeParsePage and navigates to /profile", async () => {
+    const store = makeStore();
+    store.dispatch(setResumeExtraction(dummyExtraction));
+
+    const { router } = renderPage(ResumeParsePage, "/resume", store);
+
+    // Both top header, upload card and bottom action bar have Next buttons
+    await waitFor(() => {
+      const nextButtons = screen.getAllByRole("button", { name: /Next/i });
+      expect(nextButtons.length).toBeGreaterThan(0);
+    });
+
+    const nextButtons = screen.getAllByRole("button", { name: /Next/i });
+    if (nextButtons[0]) {
+      fireEvent.click(nextButtons[0]);
+    }
+    await waitFor(() => {
+      expect(router.state.location.pathname).toBe("/profile");
+    });
   });
 });

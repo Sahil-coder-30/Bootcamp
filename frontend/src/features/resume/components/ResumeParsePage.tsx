@@ -54,6 +54,10 @@ export const ResumeParsePage: React.FC = () => {
     navigate({ to: "/talent-check" });
   };
 
+  const handleGoToProfile = () => {
+    navigate({ to: "/profile" });
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-white">
       {/* Background ambient gradient glow */}
@@ -96,6 +100,12 @@ export const ResumeParsePage: React.FC = () => {
             >
               Talent Check
             </Link>
+            <Link
+              to="/profile"
+              className="rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground"
+            >
+              Profile
+            </Link>
           </div>
         </div>
 
@@ -128,9 +138,24 @@ export const ResumeParsePage: React.FC = () => {
               How We Got This
             </Button>
 
+            {currentExtraction && (
+              <Button
+                onClick={handleGoToProfile}
+                className="bg-primary text-primary-foreground font-semibold shadow-xs hover:bg-primary/90 cursor-pointer"
+              >
+                Next
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            )}
+
             <Button
+              variant={currentExtraction ? "outline" : "default"}
               onClick={handleSendToTalentCheck}
-              className="bg-primary text-primary-foreground font-semibold shadow-xs hover:bg-primary/90 cursor-pointer"
+              className={
+                currentExtraction
+                  ? "border-border bg-card text-foreground hover:bg-muted cursor-pointer"
+                  : "bg-primary text-primary-foreground font-semibold shadow-xs hover:bg-primary/90 cursor-pointer"
+              }
             >
               Evaluate in Talent Check
               <ArrowRight className="ml-2 h-4 w-4" />
@@ -152,6 +177,7 @@ export const ResumeParsePage: React.FC = () => {
           isLoading={isLoading}
           currentCandidateName={currentExtraction?.candidate?.name}
           onClear={reset}
+          onNext={handleGoToProfile}
           showSamples={false}
         />
 
@@ -203,6 +229,39 @@ export const ResumeParsePage: React.FC = () => {
                     setHighlight(skillName === highlightedSkill ? null : skillName)
                   }
                 />
+              </div>
+            </div>
+
+            {/* Bottom Next Step Action Bar */}
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border border-primary/20 bg-card p-5 shadow-xs">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                  <CheckCircle2 className="h-5 w-5" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-foreground">
+                    Parsing Complete · Profile Ready
+                  </h4>
+                  <p className="text-xs text-muted-foreground">
+                    Your resume has been parsed and synchronized with your candidate profile. Proceed to your profile to review all details.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+                <Button
+                  variant="outline"
+                  onClick={handleSendToTalentCheck}
+                  className="border-border bg-card text-foreground hover:bg-muted cursor-pointer text-xs"
+                >
+                  Evaluate in Talent Check
+                </Button>
+                <Button
+                  onClick={handleGoToProfile}
+                  className="bg-primary text-primary-foreground font-semibold shadow-xs hover:bg-primary/90 cursor-pointer text-xs"
+                >
+                  Next
+                  <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                </Button>
               </div>
             </div>
           </div>

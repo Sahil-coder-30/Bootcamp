@@ -1,5 +1,5 @@
 import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
-import { ArrowLeft, Users } from "lucide-react";
+import { ArrowLeft, UserCheck } from "lucide-react";
 import { APP_NAME } from "@/lib/college";
 import { requireSignIn } from "@/lib/requireSignIn";
 
@@ -23,12 +23,9 @@ function ProfileLayout() {
             <ArrowLeft className="h-3.5 w-3.5 text-muted-foreground" aria-hidden /> Back to Dashboard
           </Link>
           <div className="flex items-center gap-2">
-            <Link
-              to="/profile"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl border border-border bg-card text-foreground hover:bg-muted shadow-2xs"
-            >
-              <Users className="h-3.5 w-3.5 text-primary" aria-hidden /> Profiles
-            </Link>
+            <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl border border-border bg-card text-foreground shadow-2xs">
+              <UserCheck className="h-3.5 w-3.5 text-primary" aria-hidden /> Candidate Profile
+            </span>
           </div>
         </div>
       </header>

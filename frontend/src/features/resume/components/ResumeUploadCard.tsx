@@ -1,5 +1,14 @@
 import React, { useRef, useState } from "react";
-import { UploadCloud, FileText, Sparkles, ShieldCheck, CheckCircle2, Loader2, RefreshCw } from "lucide-react";
+import {
+  UploadCloud,
+  FileText,
+  Sparkles,
+  ShieldCheck,
+  CheckCircle2,
+  Loader2,
+  RefreshCw,
+  ArrowRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface ResumeUploadCardProps {
@@ -8,6 +17,7 @@ interface ResumeUploadCardProps {
   isLoading: boolean;
   currentCandidateName?: string | undefined;
   onClear?: () => void;
+  onNext?: () => void;
   showSamples?: boolean;
 }
 
@@ -17,6 +27,7 @@ export const ResumeUploadCard: React.FC<ResumeUploadCardProps> = ({
   isLoading,
   currentCandidateName,
   onClear,
+  onNext,
   showSamples = false,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -51,7 +62,7 @@ export const ResumeUploadCard: React.FC<ResumeUploadCardProps> = ({
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {currentCandidateName && onClear && (
             <Button
               variant="outline"
@@ -61,6 +72,17 @@ export const ResumeUploadCard: React.FC<ResumeUploadCardProps> = ({
             >
               <RefreshCw className="mr-1.5 h-3.5 w-3.5" />
               Upload Different Resume
+            </Button>
+          )}
+
+          {currentCandidateName && onNext && (
+            <Button
+              size="sm"
+              onClick={onNext}
+              className="text-xs bg-primary text-primary-foreground font-semibold shadow-xs hover:bg-primary/90 cursor-pointer"
+            >
+              Next
+              <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
             </Button>
           )}
 
@@ -107,7 +129,11 @@ export const ResumeUploadCard: React.FC<ResumeUploadCardProps> = ({
           <h4 className="mt-3 font-semibold text-sm text-foreground">
             {isLoading ? "Analyzing Resume Structure..." : "Drop candidate resume here, or browse"}
           </h4>
-          <p className="mt-1 text-xs text-muted-foreground">Supports PDF &amp; DOCX (Max 10MB)</p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {currentCandidateName
+              ? `Parsed for ${currentCandidateName} · Drop a new file to replace (PDF & DOCX, Max 10MB)`
+              : "Supports PDF & DOCX (Max 10MB)"}
+          </p>
         </div>
       </div>
     </div>
