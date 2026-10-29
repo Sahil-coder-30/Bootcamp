@@ -35,7 +35,9 @@ export const HowComputedDrawer: React.FC<Props> = ({ meta, isOpen, onClose }) =>
             </div>
             <div>
               <span className="text-zinc-500 block">LLM Calls</span>
-              <span className="font-mono text-zinc-200">{meta.llm_calls} (evaluating {meta.llm_pairs} pairs)</span>
+              <span className="font-mono text-zinc-200">
+                {meta.llm_calls} (evaluating {meta.llm_pairs} pairs)
+              </span>
             </div>
             <div>
               <span className="text-zinc-500 block">Compute Latency</span>
@@ -79,4 +81,3 @@ export const HowComputedDrawer: React.FC<Props> = ({ meta, isOpen, onClose }) =>
     </div>
   );
 };
-

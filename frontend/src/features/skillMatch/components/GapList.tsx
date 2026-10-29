@@ -42,7 +42,9 @@ export const GapList: React.FC<Props> = ({ missingSkills }) => {
           {item.closest_candidate_skill && (
             <p className="text-xs text-emerald-400/90 flex items-center gap-1.5">
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              You have <span className="font-semibold text-emerald-300">{item.closest_candidate_skill}</span>; {item.skill_name} is the natural next step.
+              You have{" "}
+              <span className="font-semibold text-emerald-300">{item.closest_candidate_skill}</span>
+              ; {item.skill_name} is the natural next step.
             </p>
           )}
 
@@ -108,4 +110,3 @@ export const GapList: React.FC<Props> = ({ missingSkills }) => {
     </div>
   );
 };
-

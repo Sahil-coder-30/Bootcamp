@@ -28,6 +28,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCompany } from "@/features/companies/Hooks/companies.hooks";
 import { useCompanies } from "../Hooks/companies.hooks";
+import { useAuth } from "@/features/auth/Hooks/auth.hooks";
 import { isNullish, type CompanySummary, type CompanyType } from "@/lib/companyData";
 import { APP_NAME, COLLEGE_NAME, COLLEGE_SHORT, PORTAL_TITLE } from "@/lib/college";
 import { cn } from "@/lib/utils";
@@ -53,8 +54,7 @@ const TYPE_DOTS: Record<CompanyType, string> = {
 
 const ACTIVE_STYLES: Record<string, string> = {
   All: "bg-[#1e1b18] dark:bg-primary text-white border-transparent shadow-sm font-semibold",
-  "Super Dream":
-    "bg-primary text-white border-transparent shadow-sm font-semibold",
+  "Super Dream": "bg-primary text-white border-transparent shadow-sm font-semibold",
   Dream: "bg-primary text-white border-transparent shadow-sm font-semibold",
   Standard: "bg-emerald-600 text-white border-transparent shadow-sm font-semibold",
   Regular: "bg-amber-600 text-white border-transparent shadow-sm font-semibold",
@@ -124,7 +124,9 @@ const CompanyCard = memo(function CompanyCard({
           <h3 className="font-heading text-lg font-bold leading-snug tracking-tight text-[#384959] dark:text-foreground transition-colors duration-200 group-hover:text-primary">
             {company.name}
           </h3>
-          <p className="text-xs font-medium text-[#6A89A7] dark:text-muted-foreground">{company.shortName}</p>
+          <p className="text-xs font-medium text-[#6A89A7] dark:text-muted-foreground">
+            {company.shortName}
+          </p>
         </div>
 
         {/* Key Metrics Capsule */}
@@ -174,6 +176,8 @@ const CompanyCard = memo(function CompanyCard({
 export default function CompanyPickerPage() {
   const navigate = useNavigate();
   const { selectCompany } = useCompany();
+  const { user: currentUser, signOut } = useAuth();
+  const handleLogout = () => void signOut();
   const [query, setQuery] = useState("");
   const [debounced, setDebounced] = useState("");
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("All");
@@ -284,13 +288,17 @@ export default function CompanyPickerPage() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
             </span>
-            <span className="font-semibold text-[#384959] dark:text-foreground">{COLLEGE_SHORT}</span>
+            <span className="font-semibold text-[#384959] dark:text-foreground">
+              {COLLEGE_SHORT}
+            </span>
             <span className="hidden sm:inline">·</span>
             <span className="hidden sm:inline text-[#6A89A7] dark:text-muted-foreground">
               Department of Training & Placement
             </span>
             <span className="hidden md:inline">·</span>
-            <span className="hidden md:inline text-[#6A89A7] dark:text-muted-foreground">Autonomous Institute</span>
+            <span className="hidden md:inline text-[#6A89A7] dark:text-muted-foreground">
+              Autonomous Institute
+            </span>
           </div>
 
           <div className="flex items-center gap-3">
@@ -327,7 +335,9 @@ export default function CompanyPickerPage() {
                   CAMPUS PRO
                 </span>
               </div>
-              <p className="text-[11px] text-[#6A89A7] dark:text-muted-foreground">JSSATEN Placement Intelligence Hub</p>
+              <p className="text-[11px] text-[#6A89A7] dark:text-muted-foreground">
+                JSSATEN Placement Intelligence Hub
+              </p>
             </div>
           </Link>
 

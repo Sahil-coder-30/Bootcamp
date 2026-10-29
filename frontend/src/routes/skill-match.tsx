@@ -4,4 +4,3 @@ import { SkillMatchPage } from "@/features/skillMatch/components/SkillMatchPage"
 export const Route = createFileRoute("/skill-match")({
   component: SkillMatchPage,
 });
-

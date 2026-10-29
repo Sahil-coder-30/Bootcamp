@@ -16,20 +16,16 @@ const CANDIDATES = [
 const JOB_POSTINGS = [
   { id: "b2f4-google-swe", company: "Google LLC", role: "Software Engineer" },
   { id: "c3a1-msft-data", company: "Microsoft Corporation", role: "Data Analyst" },
-  { id: "d4e2-oracle-fss", company: "Oracle Financial Services", role: "Application Support Analyst" },
+  {
+    id: "d4e2-oracle-fss",
+    company: "Oracle Financial Services",
+    role: "Application Support Analyst",
+  },
 ];
 
 export const SkillMatchPage: React.FC = () => {
-  const {
-    profileId,
-    jdId,
-    result,
-    isLoading,
-    error,
-    fetchMatch,
-    selectProfile,
-    selectJd,
-  } = useSkillMatch();
+  const { profileId, jdId, result, isLoading, error, fetchMatch, selectProfile, selectJd } =
+    useSkillMatch();
 
   const { matrix, isLoading: matrixLoading } = useSkillMatchMatrix();
   const [activeTab, setActiveTab] = useState<"gaps" | "links" | "matrix">("gaps");
@@ -49,14 +45,17 @@ export const SkillMatchPage: React.FC = () => {
             </span>
           </div>
           <p className="text-sm text-zinc-400 mt-1">
-            Prioritizes missing skill counterfactuals first, backed by a deterministic 7-stage cascade.
+            Prioritizes missing skill counterfactuals first, backed by a deterministic 7-stage
+            cascade.
           </p>
         </div>
 
         {/* Selectors */}
         <div className="flex flex-wrap items-center gap-3">
           <div>
-            <label className="block text-[11px] font-medium text-zinc-400 mb-1">Candidate Profile</label>
+            <label className="block text-[11px] font-medium text-zinc-400 mb-1">
+              Candidate Profile
+            </label>
             <select
               value={profileId}
               onChange={(e) => selectProfile(e.target.value)}
@@ -71,7 +70,9 @@ export const SkillMatchPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-zinc-400 mb-1">Target Job Posting</label>
+            <label className="block text-[11px] font-medium text-zinc-400 mb-1">
+              Target Job Posting
+            </label>
             <select
               value={jdId}
               onChange={(e) => selectJd(e.target.value)}
@@ -184,4 +185,3 @@ export const SkillMatchPage: React.FC = () => {
     </div>
   );
 };
-

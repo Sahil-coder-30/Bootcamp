@@ -4,11 +4,7 @@
  */
 
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type {
-  MatchMethod,
-  SkillMatchMatrix,
-  SkillMatchResult,
-} from "../service/skillMatch.api";
+import type { MatchMethod, SkillMatchMatrix, SkillMatchResult } from "../service/skillMatch.api";
 
 export interface SkillMatchState {
   byKey: Record<string, SkillMatchResult>; // key `${profileId}:${jdId}`
@@ -50,10 +46,7 @@ export const skillMatchSlice = createSlice({
         state.error = null;
       }
     },
-    setMatchResult: (
-      state,
-      action: PayloadAction<{ key: string; result: SkillMatchResult }>
-    ) => {
+    setMatchResult: (state, action: PayloadAction<{ key: string; result: SkillMatchResult }>) => {
       state.byKey[action.payload.key] = action.payload.result;
       state.loadingKey = null;
       state.error = null;
@@ -115,4 +108,3 @@ export const {
 } = skillMatchSlice.actions;
 
 export default skillMatchSlice.reducer;
-

@@ -48,10 +48,12 @@ export function useSkillMatch(profileId?: string, jdId?: string, autoFetch: bool
         });
         dispatch(setMatchResult({ key: matchKey, result: data }));
       } catch (err: any) {
-        dispatch(setMatchError(err?.response?.data?.error || err.message || "Failed to load skill match"));
+        dispatch(
+          setMatchError(err?.response?.data?.error || err.message || "Failed to load skill match"),
+        );
       }
     },
-    [currentProfileId, currentJdId, matchKey, dispatch]
+    [currentProfileId, currentJdId, matchKey, dispatch],
   );
 
   useEffect(() => {
@@ -88,10 +90,14 @@ export function useSkillMatchMatrix(autoFetch: boolean = true) {
         const data = await getSkillMatchMatrixAPI({ refresh });
         dispatch(setMatrix(data));
       } catch (err: any) {
-        dispatch(setMatrixError(err?.response?.data?.error || err.message || "Failed to load match matrix"));
+        dispatch(
+          setMatrixError(
+            err?.response?.data?.error || err.message || "Failed to load match matrix",
+          ),
+        );
       }
     },
-    [dispatch]
+    [dispatch],
   );
 
   useEffect(() => {
@@ -143,4 +149,3 @@ export function useSkillMatchUI() {
     toggleFilter,
   };
 }
-

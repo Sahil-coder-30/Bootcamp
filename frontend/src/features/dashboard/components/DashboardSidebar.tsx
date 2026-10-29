@@ -38,9 +38,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
   };
 
   const displayName = currentUser?.name || "Ananya Rao";
-  const displayName = currentUser?.name || "Ananya Rao";
   const displayRole = currentUser?.role || "B.Tech CSE '26";
-  const avatarText = currentUser?.avatarText || "AR";
   const avatarText = currentUser?.avatarText || "AR";
 
   return (
@@ -65,7 +63,6 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
               </span>
             </div>
             <p className="text-[11px] text-muted-foreground truncate">
-            <p className="text-[11px] text-muted-foreground truncate">
               {COLLEGE_SHORT} Placement Hub
             </p>
           </div>
@@ -88,7 +85,10 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             )}
           >
             <LayoutDashboard
-              className={cn("h-4 w-4", activeItem === "dashboard" ? "text-primary" : "text-muted-foreground")}
+              className={cn(
+                "h-4 w-4",
+                activeItem === "dashboard" ? "text-primary" : "text-muted-foreground",
+              )}
             />
             <span>Dashboard</span>
           </Link>
@@ -104,7 +104,10 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             )}
           >
             <FileText
-              className={cn("h-4 w-4", activeItem === "resume" ? "text-primary" : "text-muted-foreground")}
+              className={cn(
+                "h-4 w-4",
+                activeItem === "resume" ? "text-primary" : "text-muted-foreground",
+              )}
             />
             <span>Resume Parsing</span>
             <span className="ml-auto text-[10px] font-mono rounded-full bg-muted border border-border px-2 py-0.5 text-muted-foreground font-semibold">
@@ -136,7 +139,10 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             )}
           >
             <ShieldCheck
-              className={cn("h-4 w-4", activeItem === "talent-check" ? "text-primary" : "text-muted-foreground")}
+              className={cn(
+                "h-4 w-4",
+                activeItem === "talent-check" ? "text-primary" : "text-muted-foreground",
+              )}
             />
             <span>Talent Check</span>
           </Link>
@@ -169,7 +175,10 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             )}
           >
             <GraduationCap
-              className={cn("h-4 w-4", activeItem === "skills" ? "text-primary" : "text-muted-foreground")}
+              className={cn(
+                "h-4 w-4",
+                activeItem === "skills" ? "text-primary" : "text-muted-foreground",
+              )}
             />
             <span>Skill Matching</span>
           </Link>
@@ -211,7 +220,10 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             )}
           >
             <Building2
-              className={cn("h-4 w-4", activeItem === "companies" ? "text-primary" : "text-muted-foreground")}
+              className={cn(
+                "h-4 w-4",
+                activeItem === "companies" ? "text-primary" : "text-muted-foreground",
+              )}
             />
             <span>118 Company Data</span>
             <span className="ml-auto text-[10px] font-mono rounded-full bg-muted border border-border px-2 py-0.5 text-muted-foreground font-semibold">
@@ -229,12 +241,8 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
               {avatarText}
             </div>
             <div className="truncate text-left">
-              <p className="font-bold text-xs text-foreground truncate">
-                {displayName}
-              </p>
-              <p className="text-[10px] text-muted-foreground truncate">
-                {displayRole}
-              </p>
+              <p className="font-bold text-xs text-foreground truncate">{displayName}</p>
+              <p className="text-[10px] text-muted-foreground truncate">{displayRole}</p>
             </div>
           </div>
 

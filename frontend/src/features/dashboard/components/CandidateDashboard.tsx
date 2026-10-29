@@ -193,7 +193,9 @@ export const CandidateDashboard: React.FC = () => {
                   Tier-1 Readiness
                 </p>
                 <p className="text-xs font-bold text-foreground">Ready for 74% Bars</p>
-                <p className="text-[10px] text-muted-foreground font-medium">Target: 30+ LPA Cohort</p>
+                <p className="text-[10px] text-muted-foreground font-medium">
+                  Target: 30+ LPA Cohort
+                </p>
               </div>
             </div>
           </div>
@@ -221,9 +223,7 @@ export const CandidateDashboard: React.FC = () => {
                   <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
                   Audited via AST Evaluation
                 </span>
-                <span className="font-mono text-[11px] font-medium text-primary">
-                  +0.6 vs L3
-                </span>
+                <span className="font-mono text-[11px] font-medium text-primary">+0.6 vs L3</span>
               </div>
             </div>
 

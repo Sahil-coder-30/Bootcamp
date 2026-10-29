@@ -51,10 +51,11 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ currentUser, onUse
     <>
       {/* Main Sticky Navigation Bar (Top institutional bar removed as requested) */}
       <header
-        className={`sticky top-0 z-40 transition-all duration-300 ${isScrolled
+        className={`sticky top-0 z-40 transition-all duration-300 ${
+          isScrolled
             ? "border-b border-zinc-800/90 bg-[#08080a]/95 shadow-[0_4px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl"
             : "border-b border-zinc-800/40 bg-[#08080a]/80 backdrop-blur-md"
-          }`}
+        }`}
       >
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
           {/* Brand Logo */}

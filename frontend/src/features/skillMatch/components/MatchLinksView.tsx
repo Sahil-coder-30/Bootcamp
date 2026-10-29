@@ -9,21 +9,53 @@ export const MatchLinksView: React.FC<Props> = ({ matchedSkills }) => {
   const getMethodBadge = (m: string) => {
     switch (m) {
       case "exact":
-        return <span className="rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 text-[11px] font-mono">exact</span>;
+        return (
+          <span className="rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 text-[11px] font-mono">
+            exact
+          </span>
+        );
       case "alias":
-        return <span className="rounded bg-teal-500/20 text-teal-300 border border-teal-500/30 px-2 py-0.5 text-[11px] font-mono">alias</span>;
+        return (
+          <span className="rounded bg-teal-500/20 text-teal-300 border border-teal-500/30 px-2 py-0.5 text-[11px] font-mono">
+            alias
+          </span>
+        );
       case "implied":
-        return <span className="rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 text-[11px] font-mono">implied</span>;
+        return (
+          <span className="rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 text-[11px] font-mono">
+            implied
+          </span>
+        );
       case "fuzzy":
-        return <span className="rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 text-[11px] font-mono">fuzzy</span>;
+        return (
+          <span className="rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 text-[11px] font-mono">
+            fuzzy
+          </span>
+        );
       case "semantic":
-        return <span className="rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 px-2 py-0.5 text-[11px] font-mono">semantic</span>;
+        return (
+          <span className="rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 px-2 py-0.5 text-[11px] font-mono">
+            semantic
+          </span>
+        );
       case "llm":
-        return <span className="rounded bg-purple-500/20 text-purple-300 border border-purple-500/30 px-2 py-0.5 text-[11px] font-mono">llm adjudicated</span>;
+        return (
+          <span className="rounded bg-purple-500/20 text-purple-300 border border-purple-500/30 px-2 py-0.5 text-[11px] font-mono">
+            llm adjudicated
+          </span>
+        );
       case "category":
-        return <span className="rounded bg-zinc-700/50 text-zinc-300 border border-zinc-600 px-2 py-0.5 text-[11px] font-mono">category</span>;
+        return (
+          <span className="rounded bg-zinc-700/50 text-zinc-300 border border-zinc-600 px-2 py-0.5 text-[11px] font-mono">
+            category
+          </span>
+        );
       default:
-        return <span className="rounded bg-zinc-800 text-zinc-400 px-2 py-0.5 text-[11px] font-mono">{m}</span>;
+        return (
+          <span className="rounded bg-zinc-800 text-zinc-400 px-2 py-0.5 text-[11px] font-mono">
+            {m}
+          </span>
+        );
     }
   };
 
@@ -38,7 +70,10 @@ export const MatchLinksView: React.FC<Props> = ({ matchedSkills }) => {
 
       <div className="divide-y divide-zinc-800/60 rounded-lg border border-zinc-800 bg-zinc-950/40">
         {matchedSkills.map((m, idx) => (
-          <div key={idx} className="p-3.5 hover:bg-zinc-900/40 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+          <div
+            key={idx}
+            className="p-3.5 hover:bg-zinc-900/40 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs"
+          >
             <div className="space-y-1 md:w-5/12">
               <div className="flex items-center gap-2">
                 <span className="font-semibold text-zinc-200">{m.jd_skill}</span>
@@ -60,11 +95,11 @@ export const MatchLinksView: React.FC<Props> = ({ matchedSkills }) => {
                   {Math.round(m.credit * 100)}% credit
                 </span>
               </div>
-              {m.evidence && (
-                <p className="text-zinc-400 line-clamp-1">{m.evidence}</p>
-              )}
+              {m.evidence && <p className="text-zinc-400 line-clamp-1">{m.evidence}</p>}
               {m.reason && (
-                <p className="text-purple-300/80 text-[11px] font-mono line-clamp-1">LLM note: {m.reason}</p>
+                <p className="text-purple-300/80 text-[11px] font-mono line-clamp-1">
+                  LLM note: {m.reason}
+                </p>
               )}
             </div>
           </div>
@@ -73,4 +108,3 @@ export const MatchLinksView: React.FC<Props> = ({ matchedSkills }) => {
     </div>
   );
 };
-

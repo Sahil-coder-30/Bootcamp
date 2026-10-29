@@ -81,7 +81,7 @@ describe("Skill Match Redux Slice", () => {
       setMatchResult({
         key: "6f1c-ananya:b2f4-google-swe",
         result: mockResult,
-      })
+      }),
     );
     expect(state.loadingKey).toBeNull();
     expect(state.byKey["6f1c-ananya:b2f4-google-swe"]!.match_score).toBe(71);
@@ -95,4 +95,3 @@ describe("Skill Match Redux Slice", () => {
     expect(state.ui.methodFilter).not.toContain("exact");
   });
 });
-

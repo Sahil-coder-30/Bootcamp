@@ -138,9 +138,6 @@ const BLOOM_COLORS: Record<string, { bg: string; text: string; border: string }>
     bg: "bg-amber-500/10",
     text: "text-amber-400",
     border: "border-amber-500/30",
-    bg: "bg-amber-500/10",
-    text: "text-amber-400",
-    border: "border-amber-500/30",
   },
   EV: {
     bg: "bg-orange-500/10",
@@ -227,9 +224,7 @@ export const SkillHistogramCard: React.FC<SkillHistogramCardProps> = ({
             Target Hiring Bar Notch
           </span>
         </div>
-        <span className="font-mono text-[10px] text-muted-foreground">
-          Scale: L1 to L5
-        </span>
+        <span className="font-mono text-[10px] text-muted-foreground">Scale: L1 to L5</span>
       </div>
 
       {/* Histogram Bars List */}
@@ -280,12 +275,13 @@ export const SkillHistogramCard: React.FC<SkillHistogramCardProps> = ({
 
                   {meetsBar ? (
                     <span className="flex items-center gap-0.5 text-[10px] font-semibold text-emerald-400">
-                      <CheckCircle2 className="h-3 w-3 text-emerald-400" />{" "}
-                      Met
+                      <CheckCircle2 className="h-3 w-3 text-emerald-400" /> Met
                     </span>
                   ) : (
                     <span className="flex items-center gap-0.5 text-[10px] font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.2 rounded-md">
-                      <AlertTriangle className="h-3 w-3 text-amber-400" /> ▲ -{skill.requiredLevel - skill.candidateLevel}L Gap (Needs L{skill.requiredLevel})
+                      <AlertTriangle className="h-3 w-3 text-amber-400" /> ▲ -
+                      {skill.requiredLevel - skill.candidateLevel}L Gap (Needs L
+                      {skill.requiredLevel})
                     </span>
                   )}
                 </div>

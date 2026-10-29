@@ -68,12 +68,8 @@ export const TopCompanyMatchesCard: React.FC = () => {
             <Trophy className="h-4 w-4 text-primary" />
           </div>
           <div>
-            <h3 className="font-heading text-base font-bold text-foreground">
-              Hiring Bar Matches
-            </h3>
-            <p className="text-xs text-muted-foreground">
-              Calibrated for Tier-1 Super Dream
-            </p>
+            <h3 className="font-heading text-base font-bold text-foreground">Hiring Bar Matches</h3>
+            <p className="text-xs text-muted-foreground">Calibrated for Tier-1 Super Dream</p>
           </div>
         </div>
 

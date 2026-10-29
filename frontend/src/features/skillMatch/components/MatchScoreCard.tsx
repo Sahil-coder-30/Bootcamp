@@ -20,8 +20,8 @@ export const MatchScoreCard: React.FC<Props> = ({
     band === "strong"
       ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
       : band === "good"
-      ? "bg-blue-500/10 text-blue-400 border-blue-500/30"
-      : "bg-amber-500/10 text-amber-400 border-amber-500/30";
+        ? "bg-blue-500/10 text-blue-400 border-blue-500/30"
+        : "bg-amber-500/10 text-amber-400 border-amber-500/30";
 
   return (
     <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5 shadow-lg backdrop-blur-sm">
@@ -29,7 +29,9 @@ export const MatchScoreCard: React.FC<Props> = ({
         <div>
           <div className="flex items-center gap-2">
             <h3 className="font-heading text-lg font-semibold text-white">Match Fit Score</h3>
-            <span className={`rounded-full border px-2.5 py-0.5 text-xs font-semibold capitalize ${bandBadgeColor}`}>
+            <span
+              className={`rounded-full border px-2.5 py-0.5 text-xs font-semibold capitalize ${bandBadgeColor}`}
+            >
               {band} fit
             </span>
           </div>
@@ -39,7 +41,9 @@ export const MatchScoreCard: React.FC<Props> = ({
         </div>
 
         <div className="flex items-baseline gap-2">
-          <span className="font-heading text-4xl font-extrabold tracking-tight text-white">{score}</span>
+          <span className="font-heading text-4xl font-extrabold tracking-tight text-white">
+            {score}
+          </span>
           <span className="text-sm font-medium text-zinc-400">/ 100</span>
         </div>
       </div>
@@ -57,7 +61,9 @@ export const MatchScoreCard: React.FC<Props> = ({
         <div className="rounded-lg bg-zinc-950/40 p-3 border border-zinc-800/50">
           <div className="flex items-center justify-between text-xs text-zinc-400">
             <span>Must-haves (60%)</span>
-            <span className="font-semibold text-white">{Math.round(breakdown.must_coverage * 100)}%</span>
+            <span className="font-semibold text-white">
+              {Math.round(breakdown.must_coverage * 100)}%
+            </span>
           </div>
           <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-zinc-800">
             <div
@@ -70,7 +76,9 @@ export const MatchScoreCard: React.FC<Props> = ({
         <div className="rounded-lg bg-zinc-950/40 p-3 border border-zinc-800/50">
           <div className="flex items-center justify-between text-xs text-zinc-400">
             <span>Nice-to-haves (20%)</span>
-            <span className="font-semibold text-white">{Math.round(breakdown.nice_coverage * 100)}%</span>
+            <span className="font-semibold text-white">
+              {Math.round(breakdown.nice_coverage * 100)}%
+            </span>
           </div>
           <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-zinc-800">
             <div
@@ -83,7 +91,9 @@ export const MatchScoreCard: React.FC<Props> = ({
         <div className="rounded-lg bg-zinc-950/40 p-3 border border-zinc-800/50">
           <div className="flex items-center justify-between text-xs text-zinc-400">
             <span>Level Fit (20%)</span>
-            <span className="font-semibold text-white">{Math.round(breakdown.level_fit * 100)}%</span>
+            <span className="font-semibold text-white">
+              {Math.round(breakdown.level_fit * 100)}%
+            </span>
           </div>
           <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-zinc-800">
             <div

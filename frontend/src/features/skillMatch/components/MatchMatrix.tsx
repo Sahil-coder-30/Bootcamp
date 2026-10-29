@@ -8,7 +8,8 @@ interface Props {
 
 export const MatchMatrix: React.FC<Props> = ({ matrix, onSelectCell }) => {
   const getScoreColor = (score: number) => {
-    if (score >= 75) return "bg-emerald-500/20 text-emerald-300 border-emerald-500/40 hover:bg-emerald-500/30";
+    if (score >= 75)
+      return "bg-emerald-500/20 text-emerald-300 border-emerald-500/40 hover:bg-emerald-500/30";
     if (score >= 50) return "bg-blue-500/20 text-blue-300 border-blue-500/40 hover:bg-blue-500/30";
     return "bg-amber-500/20 text-amber-300 border-amber-500/40 hover:bg-amber-500/30";
   };
@@ -35,7 +36,11 @@ export const MatchMatrix: React.FC<Props> = ({ matrix, onSelectCell }) => {
             <tr className="border-b border-zinc-800 text-zinc-400">
               <th className="p-2 font-medium">Candidate</th>
               {matrix.jds.map((jd) => (
-                <th key={jd.id} className="p-2 font-medium text-center max-w-[130px] truncate" title={`${jd.company} - ${jd.role}`}>
+                <th
+                  key={jd.id}
+                  className="p-2 font-medium text-center max-w-[130px] truncate"
+                  title={`${jd.company} - ${jd.role}`}
+                >
                   <div className="font-semibold text-zinc-200 truncate">{jd.role}</div>
                   <div className="text-[10px] text-zinc-500 truncate">{jd.company}</div>
                 </th>
@@ -47,9 +52,7 @@ export const MatchMatrix: React.FC<Props> = ({ matrix, onSelectCell }) => {
               const bestJd = matrix.best_jd_by_profile[p.id];
               return (
                 <tr key={p.id} className="hover:bg-zinc-900/30 transition-colors">
-                  <td className="p-2.5 font-medium text-zinc-200 whitespace-nowrap">
-                    {p.name}
-                  </td>
+                  <td className="p-2.5 font-medium text-zinc-200 whitespace-nowrap">{p.name}</td>
                   {matrix.jds.map((jd) => {
                     const score = cellMap.get(`${p.id}:${jd.id}`) ?? 0;
                     const isBest = bestJd === jd.id;
@@ -59,7 +62,7 @@ export const MatchMatrix: React.FC<Props> = ({ matrix, onSelectCell }) => {
                         <button
                           onClick={() => onSelectCell && onSelectCell(p.id, jd.id)}
                           className={`w-full py-2 px-1 rounded-lg border text-xs font-bold transition-all relative ${getScoreColor(
-                            score
+                            score,
                           )}`}
                         >
                           {score}
@@ -82,4 +85,3 @@ export const MatchMatrix: React.FC<Props> = ({ matrix, onSelectCell }) => {
     </div>
   );
 };
-
