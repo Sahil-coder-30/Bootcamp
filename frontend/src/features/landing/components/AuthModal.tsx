@@ -114,7 +114,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       />
 
       {/* Modal Card */}
-      <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-border bg-card shadow-2xl text-foreground z-10 animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-3xl border border-border bg-card shadow-2xl text-foreground z-10 animate-in fade-in zoom-in-95 duration-200">
         {/* Glow Header Accent */}
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-600 via-amber-500 to-primary" />
 

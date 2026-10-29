@@ -10,7 +10,7 @@ const FAQS: FaqItem[] = [
   {
     question: "Why deterministic mathematics instead of direct LLM percentage scoring?",
     answer:
-      "Generative LLMs suffer from prompt drift and hallucination — evaluating the same resume twice often produces inconsistent scores. PlaceIntel decouples probabilistic evidence extraction from mathematical grading. Frontier LLMs identify textual evidence with strict character-span boundaries, while the final talent scores are computed via pure deterministic formulas (100 * Σ(min(c, r) - 1) / Σ(r - 1)) in under 1ms.",
+      "Generative LLMs suffer from prompt drift and hallucination, evaluating the same resume twice often produces inconsistent scores. PlaceIntel decouples probabilistic evidence extraction from mathematical grading. Frontier LLMs identify textual evidence with strict character-span boundaries, while the final talent scores are computed via pure deterministic formulas (100 * Σ(min(c, r) - 1) / Σ(r - 1)) in under 1ms.",
   },
   {
     question: "What prevents candidates from keyword-stuffing resumes to inflate their scores?",

@@ -91,7 +91,7 @@ export const FormatInvarianceCard: React.FC = () => {
   const data = INVARIANCE_PROOFS[selectedKey] ?? INVARIANCE_PROOFS["sample_a"]!;
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-xs">
+    <div className="rounded-2xl border border-border bg-card p-4 sm:p-6 shadow-xs">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-5">
         <div>
@@ -167,7 +167,7 @@ export const FormatInvarianceCard: React.FC = () => {
             <span className="text-xs text-muted-foreground">across 12 categories</span>
           </div>
           <p className="mt-2 text-[11px] text-muted-foreground">
-            Average deviation is under 0.25 bands on a 1–10 Bloom scale.
+            Average deviation is under 0.25 bands on a 1 to 10 Bloom scale.
           </p>
         </div>
 

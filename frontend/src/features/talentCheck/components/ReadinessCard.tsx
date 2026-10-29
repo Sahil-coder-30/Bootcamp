@@ -34,7 +34,7 @@ export const ReadinessCard: React.FC<ReadinessCardProps> = ({
   source = "db",
   isWhatIf = false,
 }) => {
-  const verdictConfig = {
+  const verdictConfigMap = {
     ready: {
       label: "Ready for Role",
       badgeClass: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30",
@@ -59,8 +59,9 @@ export const ReadinessCard: React.FC<ReadinessCardProps> = ({
       icon: XCircle,
       desc: "Significant preparation required across multiple foundational skill areas.",
     },
-  }[verdict];
+  };
 
+  const verdictConfig = verdictConfigMap[verdict] || verdictConfigMap.not_yet;
   const Icon = verdictConfig.icon;
 
   return (
@@ -102,7 +103,11 @@ export const ReadinessCard: React.FC<ReadinessCardProps> = ({
               className="w-28 h-28 rounded-full flex flex-col items-center justify-center border-2 bg-card-sub dark:bg-card"
               style={{
                 borderColor:
-                  verdict === "ready" ? "#10B981" : verdict === "almost" ? "#F59E0B" : "#EF4444",
+                  verdict === "ready"
+                    ? "var(--color-success, #10B981)"
+                    : verdict === "almost"
+                      ? "var(--color-bloom-as, #F59E0B)"
+                      : "var(--color-destructive, #EF4444)",
                 boxShadow: `0 0 24px -2px ${verdictConfig.glowColor}`,
               }}
             >
@@ -132,7 +137,7 @@ export const ReadinessCard: React.FC<ReadinessCardProps> = ({
                 <ShieldCheck className="w-3.5 h-3.5 text-muted-foreground" />
                 <span>Confidence Range:</span>
                 <span className="text-foreground font-semibold">
-                  {readinessRange.low} – {readinessRange.high}
+                  {readinessRange.low} - {readinessRange.high}
                 </span>
               </div>
             )}
@@ -144,9 +149,9 @@ export const ReadinessCard: React.FC<ReadinessCardProps> = ({
           <div className="bg-card-sub rounded-xl p-3 border border-border">
             <div className="text-xs text-muted-foreground mb-1">Levels Covered</div>
             <div className="text-lg font-bold text-foreground font-mono">
-              {levelsCovered ?? "—"}{" "}
+              {levelsCovered ?? "-"}{" "}
               <span className="text-xs text-muted-foreground font-normal">
-                / {levelsNeeded ?? "—"}
+                / {levelsNeeded ?? "-"}
               </span>
             </div>
             <div className="text-[11px] text-emerald-700 dark:text-emerald-400 mt-0.5 font-medium">
@@ -159,7 +164,7 @@ export const ReadinessCard: React.FC<ReadinessCardProps> = ({
           <div className="bg-card-sub rounded-xl p-3 border border-border">
             <div className="text-xs text-muted-foreground mb-1">Categories Met</div>
             <div className="text-lg font-bold text-foreground font-mono">
-              {categoriesMet ?? "—"}{" "}
+              {categoriesMet ?? "-"}{" "}
               <span className="text-xs text-muted-foreground font-normal">/ 12</span>
             </div>
             <div className="text-[11px] text-muted-foreground mt-0.5">At or above bar</div>

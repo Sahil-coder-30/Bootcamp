@@ -23,16 +23,24 @@ interface SkillRadarProps {
 }
 
 export const SkillRadar: React.FC<SkillRadarProps> = ({
-  rows,
+  rows = [],
   candidateName = "Candidate",
   companyName = "Required Bar",
 }) => {
-  const data = rows.map((r) => ({
+  const data = (rows || []).map((r) => ({
     subject: r.category_code,
     candidate: r.candidate_level,
     required: r.required_level,
     fullMark: 10,
   }));
+
+  if (data.length === 0) {
+    return (
+      <div className="w-full h-[360px] flex items-center justify-center text-xs text-muted-foreground">
+        No skillset gap data available for radar envelope.
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-[360px] flex flex-col items-center justify-center relative">
@@ -94,18 +102,18 @@ export const SkillRadar: React.FC<SkillRadarProps> = ({
           <Radar
             name={companyName}
             dataKey="required"
-            stroke="#4f46e5"
+            stroke="var(--color-primary, #6366f1)"
             strokeWidth={2}
-            fill="#4f46e5"
+            fill="var(--color-primary, #6366f1)"
             fillOpacity={0.15}
           />
           {/* Candidate Polygon (Emerald) */}
           <Radar
             name={candidateName}
             dataKey="candidate"
-            stroke="#10B981"
+            stroke="var(--color-success, #10B981)"
             strokeWidth={2}
-            fill="#10B981"
+            fill="var(--color-success, #10B981)"
             fillOpacity={0.28}
           />
         </RadarChart>

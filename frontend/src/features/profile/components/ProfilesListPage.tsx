@@ -14,12 +14,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CATEGORY_COLORS, CATEGORY_NAMES, CODES } from "@/lib/categories";
-import { toErrorMessage } from "@/services/apiClient";
-import { useAppDispatch } from "@/store";
 import { useProfiles } from "../Hooks/useProfiles";
 import type { ProfileSummary } from "../lib/types";
-import { deleteProfileAPI } from "../service/profile.api";
-import { removeProfile } from "../slice/profile.slice";
 
 /** 12 small bars, one per category, taller = higher level. */
 function LevelBars({ levels }: { levels: ProfileSummary["levels"] }) {
@@ -48,10 +44,9 @@ function useDebounced<T>(value: T, ms: number): T {
 
 /** Saved profiles: search, open, create, and delete ("delete my data"). */
 export default function ProfilesListPage() {
-  const dispatch = useAppDispatch();
   const [search, setSearch] = useState("");
   const q = useDebounced(search.trim(), 300);
-  const { items, loading, error, hasMore, loadMore, refetch } = useProfiles({ q });
+  const { items, loading, error, hasMore, loadMore, refetch, deleteProfile } = useProfiles({ q });
   const [toDelete, setToDelete] = useState<ProfileSummary | null>(null);
   const [deleting, setDeleting] = useState(false);
 
@@ -59,12 +54,11 @@ export default function ProfilesListPage() {
     if (!toDelete) return;
     setDeleting(true);
     try {
-      await deleteProfileAPI(toDelete.id);
-      dispatch(removeProfile(toDelete.id));
+      await deleteProfile(toDelete.id);
       toast.success("Profile deleted");
       setToDelete(null);
     } catch (err) {
-      toast.error(toErrorMessage(err, "Could not delete the profile."));
+      toast.error(err instanceof Error ? err.message : "Could not delete the profile.");
     } finally {
       setDeleting(false);
     }

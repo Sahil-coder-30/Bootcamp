@@ -15,10 +15,10 @@ import {
 import { APP_NAME, COLLEGE_SHORT } from "@/lib/college";
 import { clearStoredUser, formatNameFromEmail, type CandidateUser } from "@/lib/auth";
 import { clearSession } from "@/lib/authStorage";
-import { useCompany } from "@/features/companies/Hooks/companies.hooks";
+import { useAuth } from "@/features/auth/Hooks/auth.hooks";
+import { useCompanies, useCompany } from "@/features/companies/Hooks/companies.hooks";
 import { CompanyLogo } from "@/components/CompanyLogo";
-import { useAppDispatch, useAppSelector } from "@/store";
-import { setJDModalOpen, setATSModalOpen } from "@/features/dashboard/slice/dashboard.slice";
+import { useDashboardModals } from "@/features/dashboard/Hooks/dashboard.hooks";
 import { cn } from "@/lib/utils";
 
 interface DashboardSidebarProps {
@@ -37,13 +37,14 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
   onNavigate,
 }) => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
-  // Redux-connected states
-  const authUser = useAppSelector((s) => s.auth.user);
-  const companiesCount = useAppSelector((s) => s.companies.list.length);
+  // Hook-connected states (4-layer architecture compliance)
+  const { user: authUser } = useAuth();
+  const { data: companies = [] } = useCompanies();
+  const companiesCount = companies.length;
   const { selected } = useCompany();
+  const { openJDModal, openATSModal } = useDashboardModals();
 
   const handleLogout = () => {
     clearStoredUser();
@@ -100,7 +101,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
     if (onOpenATSModal) {
       onOpenATSModal();
     } else {
-      dispatch(setATSModalOpen(true));
+      openATSModal();
     }
   };
 
@@ -114,7 +115,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
       e.preventDefault();
       e.stopPropagation();
       onNavigate?.();
-      dispatch(setJDModalOpen(true));
+      openJDModal();
     }
   };
 

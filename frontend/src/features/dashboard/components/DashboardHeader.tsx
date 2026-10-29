@@ -127,7 +127,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         {/* Session Badge */}
         <div className="hidden lg:flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-1.5 text-xs font-medium text-foreground shadow-2xs">
           <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
-          <span>Session 2025–26</span>
+          <span>Session 2025-26</span>
         </div>
 
         {/* Theme Switcher Toggle Pill */}

@@ -12,11 +12,9 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAppDispatch, useAppSelector } from "@/store";
+import { useAuth } from "@/features/auth/Hooks/auth.hooks";
 import { useJdLibrary } from "@/features/jd/Hooks/jd.hooks";
-import { runSkillMatchAPI, type SkillMatchResult } from "@/features/skillMatch/service/skillMatch.api";
-import { setMatchResult } from "@/features/skillMatch/slice/skillMatch.slice";
-import { toErrorMessage } from "@/services/apiClient";
+import { useSkillMatch } from "@/features/skillMatch/Hooks/skillMatch.hooks";
 import { getStoredUser } from "@/lib/auth";
 
 interface JDMatcherModalProps {
@@ -25,9 +23,8 @@ interface JDMatcherModalProps {
 }
 
 export const JDMatcherModal: React.FC<JDMatcherModalProps> = ({ isOpen, onClose }) => {
-  const dispatch = useAppDispatch();
-  const { items: jdItems, isLoading: isJdLoading } = useJdLibrary();
-  const authUser = useAppSelector((s) => s.auth.user);
+  const { items: jdItems } = useJdLibrary();
+  const { user: authUser } = useAuth();
 
   // Match profile ID (prioritize logged in user's profile)
   const storedUser = getStoredUser();
@@ -40,19 +37,14 @@ export const JDMatcherModal: React.FC<JDMatcherModalProps> = ({ isOpen, onClose 
   const [customText, setCustomText] = useState(
     "Looking for a Software Development Engineer (SDE-1) skilled in Distributed Systems, Go/Python, Concurrency, PostgreSQL, Kubernetes, and REST API design.",
   );
-  const [analyzing, setAnalyzing] = useState(false);
-  const [matchError, setMatchError] = useState<string | null>(null);
-  const [localResult, setLocalResult] = useState<SkillMatchResult | null>(null);
+  const [customError, setCustomError] = useState<string | null>(null);
 
-  // Redux cache check
-  const reduxKey = `${profileId}:${selectedJdId}`;
-  const reduxResult = useAppSelector((s) => s.skillMatch.byKey[reduxKey]);
-
-  useEffect(() => {
-    if (reduxResult) {
-      setLocalResult(reduxResult);
-    }
-  }, [reduxResult]);
+  const {
+    result,
+    isLoading: analyzing,
+    error: matchError,
+    fetchMatch,
+  } = useSkillMatch(profileId, selectedJdId, false);
 
   useEffect(() => {
     if (jdItems.length > 0 && !selectedJdId) {
@@ -64,36 +56,18 @@ export const JDMatcherModal: React.FC<JDMatcherModalProps> = ({ isOpen, onClose 
 
   const handleAnalyze = async () => {
     if (!profileId) {
-      setMatchError("Please upload your resume first to compare your skills against this job description.");
+      setCustomError("Please upload your resume first to compare your skills against this job description.");
       return;
     }
-    setAnalyzing(true);
-    setMatchError(null);
-
-    try {
-      // Connect to real Skill Match microservice
-      const targetJd = selectedJdId || "b2f4-google-swe";
-      const result = await runSkillMatchAPI({
-        profile_id: profileId,
-        jd_id: targetJd,
-        refresh: true,
-      });
-
-      // Update Redux Store
-      dispatch(setMatchResult({ key: `${profileId}:${targetJd}`, result }));
-      setLocalResult(result);
-    } catch (err) {
-      setMatchError(toErrorMessage(err, "Failed to run deterministic skill matching against JD"));
-    } finally {
-      setAnalyzing(false);
-    }
+    setCustomError(null);
+    await fetchMatch(true);
   };
 
-  const result = localResult || reduxResult;
+  const activeError = customError || matchError;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl border border-border bg-card text-foreground p-6 shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+      <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl border border-border bg-card text-foreground p-4 sm:p-6 shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-border">
           <div className="flex items-center gap-3">
@@ -141,13 +115,12 @@ export const JDMatcherModal: React.FC<JDMatcherModalProps> = ({ isOpen, onClose 
             value={selectedJdId}
             onChange={(e) => {
               setSelectedJdId(e.target.value);
-              setLocalResult(null);
             }}
             className="w-full rounded-xl border border-border bg-card-sub px-3 py-2 text-xs font-medium text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
           >
-            <option value="b2f4-google-swe">Google LLC — Software Engineer (SDE-1)</option>
-            <option value="c3a1-msft-data">Microsoft Corporation — Data Analyst</option>
-            <option value="d4e2-oracle-fss">Oracle Financial Services — Application Support</option>
+            <option value="b2f4-google-swe">Google LLC, Software Engineer (SDE-1)</option>
+            <option value="c3a1-msft-data">Microsoft Corporation, Data Analyst</option>
+            <option value="d4e2-oracle-fss">Oracle Financial Services, Application Support</option>
             {jdItems
               .filter(
                 (item) =>
@@ -155,7 +128,7 @@ export const JDMatcherModal: React.FC<JDMatcherModalProps> = ({ isOpen, onClose 
               )
               .map((item) => (
                 <option key={item.jd_id} value={item.jd_id}>
-                  {item.company_name || "Company"} — {item.role || item.file_name || "Role"}
+                  {item.company_name || "Company"}, {item.role || item.file_name || "Role"}
                 </option>
               ))}
           </select>
@@ -176,22 +149,22 @@ export const JDMatcherModal: React.FC<JDMatcherModalProps> = ({ isOpen, onClose 
         </div>
 
         {/* Error notification if any */}
-        {matchError && (
+        {activeError && (
           <div className="mt-3 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-500 flex items-center gap-2">
             <AlertTriangle className="h-4 w-4 shrink-0" />
-            <span>{matchError}</span>
+            <span>{activeError}</span>
           </div>
         )}
 
         {/* Match Action */}
-        <div className="mt-4 flex items-center justify-between">
+        <div className="mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <span className="text-[11px] text-muted-foreground">
             Deterministic 7-stage cascade with live Redux state
           </span>
           <Button
             onClick={handleAnalyze}
             disabled={analyzing}
-            className="rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs h-9 px-5 cursor-pointer shadow-md"
+            className="rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs h-9 px-5 cursor-pointer shadow-md w-full sm:w-auto"
           >
             {analyzing ? (
               <>
@@ -246,7 +219,7 @@ export const JDMatcherModal: React.FC<JDMatcherModalProps> = ({ isOpen, onClose 
             </div>
 
             {/* Quick Actions to Full Pages */}
-            <div className="pt-2 flex items-center justify-between text-xs">
+            <div className="pt-2 flex flex-wrap items-center justify-between gap-3 text-xs">
               <span className="text-muted-foreground text-[11px]">
                 Algorithm: {result.meta.taxonomy_version || "Bloom v1.0"}
               </span>

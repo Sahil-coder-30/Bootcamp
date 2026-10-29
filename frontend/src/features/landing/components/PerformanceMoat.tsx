@@ -181,7 +181,7 @@ export const PerformanceMoat: React.FC = () => {
 
         {/* Step-by-Step Latency Breakdown Table */}
         <div className="mt-10 overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-          <div className="overflow-x-auto">
+          <div className="no-scrollbar overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead className="border-b border-border bg-card-sub font-semibold text-foreground">
                 <tr>

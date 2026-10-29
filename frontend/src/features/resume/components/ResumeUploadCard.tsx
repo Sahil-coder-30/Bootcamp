@@ -15,6 +15,7 @@ interface ResumeUploadCardProps {
   onFileUpload: (file: File) => void | Promise<void>;
   onSelectSample?: (candidateKey: string) => void;
   isLoading: boolean;
+  status?: "idle" | "uploading" | "parsing" | "done" | "error";
   currentCandidateName?: string | undefined;
   onClear?: () => void;
   onNext?: () => void;
@@ -25,6 +26,7 @@ export const ResumeUploadCard: React.FC<ResumeUploadCardProps> = ({
   onFileUpload,
   onSelectSample,
   isLoading,
+  status,
   currentCandidateName,
   onClear,
   onNext,
@@ -47,7 +49,7 @@ export const ResumeUploadCard: React.FC<ResumeUploadCardProps> = ({
   };
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-xs">
+    <div className="rounded-2xl border border-border bg-card p-4 sm:p-6 shadow-xs">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-5">
         <div>
           <div className="flex items-center gap-2">
@@ -127,12 +129,18 @@ export const ResumeUploadCard: React.FC<ResumeUploadCardProps> = ({
           </div>
 
           <h4 className="mt-3 font-semibold text-sm text-foreground">
-            {isLoading ? "Analyzing Resume Structure..." : "Drop candidate resume here, or browse"}
+            {isLoading
+              ? status === "uploading"
+                ? "Uploading Resume Document..."
+                : status === "parsing"
+                  ? "Parsing & Computing Bloom Fingerprint..."
+                  : "Analyzing Resume Structure..."
+              : "Drop candidate resume here, or browse"}
           </h4>
           <p className="mt-1 text-xs text-muted-foreground">
             {currentCandidateName
-              ? `Parsed for ${currentCandidateName} · Drop a new file to replace (PDF & DOCX, Max 10MB)`
-              : "Supports PDF & DOCX (Max 10MB)"}
+              ? `Parsed for ${currentCandidateName} · Drop a new file to replace (PDF, DOCX, or TXT, Max 10MB)`
+              : "Supports PDF, DOCX, or TXT (Max 10MB)"}
           </p>
         </div>
       </div>

@@ -661,7 +661,7 @@ export default function CompanyPickerPage() {
           ) : (
             /* Enterprise Table View Mode */
             <div className="overflow-hidden rounded-xl border border-border bg-card dark:border-zinc-800 dark:bg-[#0c0c0e] shadow-2xs">
-              <div className="overflow-x-auto">
+              <div className="no-scrollbar overflow-x-auto">
                 <table className="w-full text-left text-sm text-foreground">
                   <thead className="border-b border-border bg-card-sub dark:border-zinc-800 dark:bg-[#121215] text-[11px] font-semibold uppercase tracking-wider text-muted-foreground dark:text-zinc-400">
                     <tr>
@@ -708,7 +708,7 @@ export default function CompanyPickerPage() {
                                 {c.category}
                               </span>
                             ) : (
-                              "—"
+                              "-"
                             )}
                           </td>
                           <td className="px-5 py-3.5">
@@ -725,10 +725,10 @@ export default function CompanyPickerPage() {
                             </span>
                           </td>
                           <td className="px-5 py-3.5 text-xs text-muted-foreground">
-                            {hasHeadquarters ? c.headquarters : "—"}
+                            {hasHeadquarters ? c.headquarters : "-"}
                           </td>
                           <td className="px-5 py-3.5 text-xs text-muted-foreground">
-                            {hasEmployees ? c.employeeSize : "—"}
+                            {hasEmployees ? c.employeeSize : "-"}
                           </td>
                           <td className="px-5 py-3.5 text-xs">
                             {hasMomentum ? (
@@ -748,7 +748,7 @@ export default function CompanyPickerPage() {
                                 <Val v={c.yoyGrowthRate} />
                               </span>
                             ) : (
-                              "—"
+                              "-"
                             )}
                           </td>
                           <td className="px-5 py-3.5 text-right">

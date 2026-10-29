@@ -22,10 +22,19 @@ const BLOOM_COLORS: Record<string, string> = {
   CR: "#EC4899", // Pink 500
 };
 
-export const GapBars: React.FC<GapBarsProps> = ({ rows, selectedCode, onSelectCode }) => {
+export const GapBars: React.FC<GapBarsProps> = ({ rows = [], selectedCode, onSelectCode }) => {
+  const safeRows = rows || [];
+  if (safeRows.length === 0) {
+    return (
+      <div className="p-6 rounded-xl bg-card-sub border border-border text-xs text-muted-foreground text-center">
+        No skillset gap data available.
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-3">
-      {rows.map((row) => {
+      {safeRows.map((row) => {
         const isSelected = selectedCode === row.category_code;
         const candPercent = (row.candidate_level / 10) * 100;
         const reqPercent = (row.required_level / 10) * 100;

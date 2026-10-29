@@ -147,8 +147,8 @@ export const CompanyRanking: React.FC<CompanyRankingProps> = ({
                   <div className="w-8 h-8 rounded-lg bg-card-sub border border-border flex items-center justify-center shrink-0">
                     <Building2 className="w-4 h-4 text-primary" />
                   </div>
-                  <div>
-                    <h4 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
+                  <div className="min-w-0">
+                    <h4 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors truncate">
                       {row.company_name}
                     </h4>
                   </div>

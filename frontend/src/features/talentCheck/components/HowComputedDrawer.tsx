@@ -110,7 +110,7 @@ export const HowComputedDrawer: React.FC<HowComputedDrawerProps> = ({
             <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
               12 Skill Breakdown & Raw Audit
             </h4>
-            <div className="overflow-x-auto border border-border rounded-xl">
+            <div className="no-scrollbar overflow-x-auto border border-border rounded-xl">
               <table className="w-full text-left text-xs font-mono">
                 <thead className="bg-card-sub text-muted-foreground border-b border-border">
                   <tr>
@@ -149,7 +149,7 @@ export const HowComputedDrawer: React.FC<HowComputedDrawerProps> = ({
                         {(g.weight * 100).toFixed(1)}%
                       </td>
                       <td className="p-2.5 text-muted-foreground">
-                        {g.raw_bloom_code ? `${g.required_level}-${g.raw_bloom_code}` : "—"}
+                        {g.raw_bloom_code ? `${g.required_level}-${g.raw_bloom_code}` : "-"}
                       </td>
                     </tr>
                   ))}

@@ -12,7 +12,12 @@ import {
   getJdAPI,
   listJdsAPI,
   uploadDocumentAPI,
+  type DocumentSection,
+  type ExtractedSkillList,
+  type JdDetail,
   type JdSkill,
+  type JdSummary,
+  type UploadedDocument,
 } from "../service/jd.api";
 import {
   selectJd,
@@ -21,7 +26,18 @@ import {
   setLibrary,
   setLoading,
   setUploadStage,
+  type UploadStage,
 } from "../slice/jd.slice";
+
+export type { UploadStage };
+export type {
+  DocumentSection,
+  ExtractedSkillList,
+  JdDetail,
+  JdSkill,
+  JdSummary,
+  UploadedDocument,
+};
 
 /** Saved JD extractions (GET /api/jds), loaded once. */
 export function useJdLibrary() {

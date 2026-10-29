@@ -7,6 +7,14 @@ interface Props {
 }
 
 export const MatchMatrix: React.FC<Props> = ({ matrix, onSelectCell }) => {
+  if (!matrix || matrix.profiles.length === 0 || matrix.jds.length === 0) {
+    return (
+      <div className="rounded-xl border border-dashed border-border bg-card/60 p-8 text-center text-xs text-muted-foreground">
+        No candidate profiles or job postings available in the matrix.
+      </div>
+    );
+  }
+
   const getScoreColor = (score: number) => {
     if (score >= 75)
       return "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30 hover:bg-emerald-500/20";
@@ -31,7 +39,7 @@ export const MatchMatrix: React.FC<Props> = ({ matrix, onSelectCell }) => {
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-border bg-card p-4 shadow-sm">
+      <div className="no-scrollbar overflow-x-auto rounded-xl border border-border bg-card p-4 shadow-sm">
         <table className="w-full border-collapse text-left text-xs">
           <thead>
             <tr className="border-b border-border text-muted-foreground">
@@ -62,7 +70,7 @@ export const MatchMatrix: React.FC<Props> = ({ matrix, onSelectCell }) => {
                       <td key={jd.id} className="p-2 text-center">
                         <button
                           onClick={() => onSelectCell && onSelectCell(p.id, jd.id)}
-                          className={`w-full py-2 px-1 rounded-lg border text-xs font-bold transition-all relative ${getScoreColor(
+                          className={`w-full py-2 px-1 rounded-lg border text-xs font-bold transition-all relative cursor-pointer ${getScoreColor(
                             score,
                           )}`}
                         >

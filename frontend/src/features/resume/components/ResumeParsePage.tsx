@@ -18,6 +18,7 @@ import {
   CheckCircle2,
   Cpu,
   ShieldCheck,
+  Loader2,
 } from "lucide-react";
 import { useNavigate, Link } from "@tanstack/react-router";
 
@@ -68,7 +69,7 @@ export const ResumeParsePage: React.FC = () => {
 
       <div className="relative mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 space-y-6">
         {/* Top Breadcrumb Header */}
-        <div className="flex items-center justify-between border-b border-border pb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-4">
           <div className="flex items-center gap-3">
             <Link
               to="/"
@@ -87,7 +88,7 @@ export const ResumeParsePage: React.FC = () => {
             <span className="text-xs font-semibold text-foreground">Resume Parsing</span>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Link
               to="/companies"
               className="rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground"
@@ -165,9 +166,20 @@ export const ResumeParsePage: React.FC = () => {
 
         {/* Error notification banner if any */}
         {error && (
-          <div className="flex items-center gap-3 rounded-xl border border-red-500/40 bg-red-950/30 p-4 text-sm text-red-300">
-            <AlertCircle className="h-5 w-5 text-red-400 shrink-0" />
-            <div className="flex-1">{error}</div>
+          <div className="flex items-center justify-between gap-3 rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-xs text-destructive">
+            <div className="flex items-center gap-2">
+              <AlertCircle className="h-4 w-4 shrink-0" />
+              <span>{error}</span>
+            </div>
+            <button
+              onClick={() => {
+                reset();
+                void loadUserResume();
+              }}
+              className="font-bold underline hover:no-underline cursor-pointer shrink-0"
+            >
+              Retry
+            </button>
           </div>
         )}
 
@@ -175,6 +187,7 @@ export const ResumeParsePage: React.FC = () => {
         <ResumeUploadCard
           onFileUpload={uploadAndParse}
           isLoading={isLoading}
+          status={status}
           currentCandidateName={currentExtraction?.candidate?.name}
           onClear={reset}
           onNext={handleGoToProfile}
@@ -182,7 +195,32 @@ export const ResumeParsePage: React.FC = () => {
         />
 
         {/* Main Content Dashboard */}
-        {currentExtraction ? (
+        {isLoading && !currentExtraction ? (
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-primary/30 bg-card/60 p-12 text-center shadow-xs">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary border border-primary/20">
+              <Loader2 className="h-7 w-7 animate-spin text-primary" />
+            </div>
+            <h3 className="mt-4 text-lg font-bold text-foreground">
+              {status === "uploading"
+                ? "Uploading Document..."
+                : "Analyzing Resume Structure & Evidence..."}
+            </h3>
+            <p className="mt-1.5 text-xs text-muted-foreground max-w-md">
+              Extracting candidate contact, career timeline, RapidFuzz grounded skills, and 12 Bloom rubric bands.
+            </p>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" /> Grounding evidence
+              </span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" /> Masking PII
+              </span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" /> Computing Bloom levels
+              </span>
+            </div>
+          </div>
+        ) : currentExtraction ? (
           <div className="space-y-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
               {/* Left Column: 12-Axis Skill Fingerprint Radar */}

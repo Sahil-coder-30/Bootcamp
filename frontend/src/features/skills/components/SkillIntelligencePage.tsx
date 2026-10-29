@@ -76,15 +76,15 @@ const BLOOM: Record<
 
 const CRIT: Record<Criticality, { desc: string; badge: string }> = {
   Critical: {
-    desc: "Score 7+ — mandatory proficiency before interview rounds",
+    desc: "Score 7+, mandatory proficiency before interview rounds",
     badge: "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30",
   },
   Important: {
-    desc: "Score 5–6 — solid working knowledge expected by panels",
+    desc: "Score 5-6, solid working knowledge expected by panels",
     badge: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30",
   },
   Baseline: {
-    desc: "Below 5 — general foundational familiarity is sufficient",
+    desc: "Below 5, general foundational familiarity is sufficient",
     badge: "bg-secondary text-muted-foreground border-border/80",
   },
 };

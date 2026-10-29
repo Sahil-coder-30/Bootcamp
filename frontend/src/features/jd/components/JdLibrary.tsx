@@ -1,8 +1,8 @@
 import React from "react";
-import { Briefcase, RefreshCw } from "lucide-react";
+import { AlertCircle, Briefcase, RefreshCw } from "lucide-react";
 import { categoryColor } from "@/lib/categories";
 import { cn } from "@/lib/utils";
-import type { JdSummary } from "../service/jd.api";
+import type { JdSummary } from "../Hooks/jd.hooks";
 
 interface JdLibraryProps {
   items: JdSummary[];
@@ -34,7 +34,30 @@ export const JdLibrary: React.FC<JdLibraryProps> = ({
         <RefreshCw className={cn("h-3.5 w-3.5", isLoading && "animate-spin")} />
       </button>
     </div>
-    {error && <p className="text-xs text-destructive">{error}</p>}
+    {error && (
+      <div
+        role="alert"
+        className="mb-3 flex items-center justify-between rounded-xl border border-destructive/30 bg-destructive/10 p-2.5 text-xs text-destructive"
+      >
+        <div className="flex items-center gap-1.5 min-w-0">
+          <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+          <span className="truncate">{error}</span>
+        </div>
+        <button
+          type="button"
+          onClick={onRefresh}
+          className="font-bold underline hover:no-underline cursor-pointer ml-2 shrink-0"
+        >
+          Retry
+        </button>
+      </div>
+    )}
+    {isLoading && items.length === 0 && (
+      <div className="space-y-2 py-1">
+        <div className="h-16 rounded-xl border border-border/50 bg-muted/40 animate-pulse" />
+        <div className="h-16 rounded-xl border border-border/50 bg-muted/40 animate-pulse" />
+      </div>
+    )}
     {!error && items.length === 0 && !isLoading && (
       <p className="text-xs text-muted-foreground">No JDs yet. Upload one above.</p>
     )}
@@ -63,13 +86,13 @@ export const JdLibrary: React.FC<JdLibraryProps> = ({
               {jd.top_categories.map((c) => (
                 <span
                   key={c}
-                  className="rounded px-1.5 py-0.5 text-[10px] font-bold text-white"
+                  className="rounded px-1.5 py-0.5 text-[10px] font-bold text-white shrink-0"
                   style={{ backgroundColor: categoryColor(c) }}
                 >
                   {c}
                 </span>
               ))}
-              <span className="ml-auto text-[10px] text-muted-foreground">
+              <span className="ml-auto text-[10px] text-muted-foreground shrink-0">
                 {jd.skill_count} skills · {jd.must_count} must
               </span>
             </div>

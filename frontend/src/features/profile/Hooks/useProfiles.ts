@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { toErrorMessage } from "@/services/apiClient";
-import { listProfilesAPI } from "../service/profile.api";
-import { appendList, setList, setListError, setListLoading } from "../slice/profile.slice";
+import { deleteProfileAPI, listProfilesAPI } from "../service/profile.api";
+import { appendList, removeProfile, setList, setListError, setListLoading } from "../slice/profile.slice";
 
 /** Paginated, searchable list of saved profiles (keyset cursor from the server). */
 export function useProfiles({ q = "", limit = 20 }: { q?: string; limit?: number } = {}) {
@@ -46,6 +46,19 @@ export function useProfiles({ q = "", limit = 20 }: { q?: string; limit?: number
     }
   }, [dispatch, limit, list.loading, list.nextCursor, list.query]);
 
+  const deleteProfile = useCallback(
+    async (profileId: string) => {
+      try {
+        await deleteProfileAPI(profileId);
+        dispatch(removeProfile(profileId));
+        return true;
+      } catch (err) {
+        throw new Error(toErrorMessage(err, "Could not delete profile."));
+      }
+    },
+    [dispatch],
+  );
+
   return {
     items: list.items,
     loadMore,
@@ -53,5 +66,6 @@ export function useProfiles({ q = "", limit = 20 }: { q?: string; limit?: number
     loading: list.loading,
     error: list.error,
     refetch: () => load(q),
+    deleteProfile,
   };
 }

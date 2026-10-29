@@ -6,6 +6,17 @@ interface Props {
 }
 
 export const MatchLinksView: React.FC<Props> = ({ matchedSkills }) => {
+  if (matchedSkills.length === 0) {
+    return (
+      <div className="rounded-xl border border-dashed border-border bg-card/60 p-8 text-center space-y-2">
+        <h4 className="text-sm font-semibold text-foreground">No Matched Skills Recorded</h4>
+        <p className="text-xs text-muted-foreground max-w-md mx-auto">
+          No skills matched the requirements for this job posting yet.
+        </p>
+      </div>
+    );
+  }
+
   const getMethodBadge = (m: string) => {
     switch (m) {
       case "exact":
@@ -95,7 +106,7 @@ export const MatchLinksView: React.FC<Props> = ({ matchedSkills }) => {
                 <span className="text-emerald-700 dark:text-emerald-300 font-medium">
                   {m.candidate_skill}
                 </span>
-                <span className="rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 px-1.5 py-0.2 text-[10px] font-mono">
+                <span className="rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 px-2 py-0.5 text-[10px] font-mono">
                   {Math.round(m.credit * 100)}% credit
                 </span>
               </div>

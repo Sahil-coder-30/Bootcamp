@@ -7,6 +7,9 @@ vi.mock("@/services/apiClient", () => ({
     get: vi.fn(),
     post: vi.fn(),
   },
+  toErrorMessage: vi.fn((err: unknown, fallback: string) =>
+    err instanceof Error ? err.message : fallback,
+  ),
 }));
 
 describe("Dashboard Service & Candidate Profile Integration", () => {
@@ -141,5 +144,57 @@ describe("Dashboard Service & Candidate Profile Integration", () => {
     expect(result.readinessScore).toBe(78);
     expect(result.skills).toHaveLength(1);
     expect(result.skills[0]?.code).toBe("COD");
+  });
+
+  describe("Dashboard Slice pure sync reducers & 4-layer contract", () => {
+    it("purely manages modal states and loading/error states", async () => {
+      const {
+        dashboardSlice,
+        setJDModalOpen,
+        setATSModalOpen,
+        setDashboardLoading,
+        setDashboardError,
+        toggleStudyStep,
+      } = await import("@/features/dashboard/slice/dashboard.slice");
+
+      const state0 = dashboardSlice.reducer(undefined, { type: "@@INIT" });
+      expect(state0.isJDModalOpen).toBe(false);
+      expect(state0.isATSModalOpen).toBe(false);
+      expect(state0.loading).toBe(false);
+      expect(state0.error).toBeNull();
+
+      const state1 = dashboardSlice.reducer(state0, setJDModalOpen(true));
+      expect(state1.isJDModalOpen).toBe(true);
+
+      const state2 = dashboardSlice.reducer(state1, setATSModalOpen(true));
+      expect(state2.isATSModalOpen).toBe(true);
+
+      const state3 = dashboardSlice.reducer(state2, setDashboardError("Network Error"));
+      expect(state3.error).toBe("Network Error");
+
+      const state4 = dashboardSlice.reducer(state3, setDashboardLoading(true));
+      expect(state4.loading).toBe(true);
+
+      const stateWithSteps = {
+        ...state4,
+        studyPlan: [
+          {
+            id: "step-1",
+            categoryCode: "COD",
+            categoryName: "Coding",
+            fromLevel: 4,
+            toLevel: 6,
+            hours: 24,
+            topics: "Recursion",
+            completed: false,
+          },
+        ],
+      };
+      const state5 = dashboardSlice.reducer(stateWithSteps, toggleStudyStep("step-1"));
+      expect(state5.studyPlan[0]?.completed).toBe(true);
+
+      const state6 = dashboardSlice.reducer(state5, toggleStudyStep("step-1"));
+      expect(state6.studyPlan[0]?.completed).toBe(false);
+    });
   });
 });

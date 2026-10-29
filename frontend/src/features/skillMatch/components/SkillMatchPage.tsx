@@ -6,89 +6,61 @@ import { MatchLinksView } from "./MatchLinksView";
 import { HowComputedDrawer } from "./HowComputedDrawer";
 import { MatchMatrix } from "./MatchMatrix";
 import { useJdLibrary } from "@/features/jd/Hooks/jd.hooks";
-import { listProfilesAPI } from "@/features/profile/service/profile.api";
+import { useProfiles } from "@/features/profile/Hooks/useProfiles";
+import { useAuth } from "@/features/auth/Hooks/auth.hooks";
 import { getStoredUser } from "@/lib/auth";
-import { useAppSelector } from "@/store";
+import { Loader2, RefreshCw } from "lucide-react";
 
 export const SkillMatchPage: React.FC = () => {
   const { profileId, jdId, result, isLoading, error, fetchMatch, selectProfile, selectJd } =
     useSkillMatch();
 
-  const { matrix } = useSkillMatchMatrix();
+  const { matrix, isLoading: matrixLoading, error: matrixError, fetchMatrix } = useSkillMatchMatrix();
   const [activeTab, setActiveTab] = useState<"gaps" | "links" | "matrix">("gaps");
   const [showDrawer, setShowDrawer] = useState(false);
 
-  // Dynamic candidate profiles state
-  const [candidates, setCandidates] = useState<Array<{ id: string; name: string }>>([]);
-  const [loadingCandidates, setLoadingCandidates] = useState<boolean>(true);
+  // Dynamic candidate profiles hook
+  const { items: profileItems = [], loading: loadingCandidates } = useProfiles({ limit: 50 });
 
   // Dynamic JDs from JD library
-  const { items: jdItems, isLoading: jdsLoading } = useJdLibrary();
+  const { items: jdItems = [], isLoading: jdsLoading } = useJdLibrary();
 
   const jobPostings = useMemo(() => {
-    return jdItems.map((j) => ({
+    return (jdItems || []).map((j) => ({
       id: j.jd_id,
       company: j.company_name || "Company",
       role: j.role || "Job Role",
     }));
   }, [jdItems]);
 
-  const authUser = useAppSelector((s) => s.auth.user);
+  const { user: authUser } = useAuth();
   const storedUser = getStoredUser();
 
-  // Load real candidate profiles dynamically
-  useEffect(() => {
-    let active = true;
+  const candidates = useMemo(() => {
+    const list = (profileItems || []).map((p) => ({
+      id: p.id,
+      name: p.name || p.email || "Candidate Profile",
+    }));
 
-    async function loadCandidates() {
-      setLoadingCandidates(true);
-      try {
-        const data = await listProfilesAPI({ limit: 50 });
-        if (!active) return;
+    // Include logged-in candidate profile if available
+    const loggedInId =
+      authUser?.candidateProfileId ||
+      (storedUser?.id && storedUser.id !== "3a000000-0000-4000-8000-000000000001" ? storedUser.id : "") ||
+      (authUser?.id && authUser.id.startsWith("6f1c") ? authUser.id : "");
+    const loggedInName = authUser?.name || storedUser?.name || "My Profile";
 
-        const list = (data.items || []).map((p) => ({
-          id: p.id,
-          name: p.name || p.email || "Candidate Profile",
-        }));
-
-        // Include logged-in candidate profile if available
-        const loggedInId =
-          authUser?.candidateProfileId ||
-          (storedUser?.id && storedUser.id !== "3a000000-0000-4000-8000-000000000001" ? storedUser.id : "") ||
-          (authUser?.id && authUser.id.startsWith("6f1c") ? authUser.id : "");
-        const loggedInName = authUser?.name || storedUser?.name || "My Profile";
-
-        if (loggedInId && !list.some((c) => c.id === loggedInId)) {
-          list.unshift({ id: loggedInId, name: `${loggedInName} (Current)` });
-        }
-
-        setCandidates(list);
-      } catch (err) {
-        console.warn("Could not list candidate profiles, checking auth fallback", err);
-        const loggedInId =
-          authUser?.candidateProfileId ||
-          (storedUser?.id && storedUser.id !== "3a000000-0000-4000-8000-000000000001" ? storedUser.id : "") ||
-          (authUser?.id && authUser.id.startsWith("6f1c") ? authUser.id : "");
-
-        if (loggedInId && active) {
-          setCandidates([
-            {
-              id: loggedInId,
-              name: authUser?.name || storedUser?.name || "Current Candidate",
-            },
-          ]);
-        }
-      } finally {
-        if (active) setLoadingCandidates(false);
-      }
+    if (loggedInId && !list.some((c) => c.id === loggedInId)) {
+      list.unshift({ id: loggedInId, name: `${loggedInName} (Current)` });
     }
+    return list;
+  }, [profileItems, authUser?.candidateProfileId, authUser?.id, authUser?.name, storedUser?.id, storedUser?.name]);
 
-    loadCandidates();
-
-    return () => {
-      active = false;
-    };
-  }, [authUser?.candidateProfileId, authUser?.id, authUser?.name, storedUser?.id, storedUser?.name]);
+  // Load matrix when matrix tab is opened
+  useEffect(() => {
+    if (activeTab === "matrix" && !matrix && !matrixLoading) {
+      void fetchMatrix();
+    }
+  }, [activeTab, matrix, matrixLoading, fetchMatrix]);
 
   // Dynamic default: select first candidate when candidates load if none selected
   useEffect(() => {
@@ -135,8 +107,8 @@ export const SkillMatchPage: React.FC = () => {
         </div>
 
         {/* Selectors */}
-        <div className="flex flex-wrap items-center gap-3">
-          <div>
+        <div className="flex flex-col sm:flex-row flex-wrap sm:items-end gap-3 w-full lg:w-auto">
+          <div className="w-full sm:w-auto min-w-[200px]">
             <label className="block text-[11px] font-medium text-muted-foreground mb-1">
               Candidate Profile
             </label>
@@ -144,7 +116,7 @@ export const SkillMatchPage: React.FC = () => {
               value={profileId}
               onChange={(e) => selectProfile(e.target.value)}
               disabled={loadingCandidates || candidates.length === 0}
-              className="rounded-lg border border-border bg-card px-3 py-1.5 text-xs text-foreground focus:outline-none focus:border-primary disabled:opacity-50"
+              className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary disabled:opacity-50 truncate"
             >
               {candidates.length === 0 ? (
                 <option value="">
@@ -160,7 +132,7 @@ export const SkillMatchPage: React.FC = () => {
             </select>
           </div>
 
-          <div>
+          <div className="w-full sm:w-auto min-w-[200px]">
             <label className="block text-[11px] font-medium text-muted-foreground mb-1">
               Target Job Posting
             </label>
@@ -168,7 +140,7 @@ export const SkillMatchPage: React.FC = () => {
               value={jdId}
               onChange={(e) => selectJd(e.target.value)}
               disabled={jdsLoading || jobPostings.length === 0}
-              className="rounded-lg border border-border bg-card px-3 py-1.5 text-xs text-foreground focus:outline-none focus:border-primary disabled:opacity-50"
+              className="w-full rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary disabled:opacity-50 truncate"
             >
               {jobPostings.length === 0 ? (
                 <option value="">
@@ -184,13 +156,23 @@ export const SkillMatchPage: React.FC = () => {
             </select>
           </div>
 
-          <div className="self-end">
+          <div className="w-full sm:w-auto">
             <button
               onClick={() => fetchMatch(true)}
               disabled={isLoading || !profileId || !jdId}
-              className="rounded-lg border border-primary bg-primary px-3.5 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors shadow-xs cursor-pointer"
+              className="w-full sm:w-auto flex items-center justify-center gap-1.5 rounded-lg border border-primary bg-primary px-3.5 py-2 text-xs font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors shadow-xs cursor-pointer"
             >
-              {isLoading ? "Matching..." : "Re-run"}
+              {isLoading ? (
+                <>
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  <span>Matching...</span>
+                </>
+              ) : (
+                <>
+                  <RefreshCw className="h-3.5 w-3.5" />
+                  <span>Re-run</span>
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -198,8 +180,16 @@ export const SkillMatchPage: React.FC = () => {
 
       {/* Error View */}
       {error && (
-        <div className="rounded-xl border border-rose-500/40 bg-rose-500/10 p-4 text-xs text-rose-600 dark:text-rose-400">
-          <span className="font-bold">Error:</span> {error}
+        <div className="flex items-center justify-between gap-3 rounded-xl border border-rose-500/40 bg-rose-500/10 p-4 text-xs text-rose-600 dark:text-rose-400">
+          <div>
+            <span className="font-bold">Error:</span> {error}
+          </div>
+          <button
+            onClick={() => void fetchMatch(true)}
+            className="font-bold underline hover:no-underline cursor-pointer shrink-0 ml-3"
+          >
+            Retry
+          </button>
         </div>
       )}
 
@@ -241,11 +231,11 @@ export const SkillMatchPage: React.FC = () => {
           />
 
           {/* Tab Navigation */}
-          <div className="flex items-center justify-between border-b border-border">
-            <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border pb-1">
+            <div className="no-scrollbar flex items-center gap-2 overflow-x-auto min-w-0 flex-1">
               <button
                 onClick={() => setActiveTab("gaps")}
-                className={`border-b-2 py-2 px-3 text-xs font-semibold transition-colors cursor-pointer ${
+                className={`whitespace-nowrap border-b-2 py-2 px-3 text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === "gaps"
                     ? "border-primary text-primary"
                     : "border-transparent text-muted-foreground hover:text-foreground"
@@ -255,7 +245,7 @@ export const SkillMatchPage: React.FC = () => {
               </button>
               <button
                 onClick={() => setActiveTab("links")}
-                className={`border-b-2 py-2 px-3 text-xs font-semibold transition-colors cursor-pointer ${
+                className={`whitespace-nowrap border-b-2 py-2 px-3 text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === "links"
                     ? "border-primary text-primary"
                     : "border-transparent text-muted-foreground hover:text-foreground"
@@ -265,7 +255,7 @@ export const SkillMatchPage: React.FC = () => {
               </button>
               <button
                 onClick={() => setActiveTab("matrix")}
-                className={`border-b-2 py-2 px-3 text-xs font-semibold transition-colors cursor-pointer ${
+                className={`whitespace-nowrap border-b-2 py-2 px-3 text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === "matrix"
                     ? "border-primary text-primary"
                     : "border-transparent text-muted-foreground hover:text-foreground"
@@ -280,7 +270,7 @@ export const SkillMatchPage: React.FC = () => {
 
             <button
               onClick={() => setShowDrawer(true)}
-              className="text-xs text-muted-foreground hover:text-foreground underline cursor-pointer"
+              className="shrink-0 text-xs text-muted-foreground hover:text-foreground underline cursor-pointer"
             >
               How this was computed
             </button>
@@ -289,15 +279,46 @@ export const SkillMatchPage: React.FC = () => {
           {/* Active Tab View */}
           {activeTab === "gaps" && <GapList missingSkills={result.missing_skills} />}
           {activeTab === "links" && <MatchLinksView matchedSkills={result.matched_skills} />}
-          {activeTab === "matrix" && matrix && (
-            <MatchMatrix
-              matrix={matrix}
-              onSelectCell={(p, j) => {
-                selectProfile(p);
-                selectJd(j);
-                setActiveTab("gaps");
-              }}
-            />
+          {activeTab === "matrix" && (
+            matrixLoading ? (
+              <div className="rounded-xl border border-border bg-card p-12 text-center space-y-3">
+                <Loader2 className="mx-auto h-6 w-6 animate-spin text-primary" />
+                <p className="text-xs text-muted-foreground">Loading cross-candidate match matrix...</p>
+              </div>
+            ) : matrixError ? (
+              <div className="rounded-xl border border-rose-500/40 bg-rose-500/10 p-5 text-xs text-rose-600 dark:text-rose-400 space-y-3">
+                <p className="font-bold">Failed to load match matrix:</p>
+                <p>{matrixError}</p>
+                <div>
+                  <button
+                    onClick={() => fetchMatrix(true)}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-500/20 px-3 py-1.5 text-xs font-semibold hover:bg-rose-500/30 transition-colors cursor-pointer text-rose-700 dark:text-rose-300"
+                  >
+                    <RefreshCw className="h-3.5 w-3.5" />
+                    Retry Matrix Load
+                  </button>
+                </div>
+              </div>
+            ) : matrix ? (
+              <MatchMatrix
+                matrix={matrix}
+                onSelectCell={(p, j) => {
+                  selectProfile(p);
+                  selectJd(j);
+                  setActiveTab("gaps");
+                }}
+              />
+            ) : (
+              <div className="rounded-xl border border-dashed border-border bg-card p-8 text-center text-xs text-muted-foreground space-y-3">
+                <p>Matrix data is not available yet.</p>
+                <button
+                  onClick={() => fetchMatrix(true)}
+                  className="rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground hover:bg-card-sub transition-colors cursor-pointer"
+                >
+                  Generate Matrix
+                </button>
+              </div>
+            )
           )}
 
           {/* How Computed Modal Drawer */}

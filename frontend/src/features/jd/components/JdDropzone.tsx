@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
-import { FileText, Loader2, UploadCloud } from "lucide-react";
+import { AlertCircle, FileText, Loader2, UploadCloud } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { UploadStage } from "../slice/jd.slice";
+import type { UploadStage } from "../Hooks/jd.hooks";
 
 interface JdDropzoneProps {
   onFile: (file: File) => void;
@@ -79,9 +79,13 @@ export const JdDropzone: React.FC<JdDropzoneProps> = ({ onFile, stage, error }) 
         </p>
       )}
       {error && (
-        <p className="mt-2 text-xs font-medium text-destructive" role="alert">
-          {error}
-        </p>
+        <div
+          role="alert"
+          className="mt-3 flex items-start gap-2 rounded-xl border border-destructive/30 bg-destructive/10 p-2.5 text-xs text-destructive"
+        >
+          <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+          <p className="font-medium flex-1">{error}</p>
+        </div>
       )}
     </div>
   );

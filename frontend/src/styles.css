@@ -125,6 +125,13 @@
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: #1e293b;
   --sidebar-ring: #6366f1;
+  /* Design Tokens Bridge */
+  --bg-canvas: var(--background);
+  --bg-surface: var(--card);
+  --bg-card: var(--card);
+  --brand-primary: var(--primary);
+  --text-primary: var(--foreground);
+  --text-muted: var(--muted-foreground);
 }
 
 .light-theme,
@@ -197,6 +204,13 @@
   --sidebar-accent-foreground: #0f172a;
   --sidebar-border: #e2e8f0;
   --sidebar-ring: #4f46e5;
+  /* Design Tokens Bridge */
+  --bg-canvas: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-card: #ffffff;
+  --brand-primary: #4f46e5;
+  --text-primary: #0f172a;
+  --text-muted: #64748b;
 }
 
 .dark,
@@ -256,6 +270,13 @@
   --sidebar-accent-foreground: #f3f4f6;
   --sidebar-border: #1a1d27;
   --sidebar-ring: #f97316;
+  /* Design Tokens Bridge */
+  --bg-canvas: #0b0c0e;
+  --bg-surface: #12141a;
+  --bg-card: #12141a;
+  --brand-primary: #f97316;
+  --text-primary: #f3f4f6;
+  --text-muted: #94a3b8;
 }
 
 @layer base {

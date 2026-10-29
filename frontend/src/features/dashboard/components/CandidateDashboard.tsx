@@ -124,14 +124,14 @@ export const CandidateDashboard: React.FC = () => {
       <div className="px-4 sm:px-8 py-6 space-y-6">
         {/* Error Banner if any */}
         {dashboardError && (
-          <div className="flex items-center justify-between gap-3 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-xs text-red-500">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-xs text-red-500">
             <div className="flex items-center gap-2">
               <AlertCircle className="h-4 w-4 shrink-0" />
               <span>Notice: {dashboardError}. Displaying cached snapshot.</span>
             </div>
             <button
               onClick={refresh}
-              className="inline-flex items-center gap-1 font-bold hover:underline cursor-pointer"
+              className="inline-flex items-center gap-1 font-bold hover:underline cursor-pointer shrink-0"
             >
               <RefreshCw className="h-3 w-3" /> Retry
             </button>
@@ -165,8 +165,8 @@ export const CandidateDashboard: React.FC = () => {
 
             {/* Quick Readiness Score Circular Ring Card */}
             {summary?.hasData ? (
-              <div className="flex items-center gap-4 bg-card-sub border border-border rounded-2xl px-5 py-3.5 shadow-xs shrink-0">
-                <div className="relative h-14 w-14 flex flex-col items-center justify-center">
+              <div className="flex items-center gap-4 bg-card-sub border border-border rounded-2xl px-5 py-3.5 shadow-xs w-full sm:w-auto shrink-0">
+                <div className="relative h-14 w-14 flex flex-col items-center justify-center shrink-0">
                   <svg className="h-14 w-14 -rotate-90 transform" viewBox="0 0 36 36">
                     <circle
                       cx="18"
@@ -206,13 +206,13 @@ export const CandidateDashboard: React.FC = () => {
                   </p>
                   <p className="text-[10px] text-muted-foreground font-medium">
                     {summary?.readinessRange
-                      ? `Range: ${summary.readinessRange.low}% – ${summary.readinessRange.high}%`
+                      ? `Range: ${summary.readinessRange.low}% to ${summary.readinessRange.high}%`
                       : "Confidence Interval"}
                   </p>
                 </div>
               </div>
             ) : (
-              <div className="flex items-center gap-3 bg-card-sub border border-amber-500/30 rounded-2xl px-5 py-3.5 shadow-xs shrink-0">
+              <div className="flex items-center gap-3 bg-card-sub border border-amber-500/30 rounded-2xl px-5 py-3.5 shadow-xs w-full sm:w-auto shrink-0">
                 <div className="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500 shrink-0">
                   <AlertCircle className="h-5 w-5" />
                 </div>

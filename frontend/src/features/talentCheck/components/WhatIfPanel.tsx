@@ -124,7 +124,7 @@ export const WhatIfPanel: React.FC<WhatIfPanelProps> = ({
 
       {/* 12 Skill Sliders Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {result.skillset_gap.map((row) => {
+        {(result.skillset_gap || []).map((row) => {
           const currentVal =
             typeof overrides[row.category_code] === "number"
               ? overrides[row.category_code]!

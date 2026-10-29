@@ -88,13 +88,13 @@ export const SkillHistogramCard: React.FC<SkillHistogramCardProps> = ({
         </div>
 
         {/* Filter Pills */}
-        <div className="flex items-center gap-1 rounded-full bg-muted p-1 border border-border text-[11px]">
+        <div className="flex items-center gap-1 rounded-full bg-muted p-1 border border-border text-[11px] max-w-full overflow-x-auto no-scrollbar shrink-0">
           {(["All", "Core", "Systems", "Engineering"] as const).map((cat) => (
             <button
               key={cat}
               onClick={() => setFilterCategory(cat)}
               className={cn(
-                "rounded-full px-2.5 py-1 font-medium transition-all cursor-pointer",
+                "rounded-full px-2.5 py-1 font-medium transition-all cursor-pointer whitespace-nowrap",
                 filterCategory === cat
                   ? "bg-primary text-white font-bold shadow-xs"
                   : "text-muted-foreground hover:text-foreground",

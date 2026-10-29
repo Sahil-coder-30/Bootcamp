@@ -119,7 +119,7 @@ export const InteractiveSimulator: React.FC = () => {
     }
     if (readinessMetrics.score >= 65) {
       return {
-        label: "Tier Gap Detected — Targeted Review Needed",
+        label: "Tier Gap Detected, Targeted Review Needed",
         badge: "bg-amber-500/10 text-amber-800 dark:text-amber-300 border-amber-500/30",
         description:
           "Minor shortfall in 1-2 competencies; remediable via focused topic ladder practice.",

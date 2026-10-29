@@ -165,7 +165,7 @@ export const ATSResumeModal: React.FC<ATSResumeModalProps> = ({ isOpen, onClose 
 
             {/* Audit Details */}
             <div className="mt-5 space-y-2.5">
-              <div className="flex items-center justify-between rounded-xl border border-border bg-card-sub p-3 text-xs">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 rounded-xl border border-border bg-card-sub p-3 text-xs">
                 <span className="flex items-center gap-2 font-medium text-foreground">
                   <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                   Standard Heading Structures (Experience, Education, Skills, Projects)
@@ -175,7 +175,7 @@ export const ATSResumeModal: React.FC<ATSResumeModalProps> = ({ isOpen, onClose 
                 </span>
               </div>
 
-              <div className="flex items-center justify-between rounded-xl border border-border bg-card-sub p-3 text-xs">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 rounded-xl border border-border bg-card-sub p-3 text-xs">
                 <span className="flex items-center gap-2 font-medium text-foreground">
                   <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                   Verifiable Metric Action Verbs (Engineered, Implemented, Optimized)
@@ -185,7 +185,7 @@ export const ATSResumeModal: React.FC<ATSResumeModalProps> = ({ isOpen, onClose 
                 </span>
               </div>
 
-              <div className="flex items-center justify-between rounded-xl border border-border bg-card-sub p-3 text-xs">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 rounded-xl border border-border bg-card-sub p-3 text-xs">
                 <span className="flex items-center gap-2 font-medium text-foreground">
                   <FileText className="h-4 w-4 text-primary shrink-0" />
                   Extracted Bloom RADIX Skills
@@ -195,7 +195,7 @@ export const ATSResumeModal: React.FC<ATSResumeModalProps> = ({ isOpen, onClose 
                 </span>
               </div>
 
-              <div className="flex items-center justify-between rounded-xl border border-border bg-card-sub p-3 text-xs">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 rounded-xl border border-border bg-card-sub p-3 text-xs">
                 <span className="flex items-center gap-2 font-medium text-foreground">
                   <AlertCircle className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0" />
                   Suggested Skill Addition: &apos;{audit.recommendation}&apos;
@@ -207,7 +207,7 @@ export const ATSResumeModal: React.FC<ATSResumeModalProps> = ({ isOpen, onClose 
             </div>
 
             {/* Footer actions */}
-            <div className="mt-6 flex items-center justify-between border-t border-border pt-4">
+            <div className="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-border pt-4">
               <span className="text-xs text-muted-foreground">
                 Want to view full fingerprint radar or upload a new CV?
               </span>

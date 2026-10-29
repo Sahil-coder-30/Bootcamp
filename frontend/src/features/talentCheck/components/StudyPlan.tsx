@@ -13,7 +13,7 @@ interface StudyPlanProps {
 }
 
 export const StudyPlan: React.FC<StudyPlanProps> = ({ plan, onApplyPlan }) => {
-  if (!plan || plan.steps.length === 0) {
+  if (!plan || !plan.steps || plan.steps.length === 0) {
     return (
       <div className="bg-card-sub border border-border rounded-2xl p-6 text-center text-muted-foreground text-sm">
         Candidate already meets or exceeds the required hiring bar.

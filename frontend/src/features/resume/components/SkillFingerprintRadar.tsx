@@ -71,7 +71,7 @@ export const SkillFingerprintRadar: React.FC<SkillFingerprintRadarProps> = ({
   }, [primary, compare]);
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-xs">
+    <div className="rounded-2xl border border-border bg-card p-4 sm:p-6 shadow-xs">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
         <div>
           <div className="flex items-center gap-2">
@@ -87,16 +87,16 @@ export const SkillFingerprintRadar: React.FC<SkillFingerprintRadarProps> = ({
 
       </div>
 
-      <div className="mt-4 h-[350px] w-full">
+      <div className="mt-4 h-[300px] sm:h-[350px] w-full min-w-0 overflow-hidden">
         <ResponsiveContainer width="100%" height="100%">
-          <RadarChart cx="50%" cy="50%" outerRadius="75%" data={chartData}>
-            <PolarGrid stroke="var(--color-border, #e2e8f0)" />
+          <RadarChart cx="50%" cy="50%" outerRadius="68%" data={chartData}>
+            <PolarGrid stroke="var(--border, rgba(148, 163, 184, 0.2))" />
             <PolarAngleAxis
               dataKey="code"
               tick={{
                 fill: "currentColor",
                 className: "text-muted-foreground",
-                fontSize: 11,
+                fontSize: 10,
                 fontWeight: 600,
               }}
             />
@@ -104,7 +104,7 @@ export const SkillFingerprintRadar: React.FC<SkillFingerprintRadarProps> = ({
               angle={30}
               domain={[0, 10]}
               tick={{ fill: "currentColor", className: "text-muted-foreground", fontSize: 9 }}
-              stroke="var(--color-border, #e2e8f0)"
+              stroke="var(--border, rgba(148, 163, 184, 0.2))"
             />
             <Tooltip
               content={({ active, payload }) => {
@@ -112,7 +112,7 @@ export const SkillFingerprintRadar: React.FC<SkillFingerprintRadarProps> = ({
                 const d = payload[0]?.payload;
                 if (!d) return null;
                 return (
-                  <div className="rounded-xl border border-border bg-card p-3 text-xs shadow-xl">
+                  <div className="rounded-xl border border-border bg-card p-3 text-xs shadow-xl max-w-[280px] sm:max-w-xs">
                     <div className="flex items-center justify-between gap-3 border-b border-border pb-1.5">
                       <span className="font-bold text-foreground">{d.fullName}</span>
                       <span className="font-mono text-primary font-bold">

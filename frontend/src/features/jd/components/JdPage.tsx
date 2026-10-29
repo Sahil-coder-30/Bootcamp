@@ -5,9 +5,14 @@
  */
 
 import React, { useEffect, useState } from "react";
-import { FileSearch, Loader2 } from "lucide-react";
-import { useGroupedSkills, useJdDetail, useJdLibrary, useJdUpload } from "../Hooks/jd.hooks";
-import type { JdSkill } from "../service/jd.api";
+import { AlertCircle, FileSearch, Loader2 } from "lucide-react";
+import {
+  useGroupedSkills,
+  useJdDetail,
+  useJdLibrary,
+  useJdUpload,
+  type JdSkill,
+} from "../Hooks/jd.hooks";
 import { JdDropzone } from "./JdDropzone";
 import { JdEvidenceText } from "./JdEvidenceText";
 import { JdLibrary } from "./JdLibrary";
@@ -16,7 +21,7 @@ import { JdResult } from "./JdResult";
 export const JdPage: React.FC = () => {
   const library = useJdLibrary();
   const upload = useJdUpload();
-  const { detail, isLoading, error } = useJdDetail(library.selectedId);
+  const { detail, isLoading, error, refetch: refetchDetail } = useJdDetail(library.selectedId);
   const result = detail?.extraction;
   const groups = useGroupedSkills(result?.skills, result?.category_levels);
   const [selected, setSelected] = useState<JdSkill | null>(null);
@@ -62,11 +67,28 @@ export const JdPage: React.FC = () => {
 
         <div className="min-w-0 space-y-4">
           {isLoading && !detail && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="h-4 w-4 animate-spin" /> Loading JD...
+            <div className="flex items-center gap-2 text-sm text-muted-foreground p-6 rounded-2xl border border-border bg-card">
+              <Loader2 className="h-4 w-4 animate-spin text-primary" /> Loading JD details...
             </div>
           )}
-          {error && <p className="text-sm text-destructive">{error}</p>}
+          {error && (
+            <div
+              role="alert"
+              className="flex items-center justify-between rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-xs text-destructive"
+            >
+              <div className="flex items-center gap-2 min-w-0">
+                <AlertCircle className="h-4 w-4 shrink-0" />
+                <span className="truncate">{error}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => void refetchDetail()}
+                className="font-bold underline hover:no-underline cursor-pointer ml-3 shrink-0"
+              >
+                Retry
+              </button>
+            </div>
+          )}
           {!detail && !isLoading && !error && (
             <p className="rounded-2xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
               Upload a JD or pick one from the library to see its skills.

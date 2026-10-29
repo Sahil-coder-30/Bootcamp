@@ -9,6 +9,20 @@ interface Props {
 export const GapList: React.FC<Props> = ({ missingSkills }) => {
   const { quickWins, bigGaps, minor } = useGapGroups(missingSkills);
 
+  if (missingSkills.length === 0) {
+    return (
+      <div className="rounded-xl border border-dashed border-border bg-card/60 p-8 text-center space-y-2">
+        <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 mb-1 font-bold text-sm">
+          ✓
+        </div>
+        <h4 className="text-sm font-semibold text-foreground">No Skill Gaps Detected</h4>
+        <p className="text-xs text-muted-foreground max-w-md mx-auto">
+          The candidate profile satisfies all required and optional skills tracked for this target role.
+        </p>
+      </div>
+    );
+  }
+
   const renderItem = (item: MissingSkill) => {
     return (
       <div

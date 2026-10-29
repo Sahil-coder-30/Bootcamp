@@ -2,8 +2,7 @@ import React from "react";
 import { AlertTriangle, Building2, Database, RefreshCw, Zap } from "lucide-react";
 import { bloomOf, categoryColor, categoryName } from "@/lib/categories";
 import { cn } from "@/lib/utils";
-import type { CategoryGroup } from "../Hooks/jd.hooks";
-import type { ExtractedSkillList, JdSkill } from "../service/jd.api";
+import type { CategoryGroup, ExtractedSkillList, JdSkill } from "../Hooks/jd.hooks";
 
 interface JdResultProps {
   result: ExtractedSkillList;
@@ -30,7 +29,7 @@ const SkillChip: React.FC<{ skill: JdSkill; active: boolean; onClick: () => void
     onClick={onClick}
     title={`${skill.confidence} confidence${skill.level_hint ? ` · level ${skill.level_hint}` : ""}: ${skill.evidence}`}
     className={cn(
-      "inline-flex items-center gap-1.5 rounded-lg border px-2 py-1 text-xs transition-colors",
+      "inline-flex items-center gap-1.5 rounded-lg border px-2 py-1 text-xs transition-colors text-left",
       active
         ? "border-primary bg-primary/10 text-foreground"
         : "border-border text-foreground hover:border-primary/50",
@@ -38,12 +37,12 @@ const SkillChip: React.FC<{ skill: JdSkill; active: boolean; onClick: () => void
     )}
   >
     <span
-      className={cn("h-1.5 w-1.5 rounded-full", CONFIDENCE_DOT[skill.confidence])}
+      className={cn("h-1.5 w-1.5 shrink-0 rounded-full", CONFIDENCE_DOT[skill.confidence])}
       aria-hidden
     />
-    {skill.skill_name}
+    <span className="break-words">{skill.skill_name}</span>
     {skill.level_hint ? (
-      <span className="text-[10px] text-muted-foreground">L{skill.level_hint}</span>
+      <span className="shrink-0 text-[10px] text-muted-foreground">L{skill.level_hint}</span>
     ) : null}
   </button>
 );

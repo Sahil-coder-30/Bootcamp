@@ -31,84 +31,84 @@ export const ResumeParsedView: React.FC<ResumeParsedViewProps> = ({
   onSkillClick,
 }) => {
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-xs">
+    <div className="rounded-2xl border border-border bg-card p-4 sm:p-6 shadow-xs">
       {/* Tab Navigation */}
-      <div className="no-scrollbar flex items-center gap-1.5 border-b border-border pb-3 overflow-x-auto">
+      <div className="no-scrollbar flex items-center gap-1.5 border-b border-border pb-3 overflow-x-auto touch-pan-x">
         <button
           type="button"
           onClick={() => onTabChange("overview")}
-          className={`flex items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
+          className={`flex shrink-0 whitespace-nowrap items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
             activeTab === "overview"
               ? "bg-primary/10 text-primary border border-primary/30"
               : "text-muted-foreground hover:bg-muted hover:text-foreground"
           }`}
         >
-          <Sparkles className="h-3.5 w-3.5" />
+          <Sparkles className="h-3.5 w-3.5 shrink-0" />
           Overview
         </button>
 
         <button
           type="button"
           onClick={() => onTabChange("experience")}
-          className={`flex items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
+          className={`flex shrink-0 whitespace-nowrap items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
             activeTab === "experience"
               ? "bg-primary/10 text-primary border border-primary/30"
               : "text-muted-foreground hover:bg-muted hover:text-foreground"
           }`}
         >
-          <Briefcase className="h-3.5 w-3.5" />
+          <Briefcase className="h-3.5 w-3.5 shrink-0" />
           Experience ({extraction.experience?.length || 0})
         </button>
 
         <button
           type="button"
           onClick={() => onTabChange("projects")}
-          className={`flex items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
+          className={`flex shrink-0 whitespace-nowrap items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
             activeTab === "projects"
               ? "bg-primary/10 text-primary border border-primary/30"
               : "text-muted-foreground hover:bg-muted hover:text-foreground"
           }`}
         >
-          <Code2 className="h-3.5 w-3.5" />
+          <Code2 className="h-3.5 w-3.5 shrink-0" />
           Projects ({extraction.projects?.length || 0})
         </button>
 
         <button
           type="button"
           onClick={() => onTabChange("skills")}
-          className={`flex items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
+          className={`flex shrink-0 whitespace-nowrap items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
             activeTab === "skills"
               ? "bg-primary/10 text-primary border border-primary/30"
               : "text-muted-foreground hover:bg-muted hover:text-foreground"
           }`}
         >
-          <Layers className="h-3.5 w-3.5" />
+          <Layers className="h-3.5 w-3.5 shrink-0" />
           Skills Matrix ({extraction.skills?.length || 0})
         </button>
 
         <button
           type="button"
           onClick={() => onTabChange("education")}
-          className={`flex items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
+          className={`flex shrink-0 whitespace-nowrap items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
             activeTab === "education"
               ? "bg-primary/10 text-primary border border-primary/30"
               : "text-muted-foreground hover:bg-muted hover:text-foreground"
           }`}
         >
-          <GraduationCap className="h-3.5 w-3.5" />
+          <GraduationCap className="h-3.5 w-3.5 shrink-0" />
           Education &amp; Certs ({(extraction.education?.length || 0) + (extraction.certifications?.length || 0)})
         </button>
 
         <button
           type="button"
           onClick={() => onTabChange("hackathons")}
-          className={`flex items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
+          className={`flex shrink-0 whitespace-nowrap items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
             activeTab === "hackathons"
               ? "bg-primary/10 text-primary border border-primary/30"
               : "text-muted-foreground hover:bg-muted hover:text-foreground"
           }`}
         >
-          <Trophy className="h-3.5 w-3.5" />
+          <Trophy className="h-3.5 w-3.5 shrink-0" />
           Hackathons ({extraction.hackathons?.length || 0})
         </button>
       </div>
@@ -193,7 +193,7 @@ export const ResumeParsedView: React.FC<ResumeParsedViewProps> = ({
                       <p className="text-xs text-primary font-medium">{exp.org}</p>
                     </div>
                     <span className="text-[11px] text-muted-foreground">
-                      {exp.start} — {exp.end || "Present"}
+                      {exp.start} to {exp.end || "Present"}
                     </span>
                   </div>
 

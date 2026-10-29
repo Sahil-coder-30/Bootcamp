@@ -6,14 +6,13 @@ import { JDMatcherModal } from "@/features/dashboard/components/JDMatcherModal";
 import { ATSResumeModal } from "@/features/dashboard/components/ATSResumeModal";
 import { useAuth } from "@/features/auth/Hooks/auth.hooks";
 import { useCompanies, useCompany } from "@/features/companies/Hooks/companies.hooks";
+import { useDashboardModals } from "@/features/dashboard/Hooks/dashboard.hooks";
 import {
   getStoredUser,
   subscribeToAuthChanges,
   formatNameFromEmail,
   type CandidateUser,
 } from "@/lib/auth";
-import { useAppDispatch, useAppSelector } from "@/store";
-import { setJDModalOpen, setATSModalOpen } from "@/features/dashboard/slice/dashboard.slice";
 
 export interface DashboardLayoutProps {
   children?: React.ReactNode;
@@ -25,9 +24,14 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-  const dispatch = useAppDispatch();
-  const isJDModalOpen = useAppSelector((s) => s.dashboard.isJDModalOpen);
-  const isATSModalOpen = useAppSelector((s) => s.dashboard.isATSModalOpen);
+  const {
+    isJDModalOpen,
+    isATSModalOpen,
+    openJDModal,
+    closeJDModal,
+    openATSModal,
+    closeATSModal,
+  } = useDashboardModals();
 
   const { data: companies = [] } = useCompanies();
   const { selectCompany } = useCompany();
@@ -79,8 +83,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       <div className="hidden md:block shrink-0">
         <DashboardSidebar
           currentUser={effectiveUser}
-          onOpenJDMatcher={() => dispatch(setJDModalOpen(true))}
-          onOpenATSModal={() => dispatch(setATSModalOpen(true))}
+          onOpenJDMatcher={openJDModal}
+          onOpenATSModal={openATSModal}
         />
       </div>
 
@@ -97,11 +101,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               onNavigate={() => setMobileSidebarOpen(false)}
               onOpenJDMatcher={() => {
                 setMobileSidebarOpen(false);
-                dispatch(setJDModalOpen(true));
+                openJDModal();
               }}
               onOpenATSModal={() => {
                 setMobileSidebarOpen(false);
-                dispatch(setATSModalOpen(true));
+                openATSModal();
               }}
             />
           </div>
@@ -166,13 +170,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {isJDModalOpen && (
         <JDMatcherModal
           isOpen={isJDModalOpen}
-          onClose={() => dispatch(setJDModalOpen(false))}
+          onClose={closeJDModal}
         />
       )}
       {isATSModalOpen && (
         <ATSResumeModal
           isOpen={isATSModalOpen}
-          onClose={() => dispatch(setATSModalOpen(false))}
+          onClose={closeATSModal}
         />
       )}
     </div>

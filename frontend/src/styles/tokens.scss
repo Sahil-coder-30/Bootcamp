@@ -16,6 +16,7 @@ $space-16: 64px;
 // Surface & Background Mappings
 $color-bg: var(--bg-canvas);
 $color-bg-sidebar: var(--bg-surface);
+$color-bg-card: var(--bg-card, var(--bg-surface));
 $color-bg-panel: var(--bg-overlay);
 $color-bg-element: var(--bg-element);
 $color-bg-active: var(--bg-active);
@@ -34,7 +35,8 @@ $color-accent-hover: var(--accent-hover);
 
 // Typography Tokens
 $color-text: var(--text-primary);
-$color-text-muted: var(--text-secondary);
+$color-text-secondary: var(--text-secondary);
+$color-text-muted: var(--text-muted);
 $color-text-disabled: var(--text-disabled);
 
 $font-sans: var(--font-sans);
@@ -42,8 +44,8 @@ $font-mono: var(--font-mono);
 
 // Alpha Card Helpers
 $color-rgb-text: var(--color-rgb-text);
-$color-bg-card: rgba(var(--color-rgb-text), 0.03);
-$color-bg-card-hover: rgba(var(--color-rgb-text), 0.06);
+$color-alpha-card: rgba(var(--color-rgb-text), 0.03);
+$color-alpha-card-hover: rgba(var(--color-rgb-text), 0.06);
 
 // Layout Mixins
 @mixin flex-center {
@@ -59,7 +61,7 @@ $color-bg-card-hover: rgba(var(--color-rgb-text), 0.06);
 }
 
 @mixin card {
-  background: var(--bg-surface);
+  background: var(--bg-card, var(--bg-surface));
   border: 1px solid $color-border;
   border-radius: 12px;
   padding: $space-6;
@@ -74,7 +76,7 @@ $color-bg-card-hover: rgba(var(--color-rgb-text), 0.06);
 }
 
 @mixin skeleton {
-  background: linear-gradient(90deg, $color-bg-card 25%, var(--bg-element) 50%, $color-bg-card 75%);
+  background: linear-gradient(90deg, rgba(var(--color-rgb-text), 0.03) 25%, var(--bg-element) 50%, rgba(var(--color-rgb-text), 0.03) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite linear;
   border-radius: 6px;

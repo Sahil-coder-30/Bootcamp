@@ -9,7 +9,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useRouter } from "@tanstack/react-router";
 import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 import { getStoredUser } from "@/lib/auth";
-import { listProfilesAPI } from "@/features/profile/service/profile.api";
+import { useProfiles } from "@/features/profile/Hooks/useProfiles";
 import { useCompanies } from "@/features/companies/Hooks/companies.hooks";
 import {
   useTalentCheck,
@@ -46,12 +46,18 @@ interface CandidateOption {
 
 export const TalentCheckPage: React.FC = () => {
   const storedUser = getStoredUser();
-  const [profileList, setProfileList] = useState<CandidateOption[]>([]);
+  const { items: profileItems = [] } = useProfiles({ limit: 50 });
   const { data: companies = [] } = useCompanies();
 
   // Combine dynamic profiles with logged-in user if available
   const candidates = useMemo<CandidateOption[]>(() => {
-    const list = [...profileList];
+    const list: CandidateOption[] = (profileItems || []).map((p) => ({
+      id: p.id,
+      name: p.name || p.email || "Candidate",
+      role:
+        (Array.isArray(p.preferred_roles) && p.preferred_roles[0]) ||
+        "Candidate Profile",
+    }));
     if (storedUser?.id && !list.some((c) => c.id === storedUser.id)) {
       list.unshift({
         id: storedUser.id,
@@ -60,7 +66,7 @@ export const TalentCheckPage: React.FC = () => {
       });
     }
     return list;
-  }, [profileList, storedUser]);
+  }, [profileItems, storedUser]);
 
   // Fallback candidate list if database is empty or still loading
   const displayedCandidates = useMemo<CandidateOption[]>(() => {
@@ -82,31 +88,6 @@ export const TalentCheckPage: React.FC = () => {
   const [selectedCompany, setSelectedCompany] = useState<number>(() => {
     return companies.length > 0 ? companies[0]!.id : 4;
   });
-
-  // Load real candidates dynamically from API
-  useEffect(() => {
-    let mounted = true;
-    listProfilesAPI({ limit: 20 })
-      .then((data: any) => {
-        if (!mounted) return;
-        const raw = Array.isArray(data) ? data : data?.items ?? [];
-        const mapped: CandidateOption[] = raw.map((p: any) => ({
-          id: p.id,
-          name: p.name || "Candidate",
-          role:
-            (Array.isArray(p.preferred_roles) && p.preferred_roles[0]) ||
-            p.role ||
-            "Candidate Profile",
-        }));
-        setProfileList(mapped);
-      })
-      .catch((err) => {
-        console.warn("Failed to load candidate profiles:", err);
-      });
-    return () => {
-      mounted = false;
-    };
-  }, []);
 
   // Update selectedCandidate when real candidates load
   useEffect(() => {
@@ -264,12 +245,12 @@ export const TalentCheckPage: React.FC = () => {
           <label className="text-xs font-medium text-muted-foreground mb-1.5 flex items-center gap-1.5">
             <User className="w-3.5 h-3.5 text-primary" /> Select Candidate Profile
           </label>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <div className="flex flex-wrap gap-2">
             {displayedCandidates.slice(0, 4).map((c) => (
               <button
                 key={c.id}
                 onClick={() => setSelectedCandidate(c.id)}
-                className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                className={`flex-1 min-w-[130px] p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
                   selectedCandidate === c.id
                     ? "bg-primary/10 border-primary/50 text-primary font-bold shadow-xs"
                     : "bg-background border-border text-muted-foreground hover:text-foreground hover:border-border-strong"
@@ -301,12 +282,12 @@ export const TalentCheckPage: React.FC = () => {
           <label className="text-xs font-medium text-muted-foreground mb-1.5 flex items-center gap-1.5">
             <Building2 className="w-3.5 h-3.5 text-primary" /> Select Employer Hiring Bar
           </label>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          <div className="flex flex-wrap gap-2">
             {displayedCompanies.map((comp) => (
               <button
                 key={comp.id}
                 onClick={() => setSelectedCompany(comp.id)}
-                className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                className={`flex-1 min-w-[140px] p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
                   selectedCompany === comp.id
                     ? "bg-primary/10 border-primary/50 text-primary font-bold shadow-xs"
                     : "bg-background border-border text-muted-foreground hover:text-foreground hover:border-border-strong"
@@ -427,8 +408,14 @@ export const TalentCheckPage: React.FC = () => {
           Computing readiness against {companyObj?.name}...
         </div>
       ) : error ? (
-        <div className="p-6 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 text-sm text-center">
-          {error}
+        <div className="flex items-center justify-between gap-3 p-6 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 text-sm">
+          <span>{error}</span>
+          <button
+            onClick={() => void run()}
+            className="inline-flex items-center gap-1 font-bold underline hover:no-underline cursor-pointer shrink-0"
+          >
+            <RefreshCw className="h-3.5 w-3.5" /> Retry
+          </button>
         </div>
       ) : result ? (
         <div>

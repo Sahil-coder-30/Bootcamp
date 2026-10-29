@@ -17,7 +17,7 @@ export const HowComputedDrawer: React.FC<Props> = ({ meta, isOpen, onClose }) =>
           <h3 className="font-heading text-lg font-bold text-foreground">How This Was Computed</h3>
           <button
             onClick={onClose}
-            className="rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+            className="rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer"
           >
             ✕
           </button>
@@ -72,7 +72,7 @@ export const HowComputedDrawer: React.FC<Props> = ({ meta, isOpen, onClose }) =>
         <div className="pt-2 text-right">
           <button
             onClick={onClose}
-            className="rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:opacity-90 transition-opacity"
+            className="rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:opacity-90 transition-opacity cursor-pointer"
           >
             Close
           </button>

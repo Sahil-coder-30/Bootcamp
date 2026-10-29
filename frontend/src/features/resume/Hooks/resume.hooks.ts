@@ -10,6 +10,7 @@ import { getStoredUser, saveStoredUser } from "@/lib/auth";
 import { setAuthUser } from "@/features/auth/slice/auth.slice";
 import { updateMeAPI } from "@/features/auth/service/auth.api";
 import { clearDashboardCache } from "@/services/dbService";
+import { toErrorMessage } from "@/services/apiClient";
 import {
   parseResumeAPI,
   getSampleResumeAPI,
@@ -49,7 +50,7 @@ export function useResume() {
         dispatch(setResumeExtraction(result));
       } catch (err) {
         dispatch(
-          setResumeError(err instanceof Error ? err.message : "Failed to load candidate sample"),
+          setResumeError(toErrorMessage(err, "Failed to load candidate sample")),
         );
       }
     },
@@ -70,6 +71,30 @@ export function useResume() {
 
   const uploadAndParse = useCallback(
     async (file: File) => {
+      // Client-side file validation
+      if (file.size > 10 * 1024 * 1024) {
+        dispatch(
+          setResumeError("File size exceeds 10MB limit. Please upload a smaller resume."),
+        );
+        return;
+      }
+
+      const validExtensions = [".pdf", ".docx", ".txt"];
+      const lowerName = file.name.toLowerCase();
+      const hasValidExt = validExtensions.some((ext) => lowerName.endsWith(ext));
+      const hasValidMime =
+        file.type.includes("pdf") ||
+        file.type.includes("document") ||
+        file.type.includes("text") ||
+        file.type === "";
+
+      if (!hasValidExt && !hasValidMime) {
+        dispatch(
+          setResumeError("Unsupported file format. Please upload a PDF, DOCX, or TXT file."),
+        );
+        return;
+      }
+
       dispatch(setResumeStatus("uploading"));
       try {
         dispatch(setResumeStatus("parsing"));
@@ -119,7 +144,7 @@ export function useResume() {
         }
       } catch (err) {
         dispatch(
-          setResumeError(err instanceof Error ? err.message : "Failed to parse resume document"),
+          setResumeError(toErrorMessage(err, "Failed to parse resume document")),
         );
       }
     },
@@ -154,7 +179,9 @@ export function useResume() {
       };
       dispatch(setResumeExtraction(updated));
     } catch (err) {
-      console.error("Recalculate error:", err);
+      dispatch(
+        setResumeError(toErrorMessage(err, "Failed to recalculate Bloom levels")),
+      );
     }
   }, [currentExtraction, dispatch]);
 
@@ -163,6 +190,8 @@ export function useResume() {
     compareExtraction,
     status,
     isLoading: status === "uploading" || status === "parsing",
+    isUploading: status === "uploading",
+    isParsing: status === "parsing",
     error,
     activeTab,
     highlightedSkill,

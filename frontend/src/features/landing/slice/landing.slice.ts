@@ -13,7 +13,7 @@ const initialState: LandingState = {
     recruiterCount: 115,
     maxCtcLpa: 55,
     bloomTopicsCount: 1380,
-    verifiedYear: "2025–26",
+    verifiedYear: "2025-26",
   },
   selectedTier: "All",
   loading: false,

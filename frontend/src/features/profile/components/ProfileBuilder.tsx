@@ -33,8 +33,7 @@ import ExperienceStep from "./steps/ExperienceStep";
 import SkillLevelsStep from "./steps/SkillLevelsStep";
 import SkillsStep from "./steps/SkillsStep";
 import { getStoredUser, saveStoredUser } from "@/lib/auth";
-import { updateMeAPI } from "@/features/auth/service/auth.api";
-import { setAuthUser } from "@/features/auth/slice/auth.slice";
+import { useAuth } from "@/features/auth/Hooks/auth.hooks";
 
 // The history drawer is only opened on demand.
 const VersionHistoryDrawer = lazy(() =>
@@ -106,6 +105,7 @@ export default function ProfileBuilder(props: ProfileBuilderProps) {
 function Builder({ profileId, extractionId, onSaved }: ProfileBuilderProps) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { user: authUser, updateProfile } = useAuth();
   const { profile, version, loading, error: loadError, refetch } = useProfile(profileId);
 
   const form = useForm<ProfileValues>({
@@ -118,7 +118,6 @@ function Builder({ profileId, extractionId, onSaved }: ProfileBuilderProps) {
   const [step, setStep] = useState<Step>("basics");
   const [historyOpen, setHistoryOpen] = useState(false);
   const source = useRef<ChangeSource>("form");
-  const authUser = useAppSelector((s) => s.auth.user);
 
   // Pre-fill user name and email from active session if starting a fresh profile
   useEffect(() => {
@@ -194,8 +193,7 @@ function Builder({ profileId, extractionId, onSaved }: ProfileBuilderProps) {
       saveStoredUser({ ...currentCandidate, id: stored.id });
     }
     if (authUser && authUser.candidateProfileId !== stored.id) {
-      void updateMeAPI({ candidateProfileId: stored.id }).catch(() => {});
-      dispatch(setAuthUser({ ...authUser, candidateProfileId: stored.id }));
+      void updateProfile({ candidateProfileId: stored.id });
     }
 
     onSaved?.({ profile_id: stored.id, version: stored.version });

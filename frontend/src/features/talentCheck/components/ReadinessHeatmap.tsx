@@ -33,7 +33,7 @@ export const ReadinessHeatmap: React.FC<ReadinessHeatmapProps> = ({ matrix, onSe
   }
 
   return (
-    <div className="bg-card border border-border rounded-2xl p-6 shadow-xs overflow-x-auto">
+    <div className="bg-card border border-border rounded-2xl p-6 shadow-xs no-scrollbar overflow-x-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="text-base font-bold text-foreground flex items-center gap-2">
@@ -75,7 +75,7 @@ export const ReadinessHeatmap: React.FC<ReadinessHeatmapProps> = ({ matrix, onSe
                 if (!data)
                   return (
                     <td key={comp.company_id} className="p-3 text-center text-muted-foreground">
-                      —
+                      -
                     </td>
                   );
 

@@ -411,7 +411,7 @@ describe("Talent Check UI Components", () => {
 
     expect(screen.getByText("82")).toBeInTheDocument();
     expect(screen.getByText("Ready for Role")).toBeInTheDocument();
-    expect(screen.getByText(/78 – 86/)).toBeInTheDocument();
+    expect(screen.getByText(/78 [-–] 86/)).toBeInTheDocument();
     expect(screen.getByText("Offline Snapshot")).toBeInTheDocument();
     expect(screen.getByText("Live What-If Preview")).toBeInTheDocument();
 

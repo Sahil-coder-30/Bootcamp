@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import type { JdSkill } from "../service/jd.api";
+import type { JdSkill } from "../Hooks/jd.hooks";
 
 interface JdEvidenceTextProps {
   text: string;
@@ -18,9 +18,9 @@ export const JdEvidenceText: React.FC<JdEvidenceTextProps> = ({ text, skill }) =
 
   return (
     <div className="rounded-2xl border border-border bg-card p-4">
-      <div className="mb-2 flex items-center justify-between">
+      <div className="mb-2 flex items-center justify-between gap-2">
         <h3 className="text-sm font-bold text-foreground">JD text</h3>
-        <span className="text-[11px] text-muted-foreground">
+        <span className="text-[11px] text-muted-foreground truncate">
           {skill ? `Evidence for ${skill.skill_name}` : "Click a skill to see where it came from"}
         </span>
       </div>

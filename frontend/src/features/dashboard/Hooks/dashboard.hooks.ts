@@ -1,4 +1,5 @@
 import { useCallback, useEffect } from "react";
+import { toast } from "sonner";
 import { useAppDispatch, useAppSelector } from "@/store";
 import {
   setDashboardSummary,
@@ -16,10 +17,32 @@ import {
   type SkillGapItem,
 } from "../service/dashboard.api";
 import { getCacheItem, setCacheItem, deleteCacheItem } from "@/services/dbService";
+import { toErrorMessage } from "@/services/apiClient";
+
+export function useDashboardModals() {
+  const dispatch = useAppDispatch();
+  const isJDModalOpen = useAppSelector((s) => s.dashboard.isJDModalOpen);
+  const isATSModalOpen = useAppSelector((s) => s.dashboard.isATSModalOpen);
+
+  const openJDModal = useCallback(() => dispatch(setJDModalOpen(true)), [dispatch]);
+  const closeJDModal = useCallback(() => dispatch(setJDModalOpen(false)), [dispatch]);
+  const openATSModal = useCallback(() => dispatch(setATSModalOpen(true)), [dispatch]);
+  const closeATSModal = useCallback(() => dispatch(setATSModalOpen(false)), [dispatch]);
+
+  return {
+    isJDModalOpen,
+    isATSModalOpen,
+    openJDModal,
+    closeJDModal,
+    openATSModal,
+    closeATSModal,
+  };
+}
 
 export function useDashboard(
   candidateId = "",
   candidateFallback?: { name?: string | undefined; email?: string | undefined; role?: string | undefined } | undefined,
+  autoFetch = true,
 ) {
   const dispatch = useAppDispatch();
   const {
@@ -64,8 +87,9 @@ export function useDashboard(
           await deleteCacheItem(cacheKey, "dashboard");
         }
       } catch (err) {
-        const msg = err instanceof Error ? err.message : "Failed to load dashboard data";
+        const msg = toErrorMessage(err, "Failed to load dashboard data");
         dispatch(setDashboardError(msg));
+        toast.error(msg);
       } finally {
         dispatch(setDashboardLoading(false));
       }
@@ -74,8 +98,10 @@ export function useDashboard(
   );
 
   useEffect(() => {
-    void fetchDashboardData(candidateId, targetCompanyId);
-  }, [candidateId, targetCompanyId, fetchDashboardData]);
+    if (autoFetch) {
+      void fetchDashboardData(candidateId, targetCompanyId);
+    }
+  }, [candidateId, targetCompanyId, fetchDashboardData, autoFetch]);
 
   const selectSkill = useCallback(
     (skill: SkillGapItem | null) => {
@@ -92,10 +118,22 @@ export function useDashboard(
   );
 
   const toggleStep = useCallback(
-    (stepId: string) => {
+    async (stepId: string) => {
       dispatch(toggleStudyStep(stepId));
+      try {
+        const cacheKey = `dashboard_${candidateId || candidateFallback?.email || "anon"}_${targetCompanyId}`;
+        const cached = await getCacheItem<DashboardSummary>(cacheKey, "dashboard");
+        if (cached && cached.studyPlan?.steps) {
+          cached.studyPlan.steps = cached.studyPlan.steps.map((s) =>
+            s.id === stepId ? { ...s, completed: !s.completed } : s,
+          );
+          await setCacheItem(cacheKey, cached, "dashboard");
+        }
+      } catch {
+        // Non-blocking cache persistence error
+      }
     },
-    [dispatch],
+    [dispatch, candidateId, candidateFallback?.email, targetCompanyId],
   );
 
   const openJDModal = useCallback(() => dispatch(setJDModalOpen(true)), [dispatch]);

@@ -7,7 +7,12 @@ import { HowWeGotThisDrawer } from "@/features/resume/components/HowWeGotThisDra
 import { ResumeParsePage } from "@/features/resume/components/ResumeParsePage";
 import type { ResumeExtraction } from "@/features/resume/service/resume.api";
 import { makeStore, renderPage } from "./utils";
-import { setResumeExtraction } from "@/features/resume/slice/resume.slice";
+import {
+  setResumeExtraction,
+  setResumeError,
+  setResumeStatus,
+  resetResumeState,
+} from "@/features/resume/slice/resume.slice";
 
 describe("Resume Parsing Feature Components", () => {
   const dummyExtraction: ResumeExtraction = {
@@ -25,7 +30,7 @@ describe("Resume Parsing Feature Components", () => {
       {
         degree: "B.Tech Computer Science",
         institution: "IIT Bombay",
-        year: "2021–2025",
+        year: "2021-2025",
         score: "9.2 CGPA",
       },
     ],
@@ -210,5 +215,56 @@ describe("Resume Parsing Feature Components", () => {
     await waitFor(() => {
       expect(router.state.location.pathname).toBe("/profile");
     });
+  });
+
+  it("renders error alert banner with Retry button and clears error on retry", async () => {
+    const store = makeStore();
+    store.dispatch(setResumeError("Network connection timed out"));
+
+    renderPage(ResumeParsePage, "/resume", store);
+
+    await waitFor(() => {
+      expect(screen.getByText("Network connection timed out")).toBeInTheDocument();
+    });
+
+    const retryButton = screen.getByRole("button", { name: /Retry/i });
+    expect(retryButton).toBeInTheDocument();
+
+    fireEvent.click(retryButton);
+    expect(store.getState().resume.error).toBeNull();
+  });
+
+  it("renders active extracting skeleton during parsing state when no extraction exists", async () => {
+    const store = makeStore();
+    store.dispatch(setResumeStatus("parsing"));
+
+    renderPage(ResumeParsePage, "/resume", store);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/Analyzing Resume Structure & Evidence\.\.\./i),
+      ).toBeInTheDocument();
+    });
+
+    expect(
+      screen.getByText(/Extracting candidate contact, career timeline/i),
+    ).toBeInTheDocument();
+  });
+
+  it("pure synchronous reducers in resumeSlice handle status, tab, and state resets", () => {
+    const store = makeStore();
+    expect(store.getState().resume.status).toBe("idle");
+
+    store.dispatch(setResumeStatus("uploading"));
+    expect(store.getState().resume.status).toBe("uploading");
+
+    store.dispatch(setResumeError("File too large"));
+    expect(store.getState().resume.status).toBe("error");
+    expect(store.getState().resume.error).toBe("File too large");
+
+    store.dispatch(resetResumeState());
+    expect(store.getState().resume.status).toBe("idle");
+    expect(store.getState().resume.error).toBeNull();
+    expect(store.getState().resume.currentExtraction).toBeNull();
   });
 });
