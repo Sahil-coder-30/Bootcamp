@@ -22,6 +22,7 @@
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
+  --color-card-sub: var(--card-sub);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
@@ -35,6 +36,8 @@
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
+  --color-border-sub: var(--border-sub);
+  --color-border-strong: var(--border-strong);
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-ring-offset-background: var(--background);
@@ -48,6 +51,8 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --color-success: var(--success);
   --color-navy: var(--navy);
+  --color-terracotta: var(--terracotta);
+  --color-terracotta-hover: var(--terracotta-hover);
   --color-super-dream: var(--super-dream);
   --color-dream: var(--dream);
   --color-standard: var(--standard);
@@ -57,6 +62,8 @@
   --color-bloom-as: var(--bloom-as);
   --color-bloom-ev: var(--bloom-ev);
   --color-bloom-cr: var(--bloom-cr);
+  --color-track: var(--track);
+  --color-marker: var(--marker);
   --animate-glow: glow 2s ease-in-out infinite;
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
@@ -122,6 +129,8 @@
 
 .light-theme,
 :root:not(.dark) {
+  --radius: 0.75rem;
+  /* Surface Tokens: Sleek, high-contrast Slate/Zinc palette */
   --background: #f8fafc;
   --foreground: #0f172a;
   --card: #ffffff;
@@ -129,27 +138,56 @@
   --card-sub: #f1f5f9;
   --popover: #ffffff;
   --popover-foreground: #0f172a;
+  
+  /* Brand Tokens: Tech Indigo / Cobalt 600 */
   --primary: #4f46e5;
   --primary-foreground: #ffffff;
   --secondary: #f1f5f9;
   --secondary-foreground: #1e293b;
   --muted: #f1f5f9;
   --muted-foreground: #64748b;
-  --accent: #e0e7ff;
+  --accent: #eef2ff;
   --accent-foreground: #3730a3;
+  
+  /* Feedback Tokens */
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
   --success: #10b981;
+  
+  /* Hairline Borders & Dividers */
   --border: #e2e8f0;
+  --border-sub: #f1f5f9;
   --border-strong: #cbd5e1;
   --input: #e2e8f0;
   --ring: #4f46e5;
   --navy: #0f172a;
+  --terracotta: #ea580c;
+  --terracotta-hover: #c2410c;
+  
+  /* Charts */
   --chart-1: #4f46e5;
   --chart-2: #0284c7;
   --chart-3: #10b981;
   --chart-4: #f59e0b;
   --chart-5: #7c3aed;
+  
+  /* Placement category colors (WCAG AA calibrated) */
+  --super-dream: #ea580c;
+  --dream: #d97706;
+  --standard: #059669;
+  --regular: #0284c7;
+  
+  /* Bloom cognitive complexity levels */
+  --bloom-cu: #64748b;
+  --bloom-ap: #059669;
+  --bloom-as: #d97706;
+  --bloom-ev: #dc2626;
+  --bloom-cr: #7c3aed;
+  
+  /* Sliders & Controls */
+  --track: #e2e8f0;
+  --marker: #0f172a;
+  
   /* Sidebar Light */
   --sidebar: #ffffff;
   --sidebar-foreground: #1e293b;
@@ -184,6 +222,7 @@
   --success: #22c55e;
   --border: #1e222d;
   --border-sub: #252936;
+  --border-strong: #2a2e3d;
   --input: #1e222d;
   --ring: #f97316;
   --navy: #f3f4f6;
@@ -200,11 +239,14 @@
   --standard: #10b981; /* Emerald */
   --regular: #38bdf8; /* Sky */
   /* Bloom levels */
-  --bloom-cu: #171922;
-  --bloom-ap: #1f2330;
+  --bloom-cu: #94a3b8;
+  --bloom-ap: #10b981;
   --bloom-as: #f97316;
-  --bloom-ev: #f3f4f6;
-  --bloom-cr: #ffffff;
+  --bloom-ev: #ef4444;
+  --bloom-cr: #a855f7;
+  /* Sliders & Controls */
+  --track: #1e222d;
+  --marker: #ffffff;
   /* Sidebar */
   --sidebar: #090a0d;
   --sidebar-foreground: #f3f4f6;
@@ -214,8 +256,6 @@
   --sidebar-accent-foreground: #f3f4f6;
   --sidebar-border: #1a1d27;
   --sidebar-ring: #f97316;
-  --track: #1e222d;
-  --marker: #ffffff;
 }
 
 @layer base {

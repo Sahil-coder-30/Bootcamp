@@ -303,7 +303,7 @@ describe("small helpers", () => {
         "skill_levels.COD",
         "cv_file",
       ].map(stepOfPath),
-    ).toEqual(["basics", "education", "experience", "achievements", "skills", "levels", "start"]);
+    ).toEqual(["basics", "education", "experience", "achievements", "skills", "levels", "basics"]);
   });
 
   it("toBlocks styles the brief fields and our additions separately", () => {

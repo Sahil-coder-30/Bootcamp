@@ -1,127 +1,9 @@
 import React, { useState } from "react";
-import { BarChart3, Info, Sparkles, Filter, CheckCircle2, AlertTriangle } from "lucide-react";
+import { BarChart3, Sparkles, CheckCircle2, AlertTriangle, BookOpen, Layers } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { SkillGapItem } from "../service/dashboard.api";
 
-export interface SkillItem {
-  code: string;
-  name: string;
-  candidateLevel: number; // 1 to 5
-  requiredLevel: number; // 1 to 5
-  bloomStage: "Understand" | "Apply" | "Analyze" | "Evaluate" | "Create";
-  bloomCode: "CU" | "AP" | "AS" | "EV" | "CR";
-  category: "Core" | "Systems" | "Engineering";
-}
-
-export const RADIX_12_SKILLS: SkillItem[] = [
-  {
-    code: "DSA",
-    name: "Data Structures & Algorithms",
-    candidateLevel: 4,
-    requiredLevel: 4,
-    bloomStage: "Analyze",
-    bloomCode: "AS",
-    category: "Core",
-  },
-  {
-    code: "SYS",
-    name: "System Design & Distributed",
-    candidateLevel: 3,
-    requiredLevel: 4,
-    bloomStage: "Apply",
-    bloomCode: "AP",
-    category: "Systems",
-  },
-  {
-    code: "DBM",
-    name: "Database Internals & Storage",
-    candidateLevel: 4,
-    requiredLevel: 4,
-    bloomStage: "Analyze",
-    bloomCode: "AS",
-    category: "Core",
-  },
-  {
-    code: "CNC",
-    name: "Concurrency & Threading",
-    candidateLevel: 2,
-    requiredLevel: 3,
-    bloomStage: "Understand",
-    bloomCode: "CU",
-    category: "Systems",
-  },
-  {
-    code: "API",
-    name: "API Protocols (gRPC/REST)",
-    candidateLevel: 4,
-    requiredLevel: 3,
-    bloomStage: "Analyze",
-    bloomCode: "AS",
-    category: "Engineering",
-  },
-  {
-    code: "NET",
-    name: "Computer Networks & Sockets",
-    candidateLevel: 3,
-    requiredLevel: 3,
-    bloomStage: "Apply",
-    bloomCode: "AP",
-    category: "Systems",
-  },
-  {
-    code: "TST",
-    name: "Testing & Determinism",
-    candidateLevel: 4,
-    requiredLevel: 3,
-    bloomStage: "Analyze",
-    bloomCode: "AS",
-    category: "Engineering",
-  },
-  {
-    code: "CLD",
-    name: "Cloud Architecture & AWS",
-    candidateLevel: 3,
-    requiredLevel: 4,
-    bloomStage: "Apply",
-    bloomCode: "AP",
-    category: "Engineering",
-  },
-  {
-    code: "SEC",
-    name: "Security, Auth & Crypto",
-    candidateLevel: 2,
-    requiredLevel: 3,
-    bloomStage: "Understand",
-    bloomCode: "CU",
-    category: "Systems",
-  },
-  {
-    code: "DEV",
-    name: "DevOps & CI/CD Pipelines",
-    candidateLevel: 3,
-    requiredLevel: 3,
-    bloomStage: "Apply",
-    bloomCode: "AP",
-    category: "Engineering",
-  },
-  {
-    code: "OOD",
-    name: "Object-Oriented Design",
-    candidateLevel: 4,
-    requiredLevel: 4,
-    bloomStage: "Analyze",
-    bloomCode: "AS",
-    category: "Core",
-  },
-  {
-    code: "PRB",
-    name: "Complex Problem Solving",
-    candidateLevel: 4,
-    requiredLevel: 4,
-    bloomStage: "Analyze",
-    bloomCode: "AS",
-    category: "Core",
-  },
-];
+export type { SkillGapItem as SkillItem };
 
 const BLOOM_COLORS: Record<string, { bg: string; text: string; border: string }> = {
   CU: {
@@ -136,44 +18,55 @@ const BLOOM_COLORS: Record<string, { bg: string; text: string; border: string }>
   },
   AS: {
     bg: "bg-amber-500/10",
-    text: "text-amber-400",
+    text: "text-amber-500 dark:text-amber-400",
     border: "border-amber-500/30",
   },
   EV: {
     bg: "bg-orange-500/10",
-    text: "text-orange-400",
+    text: "text-orange-500 dark:text-orange-400",
     border: "border-orange-500/30",
   },
   CR: {
     bg: "bg-emerald-500/10",
-    text: "text-emerald-400",
+    text: "text-emerald-600 dark:text-emerald-400",
     border: "border-emerald-500/30",
   },
 };
 
 interface SkillHistogramCardProps {
-  onSelectSkill?: ((skill: SkillItem) => void) | undefined;
+  skills?: SkillGapItem[] | undefined;
+  onSelectSkill?: ((skill: SkillGapItem) => void) | undefined;
   selectedSkillCode?: string | null | undefined;
+  targetCompanyName?: string | undefined;
+  loading?: boolean | undefined;
 }
 
 export const SkillHistogramCard: React.FC<SkillHistogramCardProps> = ({
+  skills = [],
   onSelectSkill,
   selectedSkillCode,
+  targetCompanyName = "Google LLC",
+  loading = false,
 }) => {
   const [filterCategory, setFilterCategory] = useState<"All" | "Core" | "Systems" | "Engineering">(
     "All",
   );
 
   const counts = {
-    All: RADIX_12_SKILLS.length,
-    Core: RADIX_12_SKILLS.filter((s) => s.category === "Core").length,
-    Systems: RADIX_12_SKILLS.filter((s) => s.category === "Systems").length,
-    Engineering: RADIX_12_SKILLS.filter((s) => s.category === "Engineering").length,
+    All: skills.length,
+    Core: skills.filter((s) => s.category === "Core").length,
+    Systems: skills.filter((s) => s.category === "Systems").length,
+    Engineering: skills.filter((s) => s.category === "Engineering").length,
   };
 
-  const filteredSkills = RADIX_12_SKILLS.filter(
+  const filteredSkills = skills.filter(
     (s) => filterCategory === "All" || s.category === filterCategory,
   );
+
+  const selectedSkill =
+    skills.find((s) => s.code === selectedSkillCode) || (skills.length > 0 ? skills[0] : null);
+
+  const metCount = skills.filter((s) => !s.gap).length;
 
   return (
     <div className="rounded-2xl border border-border bg-card p-5 shadow-xs flex flex-col h-full transition-colors">
@@ -189,7 +82,8 @@ export const SkillHistogramCard: React.FC<SkillHistogramCardProps> = ({
             </h3>
           </div>
           <p className="mt-1 text-xs text-muted-foreground">
-            Bloom Gap Depth vs L4 Enterprise Hiring Cutoffs
+            AST Gap Depth vs <strong className="text-foreground">{targetCompanyName}</strong> Hiring
+            Bar
           </p>
         </div>
 
@@ -220,106 +114,143 @@ export const SkillHistogramCard: React.FC<SkillHistogramCardProps> = ({
             Candidate Level (Bloom Depth)
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="h-3 w-1 rounded-full bg-white shadow-[0_0_6px_rgba(255,255,255,0.8)]" />
-            Target Hiring Bar Notch
+            <span className="h-3 w-1 rounded-full bg-foreground shadow-xs" />
+            Recruiter Cutoff Notch
           </span>
         </div>
-        <span className="font-mono text-[10px] text-muted-foreground">Scale: L1 to L5</span>
+        <span className="font-mono text-[10px] text-muted-foreground">AST Scale: L1 to L10</span>
       </div>
 
       {/* Histogram Bars List */}
-      <div className="mt-3 space-y-2.5 overflow-y-auto max-h-[440px] pr-1.5 no-scrollbar flex-1">
-        {filteredSkills.map((skill) => {
-          const isSelected = selectedSkillCode === skill.code;
-          const meetsBar = skill.candidateLevel >= skill.requiredLevel;
-          const fallbackBloom = BLOOM_COLORS["CU"]!;
-          const bloom = BLOOM_COLORS[skill.bloomCode] ?? fallbackBloom;
+      <div className="mt-3.5 space-y-2.5 overflow-y-auto max-h-[560px] pr-1.5 no-scrollbar flex-1">
+        {loading && skills.length === 0 ? (
+          <div className="py-12 text-center text-xs text-muted-foreground">
+            <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent mb-2" />
+            <p>Benchmarking skills against live AST topic ladders...</p>
+          </div>
+        ) : (
+          filteredSkills.map((skill) => {
+            const isSelected = selectedSkill?.code === skill.code;
+            const meetsBar = !skill.gap;
+            const bloom = BLOOM_COLORS[skill.candidateBloom] ?? BLOOM_COLORS["CU"]!;
 
-          // Width percent based on max level 5
-          const candWidthPercent = (skill.candidateLevel / 5) * 100;
-          const reqPositionPercent = (skill.requiredLevel / 5) * 100;
+            // Scale L1 to L10
+            const candWidthPercent = Math.min(100, Math.max(10, (skill.candidateLevel / 10) * 100));
+            const reqPositionPercent = Math.min(
+              100,
+              Math.max(10, (skill.requiredLevel / 10) * 100),
+            );
 
-          return (
-            <div
-              key={skill.code}
-              onClick={() => onSelectSkill?.(skill)}
-              className={cn(
-                "group relative rounded-xl border p-2.5 transition-all cursor-pointer",
-                isSelected
-                  ? "border-primary bg-card-sub ring-1 ring-primary shadow-xs"
-                  : "border-border bg-card-sub hover:border-primary/60",
-              )}
-            >
-              {/* Row Header */}
-              <div className="flex items-center justify-between gap-2 text-xs">
-                <div className="flex items-center gap-2">
-                  <span className="rounded-md border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px] font-bold text-foreground">
-                    {skill.code}
-                  </span>
-                  <span className="font-semibold text-foreground truncate max-w-[170px] sm:max-w-[220px]">
-                    {skill.name}
-                  </span>
-                </div>
+            return (
+              <div
+                key={skill.code}
+                onClick={() => onSelectSkill?.(skill)}
+                className={cn(
+                  "group relative rounded-xl border p-2.5 transition-all cursor-pointer",
+                  isSelected
+                    ? "border-primary bg-card-sub ring-1 ring-primary shadow-xs"
+                    : "border-border bg-card-sub hover:border-primary/60",
+                )}
+              >
+                {/* Row Header */}
+                <div className="flex items-center justify-between gap-2 text-xs">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="shrink-0 rounded-md border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px] font-bold text-foreground">
+                      {skill.code}
+                    </span>
+                    <span className="font-semibold text-foreground truncate">{skill.name}</span>
+                  </div>
 
-                <div className="flex items-center gap-2">
-                  <span
-                    className={cn(
-                      "rounded-full border px-2 py-0.5 text-[10px] font-semibold",
-                      bloom.bg,
-                      bloom.text,
-                      bloom.border,
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span
+                      className={cn(
+                        "rounded-full border px-2 py-0.5 text-[10px] font-semibold shrink-0",
+                        bloom.bg,
+                        bloom.text,
+                        bloom.border,
+                      )}
+                    >
+                      {skill.candidateBloom} L{skill.candidateLevel}
+                    </span>
+
+                    {meetsBar ? (
+                      <span className="flex items-center gap-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 shrink-0">
+                        <CheckCircle2 className="h-3 w-3" /> Met
+                      </span>
+                    ) : (
+                      <span
+                        className={cn(
+                          "flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.2 rounded-md border shrink-0",
+                          skill.blocking
+                            ? "text-red-500 bg-red-500/10 border-red-500/20"
+                            : "text-amber-500 bg-amber-500/10 border-amber-500/20",
+                        )}
+                      >
+                        <AlertTriangle className="h-3 w-3" /> -{skill.shortfall}L Gap
+                      </span>
                     )}
-                  >
-                    {skill.bloomCode} L{skill.candidateLevel}
-                  </span>
-
-                  {meetsBar ? (
-                    <span className="flex items-center gap-0.5 text-[10px] font-semibold text-emerald-400">
-                      <CheckCircle2 className="h-3 w-3 text-emerald-400" /> Met
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-0.5 text-[10px] font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.2 rounded-md">
-                      <AlertTriangle className="h-3 w-3 text-amber-400" /> ▲ -
-                      {skill.requiredLevel - skill.candidateLevel}L Gap (Needs L
-                      {skill.requiredLevel})
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Progress Histogram Track */}
-              <div className="relative mt-2 h-2.5 w-full rounded-full bg-track overflow-hidden">
-                {/* Level Grid ticks (1, 2, 3, 4, 5) */}
-                <div className="absolute inset-0 flex justify-between pointer-events-none px-1">
-                  {[1, 2, 3, 4].map((i) => (
-                    <span key={i} className="h-full w-[1px] bg-border/40" />
-                  ))}
+                  </div>
                 </div>
 
-                {/* Candidate Filled Bar (Luminous Amber / Orange) */}
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-orange-600 to-amber-500 transition-all duration-500 shadow-[0_0_8px_rgba(249,115,22,0.4)]"
-                  style={{ width: `${candWidthPercent}%` }}
-                />
+                {/* Progress Histogram Track */}
+                <div className="relative mt-2 h-2.5 w-full rounded-full bg-track overflow-hidden">
+                  {/* Grid lines for 10 levels */}
+                  <div className="absolute inset-0 flex justify-between pointer-events-none px-1">
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
+                      <span key={i} className="h-full w-[1px] bg-border/40" />
+                    ))}
+                  </div>
 
-                {/* Target Requirement Marker */}
-                <div
-                  className="absolute top-0 bottom-0 w-1.5 bg-white shadow-[0_0_6px_rgba(255,255,255,0.9)] rounded-full"
-                  style={{ left: `calc(${reqPositionPercent}% - 3px)` }}
-                  title={`Target Bar: Level ${skill.requiredLevel}`}
-                />
+                  {/* Candidate Filled Bar */}
+                  <div
+                    className={cn(
+                      "h-full rounded-full transition-all duration-500 shadow-xs",
+                      meetsBar
+                        ? "bg-gradient-to-r from-emerald-600 to-emerald-400"
+                        : skill.blocking
+                          ? "bg-gradient-to-r from-red-600 to-amber-500"
+                          : "bg-gradient-to-r from-primary to-amber-500",
+                    )}
+                    style={{ width: `${candWidthPercent}%` }}
+                  />
+
+                  {/* Target Requirement Notch */}
+                  <div
+                    className="absolute top-0 bottom-0 w-1.5 bg-foreground rounded-full shadow-sm"
+                    style={{ left: `calc(${reqPositionPercent}% - 3px)` }}
+                    title={`Target Cutoff: Level ${skill.requiredLevel}`}
+                  />
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })
+        )}
       </div>
+
+      {/* Selected Skill Next Topics Preview */}
+      {selectedSkill && selectedSkill.nextTopics.length > 0 && (
+        <div className="mt-3 p-3 rounded-xl border border-primary/30 bg-primary/5 text-xs">
+          <div className="flex items-center gap-1.5 font-semibold text-primary mb-1">
+            <BookOpen className="h-3.5 w-3.5" />
+            <span>Next AST Topics for {selectedSkill.name}:</span>
+          </div>
+          <p className="text-[11px] text-foreground leading-relaxed">
+            {selectedSkill.nextTopics[0]?.topics}
+          </p>
+        </div>
+      )}
 
       {/* Summary Footer */}
       <div className="mt-3 pt-3 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
         <span>
-          <strong className="text-foreground">8 of 12</strong> skills satisfy Super Dream bar
+          <strong className="text-foreground">
+            {metCount} of {skills.length}
+          </strong>{" "}
+          skills meet {targetCompanyName} cutoff
         </span>
-        <span className="text-[11px] font-semibold text-foreground">Composite Index: 3.4/5.0</span>
+        <span className="text-[11px] font-semibold text-primary">
+          {metCount === skills.length ? "100% Ready" : `${skills.length - metCount} Gaps to Bridge`}
+        </span>
       </div>
     </div>
   );

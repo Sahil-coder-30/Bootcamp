@@ -1,46 +1,34 @@
 import React, { useRef, useState } from "react";
-import { UploadCloud, FileText, Sparkles, ShieldCheck, CheckCircle2, Loader2 } from "lucide-react";
+import {
+  UploadCloud,
+  FileText,
+  Sparkles,
+  ShieldCheck,
+  CheckCircle2,
+  Loader2,
+  RefreshCw,
+  ArrowRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface ResumeUploadCardProps {
   onFileUpload: (file: File) => void | Promise<void>;
-  onSelectSample: (candidateKey: string) => void;
+  onSelectSample?: (candidateKey: string) => void;
   isLoading: boolean;
   currentCandidateName?: string | undefined;
+  onClear?: () => void;
+  onNext?: () => void;
+  showSamples?: boolean;
 }
-
-const DEMO_CANDIDATES = [
-  {
-    key: "ananya",
-    name: "Ananya Rao",
-    tag: "Systems / SWE Focus",
-    color: "border-orange-500/40 text-orange-400 bg-orange-500/10",
-  },
-  {
-    key: "karthik",
-    name: "Karthik Sub.",
-    tag: "Data Eng. / SQL Focus",
-    color: "border-cyan-500/40 text-cyan-400 bg-cyan-500/10",
-  },
-  {
-    key: "priya",
-    name: "Priya Menon",
-    tag: "Support / Entry Focus",
-    color: "border-pink-500/40 text-pink-400 bg-pink-500/10",
-  },
-  {
-    key: "rohan",
-    name: "Rohan Verma",
-    tag: "All-Rounder Generalist",
-    color: "border-emerald-500/40 text-emerald-400 bg-emerald-500/10",
-  },
-];
 
 export const ResumeUploadCard: React.FC<ResumeUploadCardProps> = ({
   onFileUpload,
   onSelectSample,
   isLoading,
   currentCandidateName,
+  onClear,
+  onNext,
+  showSamples = false,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragOver, setIsDragOver] = useState(false);
@@ -55,32 +43,58 @@ export const ResumeUploadCard: React.FC<ResumeUploadCardProps> = ({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) onFileUpload(file);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   return (
-    <div className="rounded-2xl border border-zinc-800 bg-[#0c0c10] p-6 shadow-xl backdrop-blur-md">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-800/80 pb-5">
+    <div className="rounded-2xl border border-border bg-card p-6 shadow-xs">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <span className="flex h-2 w-2 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.8)]" />
-            <h3 className="font-heading text-lg font-bold text-white">
-              Resume Ingestion & Deterministic Parser
+            <span className="flex h-2 w-2 rounded-full bg-primary shadow-xs" />
+            <h3 className="font-heading text-lg font-bold text-foreground">
+              Resume Ingestion &amp; Deterministic Parser
             </h3>
           </div>
-          <p className="mt-1 text-xs text-zinc-400">
+          <p className="mt-1 text-xs text-muted-foreground">
             Upload PDF or DOCX format. Computes 12-dimensional Bloom skill levels and extracts
             grounded evidence.
           </p>
         </div>
 
-        {/* Privacy badge */}
-        <div className="inline-flex items-center gap-1.5 self-start md:self-auto rounded-full border border-emerald-500/30 bg-emerald-950/40 px-3 py-1 text-[11px] font-medium text-emerald-300">
-          <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
-          <span>Zero PII Sent: Contacts Redacted</span>
+        <div className="flex flex-wrap items-center gap-2">
+          {currentCandidateName && onClear && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onClear}
+              className="text-xs border-border hover:bg-muted text-muted-foreground hover:text-foreground cursor-pointer"
+            >
+              <RefreshCw className="mr-1.5 h-3.5 w-3.5" />
+              Upload Different Resume
+            </Button>
+          )}
+
+          {currentCandidateName && onNext && (
+            <Button
+              size="sm"
+              onClick={onNext}
+              className="text-xs bg-primary text-primary-foreground font-semibold shadow-xs hover:bg-primary/90 cursor-pointer"
+            >
+              Next
+              <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+            </Button>
+          )}
+
+          {/* Privacy badge */}
+          <div className="inline-flex items-center gap-1.5 self-start md:self-auto rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[11px] font-medium text-emerald-700 dark:text-emerald-300">
+            <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+            <span>Zero PII Sent: Contacts Redacted</span>
+          </div>
         </div>
       </div>
 
-      <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+      <div className="mt-6">
         {/* Upload Dropzone */}
         <div
           onDragOver={(e) => {
@@ -90,10 +104,10 @@ export const ResumeUploadCard: React.FC<ResumeUploadCardProps> = ({
           onDragLeave={() => setIsDragOver(false)}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
-          className={`lg:col-span-7 flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-7 text-center transition-all cursor-pointer ${
+          className={`w-full flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 text-center transition-all cursor-pointer ${
             isDragOver
-              ? "border-orange-500 bg-orange-500/5"
-              : "border-zinc-800 bg-zinc-950/40 hover:border-zinc-700 hover:bg-zinc-900/40"
+              ? "border-primary bg-primary/5"
+              : "border-border bg-card-sub hover:border-primary/50 hover:bg-muted/40"
           }`}
         >
           <input
@@ -104,51 +118,22 @@ export const ResumeUploadCard: React.FC<ResumeUploadCardProps> = ({
             className="hidden"
           />
 
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900 text-orange-400 shadow-inner">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-border bg-card text-primary shadow-2xs">
             {isLoading ? (
-              <Loader2 className="h-6 w-6 animate-spin text-orange-400" />
+              <Loader2 className="h-6 w-6 animate-spin text-primary" />
             ) : (
               <UploadCloud className="h-6 w-6" />
             )}
           </div>
 
-          <h4 className="mt-3 font-semibold text-sm text-white">
+          <h4 className="mt-3 font-semibold text-sm text-foreground">
             {isLoading ? "Analyzing Resume Structure..." : "Drop candidate resume here, or browse"}
           </h4>
-          <p className="mt-1 text-xs text-zinc-500">Supports PDF & DOCX (Max 10MB)</p>
-        </div>
-
-        {/* 1-Click Golden Demo Candidates */}
-        <div className="lg:col-span-5 flex flex-col justify-center space-y-3">
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-zinc-300">
-            <Sparkles className="h-3.5 w-3.5 text-amber-400" />
-            <span>Or test with a pre-validated sample candidate:</span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {DEMO_CANDIDATES.map((cand) => {
-              const isSelected = currentCandidateName?.includes(cand.name.split(" ")[0] || "");
-              return (
-                <button
-                  key={cand.key}
-                  type="button"
-                  disabled={isLoading}
-                  onClick={() => onSelectSample(cand.key)}
-                  className={`flex flex-col items-start rounded-xl border p-2.5 text-left transition-all cursor-pointer ${
-                    isSelected
-                      ? "border-orange-500 bg-orange-500/10 ring-1 ring-orange-500"
-                      : "border-zinc-800 bg-zinc-900/50 hover:border-zinc-700 hover:bg-zinc-900"
-                  }`}
-                >
-                  <div className="flex w-full items-center justify-between">
-                    <span className="font-semibold text-xs text-white">{cand.name}</span>
-                    {isSelected && <CheckCircle2 className="h-3.5 w-3.5 text-orange-400" />}
-                  </div>
-                  <span className="mt-0.5 text-[10px] text-zinc-400">{cand.tag}</span>
-                </button>
-              );
-            })}
-          </div>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {currentCandidateName
+              ? `Parsed for ${currentCandidateName} · Drop a new file to replace (PDF & DOCX, Max 10MB)`
+              : "Supports PDF & DOCX (Max 10MB)"}
+          </p>
         </div>
       </div>
     </div>

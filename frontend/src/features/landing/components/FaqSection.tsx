@@ -38,18 +38,18 @@ export const FaqSection: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="relative scroll-mt-20 py-16 md:py-24 border-t border-zinc-800/80">
+    <section id="faq" className="relative scroll-mt-20 py-16 md:py-24 border-t border-border">
       <div className="mx-auto max-w-4xl px-4 sm:px-6">
         {/* Section Header */}
         <div className="text-center">
-          <div className="inline-flex items-center gap-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 px-3.5 py-1 text-xs font-semibold text-orange-400">
-            <HelpCircle className="h-3.5 w-3.5 text-orange-400" />
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 px-3.5 py-1 text-xs font-semibold text-orange-600 dark:text-orange-400">
+            <HelpCircle className="h-3.5 w-3.5 text-orange-500" />
             Architecture & Evaluation
           </div>
-          <h2 className="mt-4 font-heading text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          <h2 className="mt-4 font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             Frequently Asked Questions
           </h2>
-          <p className="mt-3 text-sm text-zinc-400 sm:text-base">
+          <p className="mt-3 text-sm text-muted-foreground sm:text-base">
             Essential architectural principles and evaluation defenses for students, evaluators, and
             placement officers.
           </p>
@@ -62,21 +62,21 @@ export const FaqSection: React.FC = () => {
             return (
               <div
                 key={i}
-                className="overflow-hidden rounded-2xl border border-zinc-800 bg-[#0d0d12] transition-all duration-200 hover:border-orange-500/40"
+                className="overflow-hidden rounded-2xl border border-border bg-card dark:border-zinc-800 dark:bg-[#0d0d12] transition-all duration-200 hover:border-primary/40 shadow-xs"
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : i)}
-                  className="flex w-full items-center justify-between p-5 text-left text-sm font-semibold text-white focus:outline-none cursor-pointer"
+                  className="flex w-full items-center justify-between p-5 text-left text-sm font-semibold text-foreground focus:outline-none cursor-pointer"
                 >
                   <span className="pr-4">{faq.question}</span>
                   <ChevronDown
-                    className={`h-4 w-4 shrink-0 text-orange-400 transition-transform duration-200 ${
-                      isOpen ? "rotate-180 text-orange-400" : ""
+                    className={`h-4 w-4 shrink-0 text-primary transition-transform duration-200 ${
+                      isOpen ? "rotate-180 text-primary" : ""
                     }`}
                   />
                 </button>
                 {isOpen && (
-                  <div className="border-t border-zinc-800/80 bg-zinc-900/40 px-5 py-4 text-xs sm:text-sm text-zinc-300 leading-relaxed">
+                  <div className="border-t border-border dark:border-zinc-800/80 bg-muted/40 dark:bg-zinc-900/40 px-5 py-4 text-xs sm:text-sm text-muted-foreground leading-relaxed">
                     {faq.answer}
                   </div>
                 )}

@@ -6,6 +6,7 @@ Start with the shared contract. Each role plan builds on it and uses its names, 
 |---|---|---|
 | [00-shared-contract.md](00-shared-contract.md) | Team | Architecture, the 12 categories, the evidence-to-level rubric, every JSON object, API routes, Supabase tables, cross-cutting rules, demo flow, phases |
 | [architecture.md](architecture.md) | Team | The whole system in Mermaid diagrams: base project vs the 5 features, services, data flow, user flow, role internals, database, status |
+| [ARCHITECTURE-MANUAL.md](ARCHITECTURE-MANUAL.md) ([Word](RADIX-Architecture-Manual.docx)) | Team | Engineering manual grounded in the code: services, contract schemas, every role's algorithm with exact constants, tc-1.0 / sm-1.0 / lv-1.0 formulas, evaluation, spec-vs-build register |
 | [role-1-jd-analytics/plan.md](role-1-jd-analytics/plan.md) | Sahil Sharma (`sahilsharma3043@gmail.com`) | JD (PDF/DOCX) to structured skill list. Also owns document ingestion and the shared LLM layer |
 | [role-2-resume-parsing/plan.md](role-2-resume-parsing/plan.md) | Himanshu Gola (`himanshu.gola05@gmail.com`) | Resume to skill list, structured fields and inferred 1-10 level per category |
 | [role-3-profile-builder/plan.md](role-3-profile-builder/plan.md) | Raunak Bisht (`raunakbisht790@gmail.com`) | Candidate profile form pre-filled from the resume, skill-level editor, JSON save/load |

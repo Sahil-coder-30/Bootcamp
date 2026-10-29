@@ -16,7 +16,10 @@ export interface AuthUser {
 }
 
 export type ProfilePatch = Partial<
-  Pick<AuthUser, "name" | "phone" | "college" | "branch" | "graduationYear" | "resumeId">
+  Pick<
+    AuthUser,
+    "name" | "phone" | "college" | "branch" | "graduationYear" | "resumeId" | "candidateProfileId"
+  >
 >;
 
 /** Where the browser goes to start Google sign-in (full-page redirect, handled by the auth service). */

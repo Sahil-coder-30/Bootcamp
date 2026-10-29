@@ -108,14 +108,66 @@ export interface InferLevelsResponse {
   latency_ms: number;
 }
 
-export const parseResumeAPI = async (payload: {
-  content_b64?: string;
-  file_name?: string;
-  mime?: string;
-  sample_key?: string;
-}): Promise<ResumeExtraction> => {
+export const parseResumeAPI = async (
+  payload:
+    | File
+    | FormData
+    | {
+        content_b64?: string;
+        file_name?: string;
+        mime?: string;
+        sample_key?: string;
+      },
+): Promise<ResumeExtraction> => {
+  if (payload instanceof File) {
+    const formData = new FormData();
+    formData.append("file", payload);
+    const response = await apiClient.post<
+      { extraction?: ResumeExtraction; resume_id?: string } & ResumeExtraction
+    >("/resumes", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    const result = response.data.extraction || response.data;
+    if (response.data.resume_id && !result.extraction_id) {
+      result.extraction_id = response.data.resume_id;
+      result.document_id = response.data.resume_id;
+    }
+    return result;
+  }
+  if (payload instanceof FormData) {
+    const response = await apiClient.post<
+      { extraction?: ResumeExtraction; resume_id?: string } & ResumeExtraction
+    >("/resumes", payload, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    const result = response.data.extraction || response.data;
+    if (response.data.resume_id && !result.extraction_id) {
+      result.extraction_id = response.data.resume_id;
+      result.document_id = response.data.resume_id;
+    }
+    return result;
+  }
   const response = await apiClient.post<ResumeExtraction>("/resumes/parse", payload);
   return response.data;
+};
+
+export const getUserLatestResumeAPI = async (): Promise<ResumeExtraction | null> => {
+  try {
+    const response = await apiClient.get<{
+      items?: Array<{ id: string; extraction?: ResumeExtraction }>;
+      total?: number;
+    }>("/resumes?limit=1&include_extraction=true");
+    const item = response.data.items?.[0];
+    if (item?.extraction) {
+      const ext = item.extraction;
+      if (!ext.extraction_id) ext.extraction_id = item.id;
+      if (!ext.document_id) ext.document_id = item.id;
+      return ext;
+    }
+    return null;
+  } catch {
+    return null;
+  }
 };
 
 export const getSampleResumeAPI = async (candidateKey: string): Promise<ResumeExtraction> => {

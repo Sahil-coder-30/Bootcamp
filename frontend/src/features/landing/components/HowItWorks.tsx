@@ -47,19 +47,19 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({ onOpenRegister }) => {
   return (
     <section
       id="how-it-works"
-      className="relative scroll-mt-20 py-16 md:py-24 border-t border-zinc-800/80"
+      className="relative scroll-mt-20 py-16 md:py-24 border-t border-border"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         {/* Section Header */}
         <div className="mx-auto max-w-3xl text-center">
-          <div className="inline-flex items-center gap-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 px-3 py-1 text-xs font-semibold text-orange-400">
-            <Zap className="h-3.5 w-3.5 text-orange-400" />
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 px-3 py-1 text-xs font-semibold text-orange-600 dark:text-orange-400">
+            <Zap className="h-3.5 w-3.5 text-orange-500" />
             Simple 3-Step Workflow
           </div>
-          <h2 className="mt-4 font-heading text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl">
+          <h2 className="mt-4 font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl">
             How Candidates Compare & Get Placed
           </h2>
-          <p className="mt-3 text-sm text-zinc-400 sm:text-base">
+          <p className="mt-3 text-sm text-muted-foreground sm:text-base">
             Replace subjective guesswork with an auditable mathematical pipeline designed for
             high-volume campus recruitment.
           </p>
@@ -70,25 +70,27 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({ onOpenRegister }) => {
           {STEPS.map((s, idx) => (
             <div
               key={s.step}
-              className="group relative flex flex-col justify-between rounded-3xl border border-zinc-800 bg-[#0d0d12] p-7 transition-all duration-300 hover:border-orange-500/50 hover:bg-zinc-900/60 shadow-xl"
+              className="group relative flex flex-col justify-between rounded-3xl border border-border bg-card dark:border-zinc-800 dark:bg-[#0d0d12] p-7 transition-all duration-300 hover:border-primary/50 dark:hover:border-orange-500/50 hover:bg-card-sub dark:hover:bg-zinc-900/60 shadow-sm hover:shadow-xl"
             >
               <div>
                 {/* Step Number with Warm Gradient */}
                 <div className="flex items-center justify-between">
-                  <span className="font-heading text-3xl font-black bg-gradient-to-br from-orange-400 to-amber-500 bg-clip-text text-transparent">
+                  <span className="font-heading text-3xl font-black bg-gradient-to-br from-primary via-amber-500 to-orange-500 dark:from-orange-400 dark:to-amber-500 bg-clip-text text-transparent">
                     {s.step}
                   </span>
-                  <span className="rounded-full border border-orange-500/30 bg-orange-500/10 px-2.5 py-0.5 text-[10px] font-semibold text-orange-400">
+                  <span className="rounded-full border border-orange-500/30 bg-orange-500/10 px-2.5 py-0.5 text-[10px] font-semibold text-orange-600 dark:text-orange-400">
                     {s.badge}
                   </span>
                 </div>
 
                 <div className="mt-6">
-                  <h3 className="font-heading text-lg font-bold text-white group-hover:text-orange-400 transition-colors">
+                  <h3 className="font-heading text-lg font-bold text-foreground group-hover:text-primary transition-colors">
                     {s.title}
                   </h3>
-                  <p className="mt-1 text-xs font-medium text-orange-400/90">{s.subtitle}</p>
-                  <p className="mt-3 text-xs text-zinc-400 leading-relaxed">{s.description}</p>
+                  <p className="mt-1 text-xs font-medium text-primary/90">{s.subtitle}</p>
+                  <p className="mt-3 text-xs text-muted-foreground leading-relaxed">
+                    {s.description}
+                  </p>
                 </div>
               </div>
 
@@ -103,19 +105,19 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({ onOpenRegister }) => {
                   </Link>
                 </div>
               ) : idx === 1 ? (
-                <div className="mt-6 pt-4 border-t border-zinc-800">
+                <div className="mt-6 pt-4 border-t border-border">
                   <Link
                     to="/talent-check"
-                    className="inline-flex items-center text-xs font-bold text-orange-400 hover:text-orange-300"
+                    className="inline-flex items-center text-xs font-bold text-primary hover:underline"
                   >
                     Explore Talent Check Console &rarr;
                   </Link>
                 </div>
               ) : (
-                <div className="mt-6 pt-4 border-t border-zinc-800">
+                <div className="mt-6 pt-4 border-t border-border">
                   <Link
                     to="/company/skills"
-                    className="inline-flex items-center text-xs font-bold text-orange-400 hover:text-orange-300"
+                    className="inline-flex items-center text-xs font-bold text-primary hover:underline"
                   >
                     Inspect 10-Level Topic Ladders &rarr;
                   </Link>

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { LandingHeader } from "./LandingHeader";
 import { HeroSection } from "./HeroSection";
 import { LockedFeatureBanner } from "./LockedFeatureBanner";
-import { JobSkillComparator } from "./JobSkillComparator";
 import { HowItWorks } from "./HowItWorks";
 import { PlacementTiers } from "./PlacementTiers";
 import { FeatureBento } from "./FeatureBento";
@@ -16,11 +16,19 @@ import {
   clearStoredUser,
   subscribeToAuthChanges,
 } from "@/lib/auth";
+import { isSignedIn } from "@/lib/authStorage";
 
 export const LandingPage: React.FC = () => {
+  const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState<CandidateUser | null>(() => getStoredUser());
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authInitialTab, setAuthInitialTab] = useState<"login" | "register" | "demo">("register");
+
+  useEffect(() => {
+    if (currentUser || isSignedIn()) {
+      void navigate({ to: "/dashboard" });
+    }
+  }, [currentUser, navigate]);
 
   useEffect(() => {
     return subscribeToAuthChanges((user) => {
@@ -31,6 +39,7 @@ export const LandingPage: React.FC = () => {
   const handleUserChange = (user: CandidateUser | null) => {
     if (user) {
       saveStoredUser(user);
+      void navigate({ to: "/dashboard" });
     } else {
       clearStoredUser();
     }
@@ -42,7 +51,7 @@ export const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#08080a] text-zinc-100 selection:bg-orange-500 selection:text-zinc-950 font-sans">
+    <div className="min-h-screen bg-background text-foreground selection:bg-primary/20 selection:text-primary font-sans transition-colors duration-200">
       {/* 1. Clean Navigation Bar (Institutional bar removed) */}
       <LandingHeader currentUser={currentUser} onUserChange={handleUserChange} />
 
@@ -57,14 +66,6 @@ export const LandingPage: React.FC = () => {
 
         {/* 3. Company Data & Skill Section: Crisp Banner for public, Unlocked for authenticated */}
         <LockedFeatureBanner currentUser={currentUser} onOpenAuth={() => openAuthWithTab("demo")} />
-
-        {/* If logged in, show the interactive comparator */}
-        {currentUser && (
-          <JobSkillComparator
-            currentUser={currentUser}
-            onOpenAuth={() => openAuthWithTab("demo")}
-          />
-        )}
 
         {/* 4. How It Works (3 Clean Steps) */}
         <HowItWorks onOpenRegister={() => openAuthWithTab("register")} />

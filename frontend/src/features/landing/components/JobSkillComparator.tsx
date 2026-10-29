@@ -196,7 +196,7 @@ export const JobSkillComparator: React.FC<JobSkillComparatorProps> = ({
     }
     return {
       text: "Foundational Gap · Structured Ladder Required",
-      badge: "bg-zinc-800 text-zinc-300 border-zinc-700",
+      badge: "bg-muted text-muted-foreground border-border",
       message: "Recommend completing targeted Bloom Level 5 prerequisite assignments.",
     };
   }, [comparison.score]);
@@ -204,19 +204,19 @@ export const JobSkillComparator: React.FC<JobSkillComparatorProps> = ({
   return (
     <section
       id="comparator"
-      className="relative scroll-mt-20 py-16 md:py-24 border-t border-zinc-800/80"
+      className="relative scroll-mt-20 py-16 md:py-24 border-t border-border"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         {/* Section Heading */}
         <div className="mx-auto max-w-3xl text-center">
-          <div className="inline-flex items-center gap-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 px-3.5 py-1 text-xs font-semibold text-orange-400">
-            <Sparkles className="h-3.5 w-3.5 text-orange-400" />
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 px-3.5 py-1 text-xs font-semibold text-orange-600 dark:text-orange-400">
+            <Sparkles className="h-3.5 w-3.5 text-orange-500" />
             Live Candidate vs. Employer Benchmarking
           </div>
-          <h2 className="mt-4 font-heading text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl">
+          <h2 className="mt-4 font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl">
             Compare Your Skills Against Active Roles
           </h2>
-          <p className="mt-3 text-sm text-zinc-400 sm:text-base">
+          <p className="mt-3 text-sm text-muted-foreground sm:text-base">
             Select a verified corporate opening to benchmark your Bloom proficiency levels
             side-by-side with the employer's official campus cutoff.
           </p>
@@ -227,12 +227,12 @@ export const JobSkillComparator: React.FC<JobSkillComparatorProps> = ({
           {/* LEFT COLUMN: Curated Active Job Openings (5 cols) */}
           <div className="space-y-3.5 lg:col-span-5">
             <div className="flex items-center justify-between px-1">
-              <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">
+              <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                 Verified Recruiter Openings ({JOBS.length})
               </span>
               <Link
                 to="/companies"
-                className="text-xs font-semibold text-orange-400 hover:text-orange-300 transition-colors"
+                className="text-xs font-semibold text-primary hover:underline transition-colors"
               >
                 View all 115 companies &rarr;
               </Link>
@@ -247,34 +247,36 @@ export const JobSkillComparator: React.FC<JobSkillComparatorProps> = ({
                     onClick={() => setSelectedJob(job)}
                     className={`group relative cursor-pointer rounded-2xl border p-4.5 transition-all ${
                       isSelected
-                        ? "border-orange-500 bg-gradient-to-r from-orange-500/10 to-transparent shadow-lg text-white"
-                        : "border-zinc-800/80 bg-zinc-950/70 text-zinc-300 hover:border-zinc-700 hover:bg-zinc-900/50"
+                        ? "border-primary bg-primary/10 shadow-md text-foreground"
+                        : "border-border bg-card text-foreground hover:border-primary/50 hover:bg-muted/40"
                     }`}
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <div className="flex items-center gap-2">
-                          <h4 className="font-heading text-sm font-bold text-white group-hover:text-orange-400 transition-colors">
+                          <h4 className="font-heading text-sm font-bold text-foreground group-hover:text-primary transition-colors">
                             {job.companyName}
                           </h4>
                           <span
                             className={`rounded-md px-2 py-0.5 text-[10px] font-bold ${
                               job.tier === "Super Dream"
-                                ? "bg-orange-500/15 text-orange-400 border border-orange-500/30"
-                                : "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+                                ? "bg-orange-500/15 text-orange-600 dark:text-orange-400 border border-orange-500/30"
+                                : "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30"
                             }`}
                           >
                             {job.tier}
                           </span>
                         </div>
-                        <p className="mt-0.5 text-xs font-medium text-zinc-300">{job.roleTitle}</p>
+                        <p className="mt-0.5 text-xs font-medium text-muted-foreground">
+                          {job.roleTitle}
+                        </p>
                       </div>
 
                       <div className="text-right shrink-0">
-                        <span className="font-heading font-extrabold text-sm text-orange-400">
+                        <span className="font-heading font-extrabold text-sm text-primary">
                           {job.salary}
                         </span>
-                        <p className="text-[10px] text-zinc-500">{job.batch}</p>
+                        <p className="text-[10px] text-muted-foreground">{job.batch}</p>
                       </div>
                     </div>
 
@@ -282,19 +284,19 @@ export const JobSkillComparator: React.FC<JobSkillComparatorProps> = ({
                       {job.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="rounded-md border border-zinc-800 bg-zinc-900/80 px-2 py-0.5 text-[10px] font-medium text-zinc-400"
+                          className="rounded-md border border-border bg-muted/60 px-2 py-0.5 text-[10px] font-medium text-muted-foreground"
                         >
                           {tag}
                         </span>
                       ))}
                     </div>
 
-                    <div className="mt-3.5 flex items-center justify-between border-t border-zinc-800/60 pt-2.5 text-[11px] text-zinc-400">
-                      <span className="flex items-center gap-1 text-zinc-400">
-                        <MapPin className="h-3 w-3 text-zinc-500" />
+                    <div className="mt-3.5 flex items-center justify-between border-t border-border pt-2.5 text-[11px] text-muted-foreground">
+                      <span className="flex items-center gap-1">
+                        <MapPin className="h-3 w-3 text-muted-foreground" />
                         {job.locations}
                       </span>
-                      <span className="flex items-center gap-1 font-semibold text-orange-400 group-hover:translate-x-0.5 transition-transform">
+                      <span className="flex items-center gap-1 font-semibold text-primary group-hover:translate-x-0.5 transition-transform">
                         Compare Fit
                         <ChevronRight className="h-3.5 w-3.5" />
                       </span>
@@ -306,31 +308,31 @@ export const JobSkillComparator: React.FC<JobSkillComparatorProps> = ({
           </div>
 
           {/* RIGHT COLUMN: Live Skill Match & Gap Analyzer (7 cols) */}
-          <div className="flex flex-col justify-between rounded-3xl border border-zinc-800 bg-[#0d0d12] p-6 sm:p-8 shadow-2xl backdrop-blur-xl lg:col-span-7">
+          <div className="flex flex-col justify-between rounded-3xl border border-border bg-card p-6 sm:p-8 shadow-xl lg:col-span-7">
             <div>
               {/* Header with Candidate Profile Switcher */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-zinc-800 pb-5">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-border pb-5">
                 <div>
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-orange-400">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-primary">
                     Live Skill Gap Analysis
                   </span>
-                  <h3 className="font-heading text-xl font-bold text-white sm:text-2xl mt-0.5">
+                  <h3 className="font-heading text-xl font-bold text-foreground sm:text-2xl mt-0.5">
                     {selectedJob.companyName} &bull; {selectedJob.roleTitle}
                   </h3>
                 </div>
 
                 {/* Profile Pill */}
                 <div className="flex items-center gap-2">
-                  <div className="rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-1.5 text-xs text-zinc-300 flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                  <div className="rounded-xl border border-border bg-card-sub px-3 py-1.5 text-xs text-foreground flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full bg-emerald-500" />
                     <span>
-                      Profile: <strong>{currentUser ? currentUser.name : "Ananya Rao"}</strong>
+                      Profile: <strong>{currentUser ? currentUser.name : "Candidate Profile"}</strong>
                     </span>
                   </div>
                   {!currentUser && (
                     <button
                       onClick={onOpenAuth}
-                      className="text-[11px] font-semibold text-orange-400 hover:underline cursor-pointer"
+                      className="text-[11px] font-semibold text-primary hover:underline cursor-pointer"
                     >
                       Switch &rarr;
                     </button>
@@ -339,17 +341,19 @@ export const JobSkillComparator: React.FC<JobSkillComparatorProps> = ({
               </div>
 
               {/* Match Gauge Card */}
-              <div className="mt-6 rounded-2xl border border-orange-500/20 bg-gradient-to-r from-orange-500/10 via-zinc-900/60 to-zinc-900/60 p-5">
+              <div className="mt-6 rounded-2xl border border-border bg-card-sub p-5">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div className="space-y-1">
-                    <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                       Deterministic Readiness Score
                     </span>
                     <div className="flex items-baseline gap-2">
-                      <span className="font-heading text-4xl sm:text-5xl font-black text-white">
+                      <span className="font-heading text-4xl sm:text-5xl font-black text-foreground">
                         {comparison.score}%
                       </span>
-                      <span className="text-xs text-zinc-400">Match against hiring bar</span>
+                      <span className="text-xs text-muted-foreground">
+                        Match against hiring bar
+                      </span>
                     </div>
                   </div>
 
@@ -359,14 +363,16 @@ export const JobSkillComparator: React.FC<JobSkillComparatorProps> = ({
                     >
                       {fitBadge.text}
                     </span>
-                    <p className="mt-1.5 text-xs text-zinc-400 max-w-xs">{fitBadge.message}</p>
+                    <p className="mt-1.5 text-xs text-muted-foreground max-w-xs">
+                      {fitBadge.message}
+                    </p>
                   </div>
                 </div>
               </div>
 
               {/* Side-by-Side Competencies List */}
               <div className="mt-7 space-y-4">
-                <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-zinc-400 border-b border-zinc-800/80 pb-2">
+                <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-muted-foreground border-b border-border pb-2">
                   <span>Technical Competency</span>
                   <span>Candidate vs. Cutoff</span>
                 </div>
@@ -377,25 +383,29 @@ export const JobSkillComparator: React.FC<JobSkillComparatorProps> = ({
                   return (
                     <div
                       key={item.name}
-                      className="rounded-xl border border-zinc-800/80 bg-zinc-950/60 p-3.5 transition-colors hover:border-zinc-700"
+                      className="rounded-xl border border-border bg-card-sub p-3.5 transition-colors hover:border-primary/50"
                     >
                       <div className="flex items-center justify-between text-xs">
                         <div>
-                          <p className="font-bold text-white">{item.name}</p>
-                          <p className="text-[11px] text-zinc-400">{item.weight}</p>
+                          <p className="font-bold text-foreground">{item.name}</p>
+                          <p className="text-[11px] text-muted-foreground">{item.weight}</p>
                         </div>
 
                         <div className="text-right">
                           <span
                             className={`font-mono font-bold text-xs ${
-                              isMet ? "text-emerald-400" : "text-orange-400"
+                              isMet
+                                ? "text-emerald-600 dark:text-emerald-400"
+                                : "text-amber-600 dark:text-amber-400"
                             }`}
                           >
                             L{item.candidate} / Cutoff L{item.required}
                           </span>
                           <p
                             className={`text-[10px] font-semibold ${
-                              isMet ? "text-emerald-400" : "text-orange-400"
+                              isMet
+                                ? "text-emerald-600 dark:text-emerald-400"
+                                : "text-amber-600 dark:text-amber-400"
                             }`}
                           >
                             {isMet ? "Cutoff Met" : `${Math.abs(diff)} Level Gap`}
@@ -405,10 +415,10 @@ export const JobSkillComparator: React.FC<JobSkillComparatorProps> = ({
 
                       {/* Visual Bar Comparison */}
                       <div className="mt-2.5 flex items-center gap-3">
-                        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-zinc-800">
+                        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
                           <div
                             className={`h-full rounded-full transition-all duration-300 ${
-                              isMet ? "bg-emerald-400" : "bg-orange-500"
+                              isMet ? "bg-emerald-500" : "bg-orange-500"
                             }`}
                             style={{
                               width: `${Math.min(100, (item.candidate / item.required) * 100)}%`,
@@ -424,14 +434,14 @@ export const JobSkillComparator: React.FC<JobSkillComparatorProps> = ({
               {/* Recommended Topic to Unlock Next Tier */}
               <div className="mt-6 rounded-2xl border border-orange-500/30 bg-orange-500/5 p-4 text-xs">
                 <div className="flex items-start gap-2.5">
-                  <Sparkles className="h-4 w-4 text-orange-400 shrink-0 mt-0.5" />
+                  <Sparkles className="h-4 w-4 text-orange-500 shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-bold text-orange-300">
+                    <span className="font-bold text-orange-700 dark:text-orange-300">
                       Targeted Recommendation to Reach 100% Fit:
                     </span>
-                    <p className="mt-1 text-zinc-300">
+                    <p className="mt-1 text-muted-foreground">
                       Master Bloom Level {selectedJob.requiredSkills.dsa} Topic:{" "}
-                      <strong className="text-white">{selectedJob.recommendedTopic}</strong>.
+                      <strong className="text-foreground">{selectedJob.recommendedTopic}</strong>.
                     </p>
                   </div>
                 </div>
@@ -439,9 +449,9 @@ export const JobSkillComparator: React.FC<JobSkillComparatorProps> = ({
             </div>
 
             {/* Bottom Actions */}
-            <div className="mt-8 pt-5 border-t border-zinc-800/80 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="mt-8 pt-5 border-t border-border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <Link to="/talent-check" className="w-full sm:w-auto">
-                <Button className="w-full sm:w-auto h-10 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 text-zinc-950 font-bold hover:brightness-110 shadow-[0_0_20px_rgba(249,115,22,0.25)] transition-all cursor-pointer">
+                <Button className="w-full sm:w-auto h-10 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 text-white font-bold hover:brightness-110 shadow-md transition-all cursor-pointer">
                   Launch Interactive Talent Check
                   <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                 </Button>
@@ -449,7 +459,7 @@ export const JobSkillComparator: React.FC<JobSkillComparatorProps> = ({
 
               <Link
                 to="/company/intelligence"
-                className="text-xs font-semibold text-zinc-400 hover:text-white transition-colors text-center sm:text-right"
+                className="text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors text-center sm:text-right"
               >
                 View Selection Process &rarr;
               </Link>

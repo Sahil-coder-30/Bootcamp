@@ -37,15 +37,15 @@ export const ReadinessCard: React.FC<ReadinessCardProps> = ({
   const verdictConfig = {
     ready: {
       label: "Ready for Role",
-      badgeClass: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
-      glowColor: "rgba(16, 185, 129, 0.2)",
+      badgeClass: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30",
+      glowColor: "rgba(16, 185, 129, 0.15)",
       icon: CheckCircle2,
       desc: "Meets or exceeds 80% of expected bar with no critical band gaps.",
     },
     almost: {
       label: "Almost Ready",
-      badgeClass: "bg-amber-500/15 text-amber-400 border-amber-500/30",
-      glowColor: "rgba(245, 158, 11, 0.2)",
+      badgeClass: "bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/30",
+      glowColor: "rgba(245, 158, 11, 0.15)",
       icon: AlertTriangle,
       desc:
         blockingCount > 0
@@ -54,8 +54,8 @@ export const ReadinessCard: React.FC<ReadinessCardProps> = ({
     },
     not_yet: {
       label: "Needs Preparation",
-      badgeClass: "bg-rose-500/15 text-rose-400 border-rose-500/30",
-      glowColor: "rgba(239, 68, 68, 0.2)",
+      badgeClass: "bg-rose-500/15 text-rose-700 dark:text-rose-400 border-rose-500/30",
+      glowColor: "rgba(239, 68, 68, 0.15)",
       icon: XCircle,
       desc: "Significant preparation required across multiple foundational skill areas.",
     },
@@ -65,21 +65,19 @@ export const ReadinessCard: React.FC<ReadinessCardProps> = ({
 
   return (
     <div
-      className="relative overflow-hidden rounded-2xl p-6 sm:p-8 backdrop-blur-md transition-all duration-300"
+      className="relative overflow-hidden rounded-2xl p-6 sm:p-8 backdrop-blur-md transition-all duration-300 border border-border bg-card shadow-xs"
       style={{
-        background: "linear-gradient(135deg, rgba(14, 16, 23, 0.95), rgba(22, 25, 41, 0.85))",
-        border: "1px solid rgba(255, 255, 255, 0.08)",
-        boxShadow: `0 8px 32px -4px ${verdictConfig.glowColor}, inset 0 1px 0 rgba(255, 255, 255, 0.05)`,
+        boxShadow: `0 8px 32px -4px ${verdictConfig.glowColor}`,
       }}
     >
       {/* Top Banner Tags */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div className="flex items-center gap-2">
-          <span className="text-xs uppercase tracking-wider text-slate-400 font-medium">
+          <span className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
             Readiness Evaluation
           </span>
           {isWhatIf && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/15 text-blue-400 border border-blue-500/30 animate-pulse">
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/15 text-primary border border-primary/30 animate-pulse">
               <Zap className="w-3 h-3" /> Live What-If Preview
             </span>
           )}
@@ -87,11 +85,11 @@ export const ReadinessCard: React.FC<ReadinessCardProps> = ({
 
         <div className="flex items-center gap-2">
           {source === "snapshot" && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-slate-800 text-slate-300 border border-slate-700">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-card-sub text-muted-foreground border border-border">
               Offline Snapshot
             </span>
           )}
-          <span className="text-[11px] font-mono text-slate-500">tc-1.0</span>
+          <span className="text-[11px] font-mono text-muted-foreground">tc-1.0</span>
         </div>
       </div>
 
@@ -99,21 +97,19 @@ export const ReadinessCard: React.FC<ReadinessCardProps> = ({
         {/* Score & Verdict */}
         <div className="md:col-span-6 flex items-center gap-6">
           <div className="relative flex items-center justify-center">
-            {/* Circular glow background */}
+            {/* Circular score container */}
             <div
-              className="w-28 h-28 rounded-full flex flex-col items-center justify-center border-2"
+              className="w-28 h-28 rounded-full flex flex-col items-center justify-center border-2 bg-card-sub dark:bg-card"
               style={{
                 borderColor:
                   verdict === "ready" ? "#10B981" : verdict === "almost" ? "#F59E0B" : "#EF4444",
-                background:
-                  "radial-gradient(circle, rgba(14, 16, 23, 0.8) 0%, rgba(7, 8, 11, 0.9) 100%)",
                 boxShadow: `0 0 24px -2px ${verdictConfig.glowColor}`,
               }}
             >
-              <span className="text-4xl sm:text-5xl font-black tracking-tight text-white font-mono">
+              <span className="text-4xl sm:text-5xl font-black tracking-tight text-foreground font-mono">
                 {score}
               </span>
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mt-0.5">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mt-0.5">
                 / 100
               </span>
             </div>
@@ -127,13 +123,15 @@ export const ReadinessCard: React.FC<ReadinessCardProps> = ({
               {verdictConfig.label}
             </div>
 
-            <p className="text-sm text-slate-300 leading-snug max-w-sm">{verdictConfig.desc}</p>
+            <p className="text-sm text-muted-foreground leading-snug max-w-sm">
+              {verdictConfig.desc}
+            </p>
 
             {readinessRange && (
-              <div className="flex items-center gap-1.5 text-xs text-slate-400 font-mono pt-1">
-                <ShieldCheck className="w-3.5 h-3.5 text-slate-400" />
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-mono pt-1">
+                <ShieldCheck className="w-3.5 h-3.5 text-muted-foreground" />
                 <span>Confidence Range:</span>
-                <span className="text-slate-200 font-semibold">
+                <span className="text-foreground font-semibold">
                   {readinessRange.low} – {readinessRange.high}
                 </span>
               </div>
@@ -142,39 +140,43 @@ export const ReadinessCard: React.FC<ReadinessCardProps> = ({
         </div>
 
         {/* Quick Stats Grid */}
-        <div className="md:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-3 border-t md:border-t-0 md:border-l border-slate-800/80 pt-4 md:pt-0 md:pl-6">
-          <div className="bg-slate-900/60 rounded-xl p-3 border border-slate-800/60">
-            <div className="text-xs text-slate-400 mb-1">Levels Covered</div>
-            <div className="text-lg font-bold text-white font-mono">
+        <div className="md:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-3 border-t md:border-t-0 md:border-l border-border pt-4 md:pt-0 md:pl-6">
+          <div className="bg-card-sub rounded-xl p-3 border border-border">
+            <div className="text-xs text-muted-foreground mb-1">Levels Covered</div>
+            <div className="text-lg font-bold text-foreground font-mono">
               {levelsCovered ?? "—"}{" "}
-              <span className="text-xs text-slate-500 font-normal">/ {levelsNeeded ?? "—"}</span>
+              <span className="text-xs text-muted-foreground font-normal">
+                / {levelsNeeded ?? "—"}
+              </span>
             </div>
-            <div className="text-[11px] text-emerald-400 mt-0.5">
+            <div className="text-[11px] text-emerald-700 dark:text-emerald-400 mt-0.5 font-medium">
               {levelsNeeded
                 ? `${Math.round(((levelsCovered || 0) / levelsNeeded) * 100)}% climbed`
                 : ""}
             </div>
           </div>
 
-          <div className="bg-slate-900/60 rounded-xl p-3 border border-slate-800/60">
-            <div className="text-xs text-slate-400 mb-1">Categories Met</div>
-            <div className="text-lg font-bold text-white font-mono">
+          <div className="bg-card-sub rounded-xl p-3 border border-border">
+            <div className="text-xs text-muted-foreground mb-1">Categories Met</div>
+            <div className="text-lg font-bold text-foreground font-mono">
               {categoriesMet ?? "—"}{" "}
-              <span className="text-xs text-slate-500 font-normal">/ 12</span>
+              <span className="text-xs text-muted-foreground font-normal">/ 12</span>
             </div>
-            <div className="text-[11px] text-slate-400 mt-0.5">At or above bar</div>
+            <div className="text-[11px] text-muted-foreground mt-0.5">At or above bar</div>
           </div>
 
-          <div className="bg-slate-900/60 rounded-xl p-3 border border-slate-800/60 col-span-2 sm:col-span-1">
-            <div className="text-xs text-slate-400 mb-1">Blocking Gaps</div>
+          <div className="bg-card-sub rounded-xl p-3 border border-border col-span-2 sm:col-span-1">
+            <div className="text-xs text-muted-foreground mb-1">Blocking Gaps</div>
             <div
               className={`text-lg font-bold font-mono ${
-                blockingCount > 0 ? "text-rose-400" : "text-emerald-400"
+                blockingCount > 0
+                  ? "text-rose-600 dark:text-rose-400"
+                  : "text-emerald-700 dark:text-emerald-400"
               }`}
             >
               {blockingCount}
             </div>
-            <div className="text-[11px] text-slate-400 mt-0.5">
+            <div className="text-[11px] text-muted-foreground mt-0.5">
               {blockingCount > 0 ? "Shortfall ≥ 3" : "None detected"}
             </div>
           </div>

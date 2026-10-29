@@ -37,22 +37,22 @@ export const GapBars: React.FC<GapBarsProps> = ({ rows, selectedCode, onSelectCo
             onClick={() => onSelectCode?.(row.category_code)}
             className={`group rounded-xl p-3.5 transition-all cursor-pointer border ${
               isSelected
-                ? "bg-slate-900/90 border-blue-500/50 shadow-lg shadow-blue-500/10"
-                : "bg-slate-900/40 hover:bg-slate-900/70 border-slate-800/60 hover:border-slate-700"
+                ? "bg-card border-primary/50 shadow-xs"
+                : "bg-card hover:bg-card-sub border-border hover:border-primary/40"
             }`}
           >
             {/* Header: Code, Title, Badges */}
             <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5">
               <div className="flex items-center gap-2.5">
-                <span className="w-12 text-center text-xs font-mono font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-200 border border-slate-700">
+                <span className="w-12 text-center text-xs font-mono font-bold px-2 py-0.5 rounded bg-card-sub text-foreground border border-border">
                   {row.category_code}
                 </span>
-                <span className="text-sm font-semibold text-white group-hover:text-blue-300 transition-colors">
+                <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
                   {row.category_code}
                 </span>
 
                 {row.blocking && (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase bg-rose-500/20 text-rose-400 border border-rose-500/40 animate-pulse">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/40 animate-pulse">
                     <AlertCircle className="w-3 h-3" /> Blocking
                   </span>
                 )}
@@ -60,26 +60,26 @@ export const GapBars: React.FC<GapBarsProps> = ({ rows, selectedCode, onSelectCo
 
               {/* Levels & Bloom Badges */}
               <div className="flex items-center gap-3 text-xs">
-                <span className="text-slate-400">
+                <span className="text-muted-foreground">
                   Candidate:{" "}
-                  <strong className="text-slate-200 font-mono">
+                  <strong className="text-foreground font-mono">
                     L{row.candidate_level} ({row.candidate_bloom})
                   </strong>
                 </span>
-                <span className="text-slate-600">|</span>
-                <span className="text-slate-400">
+                <span className="text-border">|</span>
+                <span className="text-muted-foreground">
                   Required:{" "}
-                  <strong className="text-blue-400 font-mono">
+                  <strong className="text-primary font-mono">
                     L{row.required_level} ({row.required_bloom})
                   </strong>
                 </span>
 
                 {row.gap ? (
-                  <span className="px-2 py-0.5 rounded text-xs font-mono font-semibold bg-rose-500/15 text-rose-400 border border-rose-500/30">
+                  <span className="px-2 py-0.5 rounded text-xs font-mono font-semibold bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30">
                     -{row.shortfall}
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-mono font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-mono font-semibold bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
                     <Check className="w-3 h-3" /> Met
                   </span>
                 )}
@@ -87,7 +87,7 @@ export const GapBars: React.FC<GapBarsProps> = ({ rows, selectedCode, onSelectCo
             </div>
 
             {/* Dual-Marked Visual Progress Bar */}
-            <div className="relative w-full h-3.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800/80">
+            <div className="relative w-full h-3.5 bg-muted rounded-full overflow-hidden border border-border">
               {/* Shortfall hatched gap zone if candidate < required */}
               {row.gap && (
                 <div
@@ -111,20 +111,21 @@ export const GapBars: React.FC<GapBarsProps> = ({ rows, selectedCode, onSelectCo
 
               {/* Target Marker Tick Line (Required Level) */}
               <div
-                className="absolute top-0 bottom-0 w-1 bg-white shadow-md z-10"
+                className="absolute top-0 bottom-0 w-1 shadow-xs z-10 bg-foreground dark:bg-white"
                 style={{
                   left: `calc(${reqPercent}% - 2px)`,
-                  backgroundColor: "#FFFFFF",
                 }}
                 title={`Bar: Level ${row.required_level}`}
               />
             </div>
 
             {/* Footnote details */}
-            <div className="flex items-center justify-between text-[11px] text-slate-500 mt-1.5 font-mono">
+            <div className="flex items-center justify-between text-[11px] text-muted-foreground mt-1.5 font-mono">
               <span>Weight: {(row.weight * 100).toFixed(1)}%</span>
               {row.points_lost > 0 && (
-                <span className="text-rose-400/90 font-medium">Cost: -{row.points_lost} pts</span>
+                <span className="text-rose-600 dark:text-rose-400 font-medium">
+                  Cost: -{row.points_lost} pts
+                </span>
               )}
             </div>
           </div>

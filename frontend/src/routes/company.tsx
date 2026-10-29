@@ -1,6 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import AppLayout from "@/components/Layout/AppLayout";
+import { requireSignIn } from "@/lib/requireSignIn";
+import DashboardLayout from "@/components/Layout/DashboardLayout";
 
 export const Route = createFileRoute("/company")({
-  component: AppLayout,
+  beforeLoad: ({ location }) => {
+    requireSignIn(location);
+  },
+  component: DashboardLayout,
 });

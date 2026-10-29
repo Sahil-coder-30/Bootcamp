@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.7
+# syntax=docker/dockerfile:1
 # Resume parsing service: fully offline at runtime. The spaCy NER model is baked
 # into the image at build time, so the container never downloads anything later.
 FROM python:3.12-slim
@@ -24,12 +24,12 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     RESUME_DATABASE_URL=sqlite:////app/data/resumes.db \
     RESUME_STORAGE_DIR=/app/data/files
 
-# Dependencies first so editing source does not reinstall them; the cache mount
-# keeps wheels between builds.
+# Dependencies first so editing source does not reinstall them. No BuildKit
+# cache mount here, so the image builds with the legacy builder too (skaffold's
+# default); --no-cache keeps uv's download cache out of the layer.
 COPY requirements.txt ./
-RUN --mount=type=cache,target=/root/.cache/uv \
-    for attempt in 1 2 3; do \
-        uv pip install --system -r requirements.txt && break; \
+RUN for attempt in 1 2 3; do \
+        uv pip install --system --no-cache -r requirements.txt && break; \
         echo "uv install failed (attempt $attempt), retrying in 10s"; \
         if [ "$attempt" = 3 ]; then exit 1; fi; \
         sleep 10; \

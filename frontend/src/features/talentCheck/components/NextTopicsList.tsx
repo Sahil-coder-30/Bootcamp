@@ -19,7 +19,7 @@ export const NextTopicsList: React.FC<NextTopicsListProps> = ({ rows, selectedCo
 
   if (activeRows.length === 0) {
     return (
-      <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 text-center text-slate-400 text-sm">
+      <div className="bg-card-sub border border-border rounded-2xl p-6 text-center text-muted-foreground text-sm">
         No gaps selected or candidate meets requirements in this category.
       </div>
     );
@@ -30,16 +30,16 @@ export const NextTopicsList: React.FC<NextTopicsListProps> = ({ rows, selectedCo
       {activeRows.map((row) => (
         <div
           key={row.category_code}
-          className="bg-slate-900/50 border border-slate-800 rounded-2xl p-5 backdrop-blur-md"
+          className="bg-card border border-border rounded-2xl p-5 shadow-xs"
         >
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800/80 mb-4">
+          <div className="flex items-center justify-between pb-3 border-b border-border mb-4">
             <div className="flex items-center gap-2">
-              <BookOpen className="w-4 h-4 text-blue-400" />
-              <h4 className="text-sm font-bold text-white font-mono">
+              <BookOpen className="w-4 h-4 text-primary" />
+              <h4 className="text-sm font-bold text-foreground font-mono">
                 {row.category_code}: Level {row.candidate_level} → Level {row.required_level}
               </h4>
             </div>
-            <span className="text-xs text-rose-400 font-mono font-semibold">
+            <span className="text-xs text-rose-600 dark:text-rose-400 font-mono font-semibold">
               {row.shortfall} level{row.shortfall > 1 ? "s" : ""} to bridge
             </span>
           </div>
@@ -51,21 +51,18 @@ export const NextTopicsList: React.FC<NextTopicsListProps> = ({ rows, selectedCo
                 .map((s) => s.trim())
                 .filter(Boolean);
               return (
-                <div
-                  key={t.level}
-                  className="bg-slate-950/60 rounded-xl p-3.5 border border-slate-800/60"
-                >
+                <div key={t.level} className="bg-card-sub rounded-xl p-3.5 border border-border">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-bold text-blue-400 font-mono">
+                    <span className="text-xs font-bold text-primary font-mono">
                       Target Level {t.level}
                     </span>
-                    <span className="text-[11px] text-slate-500 font-mono">Bloom Tier</span>
+                    <span className="text-[11px] text-muted-foreground font-mono">Bloom Tier</span>
                   </div>
 
                   <ul className="space-y-1.5">
                     {topicItems.map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-2 text-xs text-slate-300">
-                        <CheckSquare className="w-3.5 h-3.5 text-slate-500 mt-0.5 shrink-0" />
+                      <li key={idx} className="flex items-start gap-2 text-xs text-foreground">
+                        <CheckSquare className="w-3.5 h-3.5 text-muted-foreground mt-0.5 shrink-0" />
                         <span>{item}</span>
                       </li>
                     ))}

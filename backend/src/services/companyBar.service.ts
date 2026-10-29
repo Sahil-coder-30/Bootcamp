@@ -199,6 +199,12 @@ export async function getTopicLadder(): Promise<Record<string, Record<string, st
           if (!ladder[code]) ladder[code] = {};
           ladder[code][String(row.level_number)] = cleanTopicText(row.topics);
         }
+        const snapshot = loadSnapshot();
+        for (const [code, topics] of Object.entries(snapshot.topics || {})) {
+          if (!ladder[code] || Object.keys(ladder[code]).length === 0) {
+            ladder[code] = topics as Record<string, string>;
+          }
+        }
         return ladder;
       }
     } catch {

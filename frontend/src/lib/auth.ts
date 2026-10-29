@@ -36,6 +36,18 @@ export function clearStoredUser(): void {
   }
 }
 
+export function formatNameFromEmail(email: string): string {
+  if (!email) return "Candidate";
+  const localPart = email.split("@")[0] || "Candidate";
+  const clean = localPart.replace(/[._-]+/g, " ").trim();
+  return (
+    clean
+      .split(/\s+/)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ") || "Candidate"
+  );
+}
+
 export function subscribeToAuthChanges(callback: (user: CandidateUser | null) => void): () => void {
   const handler = () => {
     callback(getStoredUser());

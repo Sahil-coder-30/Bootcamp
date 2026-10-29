@@ -33,9 +33,9 @@ if (args.has("--export-golden")) {
 }
 
 const url = process.env["SUPABASE_URL"];
-const key = process.env["SUPABASE_SERVICE_ROLE_KEY"];
+const key = process.env["SUPABASE_SERVICE_ROLE_KEY"] ?? process.env["SUPABASE_ANON_KEY"];
 if (!url || !key) {
-  console.error("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required (backend/.env).");
+  console.error("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY (or SUPABASE_ANON_KEY) are required (backend/.env).");
   process.exit(1);
 }
 const supabase = createClient(url, key, { auth: { persistSession: false } });
@@ -96,6 +96,7 @@ async function main() {
       {
         id,
         email: seed.email,
+        name: seed.name,
         profile: seed,
         version: 1,
         resume_extraction_id: seed.resume_extraction_id ?? null,

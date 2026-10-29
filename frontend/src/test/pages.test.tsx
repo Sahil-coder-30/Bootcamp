@@ -76,7 +76,7 @@ describe("CompanyPickerPage", () => {
     expect(cards()).toHaveLength(1);
 
     fireEvent.click(screen.getByRole("button", { name: /^Standard/ }));
-    expect(await screen.findByText("No recruiting companies found")).toBeInTheDocument();
+    expect(screen.getByText("No recruiting companies found")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Reset Search Filters" }));
     expect(cards()).toHaveLength(3);
   });

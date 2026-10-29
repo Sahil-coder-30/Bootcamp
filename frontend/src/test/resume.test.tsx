@@ -1,10 +1,13 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { ResumeUploadCard } from "@/features/resume/components/ResumeUploadCard";
 import { SkillChips } from "@/features/resume/components/SkillChips";
 import { FormatInvarianceCard } from "@/features/resume/components/FormatInvarianceCard";
 import { HowWeGotThisDrawer } from "@/features/resume/components/HowWeGotThisDrawer";
+import { ResumeParsePage } from "@/features/resume/components/ResumeParsePage";
 import type { ResumeExtraction } from "@/features/resume/service/resume.api";
+import { makeStore, renderPage } from "./utils";
+import { setResumeExtraction } from "@/features/resume/slice/resume.slice";
 
 describe("Resume Parsing Feature Components", () => {
   const dummyExtraction: ResumeExtraction = {
@@ -106,31 +109,39 @@ describe("Resume Parsing Feature Components", () => {
     },
   };
 
-  it("renders ResumeUploadCard with sample pills and responds to clicks", () => {
+  it("renders ResumeUploadCard with clean full-width dropzone", () => {
     const handleUpload = vi.fn();
-    const handleSelectSample = vi.fn();
 
     render(
       <ResumeUploadCard
         onFileUpload={handleUpload}
-        onSelectSample={handleSelectSample}
         isLoading={false}
-        currentCandidateName="Ananya Rao"
+        currentCandidateName="Sample Candidate"
       />,
     );
 
     expect(screen.getByText(/Resume Ingestion & Deterministic Parser/i)).toBeInTheDocument();
     expect(screen.getByText(/Zero PII Sent: Contacts Redacted/i)).toBeInTheDocument();
+    expect(screen.getByText(/Drop candidate resume here, or browse/i)).toBeInTheDocument();
+  });
 
-    // Check candidate pills
-    const ananyaButton = screen.getByRole("button", { name: /Ananya Rao/i });
-    expect(ananyaButton).toBeInTheDocument();
-    fireEvent.click(ananyaButton);
-    expect(handleSelectSample).toHaveBeenCalledWith("ananya");
+  it("renders ResumeUploadCard with Next button when candidate is present and onNext is provided", () => {
+    const handleUpload = vi.fn();
+    const handleNext = vi.fn();
 
-    const karthikButton = screen.getByRole("button", { name: /Karthik Sub/i });
-    fireEvent.click(karthikButton);
-    expect(handleSelectSample).toHaveBeenCalledWith("karthik");
+    render(
+      <ResumeUploadCard
+        onFileUpload={handleUpload}
+        isLoading={false}
+        currentCandidateName="Sample Candidate"
+        onNext={handleNext}
+      />,
+    );
+
+    const nextButton = screen.getByRole("button", { name: /Next/i });
+    expect(nextButton).toBeInTheDocument();
+    fireEvent.click(nextButton);
+    expect(handleNext).toHaveBeenCalledTimes(1);
   });
 
   it("renders SkillChips with evidence and category badges", () => {
@@ -162,10 +173,10 @@ describe("Resume Parsing Feature Components", () => {
     expect(screen.getByText(/Skill Jaccard Overlap/i)).toBeInTheDocument();
     expect(screen.getByText(/Level MAE Difference/i)).toBeInTheDocument();
 
-    // Switch to Karthik proof
-    const karthikTab = screen.getByRole("button", { name: "Karthik" });
-    fireEvent.click(karthikTab);
-    expect(screen.getByText(/Karthik Subramaniam/i)).toBeInTheDocument();
+    // Switch to Archetype B proof
+    const archetypeBTab = screen.getByRole("button", { name: /Archetype B/i });
+    fireEvent.click(archetypeBTab);
+    expect(screen.getByText(/Archetype B \(Data\)/i)).toBeInTheDocument();
   });
 
   it("renders HowWeGotThisDrawer with privacy and telemetry audit", () => {
@@ -178,5 +189,26 @@ describe("Resume Parsing Feature Components", () => {
     expect(screen.getByText(/142 ms/i)).toBeInTheDocument();
     expect(screen.getByText(/Two Column Gutter/i)).toBeInTheDocument();
     expect(screen.getByText(/96% grounded/i)).toBeInTheDocument();
+  });
+
+  it("renders Next button when parsing is done on ResumeParsePage and navigates to /profile", async () => {
+    const store = makeStore();
+    store.dispatch(setResumeExtraction(dummyExtraction));
+
+    const { router } = renderPage(ResumeParsePage, "/resume", store);
+
+    // Both top header, upload card and bottom action bar have Next buttons
+    await waitFor(() => {
+      const nextButtons = screen.getAllByRole("button", { name: /Next/i });
+      expect(nextButtons.length).toBeGreaterThan(0);
+    });
+
+    const nextButtons = screen.getAllByRole("button", { name: /Next/i });
+    if (nextButtons[0]) {
+      fireEvent.click(nextButtons[0]);
+    }
+    await waitFor(() => {
+      expect(router.state.location.pathname).toBe("/profile");
+    });
   });
 });

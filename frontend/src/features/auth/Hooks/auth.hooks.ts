@@ -2,8 +2,28 @@ import { useCallback, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { clearSession, readSession, writeSession } from "@/lib/authStorage";
 import { setSessionLostHandler, toErrorMessage } from "@/services/apiClient";
-import { getMeAPI, logoutAPI, updateMeAPI, type ProfilePatch } from "../service/auth.api";
+import { getMeAPI, logoutAPI, updateMeAPI, type ProfilePatch, type AuthUser } from "../service/auth.api";
 import { setAuthError, setAuthLoading, setAuthReady, setAuthUser } from "../slice/auth.slice";
+import { saveStoredUser, clearStoredUser, getStoredUser, formatNameFromEmail, type CandidateUser } from "@/lib/auth";
+
+function syncCandidateUser(authUser: AuthUser): void {
+  const name = authUser.name || formatNameFromEmail(authUser.email);
+  const initials = name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase() || "CU";
+
+  const candidate: CandidateUser = {
+    id: authUser.candidateProfileId || authUser.id,
+    name,
+    role: authUser.branch ? `${authUser.branch} (${authUser.college || "Campus"})` : "Campus Candidate",
+    avatarText: initials,
+    email: authUser.email,
+  };
+  saveStoredUser(candidate);
+}
 
 /** Reads the signed-in user. Call `useAuthBootstrap` once near the app root. */
 export function useAuth() {
@@ -16,10 +36,13 @@ export function useAuth() {
       dispatch(setAuthLoading(true));
       writeSession({ accessToken, refreshToken });
       try {
-        dispatch(setAuthUser(await getMeAPI()));
+        const authUser = await getMeAPI();
+        dispatch(setAuthUser(authUser));
+        syncCandidateUser(authUser);
         return true;
       } catch (err) {
         clearSession();
+        clearStoredUser();
         dispatch(setAuthError(toErrorMessage(err, "Sign-in failed")));
         return false;
       }
@@ -30,6 +53,7 @@ export function useAuth() {
   const signOut = useCallback(async () => {
     const session = readSession();
     clearSession();
+    clearStoredUser();
     dispatch(setAuthUser(null));
     if (session) await logoutAPI(session.refreshToken).catch(() => {});
   }, [dispatch]);
@@ -38,7 +62,9 @@ export function useAuth() {
     async (patch: ProfilePatch): Promise<boolean> => {
       dispatch(setAuthLoading(true));
       try {
-        dispatch(setAuthUser(await updateMeAPI(patch)));
+        const updated = await updateMeAPI(patch);
+        dispatch(setAuthUser(updated));
+        syncCandidateUser(updated);
         return true;
       } catch (err) {
         dispatch(setAuthError(toErrorMessage(err, "Could not save profile")));
@@ -58,7 +84,10 @@ export function useAuthBootstrap() {
 
   // A refresh that fails for good (expired/revoked) signs the user out everywhere.
   useEffect(() => {
-    setSessionLostHandler(() => dispatch(setAuthUser(null)));
+    setSessionLostHandler(() => {
+      clearStoredUser();
+      dispatch(setAuthUser(null));
+    });
   }, [dispatch]);
 
   useEffect(() => {
@@ -68,7 +97,16 @@ export function useAuthBootstrap() {
       return;
     }
     getMeAPI()
-      .then((user) => dispatch(setAuthUser(user)))
-      .catch(() => dispatch(setAuthUser(null)));
+      .then((authUser) => {
+        dispatch(setAuthUser(authUser));
+        const stored = getStoredUser();
+        if (!stored || !stored.email) {
+          syncCandidateUser(authUser);
+        }
+      })
+      .catch(() => {
+        clearStoredUser();
+        dispatch(setAuthUser(null));
+      });
   }, [dispatch, ready]);
 }

@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/store";
+import { useFieldProvenance, useProvenanceSummary } from "../Hooks/useFieldProvenance";
 import { useProfile } from "../Hooks/useProfile";
 import { useProfileDraft } from "../Hooks/useProfileDraft";
 import { usePrefillFromResume } from "../Hooks/usePrefillFromResume";
@@ -32,7 +33,9 @@ import EducationStep from "./steps/EducationStep";
 import ExperienceStep from "./steps/ExperienceStep";
 import SkillLevelsStep from "./steps/SkillLevelsStep";
 import SkillsStep from "./steps/SkillsStep";
-import StartStep from "./steps/StartStep";
+import { getStoredUser, saveStoredUser } from "@/lib/auth";
+import { updateMeAPI } from "@/features/auth/service/auth.api";
+import { setAuthUser } from "@/features/auth/slice/auth.slice";
 
 // The history drawer is only opened on demand.
 const VersionHistoryDrawer = lazy(() =>
@@ -40,7 +43,6 @@ const VersionHistoryDrawer = lazy(() =>
 );
 
 export const STEPS: { id: Step; label: string }[] = [
-  { id: "start", label: "Start" },
   { id: "basics", label: "Basics" },
   { id: "education", label: "Education" },
   { id: "experience", label: "Experience" },
@@ -52,13 +54,13 @@ export const STEPS: { id: Step; label: string }[] = [
 /** Which tab a form path lives on (for error dots and the error summary links). */
 export function stepOfPath(path: string): Step {
   const root = path.split(".")[0] ?? "";
-  if (["name", "email", "phone", "links", "preferred_roles"].includes(root)) return "basics";
+  if (["name", "email", "phone", "links", "preferred_roles", "cv_file"].includes(root)) return "basics";
   if (["education", "education_details"].includes(root)) return "education";
   if (["internships", "projects"].includes(root)) return "experience";
   if (["hackathons", "certifications"].includes(root)) return "achievements";
   if (root === "skills") return "skills";
   if (root === "skill_levels") return "levels";
-  return "start";
+  return "basics";
 }
 
 interface FlatError {
@@ -86,11 +88,11 @@ export function flattenErrors(errors: FieldErrors<ProfileValues>): FlatError[] {
 
 export interface ProfileBuilderProps {
   /** Edit this saved profile; omit to create one. */
-  profileId?: string;
+  profileId?: string | undefined;
   /** A parsed resume (Role 2 extraction) to pre-fill from as soon as the form is ready. */
-  extractionId?: string;
+  extractionId?: string | undefined;
   /** Called after a successful save, e.g. by the integrated flow to remember `profile_id`. */
-  onSaved?: (result: { profile_id: string; version: number }) => void;
+  onSaved?: ((result: { profile_id: string; version: number }) => void) | undefined;
 }
 
 /** The 7-step candidate profile form. Used by /profile/* and embedded as step 3 of the flow. */
@@ -114,9 +116,26 @@ function Builder({ profileId, extractionId, onSaved }: ProfileBuilderProps) {
   });
   const { isDirty, errors, submitCount } = useFormState({ control: form.control });
 
-  const [step, setStep] = useState<Step>(profileId ? "basics" : "start");
+  const [step, setStep] = useState<Step>("basics");
   const [historyOpen, setHistoryOpen] = useState(false);
   const source = useRef<ChangeSource>("form");
+  const authUser = useAppSelector((s) => s.auth.user);
+
+  // Pre-fill user name and email from active session if starting a fresh profile
+  useEffect(() => {
+    if (!profileId && !profile) {
+      const currentEmail = form.getValues("email");
+      const currentName = form.getValues("name");
+      const fallback = authUser || getStoredUser();
+      if (!currentEmail && fallback?.email) {
+        form.setValue("email", fallback.email);
+      }
+      if (!currentName && fallback?.name) {
+        form.setValue("name", fallback.name);
+      }
+    }
+  }, [profileId, profile, authUser, form]);
+
   // Anything pre-filled from a CV makes this save a "resume import" in the version history.
   const prefilledFromResume = useAppSelector(
     (s) => Object.keys(s.profile.prefill.provenance).length > 0,
@@ -125,6 +144,7 @@ function Builder({ profileId, extractionId, onSaved }: ProfileBuilderProps) {
   const saveApi = useSaveProfile();
   const draft = useProfileDraft(form, profileId ?? "new");
   const prefill = usePrefillFromResume(form, { dirty: isDirty });
+  const summary = useProvenanceSummary();
 
   // Load a saved profile into the form (also after each successful save: the new version).
   useEffect(() => {
@@ -168,6 +188,17 @@ function Builder({ profileId, extractionId, onSaved }: ProfileBuilderProps) {
     draft.clear();
     dispatch(clearPrefill());
     form.reset(toFormValues(stored));
+
+    // Persist new profile ID to local candidate user and auth session
+    const currentCandidate = getStoredUser();
+    if (currentCandidate) {
+      saveStoredUser({ ...currentCandidate, id: stored.id });
+    }
+    if (authUser && authUser.candidateProfileId !== stored.id) {
+      void updateMeAPI({ candidateProfileId: stored.id }).catch(() => {});
+      dispatch(setAuthUser({ ...authUser, candidateProfileId: stored.id }));
+    }
+
     onSaved?.({ profile_id: stored.id, version: stored.version });
     if (!profileId && !onSaved)
       void navigate({ to: "/profile/$profileId", params: { profileId: stored.id }, replace: true });
@@ -303,6 +334,57 @@ function Builder({ profileId, extractionId, onSaved }: ProfileBuilderProps) {
           </div>
         )}
 
+        {summary.total > 0 && (
+          <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-card/50 p-4">
+            <p className="text-sm" data-testid="review-counter">
+              <span className="font-semibold">
+                {summary.reviewed} of {summary.total}
+              </span>{" "}
+              pre-filled fields reviewed
+            </p>
+            <Button type="button" variant="outline" size="sm" onClick={() => summary.acceptAllHigh()}>
+              Accept all high-confidence
+            </Button>
+          </div>
+        )}
+
+        {prefill.existingProfileId && prefill.existingProfileId !== profileId && (
+          <div
+            role="status"
+            className="space-y-2 rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 text-sm"
+          >
+            <p>
+              This CV belongs to a profile that already exists. Update it instead of creating a second
+              one.
+            </p>
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => {
+                const id = prefill.existingProfileId;
+                const ex = form.getValues("resume_extraction_id");
+                if (id) {
+                  void navigate({
+                    to: "/profile/$profileId",
+                    params: { profileId: id },
+                    search: ex ? { extraction: ex } : {},
+                  });
+                }
+              }}
+            >
+              Update the existing profile
+            </Button>
+          </div>
+        )}
+
+        {prefill.warnings.length > 0 && (
+          <ul className="space-y-1 rounded-xl border border-border bg-card/50 p-4 text-sm text-muted-foreground">
+            {prefill.warnings.map((w) => (
+              <li key={w}>{w}</li>
+            ))}
+          </ul>
+        )}
+
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
           <div className="min-w-0 space-y-4">
             <Tabs value={step} onValueChange={(v) => setStep(v as Step)}>
@@ -343,24 +425,8 @@ function Builder({ profileId, extractionId, onSaved }: ProfileBuilderProps) {
                 </select>
               </div>
 
-              <TabsContent value="start">
-                <StartStep
-                  form={form}
-                  profileId={profileId}
-                  extractionId={extractionId}
-                  prefill={prefill}
-                  onOpenExisting={(id, ex) =>
-                    void navigate({
-                      to: "/profile/$profileId",
-                      params: { profileId: id },
-                      search: { extraction: ex },
-                    })
-                  }
-                  onStartBlank={() => goTo("basics")}
-                />
-              </TabsContent>
               <TabsContent value="basics">
-                <BasicsStep />
+                <BasicsStep prefill={prefill} profileId={profileId} />
               </TabsContent>
               <TabsContent value="education">
                 <EducationStep />
@@ -389,7 +455,7 @@ function Builder({ profileId, extractionId, onSaved }: ProfileBuilderProps) {
                 type="button"
                 variant="outline"
                 disabled={stepIndex <= 0}
-                onClick={() => setStep(STEPS[stepIndex - 1]?.id ?? "start")}
+                onClick={() => setStep(STEPS[stepIndex - 1]?.id ?? "basics")}
               >
                 <ChevronLeft aria-hidden /> Back
               </Button>

@@ -5,7 +5,7 @@ import { safeRedirect } from "@/lib/safeRedirect";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "../Hooks/auth.hooks";
 import { googleLoginUrl } from "../service/auth.api";
-import { getStoredUser, saveStoredUser, type CandidateUser } from "@/lib/auth";
+import { getStoredUser, saveStoredUser, formatNameFromEmail, type CandidateUser } from "@/lib/auth";
 import { writeSession } from "@/lib/authStorage";
 import {
   ShieldCheck,
@@ -17,38 +17,10 @@ import {
   Lock,
   ArrowLeft,
   CheckCircle2,
+  Mail,
 } from "lucide-react";
 
-const DEMO_CANDIDATES: CandidateUser[] = [
-  {
-    id: "6f1c-ananya",
-    name: "Ananya Rao",
-    role: "Systems / SWE Focus",
-    avatarText: "AR",
-    email: "ananya.rao@jssaten.ac.in",
-  },
-  {
-    id: "6f1c-karthik",
-    name: "Karthik Verma",
-    role: "Data Engineering Focus",
-    avatarText: "KV",
-    email: "karthik.v@jssaten.ac.in",
-  },
-  {
-    id: "6f1c-rohan",
-    name: "Rohan Mehta",
-    role: "All-Rounder Generalist",
-    avatarText: "RM",
-    email: "rohan.mehta@jssaten.ac.in",
-  },
-  {
-    id: "6f1c-priya",
-    name: "Priya Sharma",
-    role: "Entry-Level Support Focus",
-    avatarText: "PS",
-    email: "priya.s@jssaten.ac.in",
-  },
-];
+
 
 export default function LoginPage({
   redirect,
@@ -60,8 +32,9 @@ export default function LoginPage({
   const { user, ready, error: authError } = useAuth();
   const navigate = useNavigate();
   // If no explicit redirect is supplied or if it points to root, send to candidate dashboard
-  const target = redirect && redirect !== "/" ? safeRedirect(redirect) : "/dashboard";
+  const target = redirect && redirect !== "/" ? safeRedirect(redirect, "/dashboard") : "/dashboard";
   const [loggingInId, setLoggingInId] = useState<string | null>(null);
+  const [emailInput, setEmailInput] = useState("");
 
   useEffect(() => {
     // If authenticated via backend session or stored candidate profile, forward to target
@@ -70,17 +43,38 @@ export default function LoginPage({
     }
   }, [ready, user, navigate, target]);
 
-  const handleSelectDemo = (candidate: CandidateUser) => {
-    setLoggingInId(candidate.id);
+  const handleEmailLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!emailInput.trim()) return;
+    setLoggingInId("email");
+    const name = formatNameFromEmail(emailInput);
+    const initials = name
+      .split(" ")
+      .map((w) => w[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase() || (emailInput[0] || "C").toUpperCase();
+
+    const candidate: CandidateUser = {
+      id: `candidate_${Date.now()}`,
+      name,
+      role: "Campus Candidate '26",
+      avatarText: initials,
+      email: emailInput.trim(),
+    };
+
     saveStoredUser(candidate);
     writeSession({
-      accessToken: `demo_session_${candidate.id}`,
-      refreshToken: `demo_refresh_${candidate.id}`,
+      accessToken: `session_${candidate.id}`,
+      refreshToken: `refresh_${candidate.id}`,
     });
+
     setTimeout(() => {
       void navigate({ to: target });
     }, 250);
   };
+
+
 
   const message = error ?? authError;
 
@@ -161,45 +155,34 @@ export default function LoginPage({
                 {message}
               </div>
             )}
+
+            {/* Direct Email Sign-In */}
+            <form onSubmit={handleEmailLogin} className="space-y-2.5 pt-1">
+              <div className="relative">
+                <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <input
+                  type="email"
+                  required
+                  placeholder="Enter your email ID (e.g. name@jssaten.ac.in)"
+                  value={emailInput}
+                  onChange={(e) => setEmailInput(e.target.value)}
+                  className="w-full h-10 rounded-2xl border border-border bg-card-sub pl-9 pr-3 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary shadow-2xs"
+                />
+              </div>
+
+              <Button
+                type="submit"
+                disabled={loggingInId !== null}
+                className="w-full h-10 rounded-2xl bg-gradient-to-r from-primary to-indigo-600 text-xs font-bold text-white shadow-xs hover:brightness-110 transition-all cursor-pointer"
+              >
+                <Mail className="mr-1.5 h-3.5 w-3.5 text-white" />
+                Sign In with Email ID
+                <ArrowRight className="ml-1.5 h-3.5 w-3.5 text-white" />
+              </Button>
+            </form>
           </div>
 
-          {/* Clean Divider */}
-          <div className="relative my-6 flex items-center justify-center">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-border" />
-            </div>
-            <span className="relative bg-card px-3 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-              Or Explore with Candidate Demo
-            </span>
-          </div>
 
-          {/* Quick Verified Candidate Selectors */}
-          <div className="space-y-2">
-            <p className="text-[11px] font-medium text-muted-foreground">
-              Instant login for review & evaluation:
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {DEMO_CANDIDATES.map((candidate) => (
-                <button
-                  key={candidate.id}
-                  type="button"
-                  onClick={() => handleSelectDemo(candidate)}
-                  disabled={loggingInId !== null}
-                  className="flex items-center gap-2.5 rounded-xl border border-border bg-card-sub p-2.5 text-left transition-all hover:border-primary/50 hover:bg-muted hover:shadow-xs cursor-pointer group"
-                >
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary font-mono text-xs font-bold transition-colors group-hover:bg-primary group-hover:text-white">
-                    {candidate.avatarText}
-                  </div>
-                  <div className="min-w-0">
-                    <p className="truncate text-xs font-bold text-foreground">{candidate.name}</p>
-                    <p className="truncate text-[10px] text-muted-foreground">
-                      {candidate.role.split("/")[0]}
-                    </p>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
 
           {/* Security & Confidentiality Tag */}
           <div className="mt-6 flex items-center justify-center gap-2 rounded-xl bg-muted/50 p-2.5 text-[11px] text-muted-foreground">

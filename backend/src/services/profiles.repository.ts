@@ -151,12 +151,22 @@ export function createMemoryRepo(seed: CandidateProfile[] = SEED_PROFILES): Prof
     },
 
     async findById(id) {
-      const r = rows.get(id);
+      const aliasMap: Record<string, string> = {
+        "6f1c-ananya": "3a000000-0000-4000-8000-000000000001",
+        "6f1c-karthik": "3a000000-0000-4000-8000-000000000002",
+        "6f1c-priya": "3a000000-0000-4000-8000-000000000003",
+        "6f1c-rohan": "3a000000-0000-4000-8000-000000000004",
+      };
+      const resolvedId = aliasMap[id] ?? id;
+      let r = rows.get(resolvedId);
+      if (!r && id.includes("@")) {
+        r = [...rows.values()].find((x) => x.email.toLowerCase() === id.toLowerCase());
+      }
       return r ? structuredClone(r) : null;
     },
 
     async findByEmail(email) {
-      const r = [...rows.values()].find((x) => x.email === email);
+      const r = [...rows.values()].find((x) => x.email.toLowerCase() === email.toLowerCase());
       return r ? structuredClone(r) : null;
     },
 
@@ -231,6 +241,7 @@ export function createSupabaseRepo(): ProfilesRepo {
 
   const fields = (p: ProfilePatch) => ({
     email: p.email,
+    name: p.profile.name,
     profile: p.profile,
     resume_extraction_id: p.resume_extraction_id,
     completeness: p.completeness,
@@ -261,13 +272,21 @@ export function createSupabaseRepo(): ProfilesRepo {
     },
 
     async findById(id) {
-      const { data, error } = await db().from("candidate_profiles").select("*").eq("id", id).maybeSingle();
+      if (id.includes("@")) {
+        return this.findByEmail(id);
+      }
+      let { data, error } = await db().from("candidate_profiles").select("*").eq("id", id).maybeSingle();
+      if (!data && !error && /^[0-9a-f-]{36}$/i.test(id)) {
+        // Also check if id is a user_id
+        const byUser = await db().from("candidate_profiles").select("*").eq("user_id", id).maybeSingle();
+        if (byUser.data) data = byUser.data;
+      }
       if (error) throw error;
       return data ? toRow(data) : null;
     },
 
     async findByEmail(email) {
-      const { data, error } = await db().from("candidate_profiles").select("*").eq("email", email).maybeSingle();
+      const { data, error } = await db().from("candidate_profiles").select("*").ilike("email", email).maybeSingle();
       if (error) throw error;
       return data ? toRow(data) : null;
     },

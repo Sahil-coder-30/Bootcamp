@@ -10,7 +10,9 @@ import {
   getSkillMatchMatrixAPI,
   type SkillMatchResult,
   type MissingSkill,
+  type MatchMethod,
 } from "../service/skillMatch.api";
+import { toErrorMessage } from "@/services/apiClient";
 import {
   setMatchLoading,
   setMatchResult,
@@ -47,10 +49,8 @@ export function useSkillMatch(profileId?: string, jdId?: string, autoFetch: bool
           refresh,
         });
         dispatch(setMatchResult({ key: matchKey, result: data }));
-      } catch (err: any) {
-        dispatch(
-          setMatchError(err?.response?.data?.error || err.message || "Failed to load skill match"),
-        );
+      } catch (err) {
+        dispatch(setMatchError(toErrorMessage(err, "Failed to load skill match")));
       }
     },
     [currentProfileId, currentJdId, matchKey, dispatch],
@@ -89,12 +89,8 @@ export function useSkillMatchMatrix(autoFetch: boolean = true) {
       try {
         const data = await getSkillMatchMatrixAPI({ refresh });
         dispatch(setMatrix(data));
-      } catch (err: any) {
-        dispatch(
-          setMatrixError(
-            err?.response?.data?.error || err.message || "Failed to load match matrix",
-          ),
-        );
+      } catch (err) {
+        dispatch(setMatrixError(toErrorMessage(err, "Failed to load match matrix")));
       }
     },
     [dispatch],
@@ -140,7 +136,7 @@ export function useSkillMatchUI() {
   const methodFilter = useAppSelector((s) => s.skillMatch.ui.methodFilter);
 
   const setHovered = (skill: string | null) => dispatch(setHoveredJdSkill(skill));
-  const toggleFilter = (method: any) => dispatch(toggleMethodFilter(method));
+  const toggleFilter = (method: MatchMethod) => dispatch(toggleMethodFilter(method));
 
   return {
     hoveredJdSkill,

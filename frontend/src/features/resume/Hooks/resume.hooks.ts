@@ -4,10 +4,16 @@
  */
 
 import { useCallback } from "react";
-import { useAppDispatch, useAppSelector } from "@/store";
+import { useAppDispatch, useAppSelector, store } from "@/store";
+import { saveFlowProfileAPI } from "@/features/flow/service/flow.api";
+import { getStoredUser, saveStoredUser } from "@/lib/auth";
+import { setAuthUser } from "@/features/auth/slice/auth.slice";
+import { updateMeAPI } from "@/features/auth/service/auth.api";
+import { clearDashboardCache } from "@/services/dbService";
 import {
   parseResumeAPI,
   getSampleResumeAPI,
+  getUserLatestResumeAPI,
   inferLevelsAPI,
   type ResumeExtraction,
 } from "../service/resume.api";
@@ -65,35 +71,73 @@ export function useResume() {
   const uploadAndParse = useCallback(
     async (file: File) => {
       dispatch(setResumeStatus("uploading"));
-
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const raw = reader.result as string;
-        const base64 = raw && raw.includes(",") ? (raw.split(",")[1] ?? "") : "";
+      try {
         dispatch(setResumeStatus("parsing"));
+        const result = await parseResumeAPI(file);
+        dispatch(setResumeExtraction(result));
 
+        // Automatically persist parsed resume as a candidate profile in the DB
         try {
-          const result = await parseResumeAPI({
-            content_b64: base64,
-            file_name: file.name,
-            mime: file.type || "application/pdf",
+          const authUser = store.getState().auth.user;
+          const storedUser = getStoredUser();
+          const userEmail = authUser?.email || storedUser?.email;
+          const userId = authUser?.id;
+          const profileId =
+            authUser?.candidateProfileId ||
+            (storedUser?.id && !storedUser.id.startsWith("candidate_")
+              ? storedUser.id
+              : undefined);
+
+          const saved = await saveFlowProfileAPI(result, {
+            email: userEmail,
+            userId: userId,
+            profileId: profileId,
           });
-          dispatch(setResumeExtraction(result));
-        } catch (err) {
-          dispatch(
-            setResumeError(err instanceof Error ? err.message : "Failed to parse resume document"),
-          );
+
+          if (saved?.profile_id) {
+            if (storedUser) {
+              saveStoredUser({
+                ...storedUser,
+                id: saved.profile_id,
+                name: saved.profile?.name || storedUser.name,
+                email: saved.profile?.email || storedUser.email,
+              });
+            }
+            if (authUser) {
+              dispatch(
+                setAuthUser({
+                  ...authUser,
+                  candidateProfileId: saved.profile_id,
+                }),
+              );
+              void updateMeAPI({ candidateProfileId: saved.profile_id }).catch(() => {});
+            }
+            await clearDashboardCache();
+          }
+        } catch (saveErr) {
+          console.warn("[resume.hooks] Auto-save profile to DB notice:", saveErr);
         }
-      };
-
-      reader.onerror = () => {
-        dispatch(setResumeError("Could not read local file. Please try another."));
-      };
-
-      reader.readAsDataURL(file);
+      } catch (err) {
+        dispatch(
+          setResumeError(err instanceof Error ? err.message : "Failed to parse resume document"),
+        );
+      }
     },
     [dispatch],
   );
+
+  const loadUserResume = useCallback(async () => {
+    try {
+      const result = await getUserLatestResumeAPI();
+      if (result) {
+        dispatch(setResumeExtraction(result));
+        return true;
+      }
+    } catch {
+      // not logged in or no resume stored
+    }
+    return false;
+  }, [dispatch]);
 
   const recalculateLevels = useCallback(async () => {
     if (!currentExtraction) return;
@@ -124,6 +168,7 @@ export function useResume() {
     highlightedSkill,
     isDrawerOpen,
     uploadAndParse,
+    loadUserResume,
     loadSample,
     loadCompare,
     recalculateLevels,

@@ -1,7 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { requireSignIn } from "@/lib/requireSignIn";
 import { JdPage } from "@/features/jd/components/JdPage";
+import { DashboardLayout } from "@/components/Layout/DashboardLayout";
 
 export const Route = createFileRoute("/jd")({
+  beforeLoad: ({ location }) => {
+    requireSignIn(location);
+  },
   head: () => ({
     meta: [
       { title: "JD Analytics | Skills, levels and evidence from any job description" },
@@ -12,5 +17,11 @@ export const Route = createFileRoute("/jd")({
       },
     ],
   }),
-  component: JdPage,
+  component: function Jd() {
+    return (
+      <DashboardLayout>
+        <JdPage />
+      </DashboardLayout>
+    );
+  },
 });
