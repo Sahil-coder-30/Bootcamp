@@ -13,12 +13,23 @@ export interface FlowProfileResult {
   warnings: string[];
 }
 
+/** The resume service sends `null` for absent optionals; the profile schema wants them omitted. */
+function dropNulls<T>(value: T): T {
+  if (Array.isArray(value)) return value.map(dropNulls) as T;
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).filter(([, v]) => v !== null).map(([k, v]) => [k, dropNulls(v)]),
+    ) as T;
+  }
+  return value;
+}
+
 /** Save (or refresh, matched by email) the profile for a resume extraction. */
 export async function saveProfileFromExtraction(extraction: ResumeExtraction): Promise<FlowProfileResult> {
   if (!extraction || extraction.source_type !== "resume") {
     throw new HttpError(422, "A resume extraction is required");
   }
-  const { draft, warnings } = mapExtractionToDraft(extraction, "", null);
+  const { draft, warnings } = mapExtractionToDraft(dropNulls(extraction), "", null);
   // The extraction is not stored under a uuid here, so drop the back-reference.
   const input = parseOrThrow(candidateProfileInputSchema, { ...draft, resume_extraction_id: null });
 

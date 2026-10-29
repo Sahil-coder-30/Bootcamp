@@ -47,6 +47,13 @@ describe("POST /api/flow/profile", () => {
     expect(p.id).toBe(saved.profile_id);
   });
 
+  it("accepts nulls for absent optional fields (resume service output)", async () => {
+    const withNulls = structuredClone(FALLBACK_SAMPLES.rohan);
+    withNulls.projects[0].link = null;
+    withNulls.candidate.email = "rohan.nulls@example.com";
+    expect((await post({ extraction: withNulls })).status).toBe(200);
+  });
+
   it("rejects a missing extraction", async () => {
     expect((await post({})).status).toBe(422);
   });
