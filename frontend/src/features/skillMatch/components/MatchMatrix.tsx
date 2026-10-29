@@ -35,19 +35,23 @@ export const MatchMatrix: React.FC<Props> = ({ matrix, onSelectCell }) => {
           <h4 className="font-heading text-sm font-semibold text-foreground">
             Candidate × Job Posting Match Grid (sm-1.0)
           </h4>
-          <p className="text-xs text-muted-foreground">Click any cell to inspect the breakdown</p>
+          <p className="text-xs text-muted-foreground">
+            Scroll horizontally to explore all job postings. Click any cell to inspect the breakdown.
+          </p>
         </div>
       </div>
 
-      <div className="no-scrollbar overflow-x-auto rounded-xl border border-border bg-card p-4 shadow-sm">
-        <table className="w-full border-collapse text-left text-xs">
+      <div className="overflow-x-auto rounded-xl border border-border bg-card p-2 sm:p-4 shadow-sm scroll-smooth">
+        <table className="w-full border-collapse text-left text-xs min-w-[500px]">
           <thead>
             <tr className="border-b border-border text-muted-foreground">
-              <th className="p-2 font-medium">Candidate</th>
+              <th className="sticky left-0 z-20 bg-card p-2.5 font-semibold text-foreground border-r border-border min-w-[130px] sm:min-w-[160px] shadow-xs">
+                Candidate
+              </th>
               {matrix.jds.map((jd) => (
                 <th
                   key={jd.id}
-                  className="p-2 font-medium text-center max-w-[130px] truncate"
+                  className="p-2.5 font-medium text-center min-w-[110px] max-w-[140px]"
                   title={`${jd.company} - ${jd.role}`}
                 >
                   <div className="font-semibold text-foreground truncate">{jd.role}</div>
@@ -60,8 +64,10 @@ export const MatchMatrix: React.FC<Props> = ({ matrix, onSelectCell }) => {
             {matrix.profiles.map((p) => {
               const bestJd = matrix.best_jd_by_profile[p.id];
               return (
-                <tr key={p.id} className="hover:bg-muted/40 transition-colors">
-                  <td className="p-2.5 font-medium text-foreground whitespace-nowrap">{p.name}</td>
+                <tr key={p.id} className="group hover:bg-muted/40 transition-colors">
+                  <td className="sticky left-0 z-10 bg-card group-hover:bg-muted/80 p-2.5 font-medium text-foreground whitespace-nowrap border-r border-border shadow-xs">
+                    {p.name}
+                  </td>
                   {matrix.jds.map((jd) => {
                     const score = cellMap.get(`${p.id}:${jd.id}`) ?? 0;
                     const isBest = bestJd === jd.id;

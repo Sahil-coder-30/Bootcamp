@@ -88,7 +88,7 @@ export const SkillMatchPage: React.FC = () => {
   );
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 space-y-6">
+    <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 space-y-6 min-w-0 overflow-x-hidden">
       {/* Top Header & Selector */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-border pb-6">
         <div>
@@ -107,9 +107,9 @@ export const SkillMatchPage: React.FC = () => {
         </div>
 
         {/* Selectors */}
-        <div className="flex flex-col sm:flex-row flex-wrap sm:items-end gap-3 w-full lg:w-auto">
-          <div className="w-full sm:w-auto min-w-[200px]">
-            <label className="block text-[11px] font-medium text-muted-foreground mb-1">
+        <div className="w-full lg:w-auto flex flex-col sm:flex-row sm:items-end gap-3.5">
+          <div className="w-full sm:w-auto sm:min-w-[220px]">
+            <label className="block text-xs font-medium text-muted-foreground mb-1.5">
               Candidate Profile
             </label>
             <select
@@ -132,8 +132,8 @@ export const SkillMatchPage: React.FC = () => {
             </select>
           </div>
 
-          <div className="w-full sm:w-auto min-w-[200px]">
-            <label className="block text-[11px] font-medium text-muted-foreground mb-1">
+          <div className="w-full sm:w-auto sm:min-w-[220px]">
+            <label className="block text-xs font-medium text-muted-foreground mb-1.5">
               Target Job Posting
             </label>
             <select
@@ -160,7 +160,7 @@ export const SkillMatchPage: React.FC = () => {
             <button
               onClick={() => fetchMatch(true)}
               disabled={isLoading || !profileId || !jdId}
-              className="w-full sm:w-auto flex items-center justify-center gap-1.5 rounded-lg border border-primary bg-primary px-3.5 py-2 text-xs font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors shadow-xs cursor-pointer"
+              className="w-full sm:w-auto flex items-center justify-center gap-1.5 rounded-lg border border-primary bg-primary px-4 py-2 text-xs font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors shadow-xs cursor-pointer"
             >
               {isLoading ? (
                 <>
@@ -231,49 +231,51 @@ export const SkillMatchPage: React.FC = () => {
           />
 
           {/* Tab Navigation */}
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border pb-1">
-            <div className="no-scrollbar flex items-center gap-2 overflow-x-auto min-w-0 flex-1">
+          <div className="border-b border-border pb-1">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto scroll-smooth py-1 -mb-px min-w-0 flex-1">
+                <button
+                  onClick={() => setActiveTab("gaps")}
+                  className={`shrink-0 whitespace-nowrap border-b-2 py-2 px-3 text-xs font-semibold transition-colors cursor-pointer ${
+                    activeTab === "gaps"
+                      ? "border-primary text-primary"
+                      : "border-transparent text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  Missing Gaps First ({result.missing_skills.length})
+                </button>
+                <button
+                  onClick={() => setActiveTab("links")}
+                  className={`shrink-0 whitespace-nowrap border-b-2 py-2 px-3 text-xs font-semibold transition-colors cursor-pointer ${
+                    activeTab === "links"
+                      ? "border-primary text-primary"
+                      : "border-transparent text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  How We Matched ({result.matched_skills.length})
+                </button>
+                <button
+                  onClick={() => setActiveTab("matrix")}
+                  className={`shrink-0 whitespace-nowrap border-b-2 py-2 px-3 text-xs font-semibold transition-colors cursor-pointer ${
+                    activeTab === "matrix"
+                      ? "border-primary text-primary"
+                      : "border-transparent text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  Compare Candidates{" "}
+                  {candidates.length > 0 && jobPostings.length > 0
+                    ? `(${candidates.length} × ${jobPostings.length} Matrix)`
+                    : "(Matrix)"}
+                </button>
+              </div>
+
               <button
-                onClick={() => setActiveTab("gaps")}
-                className={`whitespace-nowrap border-b-2 py-2 px-3 text-xs font-semibold transition-colors cursor-pointer ${
-                  activeTab === "gaps"
-                    ? "border-primary text-primary"
-                    : "border-transparent text-muted-foreground hover:text-foreground"
-                }`}
+                onClick={() => setShowDrawer(true)}
+                className="self-end sm:self-auto shrink-0 text-xs text-muted-foreground hover:text-foreground underline cursor-pointer py-1.5"
               >
-                Missing Gaps First ({result.missing_skills.length})
-              </button>
-              <button
-                onClick={() => setActiveTab("links")}
-                className={`whitespace-nowrap border-b-2 py-2 px-3 text-xs font-semibold transition-colors cursor-pointer ${
-                  activeTab === "links"
-                    ? "border-primary text-primary"
-                    : "border-transparent text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                How We Matched ({result.matched_skills.length})
-              </button>
-              <button
-                onClick={() => setActiveTab("matrix")}
-                className={`whitespace-nowrap border-b-2 py-2 px-3 text-xs font-semibold transition-colors cursor-pointer ${
-                  activeTab === "matrix"
-                    ? "border-primary text-primary"
-                    : "border-transparent text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                Compare Candidates{" "}
-                {candidates.length > 0 && jobPostings.length > 0
-                  ? `(${candidates.length} × ${jobPostings.length} Matrix)`
-                  : "(Matrix)"}
+                How this was computed
               </button>
             </div>
-
-            <button
-              onClick={() => setShowDrawer(true)}
-              className="shrink-0 text-xs text-muted-foreground hover:text-foreground underline cursor-pointer"
-            >
-              How this was computed
-            </button>
           </div>
 
           {/* Active Tab View */}

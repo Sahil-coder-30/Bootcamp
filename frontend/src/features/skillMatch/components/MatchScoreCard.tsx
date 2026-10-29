@@ -23,43 +23,56 @@ export const MatchScoreCard: React.FC<Props> = ({
         ? "bg-primary/10 text-primary border-primary/30"
         : "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/30";
 
+  const bandBorderColor =
+    band === "strong"
+      ? "border-emerald-500 shadow-[0_0_20px_-2px_rgba(16,185,129,0.2)]"
+      : band === "good"
+        ? "border-primary shadow-[0_0_20px_-2px_rgba(249,115,22,0.2)]"
+        : "border-amber-500 shadow-[0_0_20px_-2px_rgba(245,158,11,0.2)]";
+
   return (
-    <div className="rounded-xl border border-border bg-card p-5 shadow-xs">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <h3 className="font-heading text-lg font-semibold text-foreground">Match Fit Score</h3>
-            <span
-              className={`rounded-full border px-2.5 py-0.5 text-xs font-semibold capitalize ${bandBadgeColor}`}
-            >
-              {band} fit
+    <div className="rounded-xl border border-border bg-card p-5 sm:p-6 shadow-xs">
+      <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-5 text-center sm:text-left">
+        <div className="flex flex-col sm:flex-row items-center gap-4">
+          <div
+            className={`w-24 h-24 sm:w-26 sm:h-26 rounded-full flex flex-col items-center justify-center border-2 bg-card-sub shrink-0 transition-transform ${bandBorderColor}`}
+          >
+            <span className="font-heading text-3xl sm:text-4xl font-black tracking-tight text-foreground">
+              {score}
+            </span>
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground mt-0.5">
+              / 100
             </span>
           </div>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            Evaluated against <span className="text-foreground font-medium">{roleName}</span> ·{" "}
-            {companyName}
-          </p>
-        </div>
 
-        <div className="flex items-baseline gap-2">
-          <span className="font-heading text-4xl font-extrabold tracking-tight text-foreground">
-            {score}
-          </span>
-          <span className="text-sm font-medium text-muted-foreground">/ 100</span>
+          <div className="space-y-1">
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+              <h3 className="font-heading text-lg font-semibold text-foreground">Match Fit Score</h3>
+              <span
+                className={`rounded-full border px-2.5 py-0.5 text-xs font-semibold capitalize ${bandBadgeColor}`}
+              >
+                {band} fit
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Evaluated against <span className="text-foreground font-medium">{roleName}</span> ·{" "}
+              {companyName}
+            </p>
+          </div>
         </div>
       </div>
 
       {breakdown.cap_reason && (
         <div className="mt-4 flex items-start gap-2.5 rounded-lg border border-amber-500/20 bg-amber-500/10 p-3 text-xs text-amber-800 dark:text-amber-300">
-          <span className="font-semibold uppercase tracking-wider text-[10px] text-amber-700 dark:text-amber-400 bg-amber-500/20 px-1.5 py-0.5 rounded">
+          <span className="font-semibold uppercase tracking-wider text-[10px] text-amber-700 dark:text-amber-400 bg-amber-500/20 px-1.5 py-0.5 rounded shrink-0">
             Score Cap
           </span>
-          <p>{breakdown.cap_reason}</p>
+          <p className="break-words">{breakdown.cap_reason}</p>
         </div>
       )}
 
       <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3 border-t border-border pt-4">
-        <div className="rounded-lg bg-card-sub p-3 border border-border">
+        <div className="rounded-lg bg-card-sub p-3 border border-border w-full">
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span>Must-haves (60%)</span>
             <span className="font-semibold text-foreground">
@@ -74,7 +87,7 @@ export const MatchScoreCard: React.FC<Props> = ({
           </div>
         </div>
 
-        <div className="rounded-lg bg-card-sub p-3 border border-border">
+        <div className="rounded-lg bg-card-sub p-3 border border-border w-full">
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span>Nice-to-haves (20%)</span>
             <span className="font-semibold text-foreground">
@@ -89,7 +102,7 @@ export const MatchScoreCard: React.FC<Props> = ({
           </div>
         </div>
 
-        <div className="rounded-lg bg-card-sub p-3 border border-border">
+        <div className="rounded-lg bg-card-sub p-3 border border-border w-full">
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span>Level Fit (20%)</span>
             <span className="font-semibold text-foreground">
