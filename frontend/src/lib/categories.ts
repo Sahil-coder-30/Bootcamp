@@ -15,6 +15,7 @@ export const CODES = [
   "NETW",
   "OS",
 ] as const;
+
 export type Code = (typeof CODES)[number];
 
 export const CATEGORY_CODES = [...CODES, "OTHER"] as const;
@@ -33,7 +34,7 @@ export const CATEGORY_NAMES: Record<CategoryCode, string> = {
   SWE: "Software Engineering",
   NETW: "Computer Networking",
   OS: "Operating Systems",
-  OTHER: "Other",
+  OTHER: "Other (domain, tools)",
 };
 
 /** `skill_set_id` in `skill_set_master` (the live database). */
@@ -69,8 +70,10 @@ export function bloomOf(level: number): Bloom {
   return bands[i] as Bloom;
 }
 
-/** Colour-blind-safe categorical palette, one hue per category (same order as CODES). */
-export const CATEGORY_COLORS: Record<Code, string> = {
+export const bloomFor = bloomOf;
+
+/** Colour-blind-safe categorical palette, one hue per category. */
+export const CATEGORY_COLORS: Record<CategoryCode, string> = {
   COD: "#2563eb",
   DSA: "#7c3aed",
   APTI: "#0d9488",
@@ -83,6 +86,10 @@ export const CATEGORY_COLORS: Record<Code, string> = {
   SWE: "#65a30d",
   NETW: "#9333ea",
   OS: "#ea580c",
+  OTHER: "#94a3b8",
 };
 
 export const isCode = (v: string): v is Code => (CODES as readonly string[]).includes(v);
+export const categoryName = (code: string): string => CATEGORY_NAMES[code as CategoryCode] ?? code;
+export const categoryColor = (code: string): string =>
+  CATEGORY_COLORS[code as CategoryCode] ?? CATEGORY_COLORS.OTHER;

@@ -1,0 +1,36 @@
+KARTHIK SUBRAMANIAM
+Data Analyst
+karthik.s@example.com | +91 99887 76655 | linkedin.com/in/karthiks | kaggle.com/karthiks
+Chennai, India
+
+EDUCATION
+B.E. Electronics and Communication, PSG College of Technology, Coimbatore, 2021 - 2025, CGPA 8.1
+
+WORK EXPERIENCE
+Data Analyst Intern | Freshworks Technologies, Chennai | Jun 2024 - Dec 2024
+- Wrote complex SQL with window functions on PostgreSQL and BigQuery to build revenue dashboards in Tableau
+- Built an ETL data pipeline with Airflow and dbt processing 2 million rows a day
+- Designed the data warehouse schema (star schema) and optimized slow queries by 60%
+- Presented weekly insights to product stakeholders
+
+PROJECTS
+Customer Churn Prediction | Python, scikit-learn, XGBoost
+- Trained an XGBoost classifier with feature engineering on 50k customers, AUC 0.89
+- Deployed the model as a Flask API
+Resume Screening with NLP | spaCy, BERT
+- Fine-tuned BERT for resume classification and built a RAG assistant with LangChain and FAISS
+Sales Forecasting | Pandas, Prophet
+- Forecasted monthly sales using pandas and time-series models, reduced error by 18%
+
+TECHNICAL SKILLS
+Languages: Python, SQL, R
+Data: Pandas, NumPy, PostgreSQL, MySQL, BigQuery, Airflow, dbt, Tableau, Power BI
+ML: scikit-learn, XGBoost, TensorFlow, PyTorch, NLP, LLMs
+
+CERTIFICATIONS
+Google Data Analytics Professional Certificate (2024)
+DeepLearning.AI Machine Learning Specialization (2023)
+
+ACHIEVEMENTS
+- Kaggle Expert, top 5% in a tabular playground competition
+- Solved 250+ problems on HackerRank SQL

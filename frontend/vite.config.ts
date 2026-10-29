@@ -16,6 +16,8 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
+      // more specific first: sign-in (and the Google callback) go to the auth service
+      "/api/auth": "http://localhost:4100",
       "/api": "http://localhost:4000",
     },
   },

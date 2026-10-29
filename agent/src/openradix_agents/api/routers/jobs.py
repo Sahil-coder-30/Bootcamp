@@ -10,9 +10,8 @@ router = APIRouter(prefix="/jobs", tags=["jobs"], dependencies=[Depends(require_
 
 
 @router.get("", response_model=JobList)
-def list_jobs(
-    company: str | None = None, limit: int = Query(50, ge=1, le=200), jobs: JobManager = Depends(get_jobs)
-) -> JobList:
+def list_jobs(company: str | None = None, limit: int = Query(50, ge=1, le=200),
+              jobs: JobManager = Depends(get_jobs)) -> JobList:
     return JobList(jobs=jobs.list(company=company, limit=limit))
 
 

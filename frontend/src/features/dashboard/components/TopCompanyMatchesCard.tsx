@@ -93,24 +93,28 @@ export const TopCompanyMatchesCard: React.FC = () => {
               key={company.id}
               className="group flex flex-col gap-2.5 rounded-xl border border-border bg-card-sub p-3 transition-all hover:border-primary/60"
             >
-              {/* Top Row: Identity + Tier + Simulate CTA */}
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-border bg-muted font-heading text-sm font-bold text-foreground shadow-2xs">
-                    {company.name.slice(0, 1)}
+              {/* Left Identity */}
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border bg-muted font-heading text-xs font-bold text-foreground shadow-2xs">
+                  {company.name.slice(0, 2).toUpperCase()}
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-sm text-foreground">{company.name}</span>
+                    <span className="rounded-full px-2 py-0.5 text-[10px] font-bold bg-[#4a154b] dark:bg-[#4a183d] text-white dark:text-[#f0d5eb] border border-[#3d113e] dark:border-[#5c234d]">
+                      {company.tier}
+                    </span>
                   </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-sm text-foreground">{company.name}</span>
-                      <span className="rounded-full px-2 py-0.5 text-[10px] font-bold bg-primary/10 text-primary border border-primary/30">
-                        {company.tier}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 text-[11px] text-muted-foreground mt-0.5">
-                      <span>{company.packageLPA} · SWE</span>
-                      <span>•</span>
-                      <span>Core Campus</span>
-                    </div>
+                  <div className="flex items-center gap-2 text-[11px] text-muted-foreground mt-0.5">
+                    <span>{company.packageLPA}</span>
+                    {company.gapCategory && (
+                      <>
+                        <span>•</span>
+                        <span className="text-foreground font-mono text-[10px]">
+                          Gap: {company.gapCategory}
+                        </span>
+                      </>
+                    )}
                   </div>
                 </div>
 

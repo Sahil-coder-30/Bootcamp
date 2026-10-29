@@ -12,9 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CompaniesRouteImport } from './routes/companies'
 import { Route as CompanyRouteImport } from './routes/company'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as ResumeRouteImport } from './routes/resume'
 import { Route as TalentCheckRouteImport } from './routes/talent-check'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as CompanyIndexRouteImport } from './routes/company.index'
 import { Route as CompanyIntelligenceRouteImport } from './routes/company.intelligence'
 import { Route as CompanySkillsRouteImport } from './routes/company.skills'
@@ -37,6 +40,16 @@ const CompanyRoute = CompanyRouteImport.update({
   path: '/company',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -50,6 +63,11 @@ const ResumeRoute = ResumeRouteImport.update({
 const TalentCheckRoute = TalentCheckRouteImport.update({
   id: '/talent-check',
   path: '/talent-check',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CompanyIndexRoute = CompanyIndexRouteImport.update({
@@ -87,9 +105,12 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/companies': typeof CompaniesRoute
   '/company': typeof CompanyRouteWithChildren
+  '/dashboard': typeof DashboardRoute
+  '/login': typeof LoginRoute
   '/profile': typeof ProfileRouteWithChildren
   '/resume': typeof ResumeRoute
   '/talent-check': typeof TalentCheckRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/company/intelligence': typeof CompanyIntelligenceRoute
   '/company/skills': typeof CompanySkillsRoute
   '/profile/$profileId': typeof ProfileProfileIdRoute
@@ -100,8 +121,11 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/companies': typeof CompaniesRoute
+  '/dashboard': typeof DashboardRoute
+  '/login': typeof LoginRoute
   '/resume': typeof ResumeRoute
   '/talent-check': typeof TalentCheckRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/company/intelligence': typeof CompanyIntelligenceRoute
   '/company/skills': typeof CompanySkillsRoute
   '/profile/$profileId': typeof ProfileProfileIdRoute
@@ -114,9 +138,12 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/companies': typeof CompaniesRoute
   '/company': typeof CompanyRouteWithChildren
+  '/dashboard': typeof DashboardRoute
+  '/login': typeof LoginRoute
   '/profile': typeof ProfileRouteWithChildren
   '/resume': typeof ResumeRoute
   '/talent-check': typeof TalentCheckRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/company/intelligence': typeof CompanyIntelligenceRoute
   '/company/skills': typeof CompanySkillsRoute
   '/profile/$profileId': typeof ProfileProfileIdRoute
@@ -130,9 +157,12 @@ export interface FileRouteTypes {
     | '/'
     | '/companies'
     | '/company'
+    | '/dashboard'
+    | '/login'
     | '/profile'
     | '/resume'
     | '/talent-check'
+    | '/auth/callback'
     | '/company/intelligence'
     | '/company/skills'
     | '/profile/$profileId'
@@ -143,8 +173,11 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/companies'
+    | '/dashboard'
+    | '/login'
     | '/resume'
     | '/talent-check'
+    | '/auth/callback'
     | '/company/intelligence'
     | '/company/skills'
     | '/profile/$profileId'
@@ -156,9 +189,12 @@ export interface FileRouteTypes {
     | '/'
     | '/companies'
     | '/company'
+    | '/dashboard'
+    | '/login'
     | '/profile'
     | '/resume'
     | '/talent-check'
+    | '/auth/callback'
     | '/company/intelligence'
     | '/company/skills'
     | '/profile/$profileId'
@@ -171,9 +207,12 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CompaniesRoute: typeof CompaniesRoute
   CompanyRoute: typeof CompanyRouteWithChildren
+  DashboardRoute: typeof DashboardRoute
+  LoginRoute: typeof LoginRoute
   ProfileRoute: typeof ProfileRouteWithChildren
   ResumeRoute: typeof ResumeRoute
   TalentCheckRoute: typeof TalentCheckRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -199,6 +238,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompanyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -218,6 +271,13 @@ declare module '@tanstack/react-router' {
       path: '/talent-check'
       fullPath: '/talent-check'
       preLoaderRoute: typeof TalentCheckRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/company/': {
@@ -299,9 +359,12 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CompaniesRoute: CompaniesRoute,
   CompanyRoute: CompanyRouteWithChildren,
+  DashboardRoute: DashboardRoute,
+  LoginRoute: LoginRoute,
   ProfileRoute: ProfileRouteWithChildren,
   ResumeRoute: ResumeRoute,
   TalentCheckRoute: TalentCheckRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

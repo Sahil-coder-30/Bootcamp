@@ -18,7 +18,7 @@ import {
   AlertCircle,
   HelpCircle,
 } from "lucide-react";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, Link } from "@tanstack/react-router";
 
 export const ResumeParsePage: React.FC = () => {
   const navigate = useNavigate();
@@ -64,24 +64,60 @@ export const ResumeParsePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#08080a] text-zinc-100 selection:bg-orange-500/30 selection:text-orange-200">
+    <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-white">
       {/* Background ambient gradient glow */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-orange-600/10 blur-[128px]" />
-        <div className="absolute top-1/3 -right-40 h-96 w-96 rounded-full bg-cyan-600/10 blur-[128px]" />
+        <div className="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-primary/10 blur-[128px]" />
+        <div className="absolute top-1/3 -right-40 h-96 w-96 rounded-full bg-sky-500/10 blur-[128px]" />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
+      <div className="relative mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 space-y-6">
+        {/* Top Breadcrumb Header */}
+        <div className="flex items-center justify-between border-b border-border pb-4">
+          <div className="flex items-center gap-3">
+            <Link
+              to="/"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Home
+            </Link>
+            <span className="text-muted-foreground/40">/</span>
+            <Link
+              to="/dashboard"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary transition-colors hover:underline"
+            >
+              Dashboard
+            </Link>
+            <span className="text-muted-foreground/40">/</span>
+            <span className="text-xs font-semibold text-foreground">Resume Parsing</span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Link
+              to="/companies"
+              className="rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground"
+            >
+              115 Companies
+            </Link>
+            <Link
+              to="/talent-check"
+              className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-400 hover:bg-emerald-500/20"
+            >
+              Talent Check
+            </Link>
+          </div>
+        </div>
+
         {/* Page Top Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-zinc-800/80 pb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-border pb-6">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-950/20 px-3 py-1 text-xs font-semibold text-orange-400">
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
               <Sparkles className="h-3.5 w-3.5" />
               Role 2 Engine · Format-Invariant Resume Intelligence
             </div>
-            <h1 className="mt-3 font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
+            <h1 className="mt-3 font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground">
               Resume Parsing &{" "}
-              <span className="bg-gradient-to-r from-orange-400 to-amber-200 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary to-sky-400 bg-clip-text text-transparent">
                 Bloom Skill Fingerprint
               </span>
             </h1>

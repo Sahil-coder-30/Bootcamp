@@ -30,13 +30,9 @@ async def validate(body: CompanyRequest) -> ValidationResponse:
     report = await run_in_threadpool(validation_agent.run, body.company)
     if report.get("missing_record"):
         raise HTTPException(
-            status.HTTP_404_NOT_FOUND, f"no golden record for {body.company!r} - run the pipeline first"
-        )
+            status.HTTP_404_NOT_FOUND,
+            f"no golden record for {body.company!r} - run the pipeline first")
     failed = len(report["failures"])
-    return ValidationResponse(
-        company=body.company,
-        checks=report["checks"],
-        passed=report["checks"] - failed,
-        failed=failed,
-        failures=report["failures"],
-    )
+    return ValidationResponse(company=body.company, checks=report["checks"],
+                              passed=report["checks"] - failed, failed=failed,
+                              failures=report["failures"])

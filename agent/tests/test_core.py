@@ -19,7 +19,8 @@ from openradix_agents import (
 
 # ----------------------------------------------------------------- parsing
 def test_parse_keeps_tables_apart_and_picks_biggest():
-    md = "| A | B |\n|---|---|\n| x | y |\n\nnotes\n\n" "| ID | V |\n|---|---|\n| 1 | a |\n| 2 | b |\n"
+    md = ("| A | B |\n|---|---|\n| x | y |\n\nnotes\n\n"
+          "| ID | V |\n|---|---|\n| 1 | a |\n| 2 | b |\n")
     assert parsing.parse_markdown_table(md) == [{"ID": "1", "V": "a"}, {"ID": "2", "V": "b"}]
 
 
@@ -36,7 +37,6 @@ def test_extract_json_after_think():
 def test_text_flattens_gemini_content_parts():
     class Msg:
         content = [{"type": "text", "text": "| A |"}, {"type": "thinking", "x": 1}, "\n|---|"]
-
     assert providers._text(Msg()) == "| A |\n|---|"
 
 
@@ -80,9 +80,8 @@ def test_company_dir_stays_inside_outputs(tmp_outputs):
 
 # ----------------------------------------------------------- consolidation
 def test_dataset_escapes_pipes_and_newlines():
-    ds = consolidation_agent._build_dataset(
-        {"groq": [{"ID": "1", "Parameter": "name", "Research Output / Data": "A | B\nC"}]}
-    )
+    ds = consolidation_agent._build_dataset({"groq": [
+        {"ID": "1", "Parameter": "name", "Research Output / Data": "A | B\nC"}]})
     row = ds.splitlines()[2]
     assert row.count("|") == 7 and "A / B C" in row
 
@@ -94,11 +93,11 @@ def _fake_agents(monkeypatch, fail=()):
             if name in fail:
                 raise RuntimeError(f"{name} boom")
             return value
-
         return fn
-
-    monkeypatch.setattr(research_agent, "run_research", maybe("research", {"groq": [{"ID": "1"}]}))
-    monkeypatch.setattr(consolidation_agent, "run_consolidation", maybe("consolidation", {"name": "X"}))
+    monkeypatch.setattr(research_agent, "run_research",
+                        maybe("research", {"groq": [{"ID": "1"}]}))
+    monkeypatch.setattr(consolidation_agent, "run_consolidation",
+                        maybe("consolidation", {"name": "X"}))
     monkeypatch.setattr(skill_matrix_agent, "run", maybe("skills", {"coding": "5-AP"}))
     monkeypatch.setattr(hiring_agent, "run", maybe("hiring", {"job_role_details": [{}]}))
     monkeypatch.setattr(validation_agent, "run", maybe("test", {"checks": 3, "failures": []}))
@@ -116,13 +115,8 @@ def test_pipeline_isolates_failures(monkeypatch):
     _fake_agents(monkeypatch, fail=("research",))
     out = pipeline.run_pipeline("Acme", ("groq",))
     st = {k: v["status"] for k, v in out["steps"].items()}
-    assert st == {
-        "research": "failed",
-        "consolidation": "skipped",
-        "skills": "ok",
-        "hiring": "ok",
-        "test": "skipped",
-    }
+    assert st == {"research": "failed", "consolidation": "skipped", "skills": "ok",
+                  "hiring": "ok", "test": "skipped"}
     assert not out["ok"]
 
 

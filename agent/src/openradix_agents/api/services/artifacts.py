@@ -14,16 +14,9 @@ from ..schemas import ArtifactInfo
 
 # Only these files are served. Everything else in the folder stays private.
 ALLOWED = {
-    "golden_record.json",
-    "golden_record.csv",
-    "skill_matrix.json",
-    "skill_matrix.csv",
-    "hiring_rounds.json",
-    "data_quality_report.json",
-    "data_quality_report.md",
-    "consolidation_raw.txt",
-    "skill_matrix_raw.txt",
-    "hiring_raw.txt",
+    "golden_record.json", "golden_record.csv", "skill_matrix.json", "skill_matrix.csv",
+    "hiring_rounds.json", "data_quality_report.json", "data_quality_report.md",
+    "consolidation_raw.txt", "skill_matrix_raw.txt", "hiring_raw.txt",
 }
 
 
@@ -43,13 +36,9 @@ def list_artifacts(company: str) -> list[ArtifactInfo]:
     for path in sorted(folder.iterdir()):
         if path.is_file() and is_allowed(path.name):
             st = path.stat()
-            out.append(
-                ArtifactInfo(
-                    name=path.name,
-                    size=st.st_size,
-                    modified_at=datetime.fromtimestamp(st.st_mtime, tz=timezone.utc),
-                )
-            )
+            out.append(ArtifactInfo(
+                name=path.name, size=st.st_size,
+                modified_at=datetime.fromtimestamp(st.st_mtime, tz=timezone.utc)))
     return out
 
 

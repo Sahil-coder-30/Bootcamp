@@ -23,6 +23,24 @@ build:
           - "src/**"
           - "requirements.txt"
 
+    - image: auth-service
+      context: auth
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        infer:
+          - "src/**"
+          - "package.json"
+
+    - image: resume-service
+      context: resume
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        infer:
+          - "src/**"
+          - "requirements.txt"
+
 manifests:
   rawYaml:
     - k8s/secrets.yml
@@ -31,3 +49,7 @@ manifests:
     - k8s/backend-service.yml
     - k8s/agent-deployment.yml
     - k8s/agent-service.yml
+    - k8s/auth-deployment.yml
+    - k8s/auth-service.yml
+    - k8s/resume-deployment.yml
+    - k8s/resume-service.yml

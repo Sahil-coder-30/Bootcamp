@@ -138,6 +138,9 @@ const BLOOM_COLORS: Record<string, { bg: string; text: string; border: string }>
     bg: "bg-amber-500/10",
     text: "text-amber-400",
     border: "border-amber-500/30",
+    bg: "bg-amber-500/10",
+    text: "text-amber-400",
+    border: "border-amber-500/30",
   },
   EV: {
     bg: "bg-orange-500/10",

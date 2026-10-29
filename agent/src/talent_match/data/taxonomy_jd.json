@@ -1,0 +1,53 @@
+{
+  "version": "tax-jd-1.0",
+  "note": "JD-only additions on top of taxonomy.json (a copy of resume/src/resume_service/data/taxonomy.json, so JD and resume skills share canonical ids). Only new ids here; an alias already in the base file keeps its base skill.",
+  "skills": [
+    {
+      "id": "production-support",
+      "name": "Production Support / ITIL",
+      "cat": "SWE",
+      "aliases": [
+        "itil",
+        "incident management",
+        "problem management",
+        "change management",
+        "production support",
+        "application support",
+        "l2 support",
+        "l3 support",
+        "it service management",
+        "itsm",
+        "sla"
+      ]
+    },
+    {
+      "id": "financial-services",
+      "name": "Financial services domain",
+      "cat": "OTHER",
+      "aliases": [
+        "financial services",
+        "capital markets",
+        "investment banking",
+        "treasury",
+        "risk management",
+        "trade finance",
+        "lending",
+        "wealth management",
+        "insurance domain",
+        "bfsi",
+        "retail banking"
+      ]
+    },
+    {
+      "id": "cs-fundamentals",
+      "name": "CS fundamentals",
+      "cat": "DSA",
+      "aliases": [
+        "cs fundamentals",
+        "computer science fundamentals",
+        "computer science concepts",
+        "core computer science"
+      ]
+    }
+  ]
+}

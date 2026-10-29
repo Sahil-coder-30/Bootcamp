@@ -9,11 +9,11 @@ import {
   FileCheck2,
   Building2,
   LogOut,
-  Settings,
   Sparkles,
 } from "lucide-react";
 import { APP_NAME, COLLEGE_NAME, COLLEGE_SHORT } from "@/lib/college";
 import { clearStoredUser, type CandidateUser } from "@/lib/auth";
+import { clearSession } from "@/lib/authStorage";
 import { cn } from "@/lib/utils";
 
 interface DashboardSidebarProps {
@@ -33,11 +33,14 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
 
   const handleLogout = () => {
     clearStoredUser();
+    clearSession();
     navigate({ to: "/" });
   };
 
   const displayName = currentUser?.name || "Ananya Rao";
+  const displayName = currentUser?.name || "Ananya Rao";
   const displayRole = currentUser?.role || "B.Tech CSE '26";
+  const avatarText = currentUser?.avatarText || "AR";
   const avatarText = currentUser?.avatarText || "AR";
 
   return (
@@ -62,6 +65,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
               </span>
             </div>
             <p className="text-[11px] text-muted-foreground truncate">
+            <p className="text-[11px] text-muted-foreground truncate">
               {COLLEGE_SHORT} Placement Hub
             </p>
           </div>
@@ -75,7 +79,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
 
           {/* Dashboard */}
           <Link
-            to="/"
+            to="/dashboard"
             className={cn(
               "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all",
               activeItem === "dashboard"
@@ -89,9 +93,9 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             <span>Dashboard</span>
           </Link>
 
-          {/* Resume Parsing */}
+          {/* 115 Company Data */}
           <Link
-            to="/resume"
+            to="/companies"
             className={cn(
               "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all",
               activeItem === "resume"
@@ -137,6 +141,23 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             <span>Talent Check</span>
           </Link>
 
+          {/* Resume Parsing */}
+          <Link
+            to="/resume"
+            className={cn(
+              "flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-xs font-semibold transition-all cursor-pointer",
+              activeItem === "resume"
+                ? "bg-primary text-primary-foreground shadow-sm font-bold"
+                : "text-muted-foreground hover:bg-muted hover:text-foreground",
+            )}
+          >
+            <FileText className="h-4 w-4" />
+            <span>Resume Parsing</span>
+            <span className="ml-auto text-[10px] font-mono rounded-full bg-card-sub border border-border px-2 py-0.5 text-muted-foreground font-semibold">
+              ATS
+            </span>
+          </Link>
+
           {/* Skill Matching / Ladders */}
           <Link
             to="/company/skills"
@@ -152,6 +173,19 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             />
             <span>Skill Matching</span>
           </Link>
+
+          {/* JD Matcher */}
+          <button
+            type="button"
+            onClick={onOpenJDMatcher}
+            className="w-full flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-xs font-semibold text-muted-foreground hover:bg-muted hover:text-foreground transition-all text-left cursor-pointer"
+          >
+            <Target className="h-4 w-4" />
+            <span>JD Matcher</span>
+            <span className="ml-auto text-[10px] font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+              Beta
+            </span>
+          </button>
 
           {/* ATS Resume Audit */}
           <button

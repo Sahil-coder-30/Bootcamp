@@ -1,0 +1,38 @@
+ANANYA RAO
+Software Engineer
+ananya.rao@example.com | +91 98765 43210 | github.com/ananyarao | linkedin.com/in/ananya-rao
+Bengaluru, India
+
+EDUCATION
+B.Tech in Computer Science and Engineering
+RV College of Engineering, Bengaluru 2022 - 2026
+CGPA: 8.7/10
+
+EXPERIENCE
+SDE Intern | Acme Payments Pvt Ltd May 2025 - Jul 2025
+- Built a Kafka-based event pipeline in Go, cutting settlement latency by 40%
+- Designed PostgreSQL schemas and wrote unit tests with 90% coverage; shipped to production
+- Deployed services on Docker and Kubernetes with GitHub Actions CI/CD
+
+PROJECTS
+Raft KV Store | Go, gRPC
+- Designed a Raft-based distributed key-value store in Go handling 10k ops/s with leader election
+- Implemented log replication and snapshotting; used multithreading and goroutines
+Distributed Rate Limiter | Java, Redis
+- Built a distributed rate limiter with Redis and consistent hashing, p99 < 5 ms
+- Applied SOLID principles and design patterns in Java
+Mini Shell | C, Linux
+- Wrote a Unix shell in C supporting pipes, process scheduling experiments and system calls
+
+SKILLS
+Languages: Go, Java, Python, C++, C, SQL
+Systems: Kafka, Redis, gRPC, Docker, Kubernetes, Linux, TCP/IP
+Tools: Git, GitHub Actions, PostgreSQL
+
+ACHIEVEMENTS
+- LeetCode rating 2150 (Knight), 600+ problems solved
+- Winner, Smart India Hackathon 2024 (built a real-time logistics tracker with WebSockets)
+- Presented a talk on distributed consensus at the college ACM chapter
+
+RELEVANT COURSEWORK
+Operating Systems, Computer Networks, DBMS, Data Structures and Algorithms, Object Oriented Programming

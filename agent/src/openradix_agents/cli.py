@@ -54,9 +54,7 @@ def main(argv=None) -> None:
     run_p = sub.add_parser("run", help="Run the research agents for one company.")
     run_p.add_argument("--company", required=True, help='Target company, e.g. "Blinkit".')
     run_p.add_argument(
-        "--providers",
-        nargs="+",
-        default=list(config.RESEARCH_PROVIDERS),
+        "--providers", nargs="+", default=list(config.RESEARCH_PROVIDERS),
         help="Providers for the research fan-out (default: all three).",
     )
     run_p.add_argument("--only", choices=STEPS, help="Run a single step instead of the full pipeline.")
@@ -65,9 +63,7 @@ def main(argv=None) -> None:
         "doctor", help="Ping each provider to check its API key works (run this first)."
     )
     doctor_p.add_argument(
-        "--providers",
-        nargs="+",
-        default=list(config.RESEARCH_PROVIDERS),
+        "--providers", nargs="+", default=list(config.RESEARCH_PROVIDERS),
         help="Providers to check (default: all three).",
     )
 
@@ -76,9 +72,7 @@ def main(argv=None) -> None:
         raise SystemExit(_run(args.company, tuple(args.providers), args.only))
     elif args.command == "doctor":
         from . import doctor
-
         raise SystemExit(doctor.run(tuple(args.providers)))
     elif args.command == "serve":
         from .api.main import serve
-
         serve(host=args.host, port=args.port, reload=args.reload)

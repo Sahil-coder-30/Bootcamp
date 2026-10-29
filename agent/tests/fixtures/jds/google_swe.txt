@@ -1,0 +1,27 @@
+Google LLC
+Software Engineer, Early Career (Bengaluru, India)
+
+About the Role
+Google's software engineers develop the next-generation technologies that change how billions of users connect, explore and interact with information.
+
+Minimum Qualifications:
+- Bachelor's degree in Computer Science or equivalent practical experience.
+- 1 year of experience with software development in one or more programming languages such as Java, C++, Python or Go.
+- Strong knowledge of data structures and algorithms.
+- Experience with SQL and relational databases.
+
+Preferred Qualifications:
+- Experience with distributed systems and building systems that serve millions of users.
+- Familiarity with Kubernetes and Google Cloud Platform.
+- Exposure to machine learning frameworks such as TensorFlow is a plus.
+
+Responsibilities
+- Write and test product or system development code.
+- Participate in design reviews with peers and stakeholders.
+- Review code developed by other engineers and provide feedback to ensure best practices.
+- Debug, track and resolve system issues by analyzing the sources of issues.
+- Communicate clearly with cross-functional teams.
+
+Benefits
+- Free meals, health insurance and gym membership.
+Google is an equal opportunity employer.

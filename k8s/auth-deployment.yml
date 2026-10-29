@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-deployment
+  labels:
+    app: auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+      - name: auth-container
+        image: auth-service:latest
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "300m"
+            memory: "256Mi"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 4100
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 4100
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+        env:
+        - name: PORT
+          value: "4100"
+        - name: AUTO_MIGRATE
+          value: "true"
+        - name: CORS_ORIGINS
+          value: "http://localhost:5173,http://localhost:3000"
+        - name: FRONTEND_URL
+          value: "http://localhost:5173"
+        - name: GOOGLE_CALLBACK_URL
+          value: "http://localhost/api/auth/google/callback"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: DATABASE_URL
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: auth-secret
+              key: JWT_SECRET
+        - name: GOOGLE_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: auth-secret
+              key: GOOGLE_CLIENT_ID
+        - name: GOOGLE_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: auth-secret
+              key: GOOGLE_CLIENT_SECRET
+        ports:
+        - name: http
+          containerPort: 4100

@@ -13,7 +13,6 @@ from pydantic import BaseModel, Field, model_validator
 
 # --- Skill and Candidate Profile ---
 
-
 class Skill(BaseModel):
     skill_name: str
     category_code: str
@@ -23,6 +22,8 @@ class Skill(BaseModel):
     level_hint: int | None = Field(default=None, ge=1, le=10)
     requirement: Literal["must", "nice"] | None = None
     section: str | None = None
+    evidence_span: dict[str, int] | None = None  # {start, end, page}: char offsets into documents.text
+    alt_group: str | None = None
 
 
 class CandidateSkillLevel(BaseModel):
@@ -51,8 +52,23 @@ class CandidateProfileSummary(BaseModel):
         return self
 
 
-# --- Company Skill Bar ---
+# --- JD extraction (Role 1) ---
 
+class ExtractedSkillList(BaseModel):
+    source_type: Literal["jd", "resume"] = "jd"
+    source_file: str
+    company: str | None = None
+    role: str | None = None
+    skills: list[Skill] = Field(default_factory=list)
+    document_id: str | None = None
+    company_id: int | None = None
+    category_levels: dict[str, int] = Field(default_factory=dict)
+    jd_id: str | None = None
+    extraction_id: str | None = None
+    meta: dict[str, Any] = Field(default_factory=dict)
+
+
+# --- Company Skill Bar ---
 
 class CompanyBarRow(BaseModel):
     skill_set_id: int
@@ -73,7 +89,6 @@ class CompanyBar(BaseModel):
 
 
 # --- Topic Ladder & Study Plan ---
-
 
 class NextTopic(BaseModel):
     level: int = Field(ge=1, le=10)
@@ -96,7 +111,6 @@ class StudyPlan(BaseModel):
 
 
 # --- Talent Check Results ---
-
 
 class GapRow(BaseModel):
     category_code: str
@@ -146,7 +160,6 @@ class TalentCheckResult(BaseModel):
 
 # --- Batch & Ranking Models ---
 
-
 class MatrixCell(BaseModel):
     profile_id: str
     company_id: int
@@ -191,7 +204,6 @@ class RankRequest(BaseModel):
 
 
 # --- Role 2: Resume Parsing Models ---
-
 
 class ResumeContact(BaseModel):
     name: str
@@ -265,3 +277,4 @@ class ResumeExtraction(BaseModel):
     category_level_details: dict[str, CategoryLevelDetail] = Field(default_factory=dict)
     field_confidence: dict[str, Literal["high", "medium", "low"]] = Field(default_factory=dict)
     meta: dict[str, Any] = Field(default_factory=dict)
+

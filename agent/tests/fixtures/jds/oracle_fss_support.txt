@@ -1,0 +1,23 @@
+Oracle Financial Services Software
+Associate Consultant - Application Support (Mumbai)
+
+Job Description
+Oracle Financial Services Software (OFSS) is a world leader in providing IT solutions to the financial services industry.
+
+Key Responsibilities
+- Provide L2 production support for core banking applications built on Oracle FLEXCUBE.
+- Perform root cause analysis of incidents and follow ITIL incident management processes.
+- Write and tune PL/SQL queries on Oracle Database.
+- Work on Linux servers and write shell scripts to automate routine tasks.
+- Communicate with clients and stakeholders on issue status.
+
+Requirements
+- 0-2 years of experience; freshers with strong fundamentals may apply.
+- Working knowledge of SQL and Oracle Database.
+- Good command of Java or any object oriented programming language.
+- Basic understanding of computer networking (TCP/IP, HTTP).
+- Excellent written and verbal communication skills.
+
+Good to Have
+- Knowledge of the banking domain and financial services.
+- Exposure to Unix operating system concepts.

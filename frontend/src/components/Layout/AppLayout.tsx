@@ -1,14 +1,13 @@
 import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { useTheme } from "@/hooks/useTheme";
 import {
   ArrowLeft,
   Building2,
-  FileText,
   GraduationCap,
   LayoutGrid,
   Moon,
   Sun,
+  LogIn,
   UserCheck,
   UserRound,
 } from "lucide-react";
@@ -36,6 +35,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/features/auth/Hooks/auth.hooks";
 import { useCompany } from "@/features/companies/Hooks/companies.hooks";
 import { APP_NAME, COLLEGE_SHORT } from "@/lib/college";
 import { cn } from "@/lib/utils";
@@ -44,11 +44,31 @@ const NAV = [
   { title: "Company Intelligence", url: "/company/intelligence", icon: Building2 },
   { title: "Skill Intelligence", url: "/company/skills", icon: GraduationCap },
   { title: "Talent Check", url: "/talent-check", icon: UserCheck },
-  { title: "Resume Parser", url: "/resume", icon: FileText },
 ] as const;
 
+// `.dark` drives the Tailwind/shadcn palette, `.light-theme` drives the SCSS tokens in src/styles.
+function applyTheme(dark: boolean) {
+  document.documentElement.classList.toggle("dark", dark);
+  document.documentElement.classList.toggle("light-theme", !dark);
+}
+
 function ThemeToggle() {
-  const { theme, toggleTheme, isDark } = useTheme();
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const isDarkStored =
+      localStorage.getItem("theme") === "dark" ||
+      (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    setIsDark(isDarkStored);
+    applyTheme(isDarkStored);
+  }, []);
+
+  const toggleTheme = () => {
+    const nextDark = !isDark;
+    setIsDark(nextDark);
+    applyTheme(nextDark);
+    localStorage.setItem("theme", nextDark ? "dark" : "light");
+  };
 
   return (
     <Button
@@ -59,16 +79,13 @@ function ThemeToggle() {
       title={isDark ? "Switch to Light Mode" : "Switch to Dark Amber Mode"}
       className="h-8 w-8 rounded-lg text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
     >
-      {isDark ? (
-        <Sun className="h-4 w-4 text-primary" />
-      ) : (
-        <Moon className="h-4 w-4 text-primary" />
-      )}
+      {isDark ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4" />}
     </Button>
   );
 }
 
 function AppSidebar() {
+  const { user, ready } = useAuth();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const { selected } = useCompany();
 
@@ -107,7 +124,7 @@ function AppSidebar() {
                 {selected.companyName}
               </p>
               <Link
-                to="/companies"
+                to="/"
                 className="inline-flex items-center text-[10px] font-medium text-primary hover:underline"
               >
                 Change Company
@@ -172,12 +189,26 @@ function AppSidebar() {
               tooltip="All Companies Directory"
               className="rounded-xl py-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
             >
-              <Link to="/companies">
+              <Link to="/">
                 <LayoutGrid className="h-4 w-4" />
                 <span>All Companies</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
+          {ready && (
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                tooltip={user ? "My profile" : "Sign in"}
+                className="rounded-xl py-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              >
+                <Link to={user ? "/profile" : "/login"}>
+                  {user ? <UserRound className="h-4 w-4" /> : <LogIn className="h-4 w-4" />}
+                  <span className="truncate">{user ? user.name : "Sign in"}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )}
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
@@ -189,7 +220,6 @@ export default function AppLayout() {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const isSkillsPage = path.endsWith("/skills");
   const isTalentCheck = path.startsWith("/talent-check");
-  const isResume = path.startsWith("/resume");
 
   return (
     <SidebarProvider>
@@ -208,18 +238,7 @@ export default function AppLayout() {
                         to="/"
                         className="text-xs font-medium text-muted-foreground hover:text-foreground"
                       >
-                        Home
-                      </Link>
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    <BreadcrumbLink asChild>
-                      <Link
-                        to="/companies"
-                        className="text-xs font-medium text-muted-foreground hover:text-foreground"
-                      >
-                        Companies
+                        Companies Directory
                       </Link>
                     </BreadcrumbLink>
                   </BreadcrumbItem>
@@ -234,13 +253,11 @@ export default function AppLayout() {
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
                     <BreadcrumbPage className="text-xs font-semibold text-primary">
-                      {isResume
-                        ? "Resume Parser & Fingerprint"
-                        : isTalentCheck
-                          ? "Talent Check & Readiness"
-                          : isSkillsPage
-                            ? "Skill Intelligence"
-                            : "Company Intelligence"}
+                      {isTalentCheck
+                        ? "Talent Check & Readiness"
+                        : isSkillsPage
+                          ? "Skill Intelligence"
+                          : "Company Intelligence"}
                     </BreadcrumbPage>
                   </BreadcrumbItem>
                 </BreadcrumbList>
@@ -254,7 +271,7 @@ export default function AppLayout() {
                   to="/company/intelligence"
                   className={cn(
                     "flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-medium transition-all",
-                    !isSkillsPage && !isTalentCheck && !isResume
+                    !isSkillsPage && !isTalentCheck
                       ? "bg-card text-foreground font-semibold shadow-2xs"
                       : "text-muted-foreground hover:text-foreground",
                   )}
@@ -286,21 +303,9 @@ export default function AppLayout() {
                   <UserCheck className="h-3.5 w-3.5" />
                   <span>Talent Check</span>
                 </Link>
-                <Link
-                  to="/resume"
-                  className={cn(
-                    "flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-medium transition-all",
-                    isResume
-                      ? "bg-card text-foreground font-semibold shadow-2xs"
-                      : "text-muted-foreground hover:text-foreground",
-                  )}
-                >
-                  <FileText className="h-3.5 w-3.5 text-orange-400" />
-                  <span>Resume Parser</span>
-                </Link>
               </div>
 
-              <Link to="/companies">
+              <Link to="/">
                 <Button
                   variant="outline"
                   size="sm"

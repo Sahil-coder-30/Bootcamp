@@ -1,0 +1,15 @@
+# Runtime pins for the resume service. No LLM SDKs on purpose: everything runs locally.
+fastapi==0.162.0
+uvicorn[standard]==0.54.0
+pydantic==2.14.1
+pydantic-settings==2.16.2
+python-multipart==0.0.32
+pymupdf==1.26.5
+python-docx==1.2.0
+rapidfuzz==3.14.6
+spacy==3.8.18
+sqlalchemy==2.1.6
+psycopg[binary]==3.3.6
+boto3==1.43.121
+# spaCy English NER model (12 MB), installed from the official release wheel.
+en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
