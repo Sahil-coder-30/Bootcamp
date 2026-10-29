@@ -1,8 +1,12 @@
 import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
 import { ArrowLeft, Users } from "lucide-react";
 import { APP_NAME } from "@/lib/college";
+import { authRequiredEverywhere, requireSignIn } from "@/lib/requireSignIn";
 
 export const Route = createFileRoute("/profile")({
+  beforeLoad: ({ location }) => {
+    if (authRequiredEverywhere()) requireSignIn(location);
+  },
   head: () => ({ meta: [{ title: `Candidate profile | ${APP_NAME}` }] }),
   component: ProfileLayout,
 });

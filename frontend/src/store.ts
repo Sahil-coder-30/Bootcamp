@@ -10,6 +10,9 @@ import talentCheckReducer from "./features/talentCheck/slice/talentCheck.slice";
 import resumeReducer from "./features/resume/slice/resume.slice";
 import jdReducer from "./features/jd/slice/jd.slice";
 import skillMatchReducer from "./features/skillMatch/slice/skillMatch.slice";
+import dashboardReducer from "./features/dashboard/slice/dashboard.slice";
+import flowReducer from "./features/flow/slice/flow.slice";
+import landingReducer from "./features/landing/slice/landing.slice";
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +25,9 @@ export const store = configureStore({
     resume: resumeReducer,
     jd: jdReducer,
     skillMatch: skillMatchReducer,
+    dashboard: dashboardReducer,
+    flow: flowReducer,
+    landing: landingReducer,
   },
 });
 

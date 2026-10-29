@@ -58,7 +58,12 @@ const TOP_MATCHES: CompanyMatchItem[] = [
   },
 ];
 
-export const TopCompanyMatchesCard: React.FC = () => {
+export interface TopCompanyMatchesCardProps {
+  matches?: CompanyMatchItem[];
+}
+
+export const TopCompanyMatchesCard: React.FC<TopCompanyMatchesCardProps> = ({ matches }) => {
+  const displayMatches = matches && matches.length > 0 ? matches : TOP_MATCHES;
   return (
     <div className="rounded-2xl border border-border bg-card p-5 shadow-xs flex flex-col transition-colors">
       {/* Header */}
@@ -83,7 +88,7 @@ export const TopCompanyMatchesCard: React.FC = () => {
 
       {/* Recruiter Matches List */}
       <div className="mt-3.5 space-y-2.5">
-        {TOP_MATCHES.map((company) => {
+        {displayMatches.map((company) => {
           return (
             <div
               key={company.id}

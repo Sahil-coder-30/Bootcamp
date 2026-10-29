@@ -21,14 +21,23 @@ import { JDMatcherModal } from "./JDMatcherModal";
 import { ATSResumeModal } from "./ATSResumeModal";
 import { getStoredUser, subscribeToAuthChanges, type CandidateUser } from "@/lib/auth";
 import { useCompanies } from "@/features/companies/Hooks/companies.hooks";
+import { useDashboard } from "../Hooks/dashboard.hooks";
 
 export const CandidateDashboard: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<CandidateUser | null>(() => getStoredUser());
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedSkill, setSelectedSkill] = useState<SkillItem | null>(null);
   const [isJDModalOpen, setIsJDModalOpen] = useState(false);
   const [isATSModalOpen, setIsATSModalOpen] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+
+  // Hook-driven architecture: consume live dashboard API + Dexie caching
+  const {
+    readinessScore,
+    topMatches,
+    selectedSkill,
+    selectSkill,
+    loading: isDashboardLoading,
+  } = useDashboard(currentUser?.id || "6f1c-ananya");
 
   // Sync auth state
   useEffect(() => {
@@ -174,14 +183,14 @@ export const CandidateDashboard: React.FC = () => {
                     className="stroke-primary"
                     strokeWidth="3.2"
                     strokeDasharray="94.2"
-                    strokeDashoffset={94.2 * (1 - 0.78)}
+                    strokeDashoffset={94.2 * (1 - readinessScore / 100)}
                     strokeLinecap="round"
                     fill="none"
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                   <span className="font-heading font-extrabold text-xs text-foreground leading-none">
-                    78%
+                    {readinessScore}%
                   </span>
                   <span className="text-[7px] font-bold uppercase tracking-wider text-primary leading-tight">
                     RADIX
@@ -285,14 +294,14 @@ export const CandidateDashboard: React.FC = () => {
             <div className="lg:col-span-5 h-full lg:sticky lg:top-0">
               <SkillHistogramCard
                 selectedSkillCode={selectedSkill?.code}
-                onSelectSkill={(skill) => setSelectedSkill(skill)}
+                onSelectSkill={(skill) => selectSkill(skill)}
               />
             </div>
 
             {/* Right Side (7 Cols): Split Hybrid (Option C) */}
             <div className="lg:col-span-7 space-y-6">
               {/* Top Half: Top Recruiter Hiring Bar Matches */}
-              <TopCompanyMatchesCard />
+              <TopCompanyMatchesCard matches={topMatches} />
 
               {/* Bottom Half: Priority Study Roadmap */}
               <PriorityRoadmapCard />

@@ -21,6 +21,11 @@ import jdReducer from "@/features/jd/slice/jd.slice";
 import profileReducer from "@/features/profile/slice/profile.slice";
 import skillsReducer from "@/features/skills/slice/skills.slice";
 import talentCheckReducer from "@/features/talentCheck/slice/talentCheck.slice";
+import resumeReducer from "@/features/resume/slice/resume.slice";
+import skillMatchReducer from "@/features/skillMatch/slice/skillMatch.slice";
+import dashboardReducer from "@/features/dashboard/slice/dashboard.slice";
+import flowReducer from "@/features/flow/slice/flow.slice";
+import landingReducer from "@/features/landing/slice/landing.slice";
 import type { CompanyProfile, CompanySummary } from "@/lib/companyData";
 
 export const makeStore = () =>
@@ -33,6 +38,11 @@ export const makeStore = () =>
       profile: profileReducer,
       skills: skillsReducer,
       talentCheck: talentCheckReducer,
+      resume: resumeReducer,
+      skillMatch: skillMatchReducer,
+      dashboard: dashboardReducer,
+      flow: flowReducer,
+      landing: landingReducer,
     },
   });
 
