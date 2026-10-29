@@ -37,7 +37,9 @@ export class AppDatabase extends Dexie {
 
 export const db = new AppDatabase();
 
-export const getCachedPreferences = async <T = unknown>(key = "userPreferences"): Promise<T | null> => {
+export const getCachedPreferences = async <T = unknown>(
+  key = "userPreferences",
+): Promise<T | null> => {
   try {
     const record = await db.preferences.get(key);
     return (record?.data as T) ?? null;
@@ -47,7 +49,10 @@ export const getCachedPreferences = async <T = unknown>(key = "userPreferences")
   }
 };
 
-export const setCachedPreferences = async <T = unknown>(data: T, key = "userPreferences"): Promise<void> => {
+export const setCachedPreferences = async <T = unknown>(
+  data: T,
+  key = "userPreferences",
+): Promise<void> => {
   try {
     await db.preferences.put({
       id: key,
@@ -59,7 +64,10 @@ export const setCachedPreferences = async <T = unknown>(data: T, key = "userPref
   }
 };
 
-export const getCacheItem = async <T = unknown>(key: string, scope = "global"): Promise<T | null> => {
+export const getCacheItem = async <T = unknown>(
+  key: string,
+  scope = "global",
+): Promise<T | null> => {
   try {
     const record = await db.cache.get([key, scope]);
     return (record?.data as T) ?? null;
@@ -69,7 +77,11 @@ export const getCacheItem = async <T = unknown>(key: string, scope = "global"): 
   }
 };
 
-export const setCacheItem = async <T = unknown>(key: string, data: T, scope = "global"): Promise<void> => {
+export const setCacheItem = async <T = unknown>(
+  key: string,
+  data: T,
+  scope = "global",
+): Promise<void> => {
   try {
     await db.cache.put({
       key,

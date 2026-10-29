@@ -3,18 +3,17 @@ import { Link } from "@tanstack/react-router";
 import {
   Sparkles,
   ArrowRight,
-  ShieldCheck,
   TrendingUp,
-  FileCheck,
   CheckCircle2,
-  Building2,
-  Award,
   Trophy,
   Clock,
+  AlertCircle,
+  RefreshCw,
+  Building2,
 } from "lucide-react";
 import { DashboardSidebar } from "./DashboardSidebar";
 import { DashboardHeader } from "./DashboardHeader";
-import { SkillHistogramCard, type SkillItem } from "./SkillHistogramCard";
+import { SkillHistogramCard } from "./SkillHistogramCard";
 import { TopCompanyMatchesCard } from "./TopCompanyMatchesCard";
 import { PriorityRoadmapCard } from "./PriorityRoadmapCard";
 import { JDMatcherModal } from "./JDMatcherModal";
@@ -30,14 +29,22 @@ export const CandidateDashboard: React.FC = () => {
   const [isATSModalOpen, setIsATSModalOpen] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
+  // Default candidate UUID (Ananya Rao)
+  const candidateId = currentUser?.id || "3a000000-0000-4000-8000-000000000001";
+
   // Hook-driven architecture: consume live dashboard API + Dexie caching
   const {
+    summary,
     readinessScore,
     topMatches,
+    skills,
     selectedSkill,
     selectSkill,
+    toggleStep,
     loading: isDashboardLoading,
-  } = useDashboard(currentUser?.id || "6f1c-ananya");
+    error: dashboardError,
+    refresh,
+  } = useDashboard(candidateId);
 
   // Sync auth state
   useEffect(() => {
@@ -54,7 +61,13 @@ export const CandidateDashboard: React.FC = () => {
     return "Good evening";
   }, []);
 
-  const candidateName = currentUser?.name || "Ananya Rao";
+  const candidateName = summary?.candidateName || currentUser?.name || "Ananya Rao";
+  const educationText =
+    summary?.education || "B.Tech CSE, XYZ Institute of Technology, 2026, 8.7 CGPA";
+  const targetRoles =
+    summary?.preferredRoles && summary.preferredRoles.length > 0
+      ? summary.preferredRoles.join(" · ")
+      : "Super Dream & Dream Placement Bars";
 
   // Search results from 115 companies if user types in search
   const { data: companies = [] } = useCompanies();
@@ -68,8 +81,8 @@ export const CandidateDashboard: React.FC = () => {
 
   return (
     <div className="h-screen w-full flex bg-background text-foreground overflow-hidden font-sans selection:bg-primary selection:text-white">
-      {/* 1. Left Sidebar Navigation - Fixed & Sticky */}
-      <div className="hidden md:flex shrink-0 h-screen sticky top-0 z-40">
+      {/* 1. Left Sidebar Navigation */}
+      <div className="hidden md:block shrink-0">
         <DashboardSidebar
           currentUser={currentUser}
           activeItem="dashboard"
@@ -144,6 +157,22 @@ export const CandidateDashboard: React.FC = () => {
 
         {/* Dashboard Main Content Body */}
         <main className="flex-1 px-4 sm:px-8 py-6 space-y-6 overflow-y-auto">
+          {/* Error Banner if any */}
+          {dashboardError && (
+            <div className="flex items-center justify-between gap-3 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-xs text-red-500">
+              <div className="flex items-center gap-2">
+                <AlertCircle className="h-4 w-4 shrink-0" />
+                <span>Notice: {dashboardError}. Displaying cached snapshot.</span>
+              </div>
+              <button
+                onClick={refresh}
+                className="inline-flex items-center gap-1 font-bold hover:underline cursor-pointer"
+              >
+                <RefreshCw className="h-3 w-3" /> Retry
+              </button>
+            </div>
+          )}
+
           {/* Greeting Banner */}
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 rounded-3xl border border-border bg-card p-5 sm:p-6 shadow-xs">
             <div>
@@ -151,16 +180,14 @@ export const CandidateDashboard: React.FC = () => {
                 <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
                 <span>Campus Placement Intelligence Platform</span>
                 <span className="text-muted-foreground">•</span>
-                <span className="font-mono text-muted-foreground">&lt;280ms Match Engine</span>
+                <span className="font-mono text-muted-foreground">AST Calibrated</span>
               </div>
               <h1 className="mt-2.5 font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
                 {greeting}, {candidateName} 👋
               </h1>
               <p className="mt-1.5 text-xs sm:text-sm text-muted-foreground">
-                Candidate Profile: <strong className="text-foreground">B.Tech CSE &apos;26</strong>{" "}
-                · Targeting:{" "}
-                <span className="text-foreground font-semibold">Super Dream &amp; Dream Bars</span>{" "}
-                · Zero LLM Drift / Hard AST Calibrated
+                Profile: <strong className="text-foreground">{educationText}</strong> · Roles:{" "}
+                <span className="text-foreground font-semibold">{targetRoles}</span>
               </p>
             </div>
 
@@ -193,118 +220,151 @@ export const CandidateDashboard: React.FC = () => {
                     {readinessScore}%
                   </span>
                   <span className="text-[7px] font-bold uppercase tracking-wider text-primary leading-tight">
-                    RADIX
+                    AST
                   </span>
                 </div>
               </div>
               <div className="text-left">
                 <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
-                  Tier-1 Readiness
+                  Target Readiness
                 </p>
-                <p className="text-xs font-bold text-foreground">Ready for 74% Bars</p>
+                <p className="text-xs font-bold text-foreground">
+                  {summary
+                    ? `${summary.targetCompany.name}: ${summary.readinessScore}%`
+                    : "Evaluating..."}
+                </p>
                 <p className="text-[10px] text-muted-foreground font-medium">
-                  Target: 30+ LPA Cohort
+                  {summary?.readinessRange
+                    ? `Range: ${summary.readinessRange.low}% – ${summary.readinessRange.high}%`
+                    : "Confidence Interval"}
                 </p>
               </div>
             </div>
           </div>
 
-          {/* 3 Metric Cards Row (matching reference design) */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Metric 1: RADIX Verification Score */}
-            <div className="rounded-2xl border border-border bg-card p-5 shadow-xs flex flex-col justify-between">
+          {/* 3 Metric Cards Row (Live Backend Data) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {/* Metric 1: RADIX Profile Completeness & AST Verification */}
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-xs flex flex-col justify-between min-h-[148px]">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                  RADIX VERIFICATION SCORE
+                  PROFILE COMPLETENESS
                 </span>
                 <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
-                  <Trophy className="h-3 w-3" /> Top 3% Cohort
+                  <Trophy className="h-3 w-3" /> Top 5% Cohort
                 </span>
               </div>
-              <div className="my-3 flex items-baseline gap-1.5">
+              <div className="my-2.5 flex items-baseline gap-1.5">
                 <span className="font-heading text-3xl font-extrabold text-foreground tracking-tight">
-                  9.4
+                  {summary ? summary.completeness : 90}
                 </span>
-                <span className="text-sm font-semibold text-muted-foreground">/ 10</span>
+                <span className="text-sm font-semibold text-muted-foreground">%</span>
               </div>
               <div className="flex items-center justify-between text-xs pt-2.5 border-t border-border/60 text-muted-foreground">
                 <span className="inline-flex items-center gap-1.5 text-[11px]">
                   <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
-                  Audited via AST Evaluation
+                  AST Verified Profile
                 </span>
-                <span className="font-mono text-[11px] font-medium text-primary">+0.6 vs L3</span>
+                <Link to="/profile" className="text-xs text-primary font-semibold hover:underline">
+                  Edit Profile
+                </Link>
               </div>
             </div>
 
-            {/* Metric 2: Verified Corporate Bars */}
-            <div className="rounded-2xl border border-border bg-card p-5 shadow-xs flex flex-col justify-between">
+            {/* Metric 2: Corporate Hiring Bars Met */}
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-xs flex flex-col justify-between min-h-[148px]">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                  VERIFIED CORPORATE BARS
+                  HIRING BARS MET
                 </span>
                 <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
-                  <TrendingUp className="h-3 w-3" /> 73.9% Met
+                  <TrendingUp className="h-3 w-3" />{" "}
+                  {summary?.targetCompany.verdict === "ready" ? "Ready" : "Almost"}
                 </span>
               </div>
-              <div className="my-3 flex items-baseline gap-1.5">
+              <div className="my-2.5 flex items-baseline gap-1.5">
                 <span className="font-heading text-3xl font-extrabold text-foreground tracking-tight">
-                  85
+                  {summary ? summary.categoriesMet : 1}
                 </span>
-                <span className="text-sm font-semibold text-muted-foreground">/ 115 Corporate</span>
+                <span className="text-sm font-semibold text-muted-foreground">/ 12 Categories</span>
               </div>
               <div className="flex items-center justify-between text-xs pt-2.5 border-t border-border/60 text-muted-foreground">
-                <span className="text-[11px]">
-                  <strong className="text-foreground">18</strong> Super Dream ·{" "}
-                  <strong className="text-foreground">67</strong> Dream
+                <span className="text-[11px] truncate">
+                  <strong className="text-foreground">
+                    {summary ? summary.levelsCovered : 52}
+                  </strong>{" "}
+                  of{" "}
+                  <strong className="text-foreground">{summary ? summary.levelsNeeded : 84}</strong>{" "}
+                  Levels
                 </span>
-                <span className="text-[11px]">30 Pending Rec</span>
+                <span className="text-[11px] font-semibold text-primary truncate max-w-[120px]">
+                  {summary?.targetCompany.name || "Google LLC"}
+                </span>
               </div>
             </div>
 
-            {/* Metric 3: Scheduled Recruiter Lock */}
-            <div className="rounded-2xl border border-border bg-card p-5 shadow-xs flex flex-col justify-between">
+            {/* Metric 3: Target Enterprise Recruiter */}
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-xs flex flex-col justify-between min-h-[148px]">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                  SCHEDULED RECRUITER LOCK
+                  TARGET RECRUITER LOCK
                 </span>
                 <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary font-mono">
-                  <Clock className="h-3 w-3" /> 48h Countdown
+                  <Clock className="h-3 w-3" /> Active Benchmark
                 </span>
               </div>
-              <div className="my-3">
-                <span className="font-heading text-2xl font-extrabold text-foreground tracking-tight">
-                  Google L4 Tech
+              <div className="my-2.5 flex items-baseline justify-between gap-2">
+                <span className="font-heading text-2xl font-extrabold text-foreground tracking-tight truncate flex-1">
+                  {summary?.targetCompany.name || "Google LLC"}
+                </span>
+                <span className="rounded-full bg-primary/10 text-primary border border-primary/20 px-2.5 py-0.5 text-xs font-bold">
+                  {summary ? `${summary.readinessScore}% Match` : "62%"}
                 </span>
               </div>
               <div className="flex items-center justify-between text-xs pt-2.5 border-t border-border/60 text-muted-foreground">
-                <span className="inline-flex items-center gap-1.5 text-[11px]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                  Round 1: SysDesign &amp; Algorithmic Bar
+                <span className="inline-flex items-center gap-1.5 text-[11px] truncate">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
+                  {summary
+                    ? `${summary.studyPlan.totalSteps} Study Steps (${summary.studyPlan.totalHours}h)`
+                    : "Analyzing..."}
                 </span>
-                <span className="rounded-md border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
-                  Eligible
-                </span>
+                <Link
+                  to="/companies"
+                  className="rounded-md border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary hover:bg-primary/20 transition-colors shrink-0"
+                >
+                  Change
+                </Link>
               </div>
             </div>
           </div>
 
-          {/* Two-Column Bento Layout (Left Histogram + Right Option C Hybrid) */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* Left Card (5 Cols): 12-Skill Histogram */}
-            <div className="lg:col-span-5 h-full lg:sticky lg:top-0">
+          {/* Two-Column Bento Layout */}
+          <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+            {/* Left Card (5 Cols on xl): 12-Skill Histogram */}
+            <div className="xl:col-span-5 w-full">
               <SkillHistogramCard
+                skills={summary?.skills || skills}
                 selectedSkillCode={selectedSkill?.code}
                 onSelectSkill={(skill) => selectSkill(skill)}
+                targetCompanyName={summary?.targetCompany.name}
+                loading={isDashboardLoading}
               />
             </div>
 
-            {/* Right Side (7 Cols): Split Hybrid (Option C) */}
-            <div className="lg:col-span-7 space-y-6">
+            {/* Right Side (7 Cols on xl): Split Hybrid */}
+            <div className="xl:col-span-7 space-y-6 w-full">
               {/* Top Half: Top Recruiter Hiring Bar Matches */}
-              <TopCompanyMatchesCard matches={topMatches} />
+              <TopCompanyMatchesCard
+                matches={summary?.topMatches || topMatches}
+                loading={isDashboardLoading}
+              />
 
               {/* Bottom Half: Priority Study Roadmap */}
-              <PriorityRoadmapCard />
+              <PriorityRoadmapCard
+                studyPlan={summary?.studyPlan}
+                onToggleStep={toggleStep}
+                loading={isDashboardLoading}
+              />
             </div>
           </div>
         </main>

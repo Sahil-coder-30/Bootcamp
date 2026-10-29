@@ -39,6 +39,7 @@ import { CompanyLogo } from "@/components/CompanyLogo";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/features/auth/Hooks/auth.hooks";
 import { useCompany } from "@/features/companies/Hooks/companies.hooks";
+import { useTheme } from "@/hooks/useTheme";
 import { APP_NAME, COLLEGE_SHORT } from "@/lib/college";
 import { cn } from "@/lib/utils";
 
@@ -50,29 +51,8 @@ const NAV = [
   { title: "Guided flow", url: "/flow", icon: Workflow },
 ] as const;
 
-// `.dark` drives the Tailwind/shadcn palette, `.light-theme` drives the SCSS tokens in src/styles.
-function applyTheme(dark: boolean) {
-  document.documentElement.classList.toggle("dark", dark);
-  document.documentElement.classList.toggle("light-theme", !dark);
-}
-
 function ThemeToggle() {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    const isDarkStored =
-      localStorage.getItem("theme") === "dark" ||
-      (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches);
-    setIsDark(isDarkStored);
-    applyTheme(isDarkStored);
-  }, []);
-
-  const toggleTheme = () => {
-    const nextDark = !isDark;
-    setIsDark(nextDark);
-    applyTheme(nextDark);
-    localStorage.setItem("theme", nextDark ? "dark" : "light");
-  };
+  const { toggleTheme, isDark } = useTheme();
 
   return (
     <Button
