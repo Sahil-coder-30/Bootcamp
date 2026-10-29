@@ -36,13 +36,13 @@ export const WhatIfPanel: React.FC<WhatIfPanelProps> = ({
   const scoreDiff = previewScore - result.readiness_score;
 
   return (
-    <div className="bg-card border border-border rounded-2xl p-5 sm:p-6 shadow-xs">
+    <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-xs overflow-hidden max-w-full">
       {/* Simulation Header & Live Score Preview Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-border mb-6">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 sm:pb-5 border-b border-border mb-5 sm:mb-6">
+        <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <Sliders className="w-5 h-5 text-primary" />
-            <h3 className="text-base font-bold text-foreground">What-If Simulation Sandbox</h3>
+            <Sliders className="w-5 h-5 text-primary shrink-0" />
+            <h3 className="text-base font-bold text-foreground truncate">What-If Simulation Sandbox</h3>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
             Drag sliders to model skill progression. Recalculates in under 1 ms with zero latency.
@@ -50,12 +50,12 @@ export const WhatIfPanel: React.FC<WhatIfPanelProps> = ({
         </div>
 
         {/* Live Simulation Score Card */}
-        <div className="flex items-center gap-4 bg-card-sub px-4 py-2 rounded-xl border border-border shadow-2xs">
-          <div className="text-right">
+        <div className="flex items-center justify-between sm:justify-start gap-4 bg-card-sub px-4 py-2 rounded-xl border border-border shadow-2xs w-full sm:w-auto shrink-0">
+          <div className="text-left sm:text-right">
             <div className="text-[11px] text-muted-foreground uppercase font-medium">
               Simulated Score
             </div>
-            <div className="flex items-center gap-1.5 justify-end">
+            <div className="flex items-center gap-1.5 sm:justify-end">
               <span className="text-2xl font-black font-mono text-foreground">{previewScore}</span>
               {scoreDiff !== 0 && (
                 <span
@@ -92,12 +92,12 @@ export const WhatIfPanel: React.FC<WhatIfPanelProps> = ({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-wrap items-center gap-2.5 mb-6">
+      <div className="flex flex-wrap items-center gap-2 mb-5 sm:mb-6">
         <button
           onClick={onApplyPlan}
-          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-primary hover:bg-primary/90 text-primary-foreground transition-all shadow-xs cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary hover:bg-primary/90 text-primary-foreground transition-all shadow-xs cursor-pointer"
         >
-          <Sparkles className="w-3.5 h-3.5 text-primary-foreground" />
+          <Sparkles className="w-3.5 h-3.5 text-primary-foreground shrink-0" />
           Apply Fastest Path to Ready
         </button>
 
@@ -106,7 +106,7 @@ export const WhatIfPanel: React.FC<WhatIfPanelProps> = ({
             onClick={onReset}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-card hover:bg-muted text-foreground transition-colors cursor-pointer border border-border"
           >
-            <RotateCcw className="w-3.5 h-3.5" />
+            <RotateCcw className="w-3.5 h-3.5 shrink-0" />
             Reset
           </button>
         )}
@@ -114,16 +114,16 @@ export const WhatIfPanel: React.FC<WhatIfPanelProps> = ({
         {isModified && onSave && (
           <button
             onClick={onSave}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition-colors cursor-pointer ml-auto shadow-xs"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition-colors cursor-pointer sm:ml-auto shadow-xs"
           >
-            <Save className="w-3.5 h-3.5" />
+            <Save className="w-3.5 h-3.5 shrink-0" />
             Save as My Level
           </button>
         )}
       </div>
 
       {/* 12 Skill Sliders Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
         {(result.skillset_gap || []).map((row) => {
           const currentVal =
             typeof overrides[row.category_code] === "number"
@@ -135,19 +135,19 @@ export const WhatIfPanel: React.FC<WhatIfPanelProps> = ({
           return (
             <div
               key={row.category_code}
-              className={`p-3.5 rounded-xl border transition-all ${
+              className={`p-3 sm:p-3.5 rounded-xl border transition-all min-w-0 overflow-hidden ${
                 isRowModified ? "bg-card border-primary/50 shadow-xs" : "bg-card border-border"
               }`}
             >
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-1.5">
-                  <span className="font-mono font-bold text-xs text-foreground">
+              <div className="flex items-center justify-between mb-2 gap-2">
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <span className="font-mono font-bold text-xs text-foreground truncate">
                     {row.category_code}
                   </span>
-                  {isRowModified && <span className="w-1.5 h-1.5 rounded-full bg-primary" />}
+                  {isRowModified && <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />}
                 </div>
 
-                <div className="text-xs font-mono">
+                <div className="text-xs font-mono shrink-0">
                   <span className="text-foreground font-bold">L{currentVal}</span>{" "}
                   <span className="text-muted-foreground">({currentBloom})</span>{" "}
                   <span className="text-muted-foreground">/ Bar L{row.required_level}</span>
@@ -155,17 +155,19 @@ export const WhatIfPanel: React.FC<WhatIfPanelProps> = ({
               </div>
 
               {/* Slider Input */}
-              <input
-                type="range"
-                min="1"
-                max="10"
-                step="1"
-                value={currentVal}
-                onChange={(e) => onSetLevel(row.category_code, Number(e.target.value))}
-                className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
-              />
+              <div className="w-full px-0.5">
+                <input
+                  type="range"
+                  min="1"
+                  max="10"
+                  step="1"
+                  value={currentVal}
+                  onChange={(e) => onSetLevel(row.category_code, Number(e.target.value))}
+                  className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-primary block"
+                />
+              </div>
 
-              <div className="flex justify-between text-[10px] text-muted-foreground font-mono mt-1">
+              <div className="flex justify-between text-[10px] text-muted-foreground font-mono mt-1 px-0.5">
                 <span>1</span>
                 <span>Bar: {row.required_level}</span>
                 <span>10</span>

@@ -94,13 +94,13 @@ export const ReadinessCard: React.FC<ReadinessCardProps> = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
         {/* Score & Verdict */}
-        <div className="md:col-span-6 flex items-center gap-6">
-          <div className="relative flex items-center justify-center">
+        <div className="lg:col-span-6 flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4 sm:gap-6">
+          <div className="relative flex items-center justify-center shrink-0">
             {/* Circular score container */}
             <div
-              className="w-28 h-28 rounded-full flex flex-col items-center justify-center border-2 bg-card-sub dark:bg-card"
+              className="w-28 h-28 rounded-full flex flex-col items-center justify-center border-2 bg-card-sub dark:bg-card shrink-0"
               style={{
                 borderColor:
                   verdict === "ready"
@@ -120,21 +120,21 @@ export const ReadinessCard: React.FC<ReadinessCardProps> = ({
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2 flex-1 min-w-0">
             <div
               className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs sm:text-sm font-semibold border ${verdictConfig.badgeClass}`}
             >
-              <Icon className="w-4 h-4" />
-              {verdictConfig.label}
+              <Icon className="w-4 h-4 shrink-0" />
+              <span>{verdictConfig.label}</span>
             </div>
 
-            <p className="text-sm text-muted-foreground leading-snug max-w-sm">
+            <p className="text-sm text-muted-foreground leading-snug max-w-sm mx-auto sm:mx-0">
               {verdictConfig.desc}
             </p>
 
             {readinessRange && (
-              <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-mono pt-1">
-                <ShieldCheck className="w-3.5 h-3.5 text-muted-foreground" />
+              <div className="flex items-center justify-center sm:justify-start gap-1.5 text-xs text-muted-foreground font-mono pt-1">
+                <ShieldCheck className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                 <span>Confidence Range:</span>
                 <span className="text-foreground font-semibold">
                   {readinessRange.low} - {readinessRange.high}
@@ -145,8 +145,8 @@ export const ReadinessCard: React.FC<ReadinessCardProps> = ({
         </div>
 
         {/* Quick Stats Grid */}
-        <div className="md:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-3 border-t md:border-t-0 md:border-l border-border pt-4 md:pt-0 md:pl-6">
-          <div className="bg-card-sub rounded-xl p-3 border border-border">
+        <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-3 gap-3 border-t lg:border-t-0 lg:border-l border-border pt-4 lg:pt-0 lg:pl-6">
+          <div className="bg-card-sub rounded-xl p-3 border border-border min-w-0">
             <div className="text-xs text-muted-foreground mb-1">Levels Covered</div>
             <div className="text-lg font-bold text-foreground font-mono">
               {levelsCovered ?? "-"}{" "}
@@ -161,7 +161,7 @@ export const ReadinessCard: React.FC<ReadinessCardProps> = ({
             </div>
           </div>
 
-          <div className="bg-card-sub rounded-xl p-3 border border-border">
+          <div className="bg-card-sub rounded-xl p-3 border border-border min-w-0">
             <div className="text-xs text-muted-foreground mb-1">Categories Met</div>
             <div className="text-lg font-bold text-foreground font-mono">
               {categoriesMet ?? "-"}{" "}
@@ -170,7 +170,7 @@ export const ReadinessCard: React.FC<ReadinessCardProps> = ({
             <div className="text-[11px] text-muted-foreground mt-0.5">At or above bar</div>
           </div>
 
-          <div className="bg-card-sub rounded-xl p-3 border border-border col-span-2 sm:col-span-1">
+          <div className="bg-card-sub rounded-xl p-3 border border-border min-w-0">
             <div className="text-xs text-muted-foreground mb-1">Blocking Gaps</div>
             <div
               className={`text-lg font-bold font-mono ${

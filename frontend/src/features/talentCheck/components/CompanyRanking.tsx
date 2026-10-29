@@ -43,12 +43,12 @@ export const CompanyRanking: React.FC<CompanyRankingProps> = ({
   const notYetCount = ranking.filter((r) => r.verdict === "not_yet").length;
 
   return (
-    <div className="bg-card border border-border rounded-2xl p-6 shadow-xs space-y-6">
+    <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-xs space-y-4 sm:space-y-6 overflow-hidden">
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-amber-500" />
+            <Trophy className="w-5 h-5 text-amber-500 shrink-0" />
             <h3 className="text-base font-bold text-foreground">Which Companies Am I Ready For?</h3>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
@@ -64,7 +64,7 @@ export const CompanyRanking: React.FC<CompanyRankingProps> = ({
             placeholder="Search company..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-background border border-border text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+            className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-background border border-border text-xs text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:border-primary transition-colors"
           />
         </div>
       </div>
@@ -89,7 +89,7 @@ export const CompanyRanking: React.FC<CompanyRankingProps> = ({
               : "text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400"
           }`}
         >
-          <CheckCircle2 className="w-3.5 h-3.5" /> Ready ({readyCount})
+          <CheckCircle2 className="w-3.5 h-3.5 shrink-0" /> Ready ({readyCount})
         </button>
         <button
           onClick={() => setFilter("almost")}
@@ -99,7 +99,7 @@ export const CompanyRanking: React.FC<CompanyRankingProps> = ({
               : "text-muted-foreground hover:text-amber-600 dark:hover:text-amber-400"
           }`}
         >
-          <AlertTriangle className="w-3.5 h-3.5" /> Almost ({almostCount})
+          <AlertTriangle className="w-3.5 h-3.5 shrink-0" /> Almost ({almostCount})
         </button>
         <button
           onClick={() => setFilter("not_yet")}
@@ -109,7 +109,7 @@ export const CompanyRanking: React.FC<CompanyRankingProps> = ({
               : "text-muted-foreground hover:text-rose-600 dark:hover:text-rose-400"
           }`}
         >
-          <XCircle className="w-3.5 h-3.5" /> Needs Prep ({notYetCount})
+          <XCircle className="w-3.5 h-3.5 shrink-0" /> Needs Prep ({notYetCount})
         </button>
       </div>
 
@@ -138,36 +138,43 @@ export const CompanyRanking: React.FC<CompanyRankingProps> = ({
               <div
                 key={row.company_id}
                 onClick={() => onSelectCompany?.(row.company_id)}
-                className="group flex items-center justify-between p-3.5 rounded-xl bg-card hover:bg-card-sub border border-border hover:border-primary/40 transition-all cursor-pointer"
+                className="group flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-3.5 rounded-xl bg-card hover:bg-card-sub border border-border hover:border-primary/40 transition-all cursor-pointer gap-2 sm:gap-4 min-w-0"
               >
-                <div className="flex items-center gap-3">
-                  <span className="w-6 text-center text-xs font-mono font-bold text-muted-foreground group-hover:text-foreground">
+                {/* Top / Left: Rank, Icon, Company Name */}
+                <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
+                  <span className="w-6 text-center text-xs font-mono font-bold text-muted-foreground group-hover:text-foreground shrink-0">
                     #{idx + 1}
                   </span>
                   <div className="w-8 h-8 rounded-lg bg-card-sub border border-border flex items-center justify-center shrink-0">
-                    <Building2 className="w-4 h-4 text-primary" />
+                    <Building2 className="w-4 h-4 text-primary shrink-0" />
                   </div>
-                  <div className="min-w-0">
-                    <h4 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors truncate">
+                  <div className="min-w-0 flex-1">
+                    <h4 className="text-xs sm:text-sm font-semibold text-foreground group-hover:text-primary transition-colors truncate">
                       {row.company_name}
                     </h4>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4">
-                  <div className="text-right">
-                    <div className="text-base font-black font-mono text-foreground">
+                {/* Bottom / Right: Score, Verdict Badge, Action */}
+                <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-border/50">
+                  <div className="flex items-center gap-1.5 sm:block sm:text-right">
+                    <span className="text-[10px] text-muted-foreground sm:hidden font-mono uppercase">Score:</span>
+                    <span className="text-xs sm:text-base font-black font-mono text-foreground">
                       {row.readiness_score}
-                    </div>
+                      <span className="text-[10px] text-muted-foreground font-normal sm:hidden"> / 100</span>
+                    </span>
                   </div>
 
                   <span
-                    className={`px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider border ${badgeStyle}`}
+                    className={`px-2 sm:px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold uppercase tracking-wider border shrink-0 ${badgeStyle}`}
                   >
                     {row.verdict.replace("_", " ")}
                   </span>
 
-                  <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-primary sm:text-muted-foreground sm:group-hover:text-foreground transition-colors shrink-0">
+                    <span className="text-[11px] sm:hidden">Inspect</span>
+                    <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  </span>
                 </div>
               </div>
             );

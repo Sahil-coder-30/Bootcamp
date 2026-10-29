@@ -172,43 +172,7 @@ export const TalentCheckPage: React.FC = () => {
   const router = useRouter({ warn: false });
 
   const content = (
-    <div className="min-h-screen bg-background text-foreground p-4 sm:p-8 space-y-6 selection:bg-primary selection:text-white">
-      {/* Top Breadcrumb Header */}
-      <div className="flex items-center justify-between border-b border-border pb-4">
-        <div className="flex items-center gap-3">
-          <a
-            href="/"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Home
-          </a>
-          <span className="text-muted-foreground/40">/</span>
-          <a
-            href="/dashboard"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary transition-colors hover:underline"
-          >
-            Dashboard
-          </a>
-          <span className="text-muted-foreground/40">/</span>
-          <span className="text-xs font-semibold text-foreground">Talent Check</span>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <a
-            href="/companies"
-            className="rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground"
-          >
-            115 Companies
-          </a>
-          <a
-            href="/resume"
-            className="rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground"
-          >
-            Resume ATS
-          </a>
-        </div>
-      </div>
-
+    <div className="min-h-screen w-full max-w-full min-w-0 overflow-x-hidden bg-background text-foreground p-4 sm:p-8 space-y-6 selection:bg-primary selection:text-white">
       {/* Top Navigation & Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-6">
         <div>
@@ -239,18 +203,18 @@ export const TalentCheckPage: React.FC = () => {
       </div>
 
       {/* Selectors Bar */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-card p-4 rounded-2xl border border-border shadow-xs">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 bg-card p-4 sm:p-5 rounded-2xl border border-border shadow-xs">
         {/* Candidate Selector */}
-        <div>
-          <label className="text-xs font-medium text-muted-foreground mb-1.5 flex items-center gap-1.5">
+        <div className="space-y-2">
+          <label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
             <User className="w-3.5 h-3.5 text-primary" /> Select Candidate Profile
           </label>
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-2">
             {displayedCandidates.slice(0, 4).map((c) => (
               <button
                 key={c.id}
                 onClick={() => setSelectedCandidate(c.id)}
-                className={`flex-1 min-w-[130px] p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer min-w-0 ${
                   selectedCandidate === c.id
                     ? "bg-primary/10 border-primary/50 text-primary font-bold shadow-xs"
                     : "bg-background border-border text-muted-foreground hover:text-foreground hover:border-border-strong"
@@ -266,7 +230,7 @@ export const TalentCheckPage: React.FC = () => {
               aria-label="Select candidate profile"
               value={selectedCandidate}
               onChange={(e) => setSelectedCandidate(e.target.value)}
-              className="w-full mt-2 rounded-xl border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-hidden focus:ring-1 focus:ring-primary cursor-pointer"
+              className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-foreground focus:outline-hidden focus:ring-1 focus:ring-primary cursor-pointer transition-colors"
             >
               {displayedCandidates.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -278,16 +242,16 @@ export const TalentCheckPage: React.FC = () => {
         </div>
 
         {/* Company Bar Selector */}
-        <div>
-          <label className="text-xs font-medium text-muted-foreground mb-1.5 flex items-center gap-1.5">
+        <div className="space-y-2">
+          <label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
             <Building2 className="w-3.5 h-3.5 text-primary" /> Select Employer Hiring Bar
           </label>
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             {displayedCompanies.map((comp) => (
               <button
                 key={comp.id}
                 onClick={() => setSelectedCompany(comp.id)}
-                className={`flex-1 min-w-[140px] p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer min-w-0 ${
                   selectedCompany === comp.id
                     ? "bg-primary/10 border-primary/50 text-primary font-bold shadow-xs"
                     : "bg-background border-border text-muted-foreground hover:text-foreground hover:border-border-strong"
@@ -303,7 +267,7 @@ export const TalentCheckPage: React.FC = () => {
               aria-label="Select employer hiring bar from all companies"
               value={selectedCompany}
               onChange={(e) => setSelectedCompany(Number(e.target.value))}
-              className="w-full mt-2 rounded-xl border border-border bg-background px-3 py-1.5 text-xs text-foreground focus:outline-hidden focus:ring-1 focus:ring-primary cursor-pointer"
+              className="w-full rounded-xl border border-border bg-background px-3 py-2 text-xs text-foreground focus:outline-hidden focus:ring-1 focus:ring-primary cursor-pointer transition-colors"
             >
               {companies.map((comp) => (
                 <option key={comp.id} value={comp.id}>
