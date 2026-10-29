@@ -15,7 +15,7 @@ export const Route = createFileRoute("/profile")({
 function ProfileLayout() {
   return (
     <DashboardLayout>
-      <div className="mx-auto max-w-6xl px-4 py-6 space-y-6">
+      <div className="mx-auto w-full max-w-6xl px-4 py-6 space-y-6 min-w-0 overflow-x-hidden">
         <div className="flex items-center justify-between pb-2 border-b border-border">
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl border border-border bg-card text-foreground shadow-2xs">

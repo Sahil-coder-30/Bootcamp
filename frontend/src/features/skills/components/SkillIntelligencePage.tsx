@@ -350,7 +350,7 @@ export default function SkillIntelligencePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen w-full max-w-full min-w-0 overflow-x-hidden bg-background">
       {/* Header section */}
       <div className="border-b border-border/80 bg-gradient-to-b from-card via-card/80 to-background px-4 py-8 sm:px-8">
         <div className="mx-auto max-w-5xl">

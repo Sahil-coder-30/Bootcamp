@@ -244,7 +244,7 @@ function Builder({ profileId, extractionId, onSaved }: ProfileBuilderProps) {
       <form
         onSubmit={form.handleSubmit(onValid, onInvalid)}
         noValidate
-        className="space-y-4"
+        className="w-full max-w-full min-w-0 overflow-x-hidden space-y-4"
         aria-label="Candidate profile"
       >
         <header className="flex flex-wrap items-center justify-between gap-3">

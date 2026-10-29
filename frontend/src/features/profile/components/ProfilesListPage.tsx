@@ -65,7 +65,7 @@ export default function ProfilesListPage() {
   };
 
   return (
-    <div className="space-y-5">
+    <div className="w-full max-w-full min-w-0 overflow-x-hidden space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="font-heading text-xl font-semibold">Candidate profiles</h2>

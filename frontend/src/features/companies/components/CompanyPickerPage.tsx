@@ -288,7 +288,7 @@ export default function CompanyPickerPage() {
   const regularCount = companies.filter((c) => c.companyType === "Regular").length;
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-primary/20 selection:text-primary">
+    <div className="min-h-screen w-full max-w-full min-w-0 overflow-x-hidden bg-background text-foreground selection:bg-primary/20 selection:text-primary">
       {/* 1. Service Navigation Top Bar: Prominent Back to Dashboard */}
       <nav className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">

@@ -56,7 +56,7 @@ export const FlowPage: React.FC = () => {
   }, [jdCompany]);
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5 p-4 sm:p-6">
+    <div className="mx-auto w-full max-w-3xl min-w-0 overflow-x-hidden space-y-5 p-4 sm:p-6">
       <div>
         <h1 className="flex items-center gap-2 text-2xl font-black tracking-tight">
           <Workflow className="h-6 w-6 text-primary" /> Guided flow
