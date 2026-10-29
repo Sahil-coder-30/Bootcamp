@@ -213,7 +213,7 @@ The Resume Service operates strictly over synchronous HTTP REST for deterministi
 - **Container hardening:** Runs under unprivileged Linux user `USER resume` (UID 1000). The spaCy NER model is baked directly into the image at build-time, requiring zero outbound runtime network calls.
 - **Secrets management:** Database credentials, AWS keys, and API secrets are mounted as Kubernetes secrets (`resume-secret`, `database`), never stored in application code.
 
-### CI/CD & deployment
+### Deployment
 - **Container:** Dockerfile based on `python:3.12-slim`, utilizing multi-stage build cache mounts with Astral `uv` for sub-minute builds.
 - **Orchestration:** Managed via Kubernetes Deployment (`k8s/resume-deployment.yml`) with a 1Gi `PersistentVolumeClaim` (`resume-data`), resource requests (`200m` CPU, `384Mi` RAM), resource limits (`1000m` CPU, `1Gi` RAM), and a `Recreate` rollout strategy to protect single-writer RWO volume bindings.
 - **Rollback strategy:** Instantly roll back deployments using `kubectl rollout undo deployment/resume-deployment`.

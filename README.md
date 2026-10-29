@@ -233,7 +233,7 @@ uv pip install -r requirements-dev.txt -e .   # runtime + test tools
 .venv/bin/python -m openradix_agents serve    # http://localhost:8000/docs
 ```
 
-### 4. Tests and CI
+### 4. Tests
 
 All tests run offline: LLM providers, Supabase and the agent service are faked.
 
@@ -243,7 +243,6 @@ All tests run offline: LLM providers, Supabase and the agent service are faked.
 | backend | `npm run typecheck && npm run test:coverage` | routes, agent proxy, companies service, errors |
 | agent | `.venv/bin/ruff check src tests && .venv/bin/pytest --cov` | pipeline, agents, CLI, doctor, FastAPI |
 
-GitHub Actions (`.github/workflows/ci.yml`) runs the job for each changed service, plus a gitleaks secret scan. Require the **CI passed** check on `main` in branch protection.
 
 ---
 

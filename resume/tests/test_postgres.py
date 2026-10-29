@@ -1,4 +1,4 @@
-"""Runs the API against real Postgres with the SQL migration applied (CI has a Postgres
+"""Runs the API against real Postgres with the SQL migration applied (a local Postgres
 service; locally set TEST_DATABASE_URL). Skipped when no database is configured."""
 
 from __future__ import annotations

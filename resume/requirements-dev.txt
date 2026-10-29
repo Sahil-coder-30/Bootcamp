@@ -1,4 +1,4 @@
-# Dev and CI tools on top of the runtime pins.
+# Dev and test tools on top of the runtime pins.
 -r requirements.txt
 pytest==9.2.0
 pytest-cov==7.1.0

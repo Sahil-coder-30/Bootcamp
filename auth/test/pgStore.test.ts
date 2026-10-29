@@ -6,7 +6,7 @@ import { runMigrations } from "../src/migrate.js";
 import { PgStore } from "../src/services/pgStore.js";
 import { fakeGoogleStrategy } from "./helpers.js";
 
-// Runs against a real Postgres when TEST_DATABASE_URL is set (CI provides one); skipped otherwise.
+// Runs against a real Postgres when TEST_DATABASE_URL is set (point it at a local Postgres); skipped otherwise.
 const url = process.env["TEST_DATABASE_URL"];
 
 async function signIn(app: ReturnType<typeof createApp>, state: string, cookie: string) {
