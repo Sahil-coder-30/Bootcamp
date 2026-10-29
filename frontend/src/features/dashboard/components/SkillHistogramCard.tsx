@@ -125,29 +125,32 @@ export const RADIX_12_SKILLS: SkillItem[] = [
 
 const BLOOM_COLORS: Record<string, { bg: string; text: string; border: string }> = {
   CU: {
-    bg: "bg-slate-500/10",
-    text: "text-slate-400",
-    border: "border-slate-500/30",
+    bg: "bg-muted/80",
+    text: "text-muted-foreground",
+    border: "border-border",
   },
   AP: {
-    bg: "bg-emerald-500/10",
-    text: "text-emerald-400",
-    border: "border-emerald-500/30",
+    bg: "bg-primary/10",
+    text: "text-primary",
+    border: "border-primary/30",
   },
   AS: {
     bg: "bg-amber-500/10",
     text: "text-amber-400",
     border: "border-amber-500/30",
+    bg: "bg-amber-500/10",
+    text: "text-amber-400",
+    border: "border-amber-500/30",
   },
   EV: {
-    bg: "bg-rose-500/10",
-    text: "text-rose-400",
-    border: "border-rose-500/30",
+    bg: "bg-orange-500/10",
+    text: "text-orange-400",
+    border: "border-orange-500/30",
   },
   CR: {
-    bg: "bg-purple-500/10",
-    text: "text-purple-400",
-    border: "border-purple-500/30",
+    bg: "bg-emerald-500/10",
+    text: "text-emerald-400",
+    border: "border-emerald-500/30",
   },
 };
 
@@ -163,6 +166,13 @@ export const SkillHistogramCard: React.FC<SkillHistogramCardProps> = ({
   const [filterCategory, setFilterCategory] = useState<"All" | "Core" | "Systems" | "Engineering">(
     "All",
   );
+
+  const counts = {
+    All: RADIX_12_SKILLS.length,
+    Core: RADIX_12_SKILLS.filter((s) => s.category === "Core").length,
+    Systems: RADIX_12_SKILLS.filter((s) => s.category === "Systems").length,
+    Engineering: RADIX_12_SKILLS.filter((s) => s.category === "Engineering").length,
+  };
 
   const filteredSkills = RADIX_12_SKILLS.filter(
     (s) => filterCategory === "All" || s.category === filterCategory,
@@ -182,7 +192,7 @@ export const SkillHistogramCard: React.FC<SkillHistogramCardProps> = ({
             </h3>
           </div>
           <p className="mt-1 text-xs text-muted-foreground">
-            Bloom level distribution (L1 Remember → L5 Create) vs Super Dream hiring bar
+            Bloom Gap Depth vs L4 Enterprise Hiring Cutoffs
           </p>
         </div>
 
@@ -193,13 +203,13 @@ export const SkillHistogramCard: React.FC<SkillHistogramCardProps> = ({
               key={cat}
               onClick={() => setFilterCategory(cat)}
               className={cn(
-                "rounded-full px-3 py-1 font-medium transition-all cursor-pointer",
+                "rounded-full px-2.5 py-1 font-medium transition-all cursor-pointer",
                 filterCategory === cat
-                  ? "bg-primary text-primary-foreground font-bold shadow-xs"
+                  ? "bg-primary text-white font-bold shadow-xs"
                   : "text-muted-foreground hover:text-foreground",
               )}
             >
-              {cat}
+              {cat} ({counts[cat]})
             </button>
           ))}
         </div>
@@ -209,16 +219,16 @@ export const SkillHistogramCard: React.FC<SkillHistogramCardProps> = ({
       <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-[11px] text-muted-foreground pb-1">
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1.5">
-            <span className="h-2.5 w-4 rounded-sm bg-primary" />
-            Candidate Level
+            <span className="h-2.5 w-2.5 rounded-sm bg-primary" />
+            Candidate Level (Bloom Depth)
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="h-2.5 w-1 rounded-full bg-marker shadow-xs" />
-            Target Hiring Bar
+            <span className="h-3 w-1 rounded-full bg-white shadow-[0_0_6px_rgba(255,255,255,0.8)]" />
+            Target Hiring Bar Notch
           </span>
         </div>
         <span className="font-mono text-[10px] text-muted-foreground">
-          Click row to filter study plan
+          Scale: L1 to L5
         </span>
       </div>
 
@@ -259,24 +269,23 @@ export const SkillHistogramCard: React.FC<SkillHistogramCardProps> = ({
                 <div className="flex items-center gap-2">
                   <span
                     className={cn(
-                      "rounded-full border px-2 py-0.2 text-[10px] font-semibold",
+                      "rounded-full border px-2 py-0.5 text-[10px] font-semibold",
                       bloom.bg,
                       bloom.text,
                       bloom.border,
                     )}
                   >
-                    {skill.bloomCode} · L{skill.candidateLevel}
+                    {skill.bloomCode} L{skill.candidateLevel}
                   </span>
 
                   {meetsBar ? (
-                    <span className="flex items-center gap-0.5 text-[10px] font-semibold text-emerald-700 dark:text-emerald-400">
-                      <CheckCircle2 className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />{" "}
+                    <span className="flex items-center gap-0.5 text-[10px] font-semibold text-emerald-400">
+                      <CheckCircle2 className="h-3 w-3 text-emerald-400" />{" "}
                       Met
                     </span>
                   ) : (
-                    <span className="flex items-center gap-0.5 text-[10px] font-semibold text-amber-700 dark:text-amber-400">
-                      <AlertTriangle className="h-3 w-3 text-amber-600 dark:text-amber-400" /> -
-                      {skill.requiredLevel - skill.candidateLevel}L
+                    <span className="flex items-center gap-0.5 text-[10px] font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.2 rounded-md">
+                      <AlertTriangle className="h-3 w-3 text-amber-400" /> ▲ -{skill.requiredLevel - skill.candidateLevel}L Gap (Needs L{skill.requiredLevel})
                     </span>
                   )}
                 </div>
@@ -291,15 +300,15 @@ export const SkillHistogramCard: React.FC<SkillHistogramCardProps> = ({
                   ))}
                 </div>
 
-                {/* Candidate Filled Bar */}
+                {/* Candidate Filled Bar (Luminous Amber / Orange) */}
                 <div
-                  className="h-full rounded-full bg-primary transition-all duration-500"
+                  className="h-full rounded-full bg-gradient-to-r from-orange-600 to-amber-500 transition-all duration-500 shadow-[0_0_8px_rgba(249,115,22,0.4)]"
                   style={{ width: `${candWidthPercent}%` }}
                 />
 
                 {/* Target Requirement Marker */}
                 <div
-                  className="absolute top-0 bottom-0 w-1.5 bg-marker shadow-xs"
+                  className="absolute top-0 bottom-0 w-1.5 bg-white shadow-[0_0_6px_rgba(255,255,255,0.9)] rounded-full"
                   style={{ left: `calc(${reqPositionPercent}% - 3px)` }}
                   title={`Target Bar: Level ${skill.requiredLevel}`}
                 />

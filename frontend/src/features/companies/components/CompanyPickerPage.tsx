@@ -36,25 +36,28 @@ const FILTERS: ("All" | CompanyType)[] = ["All", "Super Dream", "Dream", "Standa
 
 // Monochromatic, luxury black-and-zinc styling (strictly no blue)
 const TYPE_STYLES: Record<CompanyType, string> = {
-  "Super Dream": "bg-zinc-100/10 text-zinc-100 border-zinc-400/50 shadow-xs",
-  Dream: "bg-zinc-700/25 text-zinc-200 border-zinc-600/60 shadow-xs",
-  Standard: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 shadow-xs",
-  Regular: "bg-amber-500/10 text-amber-400 border-amber-500/30 shadow-xs",
+  "Super Dream":
+    "bg-orange-500/10 dark:bg-primary/15 text-orange-600 dark:text-primary border-orange-500/30 dark:border-primary/40 shadow-xs",
+  Dream: "bg-primary/10 text-primary border-primary/30 shadow-xs",
+  Standard:
+    "bg-emerald-500/10 text-emerald-800 dark:text-emerald-400 border-emerald-500/30 shadow-xs",
+  Regular: "bg-amber-500/10 text-amber-800 dark:text-amber-400 border-amber-500/30 shadow-xs",
 };
 
 const TYPE_DOTS: Record<CompanyType, string> = {
-  "Super Dream": "bg-zinc-100 shadow-[0_0_8px_rgba(255,255,255,0.7)]",
-  Dream: "bg-zinc-400 shadow-[0_0_6px_rgba(161,161,170,0.5)]",
-  Standard: "bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.5)]",
-  Regular: "bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.5)]",
+  "Super Dream": "bg-primary shadow-xs",
+  Dream: "bg-primary shadow-xs",
+  Standard: "bg-emerald-500 shadow-xs",
+  Regular: "bg-amber-500 shadow-xs",
 };
 
 const ACTIVE_STYLES: Record<string, string> = {
-  All: "bg-white text-zinc-950 border-white shadow-md font-semibold",
-  "Super Dream": "bg-zinc-100 text-zinc-950 border-zinc-200 shadow-md font-semibold",
-  Dream: "bg-zinc-300 text-zinc-950 border-zinc-400 shadow-md font-semibold",
-  Standard: "bg-emerald-500 text-white border-emerald-400 shadow-md font-semibold",
-  Regular: "bg-amber-500 text-white border-amber-400 shadow-md font-semibold",
+  All: "bg-[#1e1b18] dark:bg-primary text-white border-transparent shadow-sm font-semibold",
+  "Super Dream":
+    "bg-primary text-white border-transparent shadow-sm font-semibold",
+  Dream: "bg-primary text-white border-transparent shadow-sm font-semibold",
+  Standard: "bg-emerald-600 text-white border-transparent shadow-sm font-semibold",
+  Regular: "bg-amber-600 text-white border-transparent shadow-sm font-semibold",
 };
 
 function Val({ v }: { v: string }) {
@@ -84,10 +87,10 @@ const CompanyCard = memo(function CompanyCard({
           onSelect(company);
         }
       }}
-      className="group relative flex flex-col justify-between rounded-2xl border border-zinc-800/90 bg-[#0c0c0e]/90 p-5 text-left shadow-lg backdrop-blur-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-zinc-500/70 hover:bg-[#121215] hover:shadow-2xl hover:shadow-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
+      className="group relative flex flex-col justify-between rounded-2xl border border-[#c8dcf2] dark:border-border bg-white dark:bg-card p-5 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#88BDF2] dark:hover:border-primary/60 hover:bg-[#f8fbfe] dark:hover:bg-card-sub hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
     >
       {/* Top subtle highlight shimmer on hover */}
-      <div className="absolute inset-x-0 top-0 h-[1px] rounded-t-2xl bg-gradient-to-r from-transparent via-zinc-600/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+      <div className="absolute inset-x-0 top-0 h-[2px] rounded-t-2xl bg-gradient-to-r from-transparent via-[#88BDF2] dark:via-primary to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
       <div className="space-y-4">
         {/* Header: Logo + Tier Badge */}
@@ -96,7 +99,7 @@ const CompanyCard = memo(function CompanyCard({
             name={company.name}
             logoUrl={company.logoUrl}
             websiteUrl={company.websiteUrl}
-            className="h-13 w-13 rounded-xl border border-zinc-800 bg-zinc-950/80 shadow-md"
+            className="h-13 w-13 rounded-xl border border-[#c8dcf2] dark:border-border bg-white dark:bg-card shadow-xs"
           />
           <div className="flex flex-col items-end gap-1.5">
             <span
@@ -109,7 +112,7 @@ const CompanyCard = memo(function CompanyCard({
               {company.companyType}
             </span>
             {company.category && (
-              <span className="max-w-[150px] truncate rounded-md bg-zinc-900 px-2 py-0.5 text-[10px] font-medium text-zinc-400 border border-zinc-800">
+              <span className="max-w-[150px] truncate rounded-md bg-[#e9f3fd] dark:bg-muted px-2 py-0.5 text-[10px] font-medium text-[#384959] dark:text-foreground border border-[#c8dcf2] dark:border-border">
                 {company.category}
               </span>
             )}
@@ -118,22 +121,22 @@ const CompanyCard = memo(function CompanyCard({
 
         {/* Title */}
         <div>
-          <h3 className="font-heading text-lg font-bold leading-snug tracking-tight text-white transition-colors duration-200 group-hover:text-zinc-100">
+          <h3 className="font-heading text-lg font-bold leading-snug tracking-tight text-[#384959] dark:text-foreground transition-colors duration-200 group-hover:text-primary">
             {company.name}
           </h3>
-          <p className="text-xs font-medium text-zinc-400">{company.shortName}</p>
+          <p className="text-xs font-medium text-[#6A89A7] dark:text-muted-foreground">{company.shortName}</p>
         </div>
 
         {/* Key Metrics Capsule */}
-        <div className="space-y-2 rounded-xl border border-zinc-800/80 bg-zinc-950/70 p-3 text-xs text-zinc-300">
+        <div className="space-y-2 rounded-xl border border-[#c8dcf2] dark:border-border bg-[#f1f6fc] dark:bg-card-sub p-3 text-xs text-[#384959] dark:text-foreground">
           <div className="flex items-center gap-2">
-            <MapPin className="h-3.5 w-3.5 shrink-0 text-zinc-400" />
+            <MapPin className="h-3.5 w-3.5 shrink-0 text-[#6A89A7] dark:text-muted-foreground" />
             <span className="truncate">
               <Val v={company.headquarters} />
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <Users className="h-3.5 w-3.5 shrink-0 text-zinc-400" />
+            <Users className="h-3.5 w-3.5 shrink-0 text-[#6A89A7] dark:text-muted-foreground" />
             <span className="truncate">
               <Val v={company.employeeSize} />
             </span>
@@ -141,7 +144,7 @@ const CompanyCard = memo(function CompanyCard({
           <div
             className={cn(
               "flex items-center gap-1.5 font-medium",
-              down ? "text-rose-400" : "text-emerald-400",
+              down ? "text-rose-600 dark:text-rose-400" : "text-emerald-700 dark:text-emerald-400",
             )}
           >
             {down ? (
@@ -157,12 +160,12 @@ const CompanyCard = memo(function CompanyCard({
       </div>
 
       {/* Footer Action */}
-      <div className="mt-4 flex items-center justify-between border-t border-zinc-800/80 pt-3 text-xs font-semibold text-zinc-300 transition-colors group-hover:text-white">
+      <div className="mt-4 flex items-center justify-between border-t border-[#c8dcf2] dark:border-border pt-3 text-xs font-semibold text-[#384959] dark:text-muted-foreground transition-colors group-hover:text-primary">
         <span className="flex items-center gap-1.5">
-          <Briefcase className="h-3.5 w-3.5 text-zinc-400 group-hover:text-zinc-200" />
+          <Briefcase className="h-3.5 w-3.5 text-[#6A89A7] dark:text-muted-foreground group-hover:text-primary" />
           Explore Intelligence Profile
         </span>
-        <ArrowRight className="h-4 w-4 text-zinc-400 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-white" />
+        <ArrowRight className="h-4 w-4 text-[#6A89A7] dark:text-muted-foreground transition-transform duration-200 group-hover:translate-x-1 group-hover:text-primary" />
       </div>
     </div>
   );
@@ -272,34 +275,34 @@ export default function CompanyPickerPage() {
   ).length;
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-white">
+    <div className="min-h-screen bg-[#f1f6fc] dark:bg-background text-[#384959] dark:text-foreground selection:bg-[#88BDF2] dark:selection:bg-primary selection:text-[#384959] dark:selection:text-white">
       {/* 1. Institutional Top Status Bar */}
-      <div className="border-b border-border bg-card-sub py-2">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 text-xs font-medium text-muted-foreground sm:px-6">
+      <div className="border-b border-[#c8dcf2] dark:border-border bg-[#e9f3fd] dark:bg-card-sub py-2">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 text-xs font-medium text-[#6A89A7] dark:text-muted-foreground sm:px-6">
           <div className="flex items-center gap-2.5">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
             </span>
-            <span className="font-semibold text-foreground">{COLLEGE_SHORT}</span>
+            <span className="font-semibold text-[#384959] dark:text-foreground">{COLLEGE_SHORT}</span>
             <span className="hidden sm:inline">·</span>
-            <span className="hidden sm:inline text-muted-foreground">
+            <span className="hidden sm:inline text-[#6A89A7] dark:text-muted-foreground">
               Department of Training & Placement
             </span>
             <span className="hidden md:inline">·</span>
-            <span className="hidden md:inline text-muted-foreground/80">Autonomous Institute</span>
+            <span className="hidden md:inline text-[#6A89A7] dark:text-muted-foreground">Autonomous Institute</span>
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground">
-              <ShieldCheck className="h-3 w-3 text-emerald-500" />
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#c8dcf2] dark:border-border bg-white dark:bg-card px-2.5 py-0.5 text-[11px] font-medium text-[#384959] dark:text-foreground">
+              <ShieldCheck className="h-3 w-3 text-[#6A89A7] dark:text-muted-foreground" />
               Academic Drive 2025–26
             </span>
             <a
               href="https://jssaten.ac.in"
               target="_blank"
               rel="noreferrer"
-              className="hidden items-center gap-1 text-[11px] text-muted-foreground transition-colors hover:text-foreground sm:flex"
+              className="hidden items-center gap-1 text-[11px] text-[#6A89A7] dark:text-muted-foreground transition-colors hover:text-[#384959] dark:hover:text-foreground sm:flex"
             >
               jssaten.ac.in
               <ExternalLink className="h-2.5 w-2.5" />
@@ -309,34 +312,52 @@ export default function CompanyPickerPage() {
       </div>
 
       {/* 2. Executive Navigation Header */}
-      <nav className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-md">
+      <nav className="sticky top-0 z-40 border-b border-[#c8dcf2] dark:border-border bg-white/90 dark:bg-background/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
-          <Link to="/" className="flex items-center gap-3 focus:outline-none group">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-indigo-700 font-heading text-sm font-black text-white shadow-md shadow-primary/20">
+          <Link to="/" className="flex items-center gap-3 transition-opacity hover:opacity-90">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#88BDF2] dark:border-border bg-[#BDDDFC] dark:bg-card font-heading text-sm font-bold text-[#384959] dark:text-foreground shadow-xs">
               PI
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-heading text-lg font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
+                <span className="font-heading text-lg font-bold tracking-tight text-[#384959] dark:text-foreground">
                   {APP_NAME}
                 </span>
-                <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
-                  115 RECRUITERS
+                <span className="rounded-full border border-[#88BDF2] dark:border-primary/40 bg-[#BDDDFC] dark:bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-[#384959] dark:text-primary">
+                  CAMPUS PRO
                 </span>
               </div>
-              <p className="text-[11px] text-muted-foreground">
-                {COLLEGE_SHORT} Placement Directory
-              </p>
+              <p className="text-[11px] text-[#6A89A7] dark:text-muted-foreground">JSSATEN Placement Intelligence Hub</p>
             </div>
           </Link>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <Link
-              to="/"
-              className="hidden rounded-xl border border-border bg-card px-3.5 py-2 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground hover:bg-muted sm:inline-flex items-center gap-1.5"
+            {currentUser ? (
+              <div className="flex items-center gap-2 rounded-xl border border-[#88BDF2] dark:border-border bg-[#e9f3fd] dark:bg-card px-2.5 py-1 text-xs">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                <span className="font-semibold text-[#384959]">{currentUser.name}</span>
+                <button
+                  onClick={handleLogout}
+                  className="ml-1 text-[11px] font-semibold text-rose-500 hover:text-rose-700 transition-colors cursor-pointer"
+                >
+                  Log Out
+                </button>
+              </div>
+            ) : (
+              <Link
+                to="/"
+                className="rounded-xl border border-[#c8dcf2] bg-[#f1f6fc] px-3 py-1.5 text-xs font-semibold text-[#384959] transition-colors hover:border-[#88BDF2] hover:bg-white inline-flex items-center gap-1.5"
+              >
+                ← Landing Page
+              </Link>
+            )}
+            <a
+              href="#directory"
+              className="hidden rounded-xl border border-[#c8dcf2] bg-[#f1f6fc] px-3.5 py-2 text-xs font-semibold text-[#384959] transition-colors hover:border-[#88BDF2] hover:bg-white sm:inline-flex items-center gap-1.5"
             >
-              Home
-            </Link>
+              <Building2 className="h-3.5 w-3.5 text-[#6A89A7]" />
+              Recruiters ({companies.length})
+            </a>
             <Link
               to="/dashboard"
               className="rounded-xl border border-primary/30 bg-primary/10 px-3.5 py-2 text-xs font-semibold text-primary transition-colors hover:bg-primary/20 inline-flex items-center gap-1.5 shadow-2xs"

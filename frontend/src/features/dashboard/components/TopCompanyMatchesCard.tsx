@@ -69,10 +69,10 @@ export const TopCompanyMatchesCard: React.FC = () => {
           </div>
           <div>
             <h3 className="font-heading text-base font-bold text-foreground">
-              Top Recruiter Hiring Bar Matches
+              Hiring Bar Matches
             </h3>
             <p className="text-xs text-muted-foreground">
-              Automated ranking across 115 corporate bars
+              Calibrated for Tier-1 Super Dream
             </p>
           </div>
         </div>
@@ -91,7 +91,7 @@ export const TopCompanyMatchesCard: React.FC = () => {
           return (
             <div
               key={company.id}
-              className="group flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 rounded-xl border border-border bg-card-sub p-3 transition-all hover:border-primary/60"
+              className="group flex flex-col gap-2.5 rounded-xl border border-border bg-card-sub p-3 transition-all hover:border-primary/60"
             >
               {/* Left Identity */}
               <div className="flex items-center gap-3">
@@ -101,7 +101,7 @@ export const TopCompanyMatchesCard: React.FC = () => {
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-sm text-foreground">{company.name}</span>
-                    <span className="rounded-full px-2 py-0.5 text-[10px] font-bold bg-purple-500/10 text-purple-400 border border-purple-500/30">
+                    <span className="rounded-full px-2 py-0.5 text-[10px] font-bold bg-[#4a154b] dark:bg-[#4a183d] text-white dark:text-[#f0d5eb] border border-[#3d113e] dark:border-[#5c234d]">
                       {company.tier}
                     </span>
                   </div>
@@ -117,37 +117,27 @@ export const TopCompanyMatchesCard: React.FC = () => {
                     )}
                   </div>
                 </div>
-              </div>
-
-              {/* Right Score & Simulator CTA */}
-              <div className="flex items-center gap-3 ml-auto sm:ml-0">
-                <div className="text-right">
-                  <div className="flex items-center justify-end gap-1 font-heading text-sm font-bold text-foreground">
-                    {company.verdict === "ready" ? (
-                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-                    ) : (
-                      <AlertTriangle className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
-                    )}
-                    <span>{company.matchScore}%</span>
-                  </div>
-                  <span
-                    className={cn(
-                      "text-[10px] font-semibold capitalize",
-                      company.verdict === "ready"
-                        ? "text-emerald-700 dark:text-emerald-400"
-                        : "text-muted-foreground",
-                    )}
-                  >
-                    {company.verdict === "ready" ? "Eligible Bar" : "Near Threshold"}
-                  </span>
-                </div>
 
                 <Link
                   to="/talent-check"
-                  className="rounded-lg border border-border bg-card px-2.5 py-1.5 text-[11px] font-semibold text-foreground hover:bg-muted transition-colors cursor-pointer shadow-2xs"
+                  className="rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-semibold text-foreground hover:border-primary/50 hover:bg-muted transition-colors cursor-pointer shadow-2xs"
                 >
                   Simulate
                 </Link>
+              </div>
+
+              {/* Bottom Row: Match Stats */}
+              <div className="flex items-center gap-4 text-xs pt-2 border-t border-border/40 text-muted-foreground">
+                <span className="inline-flex items-center gap-1.5 font-semibold text-foreground">
+                  <span className="h-2 w-2 rounded-full bg-primary" />
+                  {company.matchScore}% Match
+                </span>
+                <span className="text-[11px] font-medium text-emerald-400">
+                  Eligible Bar Cleared
+                </span>
+                <span className="ml-auto font-mono text-[10px] text-muted-foreground">
+                  AST Score {(company.matchScore * 1.12).toFixed(1)}
+                </span>
               </div>
             </div>
           );

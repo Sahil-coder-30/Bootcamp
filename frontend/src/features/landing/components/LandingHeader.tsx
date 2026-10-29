@@ -51,11 +51,10 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ currentUser, onUse
     <>
       {/* Main Sticky Navigation Bar (Top institutional bar removed as requested) */}
       <header
-        className={`sticky top-0 z-40 transition-all duration-300 ${
-          isScrolled
+        className={`sticky top-0 z-40 transition-all duration-300 ${isScrolled
             ? "border-b border-zinc-800/90 bg-[#08080a]/95 shadow-[0_4px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl"
             : "border-b border-zinc-800/40 bg-[#08080a]/80 backdrop-blur-md"
-        }`}
+          }`}
       >
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
           {/* Brand Logo */}
@@ -249,13 +248,13 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ currentUser, onUse
               <div className="flex items-center gap-2">
                 <button
                   onClick={toggleTheme}
-                  title={`Switch to ${theme === "dark" ? "Light Theme" : "Dark Theme"}`}
-                  className="p-2 rounded-xl border border-border bg-card text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                  title={`Switch to ${theme === "dark" ? "Light Theme" : "Dark Amber Theme"}`}
+                  className="p-2 rounded-xl border border-border bg-card text-foreground hover:border-primary/50 transition-colors cursor-pointer"
                 >
                   {isDark ? (
-                    <Sun className="h-4 w-4 text-amber-400" />
+                    <Sun className="h-4 w-4 text-primary" />
                   ) : (
-                    <Moon className="h-4 w-4 text-foreground" />
+                    <Moon className="h-4 w-4 text-primary" />
                   )}
                 </button>
 
