@@ -82,9 +82,9 @@ export const SkillChips: React.FC<SkillChipsProps> = ({
       <div className="flex flex-wrap gap-2">
         {skills.map((skill, idx) => {
           const color = CATEGORY_COLORS[skill.category_code] || {
-            bg: "bg-zinc-800/50",
-            text: "text-zinc-300",
-            border: "border-zinc-700",
+            bg: "bg-muted",
+            text: "text-foreground",
+            border: "border-border",
           };
           const isHighlighted = highlightedSkill === skill.skill_name;
           const isHighConf = skill.confidence === "high";
@@ -98,7 +98,7 @@ export const SkillChips: React.FC<SkillChipsProps> = ({
                   className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-medium transition-all cursor-pointer ${
                     color.bg
                   } ${color.text} border ${
-                    isHighConf ? color.border : "border-dashed border-zinc-600/70"
+                    isHighConf ? color.border : "border-dashed border-border"
                   } ${
                     isHighlighted
                       ? "ring-2 ring-orange-400 scale-105 shadow-[0_0_12px_rgba(249,115,22,0.4)]"

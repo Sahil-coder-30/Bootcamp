@@ -196,7 +196,7 @@ export const JobSkillComparator: React.FC<JobSkillComparatorProps> = ({
     }
     return {
       text: "Foundational Gap · Structured Ladder Required",
-      badge: "bg-zinc-800 text-zinc-300 border-zinc-700",
+      badge: "bg-muted text-muted-foreground border-border",
       message: "Recommend completing targeted Bloom Level 5 prerequisite assignments.",
     };
   }, [comparison.score]);

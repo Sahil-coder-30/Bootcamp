@@ -63,7 +63,7 @@ export function CompanyLogo({
   return (
     <div
       className={cn(
-        "relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/90 shadow-sm transition-transform duration-200 group-hover:scale-105",
+        "relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border bg-card dark:border-zinc-800 dark:bg-zinc-900/90 shadow-2xs transition-transform duration-200 group-hover:scale-105",
         className,
       )}
     >
