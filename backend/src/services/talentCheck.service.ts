@@ -9,6 +9,7 @@ import { supabase } from "./supabase.service.js";
 import { callAgent } from "./agent.service.js";
 import { getCompanyBar, getAllBars, getTopicLadder, type CompanyBar } from "./companyBar.service.js";
 import { HttpError } from "../middlewares/errorHandler.js";
+import { profilesService } from "./profiles.service.js";
 
 export interface CandidateProfile {
   id: string;
@@ -73,6 +74,24 @@ export const GOLDEN_PROFILES: Record<string, CandidateProfile> = {
 };
 
 export async function getProfile(profileId: string): Promise<CandidateProfile> {
+  // 0. Profiles saved through Role 3 (Supabase or the in-memory store)
+  try {
+    const p = await profilesService.get(profileId);
+    return {
+      id: p.id,
+      name: p.name,
+      email: p.email,
+      version: p.version,
+      skill_levels: p.skill_levels,
+      skills: p.skills,
+      projects: p.projects,
+      internships: p.internships,
+      certifications: p.certifications,
+    } as CandidateProfile;
+  } catch {
+    // not a saved profile: fall through to the legacy lookups
+  }
+
   // 1. Try Supabase candidate_profiles table
   if (supabase) {
     try {

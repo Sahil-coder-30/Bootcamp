@@ -8,6 +8,7 @@ import { supabase } from "./supabase.service.js";
 import { callAgent } from "./agent.service.js";
 import { getProfile, type CandidateProfile, GOLDEN_PROFILES } from "./talentCheck.service.js";
 import { getTopicsByCategory } from "./topics.service.js";
+import { getJd } from "./jd.service.js";
 import { HttpError } from "../middlewares/errorHandler.js";
 
 export const MATCHING_VERSION = "sm-1.0";
@@ -196,6 +197,14 @@ export const GOLDEN_JDS: Record<string, any> = {
 };
 
 export async function getJdExtraction(jdId: string): Promise<any> {
+  // 0. Role 1 store (Supabase or local file store)
+  try {
+    const { extraction } = await getJd(jdId);
+    return extraction;
+  } catch {
+    // not a Role 1 JD: fall through to the legacy lookups
+  }
+
   // 1. Try DB lookup
   if (supabase) {
     try {
