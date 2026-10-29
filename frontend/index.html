@@ -16,9 +16,6 @@
           document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
           document.documentElement.style.colorScheme = isDark ? "dark" : "light";
         } catch (e) {}
-        document.documentElement.classList.toggle("dark", !light);
-        document.documentElement.classList.toggle("light-theme", light);
-        document.documentElement.style.colorScheme = light ? "light" : "dark";
       })();
     </script>
   </head>
