@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.7
+# syntax=docker/dockerfile:1
 FROM python:3.12-slim
 
 # uv installs the pinned requirements in parallel, much faster than pip.
@@ -8,7 +8,7 @@ WORKDIR /app
 
 # Package index (PyPI by default; override with --build-arg PYPI_INDEX=... for a
 # private index). On some lines PyPI's CDN runs at ~30-100 KB/s while other CDNs
-# run at ~4 MB/s, hence the long timeout and the download cache below.
+# run at ~4 MB/s, hence the long timeout and the retry loop below.
 ARG PYPI_INDEX=https://pypi.org/simple
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -25,12 +25,12 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     UV_COMPILE_BYTECODE=1 \
     UV_INDEX_URL=${PYPI_INDEX}
 
-# Dependencies first, so editing source does not reinstall them. The cache mount
-# keeps downloaded wheels between builds, so a rebuild downloads nothing.
+# Dependencies first, so editing source does not reinstall them. No BuildKit
+# cache mount here, so the image builds with the legacy builder too (skaffold's
+# default); --no-cache keeps uv's download cache out of the layer.
 COPY requirements.txt ./
-RUN --mount=type=cache,target=/root/.cache/uv \
-    for attempt in 1 2 3; do \
-        uv pip install --system -r requirements.txt && break; \
+RUN for attempt in 1 2 3; do \
+        uv pip install --system --no-cache -r requirements.txt && break; \
         echo "uv install failed (attempt $attempt), retrying in 10s"; \
         if [ "$attempt" = 3 ]; then exit 1; fi; \
         sleep 10; \
