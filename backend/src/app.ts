@@ -3,6 +3,7 @@ import cors from "cors";
 import morgan from "morgan";
 import { env } from "./config/env.js";
 import routes from "./routes/index.js";
+import { telegramWebhook } from "./bot/index.js";
 import { authenticate } from "./middlewares/auth.js";
 import { errorHandler, notFound } from "./middlewares/errorHandler.js";
 
@@ -19,6 +20,9 @@ export function createApp() {
   app.get("/readyz", (_req, res) => {
     res.status(200).json({ status: "ready" });
   });
+
+  // Telegram calls this in webhook mode; the secret-token header is checked inside the handler.
+  app.post("/telegram/webhook", telegramWebhook);
 
   app.use("/api", authenticate, routes);
 
