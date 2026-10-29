@@ -37,40 +37,38 @@
   --font-mono: "JetBrains Mono", "Fira Code", monospace;
 }
 
-/* ─── 4-Color Ice Slate Light Theme (#6A89A7, #BDDDFC, #88BDF2, #384959) ───────── */
-:root,
-:root.light-theme,
-[data-theme="light"] {
-  --surface-canvas: #f1f6fc;
-  --surface-chrome: #e9f3fd;
-  --surface-sunken: #e2eefb;
+/* ─── 5-Layer Surface Codespace Light Theme ─────────────────────── */
+:root.light-theme {
+  --surface-canvas: #ffffff;
+  --surface-chrome: #f4f4f6;
+  --surface-sunken: #f1f5f9;
   --surface-overlay: #ffffff;
 
   --bg-canvas: var(--surface-canvas);
-  --bg-surface: var(--surface-overlay);
+  --bg-surface: var(--surface-canvas);
   --bg-sidebar: var(--surface-chrome);
   --bg-overlay: var(--surface-overlay);
   --bg-element: var(--surface-sunken);
-  --bg-active: rgba(136, 189, 242, 0.25);
+  --bg-active: rgba(5, 150, 105, 0.1);
 
-  --border-subtle: #c8dcf2;
-  --border-strong: #6a89a7;
-  --border-glow: rgba(136, 189, 242, 0.4);
+  --border-subtle: #e4e4e7;
+  --border-strong: #8c8c94;
+  --border-glow: rgba(5, 150, 105, 0.2);
 
-  --brand-primary: #384959; /* Deep Slate Charcoal */
-  --brand-hover: #293642;
-  --brand-subtle: rgba(189, 221, 252, 0.4);
+  --brand-primary: #059669;
+  --brand-hover: #047857;
+  --brand-subtle: rgba(5, 150, 105, 0.1);
 
-  --accent-primary: #88bdf2; /* Sky Blue */
-  --accent-hover: #67a9eb;
-  --accent-subtle: rgba(136, 189, 242, 0.2);
+  --accent-primary: #0969da;
+  --accent-hover: #0850b8;
+  --accent-subtle: rgba(9, 105, 218, 0.1);
 
-  --text-primary: #384959;
-  --text-secondary: #4a5e73;
-  --text-muted: #6a89a7;
-  --text-disabled: #9ab4cc;
+  --text-primary: #1a1a1e;
+  --text-secondary: #57606a;
+  --text-muted: #6e7781;
+  --text-disabled: #afb8c1;
 
-  --color-rgb-text: 56, 73, 89;
+  --color-rgb-text: 26, 26, 30;
 }
 
 /* ─── CSS Resets & Box Sizing ────────────────────────────────────── */

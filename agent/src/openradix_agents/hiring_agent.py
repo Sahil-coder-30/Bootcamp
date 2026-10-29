@@ -16,9 +16,8 @@ def run(company: str, provider_names=()) -> dict:
     try:
         data = parsing.extract_json(text)
     except ValueError as exc:  # json.JSONDecodeError is a ValueError
-        raise ValueError(
-            f"{provider} did not return valid JSON ({exc}); " f"raw reply saved to hiring_raw.txt"
-        ) from exc
+        raise ValueError(f"{provider} did not return valid JSON ({exc}); "
+                         f"raw reply saved to hiring_raw.txt") from exc
 
     io_utils.write_json(outdir / "hiring_rounds.json", data)
     print("[hiring] saved hiring_rounds.json")

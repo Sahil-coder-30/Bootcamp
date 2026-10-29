@@ -11,18 +11,18 @@ SCORING_VERSION: Final[str] = "tc-1.0"
 
 # Canonical 12 skill categories in skill_set_id order
 CODES: Final[tuple[str, ...]] = (
-    "COD",  # 1: Coding
-    "DSA",  # 2: Data Structures and Algorithms
-    "APTI",  # 3: Aptitude and Problem Solving
-    "COMM",  # 4: Communication Skills
-    "OOD",  # 5: Object-Oriented Programming and Design
-    "AI",  # 6: AI Native Engineering
-    "SQL",  # 7: SQL and Design
-    "SYSD",  # 8: System Design and Architecture
+    "COD",    # 1: Coding
+    "DSA",    # 2: Data Structures and Algorithms
+    "APTI",   # 3: Aptitude and Problem Solving
+    "COMM",   # 4: Communication Skills
+    "OOD",    # 5: Object-Oriented Programming and Design
+    "AI",     # 6: AI Native Engineering
+    "SQL",    # 7: SQL and Design
+    "SYSD",   # 8: System Design and Architecture
     "CLOUD",  # 9: DevOps and Cloud
-    "SWE",  # 10: Software Engineering
-    "NETW",  # 11: Computer Networking
-    "OS",  # 12: Operating System
+    "SWE",    # 10: Software Engineering
+    "NETW",   # 11: Computer Networking
+    "OS",     # 12: Operating System
 )
 
 CODE_TO_ID: Final[dict[str, int]] = {code: idx + 1 for idx, code in enumerate(CODES)}
@@ -45,16 +45,11 @@ CODE_NAMES: Final[dict[str, str]] = {
 
 # Bloom proficiency mappings (1-10 -> 2-letter code)
 BLOOM_BANDS: Final[dict[int, str]] = {
-    1: "CU",
-    2: "CU",
-    3: "AP",
-    4: "AP",
-    5: "AS",
-    6: "AS",
-    7: "EV",
-    8: "EV",
-    9: "CR",
-    10: "CR",
+    1: "CU", 2: "CU",
+    3: "AP", 4: "AP",
+    5: "AS", 6: "AS",
+    7: "EV", 8: "EV",
+    9: "CR", 10: "CR",
 }
 
 BLOOM_NAMES: Final[dict[str, str]] = {

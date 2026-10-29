@@ -14,6 +14,8 @@ The Express backend proxies ``/api/agent/*`` here (see backend/src/services/agen
     GET  /jobs/{id}              poll a run
     POST /validate               re-run data-quality checks on a saved record
     GET  /companies/{c}/...      read the artifacts a run wrote
+    POST /documents/parse        JD/resume file -> text + sections (Role 1)
+    POST /extract/jd             JD -> ExtractedSkillList (Role 1)
 """
 
 import logging
@@ -31,7 +33,6 @@ from .settings import Settings, get_settings
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("agent.http")
 
-
 def create_app(settings: Settings | None = None) -> FastAPI:
     settings = settings or get_settings()
 
@@ -43,11 +44,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     app = FastAPI(title="OpenRADIX Agents", version="0.5.0", lifespan=lifespan)
     app.add_middleware(
-        CORSMiddleware,
-        allow_origins=settings.cors_origins,
-        allow_methods=["GET", "POST"],
-        allow_headers=["*"],
-    )
+        CORSMiddleware, allow_origins=settings.cors_origins,
+        allow_methods=["GET", "POST"], allow_headers=["*"])
 
     @app.middleware("http")
     async def morgan_style_logger(request: Request, call_next):
@@ -67,16 +65,20 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     try:
         from talent_match.talent_check.router import router as talent_check_router
-
         app.include_router(talent_check_router)
     except ImportError as e:
         logger.warning(f"Could not import talent_check router: {e}")
 
     try:
-        from talent_match.resume.router import router as resume_router
-
-        app.include_router(resume_router)
+        from talent_match.jd.router import router as jd_router
+        app.include_router(jd_router)
     except ImportError as e:
+        logger.warning(f"Could not import jd router: {e}")
+
+    try:
+        from talent_match.resume.router import router as resume_router
+        app.include_router(resume_router)
+    except Exception as e:
         logger.warning(f"Could not import resume router: {e}")
 
     return app
@@ -87,8 +89,6 @@ app = create_app()
 
 def serve(host: str | None = None, port: int | None = None, reload: bool = False) -> None:
     import uvicorn
-
     settings = get_settings()
-    uvicorn.run(
-        "openradix_agents.api.main:app", host=host or settings.host, port=port or settings.port, reload=reload
-    )
+    uvicorn.run("openradix_agents.api.main:app", host=host or settings.host,
+                port=port or settings.port, reload=reload)

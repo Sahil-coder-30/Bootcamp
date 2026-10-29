@@ -229,24 +229,20 @@ export async function rankCompanies(profileId: string, limit = 10): Promise<any[
 
 export async function listTalentChecks(profileId?: string): Promise<any[]> {
   if (!supabase) return [];
-  try {
-    let query = supabase
-      .from("talent_checks")
-      .select("id, profile_id, company_id, readiness_score, verdict, scoring_version, bar_source, created_at")
-      .order("created_at", { ascending: false });
+  let query = supabase
+    .from("talent_checks")
+    .select("id, profile_id, company_id, readiness_score, verdict, scoring_version, bar_source, created_at")
+    .order("created_at", { ascending: false });
 
-    if (profileId) {
-      query = query.eq("profile_id", profileId);
-    }
-
-    const { data, error } = await query.limit(20);
-    if (error) {
-      console.warn("[talentCheck.service] Could not query talent_checks:", error.message);
-      return [];
-    }
-    return data || [];
-  } catch (err: any) {
-    console.warn("[talentCheck.service] Exception in listTalentChecks:", err?.message);
-    return [];
+  if (profileId) {
+    query = query.eq("profile_id", profileId);
   }
+
+  const { data, error } = await query.limit(20);
+  // Gracefully handle missing table (e.g. fresh DB without talent_checks migration yet)
+  if (error) {
+    if (error.message?.includes("talent_checks") || (error as any).code === "42P01") return [];
+    throw error;
+  }
+  return data || [];
 }

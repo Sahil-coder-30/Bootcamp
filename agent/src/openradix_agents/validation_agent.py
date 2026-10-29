@@ -59,17 +59,15 @@ def check_record(record: dict) -> tuple[int, list[dict]]:
             message = rules.REGISTRY[case["rule_id"]](record.get(col, ""), meta)
             target = col
         if message:
-            failures.append(
-                {
-                    "target": target,
-                    "scope": case.get("applicable_to", ""),
-                    "case_id": case["id"],
-                    "priority": case.get("priority", ""),
-                    "category": case.get("test_case_category", ""),
-                    "type": case.get("test_case_type", ""),
-                    "message": message,
-                }
-            )
+            failures.append({
+                "target": target,
+                "scope": case.get("applicable_to", ""),
+                "case_id": case["id"],
+                "priority": case.get("priority", ""),
+                "category": case.get("test_case_category", ""),
+                "type": case.get("test_case_type", ""),
+                "message": message,
+            })
     return len(items), failures
 
 
@@ -130,13 +128,10 @@ def run(company: str) -> dict:
     checks, failures = check_record(record)
 
     report = render_report(company, record_path, checks, failures)
-    io_utils.write_json(
-        outdir / "data_quality_report.json", {"company": company, "checks": checks, "failures": failures}
-    )
+    io_utils.write_json(outdir / "data_quality_report.json",
+                        {"company": company, "checks": checks, "failures": failures})
     (outdir / "data_quality_report.md").write_text(report, encoding="utf-8")
 
-    print(
-        f"[test] {checks - len(failures)}/{checks} checks passed; "
-        f"{len(failures)} failed -> {outdir / 'data_quality_report.md'}"
-    )
+    print(f"[test] {checks - len(failures)}/{checks} checks passed; "
+          f"{len(failures)} failed -> {outdir / 'data_quality_report.md'}")
     return {"checks": checks, "failures": failures}

@@ -20,13 +20,13 @@ load_dotenv(ROOT / ".env", override=True)
 PROMPTS_DIR = ROOT / "prompts"
 OUTPUTS_DIR = ROOT / "outputs"
 
-NVIDIA_MODEL = os.getenv("NVIDIA_MODEL") or "nvidia/nemotron-3.5-super-vl-120b-a12b"
+NVIDIA_MODEL = (os.getenv("NVIDIA_MODEL") or "nvidia/nemotron-3.5-super-vl-120b-a12b")
 # A SECOND NVIDIA model. One NVIDIA API key serves many models, so
 # this is the easy way to add a third "voice" to the research fan-out without a
 # third vendor account — handy when, say, your Gemini free-tier quota is dead.
-NVIDIA_MODEL_2 = os.getenv("NVIDIA_MODEL_2") or "nvidia/nemotron-3.5-lightning-30b-a3b"
-GROQ_MODEL = os.getenv("GROQ_MODEL") or "llama-3.3-70b-versatile"
-GEMINI_MODEL = os.getenv("GEMINI_MODEL") or "gemini-2.0-flash"
+NVIDIA_MODEL_2 = (os.getenv("NVIDIA_MODEL_2") or "nvidia/nemotron-3.5-lightning-30b-a3b")
+GROQ_MODEL = (os.getenv("GROQ_MODEL") or "llama-3.3-70b-versatile")
+GEMINI_MODEL = (os.getenv("GEMINI_MODEL") or "gemini-2.0-flash")
 LLM_TEMPERATURE = float(os.getenv("LLM_TEMPERATURE", "0.2"))
 # Hard ceiling per LLM call (seconds) and SDK-level retries. Without a timeout a
 # hung provider blocks the whole pipeline forever.
@@ -37,14 +37,15 @@ LLM_MAX_RETRIES = int(os.getenv("LLM_MAX_RETRIES", "2"))
 # swap a dead provider — e.g. drop "gemini" for "nvidia-alt" (a 2nd
 # NVIDIA model) by setting:  RESEARCH_PROVIDERS=nvidia,groq,nvidia-alt
 RESEARCH_PROVIDERS = tuple(
-    p.strip() for p in (os.getenv("RESEARCH_PROVIDERS") or "nvidia,groq,gemini").split(",") if p.strip()
+    p.strip()
+    for p in (os.getenv("RESEARCH_PROVIDERS") or "nvidia,groq,gemini").split(",")
+    if p.strip()
 )
 
 # The single-LLM steps (consolidation, skills, hiring) try this provider first,
 # then fall back through RESEARCH_PROVIDERS. Defaults to the first research one.
 PRIMARY_PROVIDER = os.getenv("PRIMARY_PROVIDER", "").strip() or (
-    RESEARCH_PROVIDERS[0] if RESEARCH_PROVIDERS else "nvidia"
-)
+    RESEARCH_PROVIDERS[0] if RESEARCH_PROVIDERS else "nvidia")
 
 
 def get_env(key: str, required: bool = True, default: str | None = None) -> str | None:

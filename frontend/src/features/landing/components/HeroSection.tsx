@@ -63,48 +63,50 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full sm:w-auto">
             {isLoggedIn ? (
               <>
-                <Link to="/companies" className="w-full sm:w-auto">
+                <Link to="/dashboard" className="w-full sm:w-auto">
                   <Button
                     size="lg"
-                    className="w-full sm:w-auto h-11 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-7 text-xs font-bold text-zinc-950 shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:brightness-110 transition-all cursor-pointer"
+                    className="w-full sm:w-auto h-11 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 px-7 text-xs font-bold text-white shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:brightness-110 transition-all cursor-pointer"
                   >
-                    Explore 115 Corporate Profiles
+                    Open Candidate Dashboard
                     <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                   </Button>
                 </Link>
 
-                <Link to="/talent-check" className="w-full sm:w-auto">
+                <Link to="/companies" className="w-full sm:w-auto">
                   <Button
                     variant="outline"
                     size="lg"
-                    className="w-full sm:w-auto h-11 rounded-xl border-zinc-700 bg-zinc-900/80 px-6 text-xs font-semibold text-zinc-200 hover:border-orange-500/50 hover:bg-zinc-800 hover:text-white"
+                    className="w-full sm:w-auto h-11 rounded-xl border-border bg-card px-6 text-xs font-semibold text-foreground hover:border-primary/50 hover:bg-muted"
                   >
-                    <Sparkles className="mr-1.5 h-3.5 w-3.5 text-orange-400" />
-                    Open Talent Check Simulator
+                    <Sparkles className="mr-1.5 h-3.5 w-3.5 text-primary" />
+                    Explore 115 Companies
                   </Button>
                 </Link>
               </>
             ) : (
               <>
-                <Button
-                  size="lg"
-                  onClick={onOpenRegister}
-                  className="w-full sm:w-auto h-11 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-7 text-xs font-bold text-zinc-950 shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:brightness-110 transition-all cursor-pointer"
-                >
-                  <User className="mr-2 h-4 w-4 text-zinc-950" />
-                  Create Candidate Profile
-                  <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
-                </Button>
+                <Link to="/login" search={{ redirect: "/dashboard" }} className="w-full sm:w-auto">
+                  <Button
+                    size="lg"
+                    className="w-full sm:w-auto h-11 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 px-7 text-xs font-bold text-white shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:brightness-110 transition-all cursor-pointer"
+                  >
+                    <User className="mr-2 h-4 w-4 text-white" />
+                    Sign In with Google & Access Dashboard
+                    <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                  </Button>
+                </Link>
 
-                <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={onOpenLogin}
-                  className="w-full sm:w-auto h-11 rounded-xl border-zinc-700 bg-zinc-900/80 px-6 text-xs font-semibold text-zinc-200 hover:border-orange-500/50 hover:bg-zinc-800 hover:text-white cursor-pointer"
-                >
-                  <Sparkles className="mr-1.5 h-3.5 w-3.5 text-amber-400" />
-                  Sign In & Test Demo Profile
-                </Button>
+                <Link to="/companies" className="w-full sm:w-auto">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="w-full sm:w-auto h-11 rounded-xl border-border bg-card px-6 text-xs font-semibold text-foreground hover:border-primary/50 hover:bg-muted cursor-pointer"
+                  >
+                    <Sparkles className="mr-1.5 h-3.5 w-3.5 text-primary" />
+                    Browse 115 Companies
+                  </Button>
+                </Link>
               </>
             )}
           </div>

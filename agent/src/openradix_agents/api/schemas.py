@@ -36,11 +36,9 @@ def _check_providers(v: list[str] | None) -> list[str] | None:
 class RunRequest(BaseModel):
     company: str = Field(..., min_length=1, max_length=100, examples=["Blinkit"])
     providers: list[str] | None = Field(
-        None, min_length=1, description="Research fan-out. Default: RESEARCH_PROVIDERS from .env."
-    )
+        None, min_length=1, description="Research fan-out. Default: RESEARCH_PROVIDERS from .env.")
     steps: list[Step] | None = Field(
-        None, min_length=1, description="Steps to run. Default: the whole pipeline."
-    )
+        None, min_length=1, description="Steps to run. Default: the whole pipeline.")
 
     _company = field_validator("company")(_clean_company)
     _providers = field_validator("providers")(_check_providers)
@@ -62,8 +60,8 @@ class JobStatus(str, Enum):
     queued = "queued"
     running = "running"
     succeeded = "succeeded"
-    partial = "partial"  # finished, but at least one step failed
-    failed = "failed"  # crashed before any step could finish
+    partial = "partial"      # finished, but at least one step failed
+    failed = "failed"        # crashed before any step could finish
 
 
 class StepState(BaseModel):

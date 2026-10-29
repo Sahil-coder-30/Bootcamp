@@ -621,7 +621,7 @@ describe("Talent Check UI Components", () => {
     const store = makeStore();
     render(<TalentCheckPage />, { wrapper: withStore(store) });
 
-    expect(screen.getByText("Talent Check")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Talent Check" })).toBeInTheDocument();
 
     // Wait for the talent check result to load (what-if preview calculates 68 from gap rows)
     await waitFor(() => expect(screen.getByText("68")).toBeInTheDocument());

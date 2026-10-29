@@ -93,13 +93,14 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({ onOpenRegister }) => {
               </div>
 
               {idx === 0 ? (
-                <div className="mt-6 pt-4 border-t border-zinc-800">
-                  <button
-                    onClick={onOpenRegister}
-                    className="inline-flex items-center text-xs font-bold text-orange-400 hover:text-orange-300 cursor-pointer"
+                <div className="mt-6 pt-4 border-t border-border">
+                  <Link
+                    to="/login"
+                    search={{ redirect: "/dashboard" }}
+                    className="inline-flex items-center text-xs font-bold text-primary hover:underline"
                   >
-                    Build Candidate Profile &rarr;
-                  </button>
+                    Build Profile & Open Dashboard &rarr;
+                  </Link>
                 </div>
               ) : idx === 1 ? (
                 <div className="mt-6 pt-4 border-t border-zinc-800">

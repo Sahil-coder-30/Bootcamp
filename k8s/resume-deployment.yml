@@ -1,0 +1,108 @@
+# Resume parsing service (../resume). Offline: no LLM keys. Files go to S3 when
+# resume-secret has S3_BUCKET, otherwise to the resume-data volume; metadata goes to
+# Postgres when the database secret has DATABASE_URL, otherwise SQLite on the volume.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: resume-data
+  labels:
+    app: resume
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resume-deployment
+  labels:
+    app: resume
+spec:
+  replicas: 1
+  # RWO volume: stop the old pod before starting the new one
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: resume
+  template:
+    metadata:
+      labels:
+        app: resume
+    spec:
+      securityContext:
+        fsGroup: 1000
+      containers:
+      - name: resume-container
+        image: resume-service:latest
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "384Mi"
+          limits:
+            cpu: "1000m"
+            memory: "1Gi"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8100
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8100
+          initialDelaySeconds: 15
+          timeoutSeconds: 5
+        env:
+        - name: PORT
+          value: "8100"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: DATABASE_URL
+              optional: true
+        - name: S3_BUCKET
+          valueFrom:
+            secretKeyRef:
+              name: resume-secret
+              key: S3_BUCKET
+              optional: true
+        - name: AWS_REGION
+          valueFrom:
+            secretKeyRef:
+              name: resume-secret
+              key: AWS_REGION
+              optional: true
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: resume-secret
+              key: AWS_ACCESS_KEY_ID
+              optional: true
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: resume-secret
+              key: AWS_SECRET_ACCESS_KEY
+              optional: true
+        - name: RESUME_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: resume-secret
+              key: RESUME_API_KEY
+              optional: true
+        ports:
+        - name: http
+          containerPort: 8100
+        volumeMounts:
+        - name: data
+          mountPath: /app/data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: resume-data

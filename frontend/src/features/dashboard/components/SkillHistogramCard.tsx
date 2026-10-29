@@ -125,29 +125,29 @@ export const RADIX_12_SKILLS: SkillItem[] = [
 
 const BLOOM_COLORS: Record<string, { bg: string; text: string; border: string }> = {
   CU: {
-    bg: "bg-[#eae2d5] dark:bg-[#28211b]",
-    text: "text-[#5c4a38] dark:text-[#d9a873]",
-    border: "border-[#dfd5c5] dark:border-[#382f27]",
+    bg: "bg-slate-500/10",
+    text: "text-slate-400",
+    border: "border-slate-500/30",
   },
   AP: {
-    bg: "bg-[#eae2d5] dark:bg-[#28211b]",
-    text: "text-[#5c4a38] dark:text-[#d9a873]",
-    border: "border-[#dfd5c5] dark:border-[#382f27]",
+    bg: "bg-emerald-500/10",
+    text: "text-emerald-400",
+    border: "border-emerald-500/30",
   },
   AS: {
-    bg: "bg-[#eae2d5] dark:bg-[#28211b]",
-    text: "text-[#5c4a38] dark:text-[#d9a873]",
-    border: "border-[#dfd5c5] dark:border-[#382f27]",
+    bg: "bg-amber-500/10",
+    text: "text-amber-400",
+    border: "border-amber-500/30",
   },
   EV: {
-    bg: "bg-[#eae2d5] dark:bg-[#28211b]",
-    text: "text-[#5c4a38] dark:text-[#d9a873]",
-    border: "border-[#dfd5c5] dark:border-[#382f27]",
+    bg: "bg-rose-500/10",
+    text: "text-rose-400",
+    border: "border-rose-500/30",
   },
   CR: {
-    bg: "bg-[#eae2d5] dark:bg-[#28211b]",
-    text: "text-[#5c4a38] dark:text-[#d9a873]",
-    border: "border-[#dfd5c5] dark:border-[#382f27]",
+    bg: "bg-purple-500/10",
+    text: "text-purple-400",
+    border: "border-purple-500/30",
   },
 };
 
@@ -195,7 +195,7 @@ export const SkillHistogramCard: React.FC<SkillHistogramCardProps> = ({
               className={cn(
                 "rounded-full px-3 py-1 font-medium transition-all cursor-pointer",
                 filterCategory === cat
-                  ? "bg-[#1e1b18] dark:bg-primary text-white font-bold shadow-xs"
+                  ? "bg-primary text-primary-foreground font-bold shadow-xs"
                   : "text-muted-foreground hover:text-foreground",
               )}
             >

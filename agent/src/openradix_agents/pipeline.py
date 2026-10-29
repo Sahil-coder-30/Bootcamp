@@ -78,8 +78,7 @@ def run_pipeline(
         per_provider = {k: v for k, v in per_provider.items() if v}
         if not per_provider:
             raise PipelineError(
-                f"no research rows to consolidate for {company!r} - run the research step first"
-            )
+                f"no research rows to consolidate for {company!r} - run the research step first")
         record = consolidation_agent.run_consolidation(company, per_provider, provider_names)
         return {"fields": len(record)}
 
@@ -95,16 +94,12 @@ def run_pipeline(
     def test():
         report = validation_agent.run(company)
         if report.get("missing_record"):
-            raise PipelineError(f"no golden_record.json for {company!r} - run consolidation first")
+            raise PipelineError(
+                f"no golden_record.json for {company!r} - run consolidation first")
         return {"checks": report["checks"], "failed": len(report["failures"])}
 
-    runners = {
-        "research": research,
-        "consolidation": consolidation,
-        "skills": skills,
-        "hiring": hiring,
-        "test": test,
-    }
+    runners = {"research": research, "consolidation": consolidation,
+               "skills": skills, "hiring": hiring, "test": test}
 
     for step in selected:
         if step == "consolidation" and results.get("research", {}).get("status") == "failed":
@@ -120,18 +115,12 @@ def run_pipeline(
         started = time.monotonic()
         try:
             result = runners[step]()
-            results[step] = {
-                "status": "ok",
-                "seconds": round(time.monotonic() - started, 2),
-                "result": result,
-            }
+            results[step] = {"status": "ok", "seconds": round(time.monotonic() - started, 2),
+                             "result": result}
         except Exception as exc:  # one failing step must not hide the others
             print(f"[{step}] FAILED: {type(exc).__name__}: {exc}")
-            results[step] = {
-                "status": "failed",
-                "seconds": round(time.monotonic() - started, 2),
-                "error": f"{type(exc).__name__}: {exc}",
-            }
+            results[step] = {"status": "failed", "seconds": round(time.monotonic() - started, 2),
+                             "error": f"{type(exc).__name__}: {exc}"}
             if not isinstance(exc, PipelineError):
                 results[step]["trace"] = traceback.format_exc(limit=5)
         notify(step, results[step]["status"], results[step])

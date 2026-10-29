@@ -134,9 +134,9 @@ export const CandidateDashboard: React.FC = () => {
         {/* Dashboard Main Content Body */}
         <main className="flex-1 px-4 sm:px-8 py-6 space-y-6 overflow-y-auto">
           {/* Greeting Banner */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl border border-border bg-[#f8f5ee] dark:bg-[#181512] p-5 sm:p-6 shadow-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl border border-border bg-card-sub p-5 sm:p-6 shadow-xs">
             <div>
-              <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-xs font-semibold text-primary uppercase tracking-wider">
                 <Sparkles className="h-3.5 w-3.5 text-primary" />
                 <span>Deterministic Placement Intelligence Hub</span>
               </div>
@@ -159,7 +159,7 @@ export const CandidateDashboard: React.FC = () => {
                     cx="18"
                     cy="18"
                     r="15"
-                    className="stroke-[#dfd6c6] dark:stroke-[#28211b]"
+                    className="stroke-muted"
                     strokeWidth="3.2"
                     fill="none"
                   />

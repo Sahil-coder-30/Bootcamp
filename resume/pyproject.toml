@@ -1,0 +1,51 @@
+# Resume parsing microservice (Role 2). Install editable for development:
+#   uv pip install -r requirements-dev.txt -e .
+# Runtime dependencies stay pinned in requirements.txt.
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "resume-service"
+version = "1.0.0"
+description = "RADIX Talent Match - offline resume parsing service (no LLM)"
+requires-python = ">=3.11,<3.14"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+resume_service = ["data/*.json"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["F", "E", "W", "B", "I", "UP"]
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.Header", "fastapi.File", "fastapi.Form"]
+
+[tool.mypy]
+python_version = "3.12"
+mypy_path = "src"
+packages = ["resume_service"]
+ignore_missing_imports = true
+warn_unused_ignores = false
+check_untyped_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra"
+
+[tool.coverage.run]
+source = ["resume_service"]
+
+[tool.coverage.report]
+fail_under = 85
+show_missing = true
+skip_covered = true

@@ -14,23 +14,23 @@ import {
   createRouter,
 } from "@tanstack/react-router";
 
+import authReducer from "@/features/auth/slice/auth.slice";
 import companiesReducer from "@/features/companies/slice/companies.slice";
 import intelligenceReducer from "@/features/intelligence/slice/intelligence.slice";
 import profileReducer from "@/features/profile/slice/profile.slice";
 import skillsReducer from "@/features/skills/slice/skills.slice";
 import talentCheckReducer from "@/features/talentCheck/slice/talentCheck.slice";
-import resumeReducer from "@/features/resume/slice/resume.slice";
 import type { CompanyProfile, CompanySummary } from "@/lib/companyData";
 
 export const makeStore = () =>
   configureStore({
     reducer: {
+      auth: authReducer,
       companies: companiesReducer,
       intelligence: intelligenceReducer,
       profile: profileReducer,
       skills: skillsReducer,
       talentCheck: talentCheckReducer,
-      resume: resumeReducer,
     },
   });
 
@@ -44,11 +44,16 @@ export function withStore(store: TestStore) {
 
 const APP_PATHS = [
   "/",
+  "/companies",
   "/company/intelligence",
   "/company/skills",
+  "/dashboard",
+  "/login",
   "/profile",
   "/profile/new",
   "/profile/$profileId",
+  "/resume",
+  "/talent-check",
 ];
 
 /** Renders `Page` at `path`; every other app path renders a "at <path>" marker. */

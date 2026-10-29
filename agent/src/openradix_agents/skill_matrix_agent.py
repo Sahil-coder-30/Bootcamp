@@ -17,9 +17,8 @@ def run(company: str, provider_names=()) -> dict:
     rows = parsing.parse_markdown_table(text)
     row = rows[0] if rows else {}
     if not row:
-        raise ValueError(
-            f"{provider} returned no parsable skill table " f"(raw reply saved to skill_matrix_raw.txt)"
-        )
+        raise ValueError(f"{provider} returned no parsable skill table "
+                         f"(raw reply saved to skill_matrix_raw.txt)")
 
     io_utils.write_json(outdir / "skill_matrix.json", row)
     if row:

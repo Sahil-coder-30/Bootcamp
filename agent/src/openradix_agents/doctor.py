@@ -51,11 +51,8 @@ def check_provider(name: str) -> dict:
     """Return a status dict for one provider after a live ping."""
     if name not in KEY_FOR:
         return {
-            "provider": name,
-            "key_name": "?",
-            "model": "?",
-            "preview": "(unknown provider)",
-            "status": "FAIL",
+            "provider": name, "key_name": "?", "model": "?",
+            "preview": "(unknown provider)", "status": "FAIL",
             "detail": f"unknown provider '{name}' - valid: {', '.join(KEY_FOR)}",
         }
     key_name = KEY_FOR[name]
@@ -101,15 +98,14 @@ def run(provider_names: tuple = config.RESEARCH_PROVIDERS) -> int:
     for r in results:
         if r["status"] != "OK":
             any_bad = True
-        print(f"{_TAG[r['status']]} {r['provider']:<{width}}  " f"{r['key_name']} = {r['preview']}")
+        print(f"{_TAG[r['status']]} {r['provider']:<{width}}  "
+              f"{r['key_name']} = {r['preview']}")
         print(f"       model: {r['model']}")
         print(f"       {r['detail']}\n")
 
     if any_bad:
-        print(
-            "One or more providers are NOT working. Fix the key(s) above in .env "
-            "(the file is the single source of truth), then run doctor again."
-        )
+        print("One or more providers are NOT working. Fix the key(s) above in .env "
+              "(the file is the single source of truth), then run doctor again.")
     else:
         print("All providers responded. You're ready to run the pipeline.")
     return 1 if any_bad else 0

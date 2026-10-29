@@ -7,7 +7,8 @@ from ..deps import require_api_key
 from ..schemas import ArtifactList
 from ..services import artifacts
 
-router = APIRouter(prefix="/companies/{company}", tags=["artifacts"], dependencies=[Depends(require_api_key)])
+router = APIRouter(prefix="/companies/{company}", tags=["artifacts"],
+                   dependencies=[Depends(require_api_key)])
 
 
 def _not_found(company: str, what: str) -> HTTPException:

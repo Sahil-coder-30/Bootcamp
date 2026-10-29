@@ -31,23 +31,24 @@ export const LandingFooter: React.FC<LandingFooterProps> = ({ onOpenRegister }) 
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5">
-            <Button
-              size="lg"
-              onClick={onOpenRegister}
-              className="w-full sm:w-auto h-11 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-6 text-xs font-bold text-zinc-950 shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:brightness-110 transition-all cursor-pointer"
-            >
-              <User className="mr-2 h-4 w-4 text-zinc-950" />
-              Create Free Candidate Profile
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+            <Link to="/login" search={{ redirect: "/dashboard" }} className="w-full sm:w-auto">
+              <Button
+                size="lg"
+                className="w-full sm:w-auto h-11 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 px-6 text-xs font-bold text-white shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:brightness-110 transition-all cursor-pointer"
+              >
+                <User className="mr-2 h-4 w-4 text-white" />
+                Sign In & Access Candidate Dashboard
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
 
             <Link to="/companies" className="w-full sm:w-auto">
               <Button
                 variant="outline"
                 size="lg"
-                className="w-full sm:w-auto h-11 rounded-xl border-zinc-700 bg-zinc-900/80 px-6 text-xs font-semibold text-zinc-200 hover:border-orange-500/50 hover:bg-zinc-800 hover:text-white"
+                className="w-full sm:w-auto h-11 rounded-xl border-border bg-card px-6 text-xs font-semibold text-foreground hover:bg-muted"
               >
-                <Building2 className="mr-2 h-4 w-4 text-orange-400" />
+                <Building2 className="mr-2 h-4 w-4 text-primary" />
                 Browse 115 Corporate Profiles
               </Button>
             </Link>

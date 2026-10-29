@@ -50,8 +50,22 @@ spec:
             secretKeyRef:
               name: database
               key: SUPABASE_SERVICE_ROLE_KEY
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: auth-secret
+              key: JWT_SECRET
+              optional: true
         - name: AGENT_URL
           value: "http://agent-service"
+        - name: RESUME_URL
+          value: "http://resume-service"
+        - name: RESUME_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: resume-secret
+              key: RESUME_API_KEY
+              optional: true
         - name: CORS_ORIGINS
           value: "http://localhost:5173,http://localhost:3000"
         ports:

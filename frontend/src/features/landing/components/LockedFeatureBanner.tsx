@@ -11,6 +11,7 @@ import {
   UserCheck,
   CheckCircle2,
   Layers,
+  LayoutDashboard,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { CandidateUser } from "./AuthModal";
@@ -52,18 +53,18 @@ export const LockedFeatureBanner: React.FC<LockedFeatureBannerProps> = ({
               </div>
 
               <div className="flex items-center gap-2">
-                <Link to="/talent-check">
-                  <Button className="h-9 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 text-zinc-950 text-xs font-bold hover:brightness-110 shadow-sm cursor-pointer">
-                    <UserCheck className="mr-1.5 h-3.5 w-3.5" />
-                    Talent Check
+                <Link to="/dashboard">
+                  <Button className="h-9 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 text-white text-xs font-bold hover:brightness-110 shadow-sm cursor-pointer">
+                    <LayoutDashboard className="mr-1.5 h-3.5 w-3.5" />
+                    Open Dashboard
                   </Button>
                 </Link>
                 <Link to="/companies">
                   <Button
                     variant="outline"
-                    className="h-9 rounded-xl border-zinc-700 bg-zinc-900 text-xs font-semibold text-zinc-200 hover:border-orange-500/50 hover:bg-zinc-800 hover:text-white"
+                    className="h-9 rounded-xl border-border bg-card text-xs font-semibold text-foreground hover:bg-muted"
                   >
-                    <Building2 className="mr-1.5 h-3.5 w-3.5 text-orange-400" />
+                    <Building2 className="mr-1.5 h-3.5 w-3.5 text-primary" />
                     All 115 Companies
                   </Button>
                 </Link>
@@ -156,14 +157,13 @@ export const LockedFeatureBanner: React.FC<LockedFeatureBannerProps> = ({
                 </div>
 
                 <div className="pt-2">
-                  <Button
-                    onClick={onOpenAuth}
-                    className="h-10 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 text-zinc-950 font-bold text-xs shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:brightness-110 transition-all cursor-pointer"
-                  >
-                    <Unlock className="mr-2 h-4 w-4 text-zinc-950" />
-                    Sign In or Select Demo Profile to Unlock
-                    <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
-                  </Button>
+                  <Link to="/login" search={{ redirect: "/dashboard" }}>
+                    <Button className="h-10 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 text-white font-bold text-xs shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:brightness-110 transition-all cursor-pointer">
+                      <Unlock className="mr-2 h-4 w-4 text-white" />
+                      Sign In with Google or Demo Candidate to Access
+                      <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                    </Button>
+                  </Link>
                 </div>
               </div>
 

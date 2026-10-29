@@ -43,7 +43,8 @@ class JobManager:
         self._ttl = ttl_seconds
 
     # ------------------------------------------------------------------ public
-    def submit(self, company: str, providers: tuple[str, ...], steps: tuple[str, ...] | None) -> Job:
+    def submit(self, company: str, providers: tuple[str, ...],
+               steps: tuple[str, ...] | None) -> Job:
         selected = [s for s in STEPS if steps is None or s in steps]
         with self._lock:
             self._evict_expired()
@@ -51,13 +52,8 @@ class JobManager:
             for job in self._jobs.values():
                 if job.status in _ACTIVE and job.company.lower() == company.lower():
                     raise CompanyBusyError(job)
-            job = Job(
-                id=uuid.uuid4().hex,
-                company=company,
-                providers=list(providers),
-                steps={s: StepState() for s in selected},
-                created_at=_now(),
-            )
+            job = Job(id=uuid.uuid4().hex, company=company, providers=list(providers),
+                      steps={s: StepState() for s in selected}, created_at=_now())
             self._jobs[job.id] = job
         self._pool.submit(self._execute, job.id, company, providers, tuple(selected))
         return self.get(job.id)
@@ -70,7 +66,8 @@ class JobManager:
     def list(self, company: str | None = None, limit: int = 50) -> list[Job]:
         with self._lock:
             self._evict_expired()
-            jobs = [j for j in self._jobs.values() if company is None or j.company.lower() == company.lower()]
+            jobs = [j for j in self._jobs.values()
+                    if company is None or j.company.lower() == company.lower()]
             jobs.sort(key=lambda j: j.created_at, reverse=True)
             return [j.model_copy(deep=True) for j in jobs[:limit]]
 
@@ -95,30 +92,20 @@ class JobManager:
         with self._lock:
             job = self._jobs[job_id]
             job.steps[step] = StepState(
-                status=status,
-                seconds=detail.get("seconds"),
-                result=detail.get("result"),
-                error=detail.get("error"),
-            )
+                status=status, seconds=detail.get("seconds"),
+                result=detail.get("result"), error=detail.get("error"))
             job.current_step = step if status == "running" else None
 
-    def _execute(self, job_id: str, company: str, providers: tuple[str, ...], steps: tuple[str, ...]) -> None:
+    def _execute(self, job_id: str, company: str, providers: tuple[str, ...],
+                 steps: tuple[str, ...]) -> None:
         self._update(job_id, status=JobStatus.running, started_at=_now())
         try:
             summary = run_pipeline(
-                company,
-                providers,
-                steps,
-                on_step=lambda step, status, detail: self._on_step(job_id, step, status, detail),
-            )
+                company, providers, steps,
+                on_step=lambda step, status, detail: self._on_step(job_id, step, status, detail))
         except Exception as exc:  # noqa: BLE001 - surface anything to the client
-            self._update(
-                job_id,
-                status=JobStatus.failed,
-                current_step=None,
-                error=f"{type(exc).__name__}: {exc}",
-                finished_at=_now(),
-            )
+            self._update(job_id, status=JobStatus.failed, current_step=None,
+                         error=f"{type(exc).__name__}: {exc}", finished_at=_now())
             return
         status = JobStatus.succeeded if summary["ok"] else JobStatus.partial
         if not any(s["status"] == "ok" for s in summary["steps"].values()):
@@ -127,7 +114,6 @@ class JobManager:
 
     def _evict_expired(self) -> None:
         cutoff = _now().timestamp() - self._ttl
-        for job_id in [
-            j.id for j in self._jobs.values() if j.finished_at and j.finished_at.timestamp() < cutoff
-        ]:
+        for job_id in [j.id for j in self._jobs.values()
+                       if j.finished_at and j.finished_at.timestamp() < cutoff]:
             del self._jobs[job_id]
