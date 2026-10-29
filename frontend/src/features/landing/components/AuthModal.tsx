@@ -129,15 +129,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       />
 
       {/* Modal Card */}
-      <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-zinc-800 bg-[#0c0c10] shadow-[0_0_50px_rgba(249,115,22,0.15)] text-zinc-100 z-10 animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-border bg-card shadow-2xl text-foreground z-10 animate-in fade-in zoom-in-95 duration-200">
         {/* Glow Header Accent */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-orange-600 via-amber-500 to-orange-400" />
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-600 via-amber-500 to-primary" />
 
         {/* Close Button */}
         <button
           onClick={onClose}
           aria-label="Close modal"
-          className="absolute top-4 right-4 rounded-xl border border-zinc-800 bg-zinc-900/80 p-1.5 text-zinc-400 transition-colors hover:border-zinc-700 hover:text-white"
+          className="absolute top-4 right-4 rounded-xl border border-border bg-card-sub p-1.5 text-muted-foreground transition-colors hover:border-border-strong hover:text-foreground"
         >
           <X className="h-4 w-4" />
         </button>
@@ -145,19 +145,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         {/* Header */}
         <div className="p-6 pb-0">
           <div className="flex items-center gap-2">
-            <span className="flex h-2 w-2 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.8)]" />
-            <span className="text-[11px] font-semibold tracking-wider uppercase text-orange-400">
+            <span className="flex h-2 w-2 rounded-full bg-orange-500 shadow-xs" />
+            <span className="text-[11px] font-semibold tracking-wider uppercase text-orange-600 dark:text-orange-400">
               PlaceIntel Candidate Portal
             </span>
           </div>
-          <h3 className="mt-1 font-heading text-xl font-bold text-white">
+          <h3 className="mt-1 font-heading text-xl font-bold text-foreground">
             {tab === "login"
               ? "Welcome Back"
               : tab === "register"
                 ? "Create Candidate Profile"
                 : "Instant Demo Profile"}
           </h3>
-          <p className="mt-1 text-xs text-zinc-400">
+          <p className="mt-1 text-xs text-muted-foreground">
             {tab === "login"
               ? "Access your saved skill gap evaluations and company applications."
               : tab === "register"
@@ -166,13 +166,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </p>
 
           {/* Navigation Tabs */}
-          <div className="mt-5 grid grid-cols-3 rounded-xl border border-zinc-800 bg-zinc-950 p-1 text-xs font-medium">
+          <div className="mt-5 grid grid-cols-3 rounded-xl border border-border bg-muted p-1 text-xs font-medium">
             <button
               onClick={() => setTab("login")}
               className={`rounded-lg py-1.5 transition-all ${
                 tab === "login"
-                  ? "bg-zinc-800 text-white font-semibold shadow-xs"
-                  : "text-zinc-400 hover:text-zinc-200"
+                  ? "bg-card text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               Sign In
@@ -181,8 +181,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               onClick={() => setTab("register")}
               className={`rounded-lg py-1.5 transition-all ${
                 tab === "register"
-                  ? "bg-zinc-800 text-white font-semibold shadow-xs"
-                  : "text-zinc-400 hover:text-zinc-200"
+                  ? "bg-card text-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               Create Profile
@@ -191,11 +191,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               onClick={() => setTab("demo")}
               className={`rounded-lg py-1.5 transition-all flex items-center justify-center gap-1 ${
                 tab === "demo"
-                  ? "bg-orange-500/20 text-orange-400 font-semibold border border-orange-500/30"
-                  : "text-zinc-400 hover:text-zinc-200"
+                  ? "bg-primary/10 text-primary font-semibold border border-primary/20"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              <Sparkles className="h-3 w-3 text-orange-400" />
+              <Sparkles className="h-3 w-3 text-primary" />
               Demo (1-Click)
             </button>
           </div>
@@ -207,36 +207,36 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           {tab === "login" && (
             <form onSubmit={handleManualLogin} className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-zinc-300">College Email Address</label>
+                <label className="text-xs font-medium text-foreground">College Email Address</label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-2.5 h-4 w-4 text-zinc-500" />
+                  <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                   <input
                     type="email"
                     required
                     placeholder="student@jssaten.ac.in"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-xl border border-zinc-800 bg-zinc-900/60 py-2 pl-9 pr-3 text-xs text-white placeholder-zinc-500 focus:border-orange-500/80 focus:outline-none focus:ring-1 focus:ring-orange-500/80"
+                    className="w-full rounded-xl border border-border bg-card-sub py-2 pl-9 pr-3 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-medium text-zinc-300">Password</label>
-                  <a href="#forgot" className="text-[11px] text-orange-400 hover:underline">
+                  <label className="text-xs font-medium text-foreground">Password</label>
+                  <a href="#forgot" className="text-[11px] text-primary hover:underline">
                     Forgot?
                   </a>
                 </div>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-2.5 h-4 w-4 text-zinc-500" />
+                  <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                   <input
                     type="password"
                     required
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full rounded-xl border border-zinc-800 bg-zinc-900/60 py-2 pl-9 pr-3 text-xs text-white placeholder-zinc-500 focus:border-orange-500/80 focus:outline-none focus:ring-1 focus:ring-orange-500/80"
+                    className="w-full rounded-xl border border-border bg-card-sub py-2 pl-9 pr-3 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                 </div>
               </div>
@@ -244,18 +244,18 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <Button
                 type="submit"
                 disabled={submitting}
-                className="w-full h-10 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 text-xs font-bold text-zinc-950 shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:brightness-110 transition-all cursor-pointer"
+                className="w-full h-10 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 text-xs font-bold text-white shadow-md hover:brightness-110 transition-all cursor-pointer"
               >
                 {submitting ? "Signing In..." : "Sign In to Candidate Portal"}
                 <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
               </Button>
 
-              <div className="rounded-xl border border-zinc-800/80 bg-zinc-950/60 p-3 text-center text-xs text-zinc-400">
+              <div className="rounded-xl border border-border bg-muted/60 p-3 text-center text-xs text-muted-foreground">
                 Want to test immediately?{" "}
                 <button
                   type="button"
                   onClick={() => setTab("demo")}
-                  className="font-semibold text-orange-400 hover:underline"
+                  className="font-semibold text-primary hover:underline cursor-pointer"
                 >
                   Use 1-Click Demo Profiles
                 </button>
@@ -267,41 +267,41 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           {tab === "register" && (
             <form onSubmit={handleRegister} className="space-y-3.5">
               <div className="space-y-1">
-                <label className="text-xs font-medium text-zinc-300">Full Name</label>
+                <label className="text-xs font-medium text-foreground">Full Name</label>
                 <div className="relative">
-                  <User className="absolute left-3 top-2.5 h-4 w-4 text-zinc-500" />
+                  <User className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                   <input
                     type="text"
                     required
                     placeholder="e.g. Aryan Singh"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="w-full rounded-xl border border-zinc-800 bg-zinc-900/60 py-2 pl-9 pr-3 text-xs text-white placeholder-zinc-500 focus:border-orange-500/80 focus:outline-none focus:ring-1 focus:ring-orange-500/80"
+                    className="w-full rounded-xl border border-border bg-card-sub py-2 pl-9 pr-3 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                 </div>
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-medium text-zinc-300">College Email</label>
+                <label className="text-xs font-medium text-foreground">College Email</label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-2.5 h-4 w-4 text-zinc-500" />
+                  <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                   <input
                     type="email"
                     required
                     placeholder="aryan.singh@jssaten.ac.in"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-xl border border-zinc-800 bg-zinc-900/60 py-2 pl-9 pr-3 text-xs text-white placeholder-zinc-500 focus:border-orange-500/80 focus:outline-none focus:ring-1 focus:ring-orange-500/80"
+                    className="w-full rounded-xl border border-border bg-card-sub py-2 pl-9 pr-3 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                 </div>
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-medium text-zinc-300">Target Role / Track</label>
+                <label className="text-xs font-medium text-foreground">Target Role / Track</label>
                 <select
                   value={targetRole}
                   onChange={(e) => setTargetRole(e.target.value)}
-                  className="w-full rounded-xl border border-zinc-800 bg-zinc-900/90 py-2 px-3 text-xs text-white focus:border-orange-500/80 focus:outline-none"
+                  className="w-full rounded-xl border border-border bg-card-sub py-2 px-3 text-xs text-foreground focus:border-primary focus:outline-none"
                 >
                   <option>Software Development Engineer (SDE)</option>
                   <option>Data Engineer / ML Engineer</option>
@@ -312,29 +312,29 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
               {/* Resume Upload Dropzone */}
               <div className="space-y-1">
-                <label className="text-xs font-medium text-zinc-300">
+                <label className="text-xs font-medium text-foreground">
                   Candidate Resume (PDF/DOCX)
                 </label>
                 <div
                   onClick={() => setResumeUploaded(!resumeUploaded)}
                   className={`cursor-pointer rounded-2xl border-2 border-dashed p-3.5 text-center transition-all ${
                     resumeUploaded
-                      ? "border-emerald-500/50 bg-emerald-950/20 text-emerald-400"
-                      : "border-zinc-800 bg-zinc-950/60 text-zinc-400 hover:border-orange-500/50 hover:bg-zinc-900/40"
+                      ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                      : "border-border bg-card-sub text-muted-foreground hover:border-primary/50 hover:bg-muted"
                   }`}
                 >
                   {resumeUploaded ? (
                     <div className="flex items-center justify-center gap-2 text-xs font-medium">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
                       <span>Resume Uploaded: Aryan_Singh_CV.pdf (SHA-256 Verified)</span>
                     </div>
                   ) : (
                     <div className="flex flex-col items-center gap-1">
-                      <UploadCloud className="h-5 w-5 text-orange-400" />
-                      <span className="text-xs font-medium text-zinc-300">
+                      <UploadCloud className="h-5 w-5 text-primary" />
+                      <span className="text-xs font-medium text-foreground">
                         Click to upload candidate resume
                       </span>
-                      <span className="text-[10px] text-zinc-500">
+                      <span className="text-[10px] text-muted-foreground">
                         Instant Bloom skill extraction & citation matching
                       </span>
                     </div>
@@ -345,7 +345,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <Button
                 type="submit"
                 disabled={submitting}
-                className="w-full h-10 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 text-xs font-bold text-zinc-950 shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:brightness-110 transition-all cursor-pointer"
+                className="w-full h-10 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 text-xs font-bold text-white shadow-md hover:brightness-110 transition-all cursor-pointer"
               >
                 {submitting ? "Analyzing Resume & Profiling..." : "Create Profile & Compare Skills"}
                 <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
@@ -356,7 +356,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           {/* TAB 3: 1-CLICK DEMO PROFILES */}
           {tab === "demo" && (
             <div className="space-y-2.5">
-              <p className="text-xs text-zinc-400">
+              <p className="text-xs text-muted-foreground">
                 Choose a pre-validated candidate profile to explore the skill comparison console
                 instantly without entering details:
               </p>
@@ -365,27 +365,27 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 <button
                   key={profile.id}
                   onClick={() => handleSelectDemo(profile)}
-                  className="group flex w-full items-center justify-between rounded-2xl border border-zinc-800 bg-zinc-900/60 p-3 text-left transition-all hover:border-orange-500/60 hover:bg-orange-500/5 cursor-pointer"
+                  className="group flex w-full items-center justify-between rounded-2xl border border-border bg-card-sub p-3 text-left transition-all hover:border-primary/60 hover:bg-muted cursor-pointer shadow-2xs"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-orange-500/30 bg-orange-500/10 font-mono text-xs font-bold text-orange-400 group-hover:scale-105 transition-transform">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-primary/30 bg-primary/10 font-mono text-xs font-bold text-primary group-hover:scale-105 transition-transform">
                       {profile.avatarText}
                     </div>
                     <div>
-                      <h4 className="text-xs font-bold text-white group-hover:text-orange-400 transition-colors">
+                      <h4 className="text-xs font-bold text-foreground group-hover:text-primary transition-colors">
                         {profile.name}
                       </h4>
-                      <p className="text-[11px] text-zinc-400">{profile.role}</p>
+                      <p className="text-[11px] text-muted-foreground">{profile.role}</p>
                     </div>
                   </div>
-                  <span className="rounded-lg border border-zinc-800 bg-zinc-900 px-2 py-1 text-[11px] font-medium text-zinc-300 group-hover:border-orange-500/40 group-hover:text-orange-300">
+                  <span className="rounded-lg border border-border bg-card px-2 py-1 text-[11px] font-medium text-foreground group-hover:border-primary/40 group-hover:text-primary">
                     Select &rarr;
                   </span>
                 </button>
               ))}
 
-              <div className="mt-3 rounded-xl border border-orange-500/20 bg-orange-500/5 p-2.5 text-[11px] text-zinc-300 flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-orange-400 shrink-0" />
+              <div className="mt-3 rounded-xl border border-orange-500/20 bg-orange-500/5 p-2.5 text-[11px] text-muted-foreground flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-orange-500 shrink-0" />
                 <span>
                   Simulates full candidate profile state with live Bloom scores across 115
                   companies.

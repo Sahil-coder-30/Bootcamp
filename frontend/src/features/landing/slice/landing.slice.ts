@@ -42,11 +42,7 @@ export const landingSlice = createSlice({
   },
 });
 
-export const {
-  setLandingStats,
-  setSelectedTier,
-  setLandingLoading,
-  setLandingError,
-} = landingSlice.actions;
+export const { setLandingStats, setSelectedTier, setLandingLoading, setLandingError } =
+  landingSlice.actions;
 
 export default landingSlice.reducer;

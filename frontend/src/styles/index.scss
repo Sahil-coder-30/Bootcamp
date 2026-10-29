@@ -42,36 +42,37 @@
 
 /* ─── 5-Layer Surface Codespace Light Theme ─────────────────────── */
 :root.light-theme {
-  --surface-canvas: #ffffff;
-  --surface-chrome: #f4f4f6;
+  --surface-canvas: #f8fafc;
+  --surface-chrome: #ffffff;
   --surface-sunken: #f1f5f9;
   --surface-overlay: #ffffff;
 
-  --bg-canvas: var(--surface-canvas);
-  --bg-surface: var(--surface-canvas);
-  --bg-sidebar: var(--surface-chrome);
-  --bg-overlay: var(--surface-overlay);
-  --bg-element: var(--surface-sunken);
-  --bg-active: rgba(5, 150, 105, 0.1);
+  --bg-canvas: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-sidebar: #ffffff;
+  --bg-overlay: #ffffff;
+  --bg-element: #f1f5f9;
+  --bg-active: rgba(79, 70, 229, 0.08);
 
-  --border-subtle: #e4e4e7;
-  --border-strong: #8c8c94;
-  --border-glow: rgba(5, 150, 105, 0.2);
+  --border: #e2e8f0;
+  --border-subtle: #f1f5f9;
+  --border-strong: #cbd5e1;
+  --border-glow: rgba(79, 70, 229, 0.2);
 
-  --brand-primary: #059669;
-  --brand-hover: #047857;
-  --brand-subtle: rgba(5, 150, 105, 0.1);
+  --brand-primary: #4f46e5;
+  --brand-hover: #4338ca;
+  --brand-subtle: rgba(79, 70, 229, 0.1);
 
-  --accent-primary: #0969da;
-  --accent-hover: #0850b8;
-  --accent-subtle: rgba(9, 105, 218, 0.1);
+  --accent-primary: #f59e0b;
+  --accent-hover: #d97706;
+  --accent-subtle: rgba(245, 158, 11, 0.1);
 
-  --text-primary: #1a1a1e;
-  --text-secondary: #57606a;
-  --text-muted: #6e7781;
-  --text-disabled: #afb8c1;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-disabled: #94a3b8;
 
-  --color-rgb-text: 26, 26, 30;
+  --color-rgb-text: 15, 23, 42;
 }
 
 /* ─── CSS Resets & Box Sizing ────────────────────────────────────── */
