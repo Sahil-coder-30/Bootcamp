@@ -241,6 +241,7 @@ export function createSupabaseRepo(): ProfilesRepo {
 
   const fields = (p: ProfilePatch) => ({
     email: p.email,
+    name: p.profile.name,
     profile: p.profile,
     resume_extraction_id: p.resume_extraction_id,
     completeness: p.completeness,

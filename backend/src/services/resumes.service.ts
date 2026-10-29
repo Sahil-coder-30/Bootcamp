@@ -1,4 +1,5 @@
 import { callAgent } from "./agent.service.js";
+import { env } from "../config/env.js";
 
 export interface ParseResumeParams {
   content_b64?: string;
@@ -198,6 +199,19 @@ export const FALLBACK_SAMPLES: Record<string, any> = {
 };
 
 export async function parseResume(params: ParseResumeParams): Promise<any> {
+  if (params.content_b64) {
+    try {
+      const buf = Buffer.from(params.content_b64, "base64");
+      const form = new FormData();
+      form.append("file", new Blob([buf], { type: params.mime || "application/pdf" }), params.file_name || "resume.pdf");
+      const res = await fetch(`${env.resumeUrl}/parse`, { method: "POST", body: form });
+      if (res.ok) {
+        return await res.json();
+      }
+    } catch {
+      // fall back to agent
+    }
+  }
   if (params.sample_key) {
     const key = params.sample_key.toLowerCase();
     try {
@@ -229,6 +243,23 @@ export async function getSampleResume(candidateKey: string): Promise<any> {
 }
 
 export async function inferLevels(extraction: any): Promise<any> {
+  try {
+    const res = await fetch(`${env.resumeUrl}/levels/infer`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(extraction),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return {
+        category_levels: data.category_levels || {},
+        category_level_details: data.category_level_details || {},
+        latency_ms: data.meta?.latency_ms ?? 1.0,
+      };
+    }
+  } catch {
+    // fall back to agent
+  }
   try {
     return await callAgent("levels/infer", { extraction });
   } catch (err: any) {

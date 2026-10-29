@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { UploadCloud, FileText, Sparkles, ShieldCheck, CheckCircle2, Loader2 } from "lucide-react";
+import { UploadCloud, FileText, Sparkles, ShieldCheck, CheckCircle2, Loader2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface ResumeUploadCardProps {
@@ -7,6 +7,8 @@ interface ResumeUploadCardProps {
   onSelectSample?: (candidateKey: string) => void;
   isLoading: boolean;
   currentCandidateName?: string | undefined;
+  onClear?: () => void;
+  showSamples?: boolean;
 }
 
 export const ResumeUploadCard: React.FC<ResumeUploadCardProps> = ({
@@ -14,6 +16,8 @@ export const ResumeUploadCard: React.FC<ResumeUploadCardProps> = ({
   onSelectSample,
   isLoading,
   currentCandidateName,
+  onClear,
+  showSamples = false,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragOver, setIsDragOver] = useState(false);
@@ -28,6 +32,7 @@ export const ResumeUploadCard: React.FC<ResumeUploadCardProps> = ({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) onFileUpload(file);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   return (
@@ -46,10 +51,24 @@ export const ResumeUploadCard: React.FC<ResumeUploadCardProps> = ({
           </p>
         </div>
 
-        {/* Privacy badge */}
-        <div className="inline-flex items-center gap-1.5 self-start md:self-auto rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[11px] font-medium text-emerald-700 dark:text-emerald-300">
-          <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-          <span>Zero PII Sent: Contacts Redacted</span>
+        <div className="flex items-center gap-2">
+          {currentCandidateName && onClear && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onClear}
+              className="text-xs border-border hover:bg-muted text-muted-foreground hover:text-foreground cursor-pointer"
+            >
+              <RefreshCw className="mr-1.5 h-3.5 w-3.5" />
+              Upload Different Resume
+            </Button>
+          )}
+
+          {/* Privacy badge */}
+          <div className="inline-flex items-center gap-1.5 self-start md:self-auto rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[11px] font-medium text-emerald-700 dark:text-emerald-300">
+            <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+            <span>Zero PII Sent: Contacts Redacted</span>
+          </div>
         </div>
       </div>
 

@@ -15,6 +15,7 @@ router.post("/from-resume", validateBody(fromResumeBodySchema), profiles.draftFr
 router.get("/calibration/:code", profiles.getCalibrationTopics);
 router.get("/:id", profiles.getProfile);
 router.put("/:id", validateBody(candidateProfileInputSchema, SERVER_FIELDS), profiles.updateProfile);
+router.patch("/:id", validateBody(candidateProfileInputSchema, SERVER_FIELDS), profiles.updateProfile);
 router.get("/:id/versions", profiles.getProfileVersions);
 router.get("/:id/cv-url", profiles.getProfileCvUrl);
 router.delete("/:id", profiles.deleteProfile);

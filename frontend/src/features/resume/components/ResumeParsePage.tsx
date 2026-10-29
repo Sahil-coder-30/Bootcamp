@@ -4,19 +4,20 @@ import { ResumeUploadCard } from "./ResumeUploadCard";
 import { SkillFingerprintRadar } from "./SkillFingerprintRadar";
 import { ResumeParsedView } from "./ResumeParsedView";
 import { HowWeGotThisDrawer } from "./HowWeGotThisDrawer";
-import { FormatInvarianceCard } from "./FormatInvarianceCard";
 import { Button } from "@/components/ui/button";
 import {
   FileText,
   Sliders,
   Sparkles,
   ArrowRight,
-  ShieldCheck,
   RefreshCw,
-  BarChart3,
   Layers,
   AlertCircle,
   HelpCircle,
+  UploadCloud,
+  CheckCircle2,
+  Cpu,
+  ShieldCheck,
 } from "lucide-react";
 import { useNavigate, Link } from "@tanstack/react-router";
 
@@ -32,13 +33,22 @@ export const ResumeParsePage: React.FC = () => {
     highlightedSkill,
     isDrawerOpen,
     uploadAndParse,
+    loadUserResume,
     loadSample,
     loadCompare,
     recalculateLevels,
     setTab,
     setHighlight,
     setDrawer,
+    reset,
   } = useResume();
+
+  // Attempt to load the user's saved resume if authenticated, without auto-loading dummy data
+  useEffect(() => {
+    if (!currentExtraction && status === "idle") {
+      void loadUserResume();
+    }
+  }, [currentExtraction, status, loadUserResume]);
 
   const handleSendToTalentCheck = () => {
     navigate({ to: "/talent-check" });
@@ -136,11 +146,13 @@ export const ResumeParsePage: React.FC = () => {
           </div>
         )}
 
-        {/* Upload Dropzone */}
+        {/* Upload Dropzone (Clean, direct API integration) */}
         <ResumeUploadCard
           onFileUpload={uploadAndParse}
           isLoading={isLoading}
           currentCandidateName={currentExtraction?.candidate?.name}
+          onClear={reset}
+          showSamples={false}
         />
 
         {/* Main Content Dashboard */}
@@ -193,19 +205,30 @@ export const ResumeParsePage: React.FC = () => {
                 />
               </div>
             </div>
-
-            {/* Format Invariance Proof Card */}
-            <FormatInvarianceCard />
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-border bg-card py-20 text-center">
-            <Layers className="h-12 w-12 text-muted-foreground animate-pulse" />
-            <h3 className="mt-4 text-lg font-semibold text-foreground">
-              No Resume Uploaded Yet
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-card py-16 px-6 text-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary border border-primary/20">
+              <UploadCloud className="h-6 w-6" />
+            </div>
+            <h3 className="mt-4 text-lg font-bold text-foreground">
+              No Resume Analyzed Yet
             </h3>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Drop a candidate PDF/DOCX resume file above to extract skills and compute the 12-axis fingerprint.
+            <p className="mt-1 text-xs text-muted-foreground max-w-md">
+              Upload your resume (PDF, DOCX, or TXT) above. The offline parser will extract contact
+              info, work history, education, verified skills, and compute your 12-category Bloom fingerprint.
             </p>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" /> 100% Offline (Zero LLM calls)
+              </span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" /> 12 Bloom Category Levels
+              </span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" /> Evidence Audit Trail
+              </span>
+            </div>
           </div>
         )}
       </div>
