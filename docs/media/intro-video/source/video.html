@@ -1,0 +1,425 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>PlaceIntel intro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=block" rel="stylesheet">
+<style>
+  :root { --bg:#0b0c0e; --card:#12141a; --fg:#f3f4f6; --muted:#94a3b8; --orange:#f97316; --amber:#f59e0b; --green:#22c55e; --red:#ef4444; --border:#1e222d; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); color: var(--fg); font-family: Inter, sans-serif; }
+  #stage { position: absolute; inset: 0; overflow: hidden; }
+  .bg-grid { position: absolute; inset: -200px; background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px); background-size: 64px 64px; }
+  .glow { position: absolute; width: 1200px; height: 1200px; border-radius: 50%; filter: blur(40px); pointer-events: none; }
+  .scene { position: absolute; inset: 0; opacity: 0; }
+  .abs { position: absolute; will-change: transform, opacity; }
+  .h { font-family: Outfit, sans-serif; font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; }
+  .grad { background: linear-gradient(90deg, #fb923c, #fcd34d, #f97316); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .sub { color: var(--muted); font-size: 26px; line-height: 1.45; font-weight: 500; }
+  .pill { display: inline-flex; align-items: center; gap: 12px; padding: 10px 20px; border-radius: 999px; border: 1px solid rgba(249,115,22,.35); background: rgba(249,115,22,.1); color: #fdba74; font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700; letter-spacing: .04em; }
+  .pill .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--orange); box-shadow: 0 0 14px var(--orange); }
+  .shot { border-radius: 18px; overflow: hidden; box-shadow: 0 50px 120px rgba(0,0,0,.65), 0 0 0 1px rgba(255,255,255,.07), 0 0 80px rgba(249,115,22,.10); background: var(--card); }
+  .shot img { display: block; width: 100%; }
+  .mask { overflow: hidden; }
+  .word { display: inline-block; will-change: transform, opacity; }
+  .logo { width: 120px; height: 120px; border-radius: 32px; background: linear-gradient(135deg, #f97316, #6366f1); display: flex; align-items: center; justify-content: center; font-family: Outfit; font-weight: 900; font-size: 52px; color: white; box-shadow: 0 20px 80px rgba(249,115,22,.45); }
+  .ring { position: absolute; border: 3px solid var(--orange); border-radius: 16px; box-shadow: 0 0 0 6px rgba(249,115,22,.18), 0 0 40px rgba(249,115,22,.5); }
+  .tag { position: absolute; padding: 14px 22px; border-radius: 14px; background: rgba(18,20,26,.92); border: 1px solid #2a2e3d; font-size: 24px; font-weight: 600; box-shadow: 0 20px 60px rgba(0,0,0,.5); white-space: nowrap; }
+  .tag b { color: var(--orange); }
+  /* steps rail */
+  #rail { position: absolute; left: 50%; bottom: 44px; transform: translateX(-50%); display: flex; gap: 14px; opacity: 0; }
+  .step { display: flex; align-items: center; gap: 10px; padding: 10px 18px; border-radius: 999px; border: 1px solid var(--border); background: rgba(18,20,26,.85); color: #64748b; font-size: 18px; font-weight: 600; }
+  .step i { font-style: normal; font-family: 'JetBrains Mono'; font-size: 15px; color: #475569; }
+  .step.on { border-color: rgba(249,115,22,.6); color: #fff; background: rgba(249,115,22,.14); }
+  .step.on i { color: var(--orange); }
+  .step.done { color: #94a3b8; }
+  .step.done i { color: var(--green); }
+  /* architecture */
+  .node { position: absolute; width: 300px; padding: 22px 24px; border-radius: 18px; background: #12141a; border: 1px solid #2a2e3d; box-shadow: 0 30px 80px rgba(0,0,0,.5); }
+  .node .t { font-family: Outfit; font-weight: 700; font-size: 28px; }
+  .node .d { color: var(--muted); font-size: 18px; margin-top: 6px; line-height: 1.4; }
+  .node .p { font-family: 'JetBrains Mono'; font-size: 15px; color: var(--orange); margin-top: 10px; }
+  .k8s { position: absolute; border: 2px dashed rgba(56,189,248,.45); border-radius: 28px; background: rgba(56,189,248,.03); }
+  .k8s-label { position: absolute; font-family: 'JetBrains Mono'; font-size: 18px; color: #38bdf8; font-weight: 700; letter-spacing: .05em; }
+  .chip { display: inline-block; padding: 12px 20px; border-radius: 12px; border: 1px solid #2a2e3d; background: #12141a; font-size: 22px; font-weight: 600; margin-right: 14px; }
+  .chip b { color: var(--orange); }
+  .stat { text-align: center; }
+  .stat .n { font-family: Outfit; font-weight: 800; font-size: 84px; line-height: 1; }
+  .stat .l { color: var(--muted); font-size: 22px; margin-top: 10px; font-weight: 500; }
+  .btn { display: inline-flex; align-items: center; gap: 14px; padding: 24px 40px; border-radius: 16px; background: linear-gradient(90deg, #f97316, #f59e0b); color: #0b0c0e; font-family: Outfit; font-weight: 800; font-size: 32px; box-shadow: 0 20px 70px rgba(249,115,22,.45); }
+  svg.wires { position: absolute; inset: 0; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="bg-grid" id="grid"></div>
+  <div class="glow" id="glow1" style="background: radial-gradient(circle, rgba(249,115,22,.22), transparent 60%)"></div>
+  <div class="glow" id="glow2" style="background: radial-gradient(circle, rgba(99,102,241,.16), transparent 60%)"></div>
+
+  <!-- S1 hook -->
+  <div class="scene" id="s1">
+    <div class="abs h" id="s1a" style="left:0;right:0;top:330px;text-align:center;font-size:56px;color:#cbd5e1;font-weight:700">Every placement season, one question.</div>
+    <div class="abs h" id="s1b" style="left:0;right:0;top:430px;text-align:center;font-size:170px"><span class="grad">“Am I ready?”</span></div>
+    <div class="abs sub" id="s1c" style="left:0;right:0;top:700px;text-align:center;font-size:34px">Today the answer is a yes or a no. <span style="color:#fb7185">With no reason attached.</span></div>
+  </div>
+
+  <!-- S2 brand -->
+  <div class="scene" id="s2">
+    <div class="abs" id="s2logo" style="left:50%;top:120px;margin-left:-60px"><div class="logo">PI</div></div>
+    <div class="abs h" id="s2t" style="left:0;right:0;top:268px;text-align:center;font-size:110px">PlaceIntel</div>
+    <div class="abs" id="s2p" style="left:0;right:0;top:400px;text-align:center"><span class="pill"><span class="dot"></span>RADIX TALENT MATCH</span></div>
+    <div class="abs sub" id="s2s" style="left:0;right:0;top:478px;text-align:center;font-size:30px">Benchmark your skills against real company hiring bars. Every number explained.</div>
+    <div class="abs shot" id="s2hero" style="left:260px;top:560px;width:1400px"><img src="comps/hero.png"></div>
+  </div>
+
+  <!-- S3 JD -->
+  <div class="scene" id="s3">
+    <div class="abs" id="s3pill" style="left:120px;top:210px"><span class="pill"><span class="dot"></span>01 · JD ANALYTICS</span></div>
+    <div class="abs h" id="s3h" style="left:120px;top:290px;width:640px;font-size:76px">Drop in a job description.</div>
+    <div class="abs sub" id="s3s" style="left:120px;top:490px;width:600px">Every skill is mapped to one of 12 Bloom categories, tagged must or nice, with the <span style="color:#fff">exact quote</span> from the JD as evidence.</div>
+    <div class="abs shot" id="s3a" style="left:820px;top:150px;width:520px"><img src="comps/jd_text.png"></div>
+    <div class="abs shot mask" id="s3b" style="left:1290px;top:110px;width:520px;height:760px"><img id="s3bimg" src="comps/jd_skills.png"></div>
+    <div class="abs tag" id="s3tag" style="left:120px;top:720px">LLM extracts · <b>evidence gate</b> drops anything it can't quote</div>
+  </div>
+
+  <!-- S4 Resume -->
+  <div class="scene" id="s4">
+    <div class="abs" id="s4pill" style="left:120px;top:210px"><span class="pill"><span class="dot"></span>02 · RESUME PARSING</span></div>
+    <div class="abs h" id="s4h" style="left:120px;top:290px;width:640px;font-size:76px">Parse a resume. <span class="grad">Fully offline.</span></div>
+    <div class="abs sub" id="s4s" style="left:120px;top:490px;width:600px">No LLM calls, contacts redacted. A 12-dimension skill fingerprint where every skill is grounded in the resume text.</div>
+    <div class="abs shot" id="s4a" style="left:800px;top:140px;width:760px"><img src="comps/res_overview.png"></div>
+    <div class="abs shot" id="s4b" style="left:1340px;top:470px;width:470px"><img src="comps/res_radar.png"></div>
+  </div>
+
+  <!-- S5 Profile -->
+  <div class="scene" id="s5">
+    <div class="abs" id="s5pill" style="left:120px;top:210px"><span class="pill"><span class="dot"></span>03 · PROFILE BUILDER</span></div>
+    <div class="abs h" id="s5h" style="left:120px;top:290px;width:640px;font-size:76px">Every level has a <span class="grad">reason.</span></div>
+    <div class="abs sub" id="s5s" style="left:120px;top:490px;width:600px">12 categories, levels 1 to 10 on the Bloom scale. Pre-filled from the resume, each with a basis you can audit and adjust.</div>
+    <div class="abs shot mask" id="s5a" style="left:840px;top:90px;width:860px;height:820px"><img id="s5aimg" src="comps/pf_levels.png"></div>
+    <div class="abs shot" id="s5b" style="left:1560px;top:640px;width:300px"><img src="comps/pf_complete.png"></div>
+  </div>
+
+  <!-- S6 Talent check -->
+  <div class="scene" id="s6">
+    <div class="abs" id="s6pill" style="left:120px;top:70px"><span class="pill"><span class="dot"></span>04 · TALENT CHECK</span></div>
+    <div class="abs h" id="s6h" style="left:120px;top:140px;font-size:72px">Same candidate. <span class="grad">Different bar.</span></div>
+    <div class="abs shot" id="s6sel" style="left:120px;top:270px;width:1100px"><img src="comps/tc_select.png"><img id="s6selg" src="comps/tc_select_google.png" style="position:absolute;inset:0"></div>
+    <div class="abs shot" id="s6g" style="left:120px;top:420px;width:1100px"><img src="comps/tc_ready_google.png"></div>
+    <div class="abs shot" id="s6o" style="left:120px;top:420px;width:1100px"><img src="comps/tc_ready.png"></div>
+    <div class="abs shot" id="s6sum" style="left:120px;top:640px;width:1100px"><img src="comps/tc_summary.png"></div>
+    <div class="abs shot mask" id="s6gaps" style="left:1280px;top:120px;width:540px;height:840px"><img id="s6gapsimg" src="comps/tc_gaps.png"></div>
+    <div class="abs ring" id="s6ring" style="left:1288px;width:530px;height:74px"></div>
+    <div class="abs tag" id="s6tag1" style="left:300px;top:830px">Google LLC · <b>62</b> Almost</div>
+    <div class="abs tag" id="s6tag2" style="left:300px;top:830px">Oracle FSS · <b>89</b> Almost · held back by <b>SQL 4 vs 7</b></div>
+  </div>
+
+  <!-- S7 Skill match -->
+  <div class="scene" id="s7">
+    <div class="abs" id="s7pill" style="left:120px;top:70px"><span class="pill"><span class="dot"></span>05 · SKILL MATCHING</span></div>
+    <div class="abs h" id="s7h" style="left:120px;top:140px;font-size:72px">Every gap has a <span class="grad">price tag.</span></div>
+    <div class="abs sub" id="s7s" style="left:1240px;top:150px;width:560px;font-size:24px">A 7-stage matching cascade with false-friend blocking. Java ≠ JavaScript.</div>
+    <div class="abs shot" id="s7a" style="left:120px;top:280px;width:1060px"><img src="comps/sm_score.png"></div>
+    <div class="abs shot mask" id="s7b" style="left:240px;top:520px;width:1440px;height:440px"><img id="s7bimg" src="comps/sm_gaplist.png"></div>
+    <div class="abs tag" id="s7tag" style="left:1220px;top:330px">Learn <b>Java</b> → <b>+10 pts</b> on this JD</div>
+  </div>
+
+  <!-- S8 plan -->
+  <div class="scene" id="s8">
+    <div class="abs h" id="s8h" style="left:0;right:0;top:90px;text-align:center;font-size:72px">Then it shows you <span class="grad">the way up.</span></div>
+    <div class="abs shot" id="s8a" style="left:80px;top:260px;width:860px"><img src="comps/tc_whatif.png"></div>
+    <div class="abs shot" id="s8b" style="left:980px;top:260px;width:860px"><img src="comps/tc_rank.png"></div>
+    <div class="abs tag" id="s8t1" style="left:290px;top:850px"><b>What-if</b> simulator</div>
+    <div class="abs tag" id="s8t2" style="left:1150px;top:850px">Rank <b>every company</b> you're ready for</div>
+  </div>
+
+  <!-- S9 architecture -->
+  <div class="scene" id="s9">
+    <div class="abs" id="s9pill" style="left:120px;top:70px"><span class="pill"><span class="dot"></span>UNDER THE HOOD</span></div>
+    <div class="abs h" id="s9h" style="left:120px;top:140px;font-size:72px">Built like a real platform.</div>
+    <div class="k8s abs" id="s9k" style="left:120px;top:270px;width:1680px;height:560px"></div>
+    <div class="k8s-label abs" id="s9kl" style="left:150px;top:286px">KUBERNETES · NGINX INGRESS · SKAFFOLD</div>
+    <svg class="wires" id="s9w" width="1920" height="1080"></svg>
+    <div class="node" id="n_fe" style="left:170px;top:450px"><div class="t">Frontend</div><div class="d">React 19 · TypeScript · Redux Toolkit</div><div class="p">vite · tanstack router</div></div>
+    <div class="node" id="n_be" style="left:620px;top:450px"><div class="t">Backend</div><div class="d">Express 5 · Zod · orchestration</div><div class="p">:4000</div></div>
+    <div class="node" id="n_ag" style="left:1100px;top:330px"><div class="t">Agent</div><div class="d">FastAPI · LangChain · scoring</div><div class="p">:8000 · roles 1, 4, 5</div></div>
+    <div class="node" id="n_rs" style="left:1100px;top:590px"><div class="t">Resume</div><div class="d">FastAPI · spaCy · no LLM</div><div class="p">:8100 · role 2</div></div>
+    <div class="node" id="n_au" style="left:620px;top:660px;width:300px"><div class="t">Auth</div><div class="d">Google OAuth · JWT</div><div class="p">:4100</div></div>
+    <div class="node" id="n_db" style="left:1490px;top:450px;width:270px"><div class="t">Supabase</div><div class="d">Postgres · 115 company bars</div><div class="p">+ offline snapshots</div></div>
+    <div class="abs" id="s9chips" style="left:120px;top:880px"><span class="chip"><b>5</b> microservices</span><span class="chip"><b>LLMs extract.</b> Code scores.</span><span class="chip">Every dependency has an <b>offline fallback</b></span></div>
+  </div>
+
+  <!-- S10 CTA -->
+  <div class="scene" id="s10">
+    <div class="abs" id="s10logo" style="left:50%;top:130px;margin-left:-60px"><div class="logo">PI</div></div>
+    <div class="abs h" id="s10h" style="left:0;right:0;top:290px;text-align:center;font-size:96px">Know where you stand.<br><span class="grad">Know what to learn next.</span></div>
+    <div class="abs" id="s10stats" style="left:360px;right:360px;top:560px;display:flex;justify-content:space-between">
+      <div class="stat" id="st1"><div class="n">115</div><div class="l">companies benchmarked</div></div>
+      <div class="stat" id="st2"><div class="n">12</div><div class="l">Bloom skill categories</div></div>
+      <div class="stat" id="st3"><div class="n">1</div><div class="l">score you can explain</div></div>
+    </div>
+    <div class="abs" id="s10btn" style="left:0;right:0;top:790px;text-align:center"><span class="btn">Check your readiness →</span></div>
+    <div class="abs sub" id="s10f" style="left:0;right:0;top:940px;text-align:center;font-size:22px">PlaceIntel · RADIX Talent Match · JSSATEN Placement Hub</div>
+  </div>
+
+  <div id="rail">
+    <div class="step" data-i="0"><i>01</i>JD Analytics</div>
+    <div class="step" data-i="1"><i>02</i>Resume</div>
+    <div class="step" data-i="2"><i>03</i>Profile</div>
+    <div class="step" data-i="3"><i>04</i>Talent Check</div>
+    <div class="step" data-i="4"><i>05</i>Skill Match</div>
+  </div>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const k = (t, a, b) => clamp((t - a) / (b - a));
+const ease = {
+  out: (x) => 1 - Math.pow(1 - x, 3),
+  inout: (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2),
+  back: (x) => { const c1 = 1.5, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); },
+  expo: (x) => (x === 1 ? 1 : 1 - Math.pow(2, -10 * x)),
+};
+const lerp = (a, b, x) => a + (b - a) * x;
+
+function set(el, { o = 1, x = 0, y = 0, s = 1, rx = 0, ry = 0, rz = 0, blur = 0 } = {}) {
+  if (typeof el === 'string') el = $(el);
+  el.style.opacity = o;
+  el.style.transform = `perspective(1800px) translate3d(${x}px, ${y}px, 0) rotateX(${rx}deg) rotateY(${ry}deg) rotateZ(${rz}deg) scale(${s})`;
+  el.style.filter = blur > 0.05 ? `blur(${blur}px)` : 'none';
+}
+// standard entrance: rise + fade + unblur
+function enter(el, t, t0, dur = 0.8, dy = 40, extra = {}) {
+  const p = ease.out(k(t, t0, t0 + dur));
+  set(el, { o: p, y: (1 - p) * dy + (extra.y || 0), x: extra.x || 0, s: lerp(extra.s0 ?? 1, extra.s ?? 1, p), rx: lerp(extra.rx0 ?? 0, extra.rx ?? 0, p), ry: lerp(extra.ry0 ?? 0, extra.ry ?? 0, p), blur: (1 - p) * 10 });
+  return p;
+}
+// split headings into words once
+function splitWords(id) {
+  const el = $(id);
+  const walk = (node) => {
+    [...node.childNodes].forEach((n) => {
+      if (n.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach((w) => {
+          if (!w) return;
+          if (/^\s+$/.test(w)) frag.appendChild(document.createTextNode(w));
+          else { const s = document.createElement('span'); s.className = 'word'; s.textContent = w; frag.appendChild(s); }
+        });
+        n.replaceWith(frag);
+      } else if (n.nodeType === 1 && n.tagName !== 'BR') {
+        if (n.classList.contains('grad')) { n.classList.add('word'); } else walk(n);
+      }
+    });
+  };
+  walk(el);
+  el.style.opacity = 1;
+}
+function words(id, t, t0, stagger = 0.06, dur = 0.7) {
+  $(id).querySelectorAll('.word').forEach((w, i) => {
+    const p = ease.out(k(t, t0 + i * stagger, t0 + i * stagger + dur));
+    w.style.opacity = p;
+    w.style.transform = `translateY(${(1 - p) * 50}px)`;
+    w.style.filter = p < 0.99 ? `blur(${(1 - p) * 8}px)` : 'none';
+  });
+}
+
+const SCENES = [
+  ['s1', 0, 6.6], ['s2', 6.6, 13.2], ['s3', 13.2, 22.2], ['s4', 22.2, 31], ['s5', 31, 39.4],
+  ['s6', 39.4, 53], ['s7', 53, 62], ['s8', 62, 69], ['s9', 69, 78], ['s10', 78, 85],
+];
+const DURATION = 85;
+
+function envelope(t, a, b, fi = 0.5, fo = 0.5) {
+  if (t < a || t > b) return 0;
+  return Math.min(ease.out(k(t, a, a + fi)), b - t < fo ? ease.inout((b - t) / fo) : 1);
+}
+
+function render(t) {
+  // background drift
+  $('grid').style.transform = `translate(${(t * 6) % 64}px, ${(t * 4) % 64}px)`;
+  set('glow1', { x: 300 + Math.sin(t * 0.25) * 400, y: -300 + Math.cos(t * 0.2) * 200 });
+  set('glow2', { x: 900 + Math.cos(t * 0.18) * 300, y: 100 + Math.sin(t * 0.22) * 200 });
+
+  for (const [id, a, b] of SCENES) {
+    const env = envelope(t, a, b, id === 's1' ? 0.01 : 0.45, id === 's10' ? 0.6 : 0.45);
+    const el = $(id);
+    el.style.opacity = env;
+    el.style.display = env > 0 ? 'block' : 'none';
+    const outP = b - t < 0.45 ? 1 - (b - t) / 0.45 : 0;
+    el.style.transform = `scale(${1 + outP * 0.04})`;
+    el.style.filter = outP > 0.02 ? `blur(${outP * 8}px)` : 'none';
+    if (env > 0) SCENE_FN[id](t - a, b - a);
+  }
+
+  // steps rail (scenes 3..7)
+  const railOn = envelope(t, 13.6, 61.6, 0.6, 0.5);
+  $('rail').style.opacity = railOn;
+  const active = t < 22.2 ? 0 : t < 31 ? 1 : t < 39.4 ? 2 : t < 53 ? 3 : 4;
+  document.querySelectorAll('.step').forEach((s, i) => {
+    s.className = 'step' + (i === active ? ' on' : i < active ? ' done' : '');
+  });
+}
+
+const SCENE_FN = {
+  s1(t) {
+    enter('s1a', t, 0.2, 0.9, 30);
+    words('s1b', t, 1.1, 0.12, 0.9);
+    const sc = 1 + t * 0.012;
+    $('s1b').style.transform = `scale(${sc})`;
+    enter('s1c', t, 3.6, 0.9, 30);
+  },
+  s2(t) {
+    const p = enter('s2logo', t, 0.1, 0.9, 0, { s0: 0.4, s: 1 });
+    $('s2logo').style.transform += ` rotate(${(1 - p) * -90}deg)`;
+    words('s2t', t, 0.5, 0.08);
+    enter('s2p', t, 1.0, 0.7, 20);
+    enter('s2s', t, 1.4, 0.8, 20);
+    const h = ease.out(k(t, 1.8, 3.4));
+    set('s2hero', { o: h, y: (1 - h) * 300 - ease.inout(k(t, 3.4, 6.6)) * 60, rx: lerp(38, 18, h), s: lerp(0.9, 1, h) });
+  },
+  s3(t, d) {
+    enter('s3pill', t, 0.1, 0.6, 20);
+    words('s3h', t, 0.3, 0.08);
+    enter('s3s', t, 1.0, 0.8, 20);
+    enter('s3a', t, 0.9, 1.0, 120, { ry0: -25, ry: -8, s0: 0.92 });
+    enter('s3b', t, 1.4, 1.0, 120, { ry0: -25, ry: -8, s0: 0.92 });
+    $('s3bimg').style.transform = `translateY(${-ease.inout(k(t, 3, 8.2)) * 1340}px)`;
+    enter('s3tag', t, 4.2, 0.6, 20);
+  },
+  s4(t) {
+    enter('s4pill', t, 0.1, 0.6, 20);
+    words('s4h', t, 0.3, 0.08);
+    enter('s4s', t, 1.0, 0.8, 20);
+    enter('s4a', t, 0.8, 1.0, 120, { ry0: -22, ry: -6, s0: 0.92, y: -ease.inout(k(t, 2, 8.8)) * 30 });
+    enter('s4b', t, 2.2, 1.0, 120, { ry0: -22, ry: -6, s0: 0.85, y: -ease.inout(k(t, 3, 8.8)) * 50 });
+  },
+  s5(t) {
+    enter('s5pill', t, 0.1, 0.6, 20);
+    words('s5h', t, 0.3, 0.08);
+    enter('s5s', t, 1.0, 0.8, 20);
+    enter('s5a', t, 0.8, 1.0, 120, { ry0: -22, ry: -7, s0: 0.92 });
+    $('s5aimg').style.transform = `translateY(${-ease.inout(k(t, 2.6, 7.8)) * 680}px)`;
+    enter('s5b', t, 3.2, 0.8, 60, { s0: 0.8 });
+  },
+  s6(t) {
+    enter('s6pill', t, 0.1, 0.6, 20);
+    words('s6h', t, 0.3, 0.08);
+    enter('s6sel', t, 0.8, 0.8, 40);
+    // Google first, then switch to Oracle at 4.2s
+    const sw = ease.inout(k(t, 4.2, 4.9));
+    const gIn = ease.out(k(t, 1.3, 2.1));
+    set('s6g', { o: gIn * (1 - sw), y: (1 - gIn) * 40, rx: sw * -70, s: 1 - sw * 0.05 });
+    $('s6selg').style.opacity = 1 - sw;
+    set('s6o', { o: sw, rx: (1 - sw) * 70, s: 0.95 + sw * 0.05, y: 0 });
+    set('s6tag1', { o: ease.out(k(t, 2.3, 2.9)) * (1 - sw), y: (1 - ease.out(k(t, 2.3, 2.9))) * 20 });
+    enter('s6tag2', t, 5.0, 0.6, 20);
+    enter('s6sum', t, 5.6, 0.8, 30);
+    // gaps panel, scroll to SQL row and ring it
+    enter('s6gaps', t, 6.6, 1.0, 120, { ry0: 25, ry: 6, s0: 0.92 });
+    const sc = ease.inout(k(t, 7.8, 9.4));
+    $('s6gapsimg').style.transform = `translateY(${-sc * 300}px)`;
+    // SQL row sits ~ y=470 (css px at 540 width scale) in panel image
+    const ringP = ease.back(k(t, 9.5, 10.1));
+    const rowY = 120 + 512 - 300 * sc - 5; // panel top + SQL row offset (scaled) - scroll
+    set('s6ring', { o: k(t, 9.5, 9.8), s: lerp(1.15, 1, ringP), ry: 6 });
+    $('s6ring').style.top = rowY + 'px';
+  },
+  s7(t) {
+    enter('s7pill', t, 0.1, 0.6, 20);
+    words('s7h', t, 0.3, 0.08);
+    enter('s7s', t, 1.2, 0.8, 20);
+    enter('s7a', t, 0.9, 0.9, 80, { rx0: 20, rx: 0 });
+    enter('s7b', t, 2.0, 1.0, 120, { rx0: 25, rx: 4, s0: 0.92 });
+    $('s7bimg').style.transform = `translateY(${-ease.inout(k(t, 5.4, 8.4)) * 260}px)`;
+    const p = enter('s7tag', t, 3.6, 0.7, 20, { s0: 0.85 });
+    if (p > 0.99) { const pulse = 1 + Math.max(0, Math.sin((t - 4.3) * 5)) * 0.03; $('s7tag').style.transform += ` scale(${pulse})`; }
+  },
+  s8(t) {
+    words('s8h', t, 0.1, 0.08);
+    enter('s8a', t, 0.7, 1.0, 140, { ry0: 30, ry: 10, s0: 0.9, y: -ease.inout(k(t, 1.7, 7)) * 30 });
+    enter('s8b', t, 1.3, 1.0, 140, { ry0: -30, ry: -10, s0: 0.9, y: -ease.inout(k(t, 2.3, 7)) * 30 });
+    enter('s8t1', t, 2.4, 0.6, 20);
+    enter('s8t2', t, 2.9, 0.6, 20);
+  },
+  s9(t) {
+    enter('s9pill', t, 0.1, 0.6, 20);
+    words('s9h', t, 0.3, 0.08);
+    const kp = ease.out(k(t, 0.8, 1.6));
+    set('s9k', { o: kp, s: lerp(0.96, 1, kp) });
+    enter('s9kl', t, 1.2, 0.6, 10);
+    const order = [['n_fe', 1.4], ['n_be', 1.9], ['n_ag', 2.4], ['n_rs', 2.7], ['n_au', 3.0], ['n_db', 3.4]];
+    order.forEach(([id, t0]) => enter(id, t, t0, 0.7, 40, { s0: 0.85 }));
+    drawWires(t);
+    enter('s9chips', t, 5.0, 0.8, 30);
+  },
+  s10(t) {
+    const p = enter('s10logo', t, 0.1, 0.9, 0, { s0: 0.4 });
+    words('s10h', t, 0.4, 0.07);
+    ['st1', 'st2', 'st3'].forEach((id, i) => enter(id, t, 1.8 + i * 0.25, 0.7, 30));
+    const bp = enter('s10btn', t, 2.8, 0.8, 30, { s0: 0.9 });
+    if (bp > 0.99) $('s10btn').style.transform += ` scale(${1 + Math.sin((t - 3.6) * 3) * 0.015})`;
+    enter('s10f', t, 3.4, 0.8, 10);
+  },
+};
+
+// architecture wires
+const WIRES = [
+  ['n_fe', 'n_be', 2.2], ['n_be', 'n_ag', 2.8], ['n_be', 'n_rs', 3.1], ['n_be', 'n_au', 3.3], ['n_be', 'n_db', 3.8], ['n_ag', 'n_db', 4.0],
+];
+function anchor(id, side) {
+  const el = $(id); const x = el.offsetLeft, y = el.offsetTop, w = el.offsetWidth, h = el.offsetHeight;
+  return side === 'r' ? [x + w, y + h / 2] : side === 'l' ? [x, y + h / 2] : side === 'b' ? [x + w / 2, y + h] : [x + w / 2, y];
+}
+function drawWires(t) {
+  const svg = $('s9w');
+  let html = '';
+  const packets = [];
+  WIRES.forEach(([a, b, t0], i) => {
+    let p1, p2;
+    if (b === 'n_au') { p1 = anchor(a, 'b'); p2 = anchor(b, 't'); }
+    else if (a === 'n_ag' && b === 'n_db') { p1 = anchor(a, 'r'); p2 = anchor(b, 't'); p2[0] -= 60; }
+    else if (a === 'n_be' && b === 'n_db') { p1 = anchor(a, 'r'); p2 = anchor(b, 'l'); }
+    else { p1 = anchor(a, 'r'); p2 = anchor(b, 'l'); }
+    if (a === 'n_be' && b === 'n_db') { p1 = [p1[0], p1[1] + 20]; }
+    const mx = (p1[0] + p2[0]) / 2;
+    const d = b === 'n_au' ? `M${p1[0]},${p1[1]} L${p2[0]},${p2[1]}` : `M${p1[0]},${p1[1]} C${mx},${p1[1]} ${mx},${p2[1]} ${p2[0]},${p2[1]}`;
+    const p = ease.inout(k(t, t0, t0 + 0.7));
+    const len = 1400;
+    html += `<path d="${d}" fill="none" stroke="rgba(249,115,22,.55)" stroke-width="2.5" stroke-dasharray="${len}" stroke-dashoffset="${len * (1 - p)}"/>`;
+    if (p >= 1) packets.push([i, t0]);
+  });
+  if (t > 1.0) {
+    // ingress arrow into frontend
+    const p = ease.out(k(t, 1.0, 1.6));
+    html += `<text x="182" y="${430 - (1 - p) * 10}" fill="#38bdf8" opacity="${p}" font-family="JetBrains Mono" font-size="16">/api · /api/auth · /api/agent</text>`;
+  }
+  svg.innerHTML = html;
+  const paths = svg.querySelectorAll('path');
+  packets.forEach(([i, t0]) => {
+    const path = paths[i]; const L = path.getTotalLength();
+    const ph = ((t - t0 - 0.7) * 0.55 + i * 0.17) % 1;
+    const pt = path.getPointAtLength(L * ph);
+    const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    c.setAttribute('cx', pt.x); c.setAttribute('cy', pt.y); c.setAttribute('r', 6); c.setAttribute('fill', '#fdba74');
+    c.setAttribute('style', 'filter: drop-shadow(0 0 8px #f97316)');
+    svg.appendChild(c);
+  });
+}
+
+window.__ready = (async () => {
+  ['s1b', 's2t', 's3h', 's4h', 's5h', 's6h', 's7h', 's8h', 's9h', 's10h'].forEach(splitWords);
+  await document.fonts.ready;
+  await Promise.all([...document.images].map((im) => (im.complete ? 1 : new Promise((r) => { im.onload = r; im.onerror = r; }))));
+  return true;
+})();
+window.render = render;
+window.DURATION = DURATION;
+const q = new URLSearchParams(location.search);
+if (q.has('t')) window.__ready.then(() => render(parseFloat(q.get('t'))));
+else if (q.has('play')) window.__ready.then(() => { const st = performance.now(); const loop = () => { const t = ((performance.now() - st) / 1000) % DURATION; render(t); requestAnimationFrame(loop); }; loop(); });
+</script>
+</body>
+</html>

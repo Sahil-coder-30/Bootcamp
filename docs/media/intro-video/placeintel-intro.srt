@@ -1,0 +1,43 @@
+1
+00:00:00,300 --> 00:00:06,400
+Every placement season, students ask one question: am I ready? Today the answer is a yes or a no, with no reason attached.
+
+2
+00:00:06,800 --> 00:00:13,000
+Meet PlaceIntel, built on RADIX Talent Match. Benchmark your skills against real company hiring bars, with every number explained.
+
+3
+00:00:13,400 --> 00:00:22,000
+Start with a job description. Every skill is mapped to one of 12 Bloom categories, tagged must or nice, with the exact quote as evidence.
+
+4
+00:00:22,400 --> 00:00:30,800
+Upload a resume. It is parsed fully offline, with no LLM and contacts redacted, into a 12-dimension skill fingerprint.
+
+5
+00:00:31,200 --> 00:00:39,200
+The profile builder turns that into 12 levels from 1 to 10, each with a basis you can audit and adjust.
+
+6
+00:00:39,600 --> 00:00:46,000
+Talent Check scores you against a company's bar. Same candidate, different bar: Ananya is 62 at Google...
+
+7
+00:00:46,000 --> 00:00:52,800
+...and 89 at Oracle FSS. Almost ready, held back by one blocking gap: SQL, 4 versus 7.
+
+8
+00:00:53,200 --> 00:01:01,800
+Skill Matching runs a 7-stage cascade against the JD, and every gap shows exactly how many points it would add. Learn Java: plus 10.
+
+9
+00:01:02,200 --> 00:01:08,800
+Then it shows you the way up: a what-if simulator, a study plan, and the companies you are ready for.
+
+10
+00:01:09,200 --> 00:01:17,800
+Under the hood: five microservices on Kubernetes. LLMs extract, code scores, and every dependency has an offline fallback.
+
+11
+00:01:18,200 --> 00:01:24,800
+PlaceIntel. Know where you stand. Know what to learn next.
