@@ -151,7 +151,14 @@ export function createMemoryRepo(seed: CandidateProfile[] = SEED_PROFILES): Prof
     },
 
     async findById(id) {
-      const r = rows.get(id);
+      const aliasMap: Record<string, string> = {
+        "6f1c-ananya": "3a000000-0000-4000-8000-000000000001",
+        "6f1c-karthik": "3a000000-0000-4000-8000-000000000002",
+        "6f1c-priya": "3a000000-0000-4000-8000-000000000003",
+        "6f1c-rohan": "3a000000-0000-4000-8000-000000000004",
+      };
+      const resolvedId = aliasMap[id] ?? id;
+      const r = rows.get(resolvedId);
       return r ? structuredClone(r) : null;
     },
 
