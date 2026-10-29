@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-interface CompanyMatchItem {
+export interface CompanyMatchItem {
   id: number;
   name: string;
   tier: "Super Dream" | "Dream" | "Standard";
