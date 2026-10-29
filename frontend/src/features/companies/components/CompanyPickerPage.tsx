@@ -7,7 +7,7 @@ import {
   Briefcase,
   Building2,
   CheckCircle2,
-  Compass,
+  Compass, 
   ExternalLink,
   GraduationCap,
   Layers,

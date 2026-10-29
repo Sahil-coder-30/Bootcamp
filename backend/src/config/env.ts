@@ -37,6 +37,21 @@ export const env = {
   resumeUrl: (read("RESUME_URL") ?? "http://localhost:8100").replace(/\/$/, ""),
   /** Optional shared secret, sent as X-Resume-Key when the resume service has RESUME_API_KEY set. */
   resumeApiKey: read("RESUME_API_KEY"),
+  /**
+   * Telegram bot (runs inside this process). Without a token the bot is simply off.
+   * Get one from @BotFather; keep it only in .env.
+   */
+  telegramBotToken: read("TELEGRAM_BOT_TOKEN"),
+  /** "off" disables the bot even when a token is set (e.g. a second backend instance). */
+  telegramBot: read("TELEGRAM_BOT") ?? "on",
+  /** Set to a public HTTPS base URL (e.g. your ngrok URL) to use a webhook; empty = long polling. */
+  telegramWebhookUrl: read("TELEGRAM_WEBHOOK_URL")?.replace(/\/$/, ""),
+  /** Sent back by Telegram in X-Telegram-Bot-Api-Secret-Token so only Telegram can call the webhook. */
+  telegramWebhookSecret: read("TELEGRAM_WEBHOOK_SECRET"),
+  /** Optional: the bot's @username (without @), used for the deep link when the bot is not running here. */
+  telegramBotUsername: read("TELEGRAM_BOT_USERNAME")?.replace(/^@/, ""),
+  /** "memory" keeps chat links in memory (lost on restart); default is Supabase when it is configured. */
+  telegramStore: read("TELEGRAM_STORE"),
   /** "memory" forces the in-memory profile store even when Supabase is configured (tests, offline demo). */
   profilesStore: read("PROFILES_STORE"),
   /** "fixtures" reads Role 2 extractions from src/data/extractionFixtures instead of Supabase. */

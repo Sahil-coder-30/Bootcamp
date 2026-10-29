@@ -16,6 +16,8 @@ vi.mock("@/features/profile/service/profile.api", () => ({
   parseResumeAPI: vi.fn(),
   getCompanySkillBarAPI: vi.fn(),
   getCalibrationAPI: vi.fn(),
+  getTelegramStatusAPI: vi.fn(),
+  createTelegramLinkAPI: vi.fn(),
   listJdRolesAPI: vi.fn(),
 }));
 vi.mock("@/features/companies/service/companies.api", () => ({ getCompaniesAPI: vi.fn() }));
@@ -53,6 +55,8 @@ beforeEach(() => {
   vi.mocked(companiesApi.getCompaniesAPI).mockResolvedValue([]);
   vi.mocked(api.listJdRolesAPI).mockResolvedValue([]);
   vi.mocked(api.createProfileAPI).mockResolvedValue(stored());
+  // The Telegram bot is off unless a test turns it on.
+  vi.mocked(api.getTelegramStatusAPI).mockResolvedValue({ enabled: false, username: null });
 });
 
 afterEach(() => {
@@ -520,6 +524,43 @@ describe("ProfileBuilder: editing a saved profile", () => {
     expect(screen.queryByText(/restore unsaved changes from/i)).not.toBeInTheDocument();
     await tab(user, "Basics");
     expect(await screen.findByLabelText(/full name/i)).toHaveValue("Unsaved Name");
+  });
+});
+
+describe("ProfileBuilder: Connect Telegram", () => {
+  const link = {
+    code: "abc123abc123",
+    url: "https://t.me/test_bot?start=abc123abc123",
+    expires_at: "2026-10-29T10:00:00.000Z",
+  };
+
+  it("is hidden when the bot is off, and for an unsaved profile", async () => {
+    vi.mocked(api.getProfileAPI).mockResolvedValue({ profile: stored(), version: 1 });
+    renderBuilder({ profileId: PROFILE_UUID });
+    await screen.findByRole("button", { name: /history/i });
+    expect(screen.queryByRole("button", { name: /connect telegram/i })).not.toBeInTheDocument();
+  });
+
+  it("is hidden on a new profile even when the bot is on", async () => {
+    vi.mocked(api.getTelegramStatusAPI).mockResolvedValue({ enabled: true, username: "test_bot" });
+    renderBuilder();
+    await screen.findByRole("button", { name: /save profile/i });
+    expect(screen.queryByRole("button", { name: /connect telegram/i })).not.toBeInTheDocument();
+  });
+
+  it("opens the bot with a one-time link when the bot is on", async () => {
+    vi.mocked(api.getTelegramStatusAPI).mockResolvedValue({ enabled: true, username: "test_bot" });
+    vi.mocked(api.getProfileAPI).mockResolvedValue({ profile: stored(), version: 1 });
+    vi.mocked(api.createTelegramLinkAPI).mockResolvedValue(link);
+    const open = vi.spyOn(window, "open").mockImplementation(() => null);
+    const user = userEvent.setup();
+    renderBuilder({ profileId: PROFILE_UUID });
+    await user.click(await screen.findByRole("button", { name: /connect telegram/i }));
+    await waitFor(() =>
+      expect(open).toHaveBeenCalledWith(link.url, "_blank", "noopener,noreferrer"),
+    );
+    expect(api.createTelegramLinkAPI).toHaveBeenCalledWith(PROFILE_UUID);
+    open.mockRestore();
   });
 });
 

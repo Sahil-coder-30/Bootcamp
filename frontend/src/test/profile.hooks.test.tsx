@@ -15,6 +15,8 @@ vi.mock("@/features/profile/service/profile.api", () => ({
   parseResumeAPI: vi.fn(),
   getCompanySkillBarAPI: vi.fn(),
   getCalibrationAPI: vi.fn(),
+  getTelegramStatusAPI: vi.fn(),
+  createTelegramLinkAPI: vi.fn(),
   listJdRolesAPI: vi.fn(),
 }));
 
@@ -29,6 +31,7 @@ import { useCompanyBarOverlay } from "@/features/profile/Hooks/useCompanyBarOver
 import { useProfileDraft, DRAFT_PREFIX } from "@/features/profile/Hooks/useProfileDraft";
 import { useSkillLevels } from "@/features/profile/Hooks/useSkillLevels";
 import { useProfileVersions } from "@/features/profile/Hooks/useProfileVersions";
+import { useTelegramLink } from "@/features/profile/Hooks/useTelegramLink";
 import { useRoleSuggestions, DEFAULT_ROLES } from "@/features/profile/Hooks/useRoleSuggestions";
 import { blankValues } from "@/features/profile/lib/formMapping";
 import type { ProfileSummary, ProfileValues, StoredProfile } from "@/features/profile/lib/types";
@@ -561,5 +564,65 @@ describe("useProfileDraft", () => {
   it("ignores a corrupt draft", () => {
     window.localStorage.setItem(DRAFT_PREFIX + "bad", "{not json");
     expect(render("bad").result.current.draft.restorable).toBeNull();
+  });
+});
+
+describe("useTelegramLink", () => {
+  const link = {
+    code: "abc123abc123",
+    url: "https://t.me/test_bot?start=abc123abc123",
+    expires_at: "2026-10-29T10:00:00.000Z",
+  };
+
+  it("is off until the backend says the bot is running", async () => {
+    vi.mocked(api.getTelegramStatusAPI).mockResolvedValue({ enabled: false, username: null });
+    const { result } = renderHook(() => useTelegramLink("p1"));
+    await waitFor(() => expect(api.getTelegramStatusAPI).toHaveBeenCalled());
+    expect(result.current.enabled).toBe(false);
+  });
+
+  it("stays off when the status request fails (an older backend), and for an unsaved profile", async () => {
+    vi.mocked(api.getTelegramStatusAPI).mockRejectedValue(new Error("404"));
+    const { result } = renderHook(() => useTelegramLink("p1"));
+    await waitFor(() => expect(api.getTelegramStatusAPI).toHaveBeenCalled());
+    expect(result.current.enabled).toBe(false);
+
+    vi.mocked(api.getTelegramStatusAPI).mockClear();
+    const unsaved = renderHook(() => useTelegramLink(undefined));
+    expect(api.getTelegramStatusAPI).not.toHaveBeenCalled();
+    expect(await unsaved.result.current.connect()).toBeNull();
+  });
+
+  it("creates a one-time link and opens it in a new tab without giving it a handle on this page", async () => {
+    vi.mocked(api.getTelegramStatusAPI).mockResolvedValue({ enabled: true, username: "test_bot" });
+    vi.mocked(api.createTelegramLinkAPI).mockResolvedValue(link);
+    const open = vi.spyOn(window, "open").mockImplementation(() => null);
+    const { result } = renderHook(() => useTelegramLink("p1"));
+    await waitFor(() => expect(result.current.enabled).toBe(true));
+
+    let out: unknown = null;
+    await act(async () => {
+      out = await result.current.connect();
+    });
+    expect(api.createTelegramLinkAPI).toHaveBeenCalledWith("p1");
+    expect(open).toHaveBeenCalledWith(link.url, "_blank", "noopener,noreferrer");
+    expect(out).toEqual(link);
+    expect(result.current.connecting).toBe(false);
+    open.mockRestore();
+  });
+
+  it("does not open anything when the backend refuses", async () => {
+    vi.mocked(api.getTelegramStatusAPI).mockResolvedValue({ enabled: true, username: "test_bot" });
+    vi.mocked(api.createTelegramLinkAPI).mockRejectedValue(
+      new Error("The Telegram bot is not running."),
+    );
+    const open = vi.spyOn(window, "open").mockImplementation(() => null);
+    const { result } = renderHook(() => useTelegramLink("p1"));
+    await waitFor(() => expect(result.current.enabled).toBe(true));
+    await act(async () => {
+      expect(await result.current.connect()).toBeNull();
+    });
+    expect(open).not.toHaveBeenCalled();
+    open.mockRestore();
   });
 });

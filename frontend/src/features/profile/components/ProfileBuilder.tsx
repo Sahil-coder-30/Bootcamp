@@ -20,6 +20,7 @@ import { profileFormSchema } from "../lib/schema";
 import type { ChangeSource, ProfileValues } from "../lib/types";
 import { clearPrefill } from "../slice/profile.slice";
 import { CompletenessMeter } from "./CompletenessMeter";
+import { ConnectTelegramButton } from "./ConnectTelegramButton";
 import { ConflictDialog } from "./ConflictDialog";
 import { DraftRestoreBanner } from "./DraftRestoreBanner";
 import { ImportExportMenu } from "./ImportExportMenu";
@@ -230,6 +231,7 @@ function Builder({ profileId, extractionId, onSaved }: ProfileBuilderProps) {
             {isDirty && <Badge variant="warning">unsaved</Badge>}
           </div>
           <div className="flex gap-2">
+            <ConnectTelegramButton profileId={profileId} />
             {profileId && (
               <Button
                 type="button"
