@@ -22,13 +22,13 @@ export const JdLibrary: React.FC<JdLibraryProps> = ({
   error,
   onRefresh,
 }) => (
-  <div className="rounded-2xl border border-border bg-card p-4">
-    <div className="mb-3 flex items-center justify-between">
+  <div className="rounded-2xl border border-border bg-card p-4 w-full min-w-0">
+    <div className="mb-3 flex items-center justify-between gap-2">
       <h2 className="text-sm font-bold text-foreground">JD library</h2>
       <button
         type="button"
         onClick={onRefresh}
-        className="rounded-md p-1 text-muted-foreground hover:text-foreground"
+        className="rounded-md p-1 text-muted-foreground hover:text-foreground shrink-0 cursor-pointer"
         aria-label="Refresh JD library"
       >
         <RefreshCw className={cn("h-3.5 w-3.5", isLoading && "animate-spin")} />
@@ -39,7 +39,7 @@ export const JdLibrary: React.FC<JdLibraryProps> = ({
         role="alert"
         className="mb-3 flex items-center justify-between rounded-xl border border-destructive/30 bg-destructive/10 p-2.5 text-xs text-destructive"
       >
-        <div className="flex items-center gap-1.5 min-w-0">
+        <div className="flex items-center gap-1.5 min-w-0 flex-1">
           <AlertCircle className="h-3.5 w-3.5 shrink-0" />
           <span className="truncate">{error}</span>
         </div>
@@ -61,38 +61,40 @@ export const JdLibrary: React.FC<JdLibraryProps> = ({
     {!error && items.length === 0 && !isLoading && (
       <p className="text-xs text-muted-foreground">No JDs yet. Upload one above.</p>
     )}
-    <ul className="space-y-2">
+    <ul className="space-y-2 w-full min-w-0">
       {items.map((jd) => (
-        <li key={jd.jd_id}>
+        <li key={jd.jd_id} className="w-full min-w-0">
           <button
             type="button"
             onClick={() => onSelect(jd.jd_id)}
             className={cn(
-              "w-full rounded-xl border p-3 text-left transition-colors",
+              "w-full min-w-0 overflow-hidden rounded-xl border p-3 sm:p-3.5 text-left transition-colors cursor-pointer",
               selectedId === jd.jd_id
                 ? "border-primary bg-primary/5"
                 : "border-border hover:border-primary/50",
             )}
           >
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
+            <div className="flex items-center gap-1.5 min-w-0 w-full text-xs font-semibold text-foreground">
               <Briefcase className="h-3.5 w-3.5 shrink-0 text-primary" />
-              <span className="truncate">{jd.role ?? jd.file_name ?? "Untitled JD"}</span>
+              <span className="truncate min-w-0 flex-1">{jd.role ?? jd.file_name ?? "Untitled JD"}</span>
             </div>
-            <div className="mt-0.5 truncate text-[11px] text-muted-foreground">
+            <div className="mt-1 truncate min-w-0 w-full text-[11px] text-muted-foreground">
               {jd.company_name ?? "Company not resolved"}
               {jd.location ? ` · ${jd.location}` : ""}
             </div>
-            <div className="mt-2 flex items-center gap-1.5">
-              {jd.top_categories.map((c) => (
-                <span
-                  key={c}
-                  className="rounded px-1.5 py-0.5 text-[10px] font-bold text-white shrink-0"
-                  style={{ backgroundColor: categoryColor(c) }}
-                >
-                  {c}
-                </span>
-              ))}
-              <span className="ml-auto text-[10px] text-muted-foreground shrink-0">
+            <div className="mt-2.5 flex items-center justify-between gap-2 min-w-0 w-full">
+              <div className="flex items-center gap-1 min-w-0 overflow-hidden">
+                {jd.top_categories.map((c) => (
+                  <span
+                    key={c}
+                    className="rounded px-1.5 py-0.5 text-[10px] font-bold text-white shrink-0"
+                    style={{ backgroundColor: categoryColor(c) }}
+                  >
+                    {c}
+                  </span>
+                ))}
+              </div>
+              <span className="ml-auto text-[10px] text-muted-foreground shrink-0 whitespace-nowrap pl-1">
                 {jd.skill_count} skills · {jd.must_count} must
               </span>
             </div>

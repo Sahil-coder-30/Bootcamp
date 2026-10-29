@@ -36,10 +36,10 @@ export const JdPage: React.FC = () => {
   useEffect(() => setSelected(null), [detail]);
 
   return (
-    <div className="space-y-6 p-4 sm:p-6">
+    <div className="w-full max-w-full min-w-0 overflow-x-hidden space-y-6 p-4 sm:p-6">
       <div>
         <div className="flex items-center gap-2">
-          <FileSearch className="h-6 w-6 text-primary" />
+          <FileSearch className="h-6 w-6 text-primary shrink-0" />
           <h1 className="text-2xl font-black tracking-tight text-foreground">JD Analytics</h1>
         </div>
         <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
@@ -48,8 +48,8 @@ export const JdPage: React.FC = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[320px_1fr]">
-        <div className="space-y-4">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[320px_1fr] w-full min-w-0">
+        <div className="w-full min-w-0 space-y-4">
           <JdDropzone
             onFile={(f) => void upload.run(f)}
             stage={upload.stage}
@@ -65,10 +65,10 @@ export const JdPage: React.FC = () => {
           />
         </div>
 
-        <div className="min-w-0 space-y-4">
+        <div className="w-full min-w-0 space-y-4">
           {isLoading && !detail && (
             <div className="flex items-center gap-2 text-sm text-muted-foreground p-6 rounded-2xl border border-border bg-card">
-              <Loader2 className="h-4 w-4 animate-spin text-primary" /> Loading JD details...
+              <Loader2 className="h-4 w-4 animate-spin text-primary shrink-0" /> Loading JD details...
             </div>
           )}
           {error && (
@@ -95,16 +95,18 @@ export const JdPage: React.FC = () => {
             </p>
           )}
           {detail && result && (
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <JdResult
-                result={result}
-                groups={groups}
-                selected={selected}
-                onSelect={setSelected}
-                isBusy={upload.isBusy}
-                onReextract={() => void upload.reextract(detail.document.document_id, detail.jd_id)}
-              />
-              <div className="xl:sticky xl:top-20 xl:self-start">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 w-full min-w-0">
+              <div className="w-full min-w-0">
+                <JdResult
+                  result={result}
+                  groups={groups}
+                  selected={selected}
+                  onSelect={setSelected}
+                  isBusy={upload.isBusy}
+                  onReextract={() => void upload.reextract(detail.document.document_id, detail.jd_id)}
+                />
+              </div>
+              <div className="w-full min-w-0 xl:sticky xl:top-20 xl:self-start">
                 <JdEvidenceText text={detail.document.text} skill={selected} />
               </div>
             </div>

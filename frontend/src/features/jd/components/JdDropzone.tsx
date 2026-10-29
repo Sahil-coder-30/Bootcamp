@@ -28,7 +28,7 @@ export const JdDropzone: React.FC<JdDropzoneProps> = ({ onFile, stage, error }) 
   };
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-4">
+    <div className="rounded-2xl border border-border bg-card p-4 w-full min-w-0">
       <button
         type="button"
         disabled={busy}
@@ -74,17 +74,17 @@ export const JdDropzone: React.FC<JdDropzoneProps> = ({ onFile, stage, error }) 
         }}
       />
       {STAGE_LABEL[stage] && !error && (
-        <p className="mt-2 text-xs text-muted-foreground" role="status">
+        <p className="mt-2 text-xs text-muted-foreground min-w-0 break-words" role="status">
           {STAGE_LABEL[stage]}
         </p>
       )}
       {error && (
         <div
           role="alert"
-          className="mt-3 flex items-start gap-2 rounded-xl border border-destructive/30 bg-destructive/10 p-2.5 text-xs text-destructive"
+          className="mt-3 flex items-start gap-2 rounded-xl border border-destructive/30 bg-destructive/10 p-2.5 text-xs text-destructive min-w-0"
         >
           <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
-          <p className="font-medium flex-1">{error}</p>
+          <p className="font-medium flex-1 min-w-0 break-words">{error}</p>
         </div>
       )}
     </div>

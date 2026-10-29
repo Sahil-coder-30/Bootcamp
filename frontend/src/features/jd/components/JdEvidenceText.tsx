@@ -17,15 +17,15 @@ export const JdEvidenceText: React.FC<JdEvidenceTextProps> = ({ text, skill }) =
   }, [span?.start, span?.end]);
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-4">
-      <div className="mb-2 flex items-center justify-between gap-2">
-        <h3 className="text-sm font-bold text-foreground">JD text</h3>
-        <span className="text-[11px] text-muted-foreground truncate">
+    <div className="rounded-2xl border border-border bg-card p-4 w-full min-w-0">
+      <div className="mb-2 flex items-center justify-between gap-2 min-w-0">
+        <h3 className="text-sm font-bold text-foreground shrink-0">JD text</h3>
+        <span className="text-[11px] text-muted-foreground truncate min-w-0">
           {skill ? `Evidence for ${skill.skill_name}` : "Click a skill to see where it came from"}
         </span>
       </div>
       <pre
-        className="max-h-[480px] overflow-auto whitespace-pre-wrap break-words font-sans text-xs leading-relaxed text-muted-foreground"
+        className="max-h-[360px] sm:max-h-[480px] w-full min-w-0 overflow-auto whitespace-pre-wrap break-words font-sans text-xs leading-relaxed text-muted-foreground"
         data-testid="jd-text"
       >
         {valid ? (
