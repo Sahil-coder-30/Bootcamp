@@ -11,6 +11,7 @@ import {
   LogIn,
   UserCheck,
   UserRound,
+  Workflow,
 } from "lucide-react";
 import {
   Sidebar,
@@ -46,6 +47,7 @@ const NAV = [
   { title: "Skill Intelligence", url: "/company/skills", icon: GraduationCap },
   { title: "Talent Check", url: "/talent-check", icon: UserCheck },
   { title: "JD Analytics", url: "/jd", icon: FileSearch },
+  { title: "Guided flow", url: "/flow", icon: Workflow },
 ] as const;
 
 // `.dark` drives the Tailwind/shadcn palette, `.light-theme` drives the SCSS tokens in src/styles.

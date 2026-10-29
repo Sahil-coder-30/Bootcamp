@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CompaniesRouteImport } from './routes/companies'
 import { Route as CompanyRouteImport } from './routes/company'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as FlowRouteImport } from './routes/flow'
 import { Route as JdRouteImport } from './routes/jd'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ProfileRouteImport } from './routes/profile'
@@ -45,6 +46,11 @@ const CompanyRoute = CompanyRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FlowRoute = FlowRouteImport.update({
+  id: '/flow',
+  path: '/flow',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JdRoute = JdRouteImport.update({
@@ -118,6 +124,7 @@ export interface FileRoutesByFullPath {
   '/companies': typeof CompaniesRoute
   '/company': typeof CompanyRouteWithChildren
   '/dashboard': typeof DashboardRoute
+  '/flow': typeof FlowRoute
   '/jd': typeof JdRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRouteWithChildren
@@ -136,6 +143,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/companies': typeof CompaniesRoute
   '/dashboard': typeof DashboardRoute
+  '/flow': typeof FlowRoute
   '/jd': typeof JdRoute
   '/login': typeof LoginRoute
   '/resume': typeof ResumeRoute
@@ -155,6 +163,7 @@ export interface FileRoutesById {
   '/companies': typeof CompaniesRoute
   '/company': typeof CompanyRouteWithChildren
   '/dashboard': typeof DashboardRoute
+  '/flow': typeof FlowRoute
   '/jd': typeof JdRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRouteWithChildren
@@ -176,6 +185,7 @@ export interface FileRouteTypes {
     | '/companies'
     | '/company'
     | '/dashboard'
+    | '/flow'
     | '/jd'
     | '/login'
     | '/profile'
@@ -194,6 +204,7 @@ export interface FileRouteTypes {
     | '/'
     | '/companies'
     | '/dashboard'
+    | '/flow'
     | '/jd'
     | '/login'
     | '/resume'
@@ -212,6 +223,7 @@ export interface FileRouteTypes {
     | '/companies'
     | '/company'
     | '/dashboard'
+    | '/flow'
     | '/jd'
     | '/login'
     | '/profile'
@@ -232,6 +244,7 @@ export interface RootRouteChildren {
   CompaniesRoute: typeof CompaniesRoute
   CompanyRoute: typeof CompanyRouteWithChildren
   DashboardRoute: typeof DashboardRoute
+  FlowRoute: typeof FlowRoute
   JdRoute: typeof JdRoute
   LoginRoute: typeof LoginRoute
   ProfileRoute: typeof ProfileRouteWithChildren
@@ -269,6 +282,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/flow': {
+      id: '/flow'
+      path: '/flow'
+      fullPath: '/flow'
+      preLoaderRoute: typeof FlowRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/jd': {
@@ -400,6 +420,7 @@ const rootRouteChildren: RootRouteChildren = {
   CompaniesRoute: CompaniesRoute,
   CompanyRoute: CompanyRouteWithChildren,
   DashboardRoute: DashboardRoute,
+  FlowRoute: FlowRoute,
   JdRoute: JdRoute,
   LoginRoute: LoginRoute,
   ProfileRoute: ProfileRouteWithChildren,
