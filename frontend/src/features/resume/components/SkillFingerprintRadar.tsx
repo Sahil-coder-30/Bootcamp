@@ -87,9 +87,15 @@ export const SkillFingerprintRadar: React.FC<SkillFingerprintRadarProps> = ({
 
       </div>
 
-      <div className="mt-4 h-[300px] sm:h-[350px] w-full min-w-0 overflow-hidden">
-        <ResponsiveContainer width="100%" height="100%">
-          <RadarChart cx="50%" cy="50%" outerRadius="68%" data={chartData}>
+      <div className="mt-4 h-[280px] sm:h-[340px] w-full min-w-0 max-w-full overflow-hidden flex items-center justify-center">
+        <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={260}>
+          <RadarChart
+            cx="50%"
+            cy="50%"
+            outerRadius="58%"
+            margin={{ top: 12, right: 18, bottom: 12, left: 18 }}
+            data={chartData}
+          >
             <PolarGrid stroke="var(--border, rgba(148, 163, 184, 0.2))" />
             <PolarAngleAxis
               dataKey="code"

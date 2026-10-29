@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import type { ResumeExtraction } from "../service/resume.api";
 import { SkillChips } from "./SkillChips";
 import {
@@ -30,10 +30,20 @@ export const ResumeParsedView: React.FC<ResumeParsedViewProps> = ({
   highlightedSkill,
   onSkillClick,
 }) => {
+  const skillsByCategory = useMemo(() => {
+    const map = new Map<string, typeof extraction.skills>();
+    for (const skill of extraction.skills || []) {
+      const code = skill.category_code || "GENERAL";
+      if (!map.has(code)) map.set(code, []);
+      map.get(code)!.push(skill);
+    }
+    return Array.from(map.entries());
+  }, [extraction.skills]);
+
   return (
     <div className="rounded-2xl border border-border bg-card p-4 sm:p-6 shadow-xs">
       {/* Tab Navigation */}
-      <div className="no-scrollbar flex items-center gap-1.5 border-b border-border pb-3 overflow-x-auto touch-pan-x">
+      <div className="no-scrollbar flex items-center gap-1.5 border-b border-border pb-3 overflow-x-auto touch-pan-x flex-nowrap min-w-0">
         <button
           type="button"
           onClick={() => onTabChange("overview")}
@@ -180,30 +190,32 @@ export const ResumeParsedView: React.FC<ResumeParsedViewProps> = ({
 
         {/* EXPERIENCE */}
         {activeTab === "experience" && (
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {extraction.experience?.length > 0 ? (
               extraction.experience.map((exp, idx) => (
                 <div
                   key={idx}
-                  className="rounded-xl border border-border bg-card-sub p-4 transition-all hover:border-primary/40"
+                  className="rounded-xl border border-border bg-card-sub p-4 transition-all hover:border-primary/40 flex flex-col justify-between"
                 >
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                    <div>
-                      <h4 className="font-bold text-foreground text-sm">{exp.title}</h4>
-                      <p className="text-xs text-primary font-medium">{exp.org}</p>
+                  <div>
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                      <div>
+                        <h4 className="font-bold text-foreground text-sm">{exp.title}</h4>
+                        <p className="text-xs text-primary font-medium">{exp.org}</p>
+                      </div>
+                      <span className="text-[11px] text-muted-foreground shrink-0">
+                        {exp.start} to {exp.end || "Present"}
+                      </span>
                     </div>
-                    <span className="text-[11px] text-muted-foreground">
-                      {exp.start} to {exp.end || "Present"}
-                    </span>
-                  </div>
 
-                  <ul className="mt-3 space-y-1.5 list-disc list-inside text-xs text-foreground/90">
-                    {exp.highlights?.map((h, hIdx) => (
-                      <li key={hIdx} className="leading-relaxed">
-                        {h}
-                      </li>
-                    ))}
-                  </ul>
+                    <ul className="mt-3 space-y-1.5 list-disc list-inside text-xs text-foreground/90">
+                      {exp.highlights?.map((h, hIdx) => (
+                        <li key={hIdx} className="leading-relaxed">
+                          {h}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
 
                   {exp.skills?.length > 0 && (
                     <div className="mt-3.5 pt-3 border-t border-border flex flex-wrap gap-1.5">
@@ -220,7 +232,7 @@ export const ResumeParsedView: React.FC<ResumeParsedViewProps> = ({
                 </div>
               ))
             ) : (
-              <div className="rounded-xl border border-dashed border-border bg-card-sub p-6 text-center text-xs text-muted-foreground">
+              <div className="col-span-full rounded-xl border border-dashed border-border bg-card-sub p-6 text-center text-xs text-muted-foreground">
                 No work experience entries extracted from this document.
               </div>
             )}
@@ -229,7 +241,7 @@ export const ResumeParsedView: React.FC<ResumeParsedViewProps> = ({
 
         {/* PROJECTS */}
         {activeTab === "projects" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {extraction.projects?.length > 0 ? (
               extraction.projects.map((proj, idx) => (
                 <div
@@ -244,7 +256,7 @@ export const ResumeParsedView: React.FC<ResumeParsedViewProps> = ({
                           href={proj.link.startsWith("http") ? proj.link : `https://${proj.link}`}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-primary hover:text-foreground"
+                          className="text-primary hover:text-foreground shrink-0"
                         >
                           <ExternalLink className="h-3.5 w-3.5" />
                         </a>
@@ -279,21 +291,47 @@ export const ResumeParsedView: React.FC<ResumeParsedViewProps> = ({
 
         {/* SKILLS MATRIX */}
         {activeTab === "skills" && (
-          <div>
-            <div className="mb-3 flex items-center justify-between">
+          <div className="space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <span className="text-xs text-muted-foreground">
                 Click any skill badge to inspect audit quote and confidence level:
               </span>
-              <span className="text-xs font-mono text-primary font-medium">
+              <span className="text-xs font-mono text-primary font-medium shrink-0">
                 Grounding Rate: {Math.round((extraction.meta?.grounding_rate || 0.95) * 100)}%
               </span>
             </div>
-            {extraction.skills?.length > 0 ? (
-              <SkillChips
-                skills={extraction.skills}
-                highlightedSkill={highlightedSkill}
-                onSkillClick={onSkillClick}
-              />
+
+            {skillsByCategory.length > 0 ? (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3.5">
+                {skillsByCategory.map(([catCode, catSkills]) => (
+                  <div
+                    key={catCode}
+                    className="rounded-xl border border-border bg-card-sub p-4 transition-all hover:border-primary/40 flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between border-b border-border pb-2 mb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="flex h-2 w-2 rounded-full bg-primary" />
+                          <h4 className="font-bold text-foreground text-xs uppercase tracking-wider font-mono">
+                            {catCode}
+                          </h4>
+                        </div>
+                        <Badge
+                          variant="outline"
+                          className="text-[10px] border-border text-muted-foreground"
+                        >
+                          {catSkills.length} {catSkills.length === 1 ? "skill" : "skills"}
+                        </Badge>
+                      </div>
+                      <SkillChips
+                        skills={catSkills}
+                        highlightedSkill={highlightedSkill}
+                        onSkillClick={onSkillClick}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
             ) : (
               <div className="rounded-xl border border-dashed border-border bg-card-sub p-6 text-center text-xs text-muted-foreground">
                 No skills detected in this document.
@@ -309,23 +347,29 @@ export const ResumeParsedView: React.FC<ResumeParsedViewProps> = ({
               Academic Background
             </h5>
             {extraction.education?.length > 0 ? (
-              extraction.education.map((edu, idx) => (
-                <div key={idx} className="rounded-xl border border-border bg-card-sub p-4">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-bold text-foreground text-sm">{edu.degree}</h4>
-                    <span className="text-xs text-muted-foreground">{edu.year || "2026"}</span>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                {extraction.education.map((edu, idx) => (
+                  <div key={idx} className="rounded-xl border border-border bg-card-sub p-4 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between gap-2">
+                        <h4 className="font-bold text-foreground text-sm">{edu.degree}</h4>
+                        <span className="text-xs text-muted-foreground shrink-0">{edu.year || "2026"}</span>
+                      </div>
+                      <p className="mt-1 text-xs text-muted-foreground">{edu.institution}</p>
+                    </div>
+                    {edu.score && (
+                      <div className="mt-2.5">
+                        <Badge
+                          variant="outline"
+                          className="text-[10px] border-emerald-500/30 text-emerald-700 dark:text-emerald-400 bg-emerald-500/10"
+                        >
+                          Grade: {edu.score}
+                        </Badge>
+                      </div>
+                    )}
                   </div>
-                  <p className="mt-1 text-xs text-muted-foreground">{edu.institution}</p>
-                  {edu.score && (
-                    <Badge
-                      variant="outline"
-                      className="mt-2 text-[10px] border-emerald-500/30 text-emerald-700 dark:text-emerald-400 bg-emerald-500/10"
-                    >
-                      Grade: {edu.score}
-                    </Badge>
-                  )}
-                </div>
-              ))
+                ))}
+              </div>
             ) : (
               <div className="rounded-xl border border-dashed border-border bg-card-sub p-6 text-center text-xs text-muted-foreground">
                 No academic degrees extracted from this document.

@@ -106,7 +106,7 @@ export const ResumeUploadCard: React.FC<ResumeUploadCardProps> = ({
           onDragLeave={() => setIsDragOver(false)}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
-          className={`w-full flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 text-center transition-all cursor-pointer ${
+          className={`w-full flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-4 sm:p-6 text-center transition-all cursor-pointer ${
             isDragOver
               ? "border-primary bg-primary/5"
               : "border-border bg-card-sub hover:border-primary/50 hover:bg-muted/40"
@@ -120,15 +120,15 @@ export const ResumeUploadCard: React.FC<ResumeUploadCardProps> = ({
             className="hidden"
           />
 
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-border bg-card text-primary shadow-2xs">
+          <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-2xl border border-border bg-card text-primary shadow-2xs">
             {isLoading ? (
-              <Loader2 className="h-6 w-6 animate-spin text-primary" />
+              <Loader2 className="h-5 w-5 sm:h-6 sm:w-6 animate-spin text-primary" />
             ) : (
-              <UploadCloud className="h-6 w-6" />
+              <UploadCloud className="h-5 w-5 sm:h-6 sm:w-6" />
             )}
           </div>
 
-          <h4 className="mt-3 font-semibold text-sm text-foreground">
+          <h4 className="mt-2.5 font-semibold text-xs sm:text-sm text-foreground max-w-full break-words">
             {isLoading
               ? status === "uploading"
                 ? "Uploading Resume Document..."
@@ -137,11 +137,18 @@ export const ResumeUploadCard: React.FC<ResumeUploadCardProps> = ({
                   : "Analyzing Resume Structure..."
               : "Drop candidate resume here, or browse"}
           </h4>
-          <p className="mt-1 text-xs text-muted-foreground">
+          <p className="mt-1 text-[11px] sm:text-xs text-muted-foreground max-w-full break-words">
             {currentCandidateName
               ? `Parsed for ${currentCandidateName} · Drop a new file to replace (PDF, DOCX, or TXT, Max 10MB)`
               : "Supports PDF, DOCX, or TXT (Max 10MB)"}
           </p>
+
+          {!isLoading && (
+            <div className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary transition-colors hover:bg-primary/20">
+              <UploadCloud className="h-3.5 w-3.5" />
+              <span>Browse File</span>
+            </div>
+          )}
         </div>
       </div>
     </div>

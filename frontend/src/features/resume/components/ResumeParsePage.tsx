@@ -60,106 +60,67 @@ export const ResumeParsePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-white">
+    <div className="min-h-screen w-full max-w-full min-w-0 overflow-x-hidden bg-background text-foreground selection:bg-primary selection:text-white">
       {/* Background ambient gradient glow */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-primary/10 blur-[128px]" />
         <div className="absolute top-1/3 -right-40 h-96 w-96 rounded-full bg-sky-500/10 blur-[128px]" />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 space-y-6">
-        {/* Top Breadcrumb Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-4">
-          <div className="flex items-center gap-3">
-            <Link
-              to="/"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Home
-            </Link>
-            <span className="text-muted-foreground/40">/</span>
-            <Link
-              to="/dashboard"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary transition-colors hover:underline"
-            >
-              Dashboard
-            </Link>
-            <span className="text-muted-foreground/40">/</span>
-            <span className="text-xs font-semibold text-foreground">Resume Parsing</span>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            <Link
-              to="/companies"
-              className="rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground"
-            >
-              115 Companies
-            </Link>
-            <Link
-              to="/talent-check"
-              className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-400 hover:bg-emerald-500/20"
-            >
-              Talent Check
-            </Link>
-            <Link
-              to="/profile"
-              className="rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground"
-            >
-              Profile
-            </Link>
-          </div>
-        </div>
-
+      <div className="relative mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8 space-y-6">
         {/* Page Top Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-border pb-6">
-          <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-              <Sparkles className="h-3.5 w-3.5" />
-              Role 2 Engine · Format-Invariant Resume Intelligence
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 sm:gap-6 border-b border-border pb-5 sm:pb-6">
+          <div className="min-w-0">
+            <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] sm:text-xs font-semibold text-primary">
+              <Sparkles className="h-3.5 w-3.5 shrink-0" />
+              <span className="truncate">Role 2 Engine · Format-Invariant Resume Intelligence</span>
             </div>
-            <h1 className="mt-3 font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground">
+            <h1 className="mt-2.5 font-heading text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-foreground break-words">
               Resume Parsing &{" "}
               <span className="bg-gradient-to-r from-primary to-sky-400 bg-clip-text text-transparent">
                 Bloom Skill Fingerprint
               </span>
             </h1>
-            <p className="mt-2 text-sm text-muted-foreground max-w-2xl">
+            <p className="mt-1.5 text-xs sm:text-sm text-muted-foreground max-w-2xl leading-relaxed">
               Deterministic contact extraction, PII masking, RapidFuzz evidence grounding, and a
               12-dimensional Bloom skill taxonomy with verifiable audit basis.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full lg:w-auto">
             <Button
               variant="outline"
+              size="sm"
               onClick={() => setDrawer(true)}
-              className="border-border bg-card text-foreground hover:bg-muted cursor-pointer"
+              className="flex-1 sm:flex-none border-border bg-card text-foreground hover:bg-muted cursor-pointer text-xs justify-center"
             >
-              <HelpCircle className="mr-2 h-4 w-4 text-primary" />
-              How We Got This
+              <HelpCircle className="mr-1.5 h-3.5 w-3.5 text-primary shrink-0" />
+              <span>How We Got This</span>
             </Button>
 
             {currentExtraction && (
               <Button
+                size="sm"
                 onClick={handleGoToProfile}
-                className="bg-primary text-primary-foreground font-semibold shadow-xs hover:bg-primary/90 cursor-pointer"
+                className="flex-1 sm:flex-none bg-primary text-primary-foreground font-semibold shadow-xs hover:bg-primary/90 cursor-pointer text-xs justify-center"
               >
-                Next
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <span>Next</span>
+                <ArrowRight className="ml-1.5 h-3.5 w-3.5 shrink-0" />
               </Button>
             )}
 
             <Button
               variant={currentExtraction ? "outline" : "default"}
+              size="sm"
               onClick={handleSendToTalentCheck}
               className={
                 currentExtraction
-                  ? "border-border bg-card text-foreground hover:bg-muted cursor-pointer"
-                  : "bg-primary text-primary-foreground font-semibold shadow-xs hover:bg-primary/90 cursor-pointer"
+                  ? "flex-1 sm:flex-none border-border bg-card text-foreground hover:bg-muted cursor-pointer text-xs justify-center"
+                  : "flex-1 sm:flex-none bg-primary text-primary-foreground font-semibold shadow-xs hover:bg-primary/90 cursor-pointer text-xs justify-center"
               }
             >
-              Evaluate in Talent Check
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <span>Evaluate in Talent Check</span>
+              <ArrowRight className="ml-1.5 h-3.5 w-3.5 shrink-0" />
             </Button>
           </div>
         </div>
@@ -222,15 +183,15 @@ export const ResumeParsePage: React.FC = () => {
           </div>
         ) : currentExtraction ? (
           <div className="space-y-8">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
               {/* Left Column: 12-Axis Skill Fingerprint Radar */}
-              <div className="lg:col-span-5 space-y-6">
+              <div className="lg:col-span-5 space-y-6 min-w-0 max-w-full">
                 <SkillFingerprintRadar
                   primary={currentExtraction}
                 />
 
                 {/* Instant Re-score / Recalculate Levels Box */}
-                <div className="rounded-2xl border border-border bg-card p-5 shadow-xs">
+                <div className="rounded-2xl border border-border bg-card p-4 sm:p-5 shadow-xs">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Sliders className="h-4 w-4 text-primary" />
@@ -257,7 +218,7 @@ export const ResumeParsePage: React.FC = () => {
               </div>
 
               {/* Right Column: Tabbed Parsed Entities & Highlighted Evidence */}
-              <div className="lg:col-span-7">
+              <div className="lg:col-span-7 min-w-0 max-w-full">
                 <ResumeParsedView
                   extraction={currentExtraction}
                   activeTab={activeTab}
