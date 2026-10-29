@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import {
   Search,
   Sun,
@@ -178,7 +179,16 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                 </div>
               )}
 
-              <div className="pt-1">
+              <Link
+                to="/profile"
+                onClick={() => setUserDropdownOpen(false)}
+                className="w-full flex items-center gap-2 p-2 rounded-xl text-left text-xs font-medium text-foreground hover:bg-muted transition-colors cursor-pointer"
+              >
+                <User className="h-3.5 w-3.5 text-primary" />
+                <span>Candidate Profile</span>
+              </Link>
+
+              <div className="pt-1 border-t border-border mt-1">
                 <button
                   onClick={handleLogout}
                   className="w-full flex items-center gap-2 p-2 rounded-xl text-left text-xs text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"

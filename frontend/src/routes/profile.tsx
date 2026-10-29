@@ -17,17 +17,19 @@ function ProfileLayout() {
       <header className="sticky top-0 z-30 border-b border-border/80 bg-background/95 backdrop-blur-md">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4">
           <Link
-            to="/"
-            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            to="/dashboard"
+            className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-semibold text-foreground transition-all hover:bg-muted shadow-2xs"
           >
-            <ArrowLeft className="h-4 w-4" aria-hidden /> {APP_NAME}
+            <ArrowLeft className="h-3.5 w-3.5 text-muted-foreground" aria-hidden /> Back to Dashboard
           </Link>
-          <Link
-            to="/profile"
-            className="inline-flex items-center gap-1.5 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            <Users className="h-4 w-4" aria-hidden /> Profiles
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              to="/profile"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl border border-border bg-card text-foreground hover:bg-muted shadow-2xs"
+            >
+              <Users className="h-3.5 w-3.5 text-primary" aria-hidden /> Profiles
+            </Link>
+          </div>
         </div>
       </header>
       <main className="mx-auto max-w-6xl px-4 py-6">
