@@ -61,10 +61,15 @@ def test_same_company_conflict(client):
     _wait(client, first["id"])
 
 
-@pytest.mark.parametrize("body", [
-    {"company": ""}, {"company": "Acme", "steps": ["nope"]},
-    {"company": "Acme", "providers": ["nope"]}, {},
-])
+@pytest.mark.parametrize(
+    "body",
+    [
+        {"company": ""},
+        {"company": "Acme", "steps": ["nope"]},
+        {"company": "Acme", "providers": ["nope"]},
+        {},
+    ],
+)
 def test_run_validation_errors(client, body):
     assert client.post("/run", json=body).status_code == 422
 
@@ -96,6 +101,7 @@ def test_artifacts(client):
 
 def test_api_key_enforced(monkeypatch):
     from openradix_agents.api import deps
+
     monkeypatch.setattr(deps, "get_settings", lambda: Settings(api_key="s3cret"))
     with TestClient(main.create_app(Settings(api_key="s3cret"))) as c:
         assert c.get("/health").status_code == 200
@@ -106,8 +112,14 @@ def test_api_key_enforced(monkeypatch):
 # --------------------------------------------------------- more API cases
 def test_doctor_route(client, monkeypatch):
     from openradix_agents.api.services import providers as provider_service
-    monkeypatch.setattr(provider_service, "check_all", lambda names: [
-        {"provider": "groq", "key_name": "GROQ_API_KEY", "model": "m", "status": "OK", "detail": "pong"}])
+
+    monkeypatch.setattr(
+        provider_service,
+        "check_all",
+        lambda names: [
+            {"provider": "groq", "key_name": "GROQ_API_KEY", "model": "m", "status": "OK", "detail": "pong"}
+        ],
+    )
     r = client.post("/doctor", json={"providers": ["groq"]})
     assert r.status_code == 200 and r.json()["ok"] is True
     assert client.post("/doctor", json={"providers": ["nope"]}).status_code == 422
@@ -156,8 +168,13 @@ def _finish(manager, job_id):
 
 
 def test_job_partial_when_a_step_fails(monkeypatch):
-    m = _manager_with(monkeypatch, {"ok": False, "steps": {
-        "skills": {"status": "ok"}, "hiring": {"status": "failed", "error": "bad json"}}})
+    m = _manager_with(
+        monkeypatch,
+        {
+            "ok": False,
+            "steps": {"skills": {"status": "ok"}, "hiring": {"status": "failed", "error": "bad json"}},
+        },
+    )
     job = _finish(m, m.submit("Acme", ("groq",), ("skills", "hiring")).id)
     assert job.status.value == "partial"
     assert job.steps["hiring"].error == "bad json"

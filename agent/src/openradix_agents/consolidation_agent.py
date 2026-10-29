@@ -39,8 +39,7 @@ def _rows_to_record(rows: list[dict]) -> dict:
     return record
 
 
-def run_consolidation(company: str, per_provider_rows: dict[str, list[dict]],
-                      provider_names=()) -> dict:
+def run_consolidation(company: str, per_provider_rows: dict[str, list[dict]], provider_names=()) -> dict:
     outdir = io_utils.out_dir(company)
     dataset = _build_dataset(per_provider_rows)
     prompt = prompts.render("consolidation", dataset=dataset)
@@ -50,8 +49,10 @@ def run_consolidation(company: str, per_provider_rows: dict[str, list[dict]],
     rows = parsing.parse_markdown_table(text)
     record = _rows_to_record(rows)
     if not record:
-        raise ValueError(f"{provider} returned no parsable consolidation table "
-                         f"(raw reply saved to consolidation_raw.txt)")
+        raise ValueError(
+            f"{provider} returned no parsable consolidation table "
+            f"(raw reply saved to consolidation_raw.txt)"
+        )
 
     io_utils.write_json(outdir / "golden_record.json", record)
     io_utils.write_record_csv(outdir / "golden_record.csv", record)

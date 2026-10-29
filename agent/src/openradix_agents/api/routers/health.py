@@ -24,6 +24,7 @@ def k8s_probes() -> dict[str, str]:
 def health(jobs: JobManager = Depends(get_jobs)) -> HealthResponse:
     """Cheap liveness check. Makes no LLM calls."""
     from importlib.metadata import PackageNotFoundError, version
+
     try:
         ver = version("openradix-agents")
     except PackageNotFoundError:
@@ -40,6 +41,5 @@ def health(jobs: JobManager = Depends(get_jobs)) -> HealthResponse:
 @router.post("/doctor", response_model=DoctorResponse, dependencies=[Depends(require_api_key)])
 async def doctor(body: DoctorRequest | None = None) -> DoctorResponse:
     """Live-ping each provider (a few seconds). Same as `python -m openradix_agents doctor`."""
-    results = await run_in_threadpool(
-        provider_service.check_all, (body.providers if body else None))
+    results = await run_in_threadpool(provider_service.check_all, (body.providers if body else None))
     return DoctorResponse(ok=all(r["status"] == "OK" for r in results), results=results)

@@ -18,6 +18,7 @@ from . import config
 def _nvidia(model: str):
     """One NVIDIA chat model. The key is shared; only the model id changes."""
     from langchain_openai import ChatOpenAI
+
     return ChatOpenAI(
         base_url="https://integrate.api.nvidia.com/v1",
         api_key=config.get_env("NVIDIA_API_KEY"),
@@ -40,6 +41,7 @@ def nvidia_alt_llm():
 
 def groq_llm():
     from langchain_groq import ChatGroq
+
     return ChatGroq(
         api_key=config.get_env("GROQ_API_KEY"),
         model=config.GROQ_MODEL,
@@ -51,6 +53,7 @@ def groq_llm():
 
 def gemini_llm():
     from langchain_google_genai import ChatGoogleGenerativeAI
+
     return ChatGoogleGenerativeAI(
         google_api_key=config.get_env("GOOGLE_API_KEY"),
         model=config.GEMINI_MODEL,

@@ -49,10 +49,10 @@ def score_matrix_vectorized(
 
     # Calculate covered and needed rungs
     covered = np.maximum(0, np.minimum(cand_exp, bar_exp) - 1)  # shape (N, M, 12)
-    needed = np.maximum(0, bar_exp - 1)                        # shape (1, M, 12)
+    needed = np.maximum(0, bar_exp - 1)  # shape (1, M, 12)
 
     sum_covered = covered.sum(axis=-1)  # shape (N, M)
-    sum_needed = needed.sum(axis=-1)    # shape (1, M)
+    sum_needed = needed.sum(axis=-1)  # shape (1, M)
 
     # Avoid divide-by-zero if sum_needed == 0
     safe_needed = np.where(sum_needed == 0, 1.0, sum_needed)

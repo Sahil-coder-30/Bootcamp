@@ -34,6 +34,7 @@ def run_research(company: str, provider_names=DEFAULT_PROVIDERS) -> dict[str, li
 
     return per_provider
 
+
 def load_research(company: str, provider_names=DEFAULT_PROVIDERS) -> dict[str, list[dict]]:
     """Reload rows saved by an earlier run_research() — no LLM calls.
 

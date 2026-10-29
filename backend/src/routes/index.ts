@@ -9,6 +9,7 @@ import documentsRoutes from "./documents.routes.js";
 import jdsRoutes from "./jds.routes.js";
 import { requireAuth } from "../middlewares/auth.js";
 import { env } from "../config/env.js";
+import skillMatchRoutes from "./skillMatch.routes.js";
 
 const router = Router();
 
@@ -23,5 +24,6 @@ router.get("/whoami", requireAuth, (req, res) => {
   res.json({ user: req.user });
 });
 router.use("/talent-check", env.authRequired ? requireAuth : (_req, _res, next) => next(), talentCheckRoutes);
+router.use("/skill-match", skillMatchRoutes);
 
 export default router;

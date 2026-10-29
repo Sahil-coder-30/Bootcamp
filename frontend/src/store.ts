@@ -9,6 +9,7 @@ import skillsReducer from "./features/skills/slice/skills.slice";
 import talentCheckReducer from "./features/talentCheck/slice/talentCheck.slice";
 import resumeReducer from "./features/resume/slice/resume.slice";
 import jdReducer from "./features/jd/slice/jd.slice";
+import skillMatchReducer from "./features/skillMatch/slice/skillMatch.slice";
 
 export const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ export const store = configureStore({
     talentCheck: talentCheckReducer,
     resume: resumeReducer,
     jd: jdReducer,
+    skillMatch: skillMatchReducer,
   },
 });
 

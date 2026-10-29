@@ -13,7 +13,7 @@ version = "0.4.0"
 description = "OpenRADIX Level 4 - agentic research pipeline"
 # LangChain 0.3.x pins don't have reliable wheels on newer Pythons. Fail fast
 # with a clear message instead of a cryptic source-build error.
-requires-python = ">=3.11,<3.13"
+requires-python = ">=3.11"
 
 [tool.setuptools.packages.find]
 where = ["src"]

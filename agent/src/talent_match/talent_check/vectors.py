@@ -65,15 +65,17 @@ def generate_test_vectors() -> list[dict[str, Any]]:
         shortfalls = [max(0, req - cand) for cand, req in zip(c, r, strict=False)]
         vrd = verdict_for(sc, shortfalls)
         blocking = [s >= 3 for s in shortfalls]
-        vectors.append({
-            "name": name,
-            "candidate": c,
-            "required": r,
-            "raw": round(raw, 4),
-            "score": sc,
-            "verdict": vrd,
-            "blocking": blocking,
-        })
+        vectors.append(
+            {
+                "name": name,
+                "candidate": c,
+                "required": r,
+                "raw": round(raw, 4),
+                "score": sc,
+                "verdict": vrd,
+                "blocking": blocking,
+            }
+        )
 
     # 2. Boundary conditions
     boundary_cases = [
@@ -91,15 +93,17 @@ def generate_test_vectors() -> list[dict[str, Any]]:
         shortfalls = [max(0, req - cand) for cand, req in zip(c, r, strict=False)]
         vrd = verdict_for(sc, shortfalls)
         blocking = [s >= 3 for s in shortfalls]
-        vectors.append({
-            "name": name,
-            "candidate": c,
-            "required": r,
-            "raw": round(raw, 4),
-            "score": sc,
-            "verdict": vrd,
-            "blocking": blocking,
-        })
+        vectors.append(
+            {
+                "name": name,
+                "candidate": c,
+                "required": r,
+                "raw": round(raw, 4),
+                "score": sc,
+                "verdict": vrd,
+                "blocking": blocking,
+            }
+        )
 
     # 3. Systematic sweep cases (182 variations)
     for i in range(182):
@@ -110,15 +114,17 @@ def generate_test_vectors() -> list[dict[str, Any]]:
         shortfalls = [max(0, req - cand) for cand, req in zip(c, r, strict=False)]
         vrd = verdict_for(sc, shortfalls)
         blocking = [s >= 3 for s in shortfalls]
-        vectors.append({
-            "name": f"sweep_{i:03d}",
-            "candidate": c,
-            "required": r,
-            "raw": round(raw, 4),
-            "score": sc,
-            "verdict": vrd,
-            "blocking": blocking,
-        })
+        vectors.append(
+            {
+                "name": f"sweep_{i:03d}",
+                "candidate": c,
+                "required": r,
+                "raw": round(raw, 4),
+                "score": sc,
+                "verdict": vrd,
+                "blocking": blocking,
+            }
+        )
 
     return vectors
 

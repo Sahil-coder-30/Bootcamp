@@ -17,6 +17,7 @@ import { Route as JdRouteImport } from './routes/jd'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as ResumeRouteImport } from './routes/resume'
+import { Route as SkillMatchRouteImport } from './routes/skill-match'
 import { Route as TalentCheckRouteImport } from './routes/talent-check'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as CompanyIndexRouteImport } from './routes/company.index'
@@ -64,6 +65,11 @@ const ProfileRoute = ProfileRouteImport.update({
 const ResumeRoute = ResumeRouteImport.update({
   id: '/resume',
   path: '/resume',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SkillMatchRoute = SkillMatchRouteImport.update({
+  id: '/skill-match',
+  path: '/skill-match',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TalentCheckRoute = TalentCheckRouteImport.update({
@@ -116,6 +122,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRouteWithChildren
   '/resume': typeof ResumeRoute
+  '/skill-match': typeof SkillMatchRoute
   '/talent-check': typeof TalentCheckRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/company/intelligence': typeof CompanyIntelligenceRoute
@@ -132,6 +139,7 @@ export interface FileRoutesByTo {
   '/jd': typeof JdRoute
   '/login': typeof LoginRoute
   '/resume': typeof ResumeRoute
+  '/skill-match': typeof SkillMatchRoute
   '/talent-check': typeof TalentCheckRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/company/intelligence': typeof CompanyIntelligenceRoute
@@ -151,6 +159,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRouteWithChildren
   '/resume': typeof ResumeRoute
+  '/skill-match': typeof SkillMatchRoute
   '/talent-check': typeof TalentCheckRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/company/intelligence': typeof CompanyIntelligenceRoute
@@ -171,6 +180,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/profile'
     | '/resume'
+    | '/skill-match'
     | '/talent-check'
     | '/auth/callback'
     | '/company/intelligence'
@@ -187,6 +197,7 @@ export interface FileRouteTypes {
     | '/jd'
     | '/login'
     | '/resume'
+    | '/skill-match'
     | '/talent-check'
     | '/auth/callback'
     | '/company/intelligence'
@@ -205,6 +216,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/profile'
     | '/resume'
+    | '/skill-match'
     | '/talent-check'
     | '/auth/callback'
     | '/company/intelligence'
@@ -224,6 +236,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   ProfileRoute: typeof ProfileRouteWithChildren
   ResumeRoute: typeof ResumeRoute
+  SkillMatchRoute: typeof SkillMatchRoute
   TalentCheckRoute: typeof TalentCheckRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
 }
@@ -284,6 +297,13 @@ declare module '@tanstack/react-router' {
       path: '/resume'
       fullPath: '/resume'
       preLoaderRoute: typeof ResumeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/skill-match': {
+      id: '/skill-match'
+      path: '/skill-match'
+      fullPath: '/skill-match'
+      preLoaderRoute: typeof SkillMatchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/talent-check': {
@@ -384,6 +404,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   ProfileRoute: ProfileRouteWithChildren,
   ResumeRoute: ResumeRoute,
+  SkillMatchRoute: SkillMatchRoute,
   TalentCheckRoute: TalentCheckRoute,
   AuthCallbackRoute: AuthCallbackRoute,
 }
