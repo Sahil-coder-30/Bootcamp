@@ -98,7 +98,7 @@ export interface SkillMatchMatrix {
   cells: BatchCell[];
   best_jd_by_profile: Record<string, string>;
   best_candidate_by_jd: Record<string, string>;
-  meta?: Record<string, any>;
+  meta?: Record<string, unknown>;
 }
 
 export async function runSkillMatchAPI(body: {

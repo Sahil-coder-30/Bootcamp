@@ -326,7 +326,7 @@ export default function CompanyPickerPage() {
             <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#88BDF2] dark:border-border bg-[#BDDDFC] dark:bg-card font-heading text-sm font-bold text-[#384959] dark:text-foreground shadow-xs">
               PI
             </div>
-            <div>
+            <div className="hidden sm:block">
               <div className="flex items-center gap-2">
                 <span className="font-heading text-lg font-bold tracking-tight text-[#384959] dark:text-foreground">
                   {APP_NAME}
@@ -345,7 +345,9 @@ export default function CompanyPickerPage() {
             {currentUser ? (
               <div className="flex items-center gap-2 rounded-xl border border-[#88BDF2] dark:border-border bg-[#e9f3fd] dark:bg-card px-2.5 py-1 text-xs">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                <span className="font-semibold text-[#384959]">{currentUser.name}</span>
+                <span className="font-semibold text-[#384959] dark:text-foreground">
+                  {currentUser.name}
+                </span>
                 <button
                   onClick={handleLogout}
                   className="ml-1 text-[11px] font-semibold text-rose-500 hover:text-rose-700 transition-colors cursor-pointer"
@@ -356,7 +358,7 @@ export default function CompanyPickerPage() {
             ) : (
               <Link
                 to="/"
-                className="rounded-xl border border-[#c8dcf2] bg-[#f1f6fc] px-3 py-1.5 text-xs font-semibold text-[#384959] transition-colors hover:border-[#88BDF2] hover:bg-white inline-flex items-center gap-1.5"
+                className="rounded-xl border border-[#c8dcf2] dark:border-border bg-[#f1f6fc] dark:bg-card px-3 py-1.5 text-xs font-semibold text-[#384959] dark:text-foreground transition-colors hover:border-[#88BDF2] hover:bg-white dark:hover:bg-muted inline-flex items-center gap-1.5 whitespace-nowrap"
               >
                 ← Landing Page
               </Link>
@@ -370,14 +372,14 @@ export default function CompanyPickerPage() {
             </a>
             <Link
               to="/dashboard"
-              className="rounded-xl border border-primary/30 bg-primary/10 px-3.5 py-2 text-xs font-semibold text-primary transition-colors hover:bg-primary/20 inline-flex items-center gap-1.5 shadow-2xs"
+              className="rounded-xl border border-primary/30 bg-primary/10 px-3.5 py-2 text-xs font-semibold text-primary transition-colors hover:bg-primary/20 inline-flex items-center gap-1.5 whitespace-nowrap shadow-2xs"
             >
               <Briefcase className="h-3.5 w-3.5 text-primary" />
               Candidate Dashboard
             </Link>
             <Link
               to="/talent-check"
-              className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-2 text-xs font-semibold text-emerald-400 transition-colors hover:bg-emerald-500/20 inline-flex items-center gap-1.5 shadow-2xs"
+              className="hidden sm:inline-flex rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-2 text-xs font-semibold text-emerald-400 transition-colors hover:bg-emerald-500/20 items-center gap-1.5 whitespace-nowrap shadow-2xs"
             >
               <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
               Talent Check
