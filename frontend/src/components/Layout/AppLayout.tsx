@@ -56,7 +56,8 @@ function ThemeToggle() {
       size="icon"
       onClick={toggleTheme}
       aria-label="Toggle theme"
-      className="h-8 w-8 rounded-lg text-muted-foreground transition-colors hover:text-foreground"
+      title={isDark ? "Switch to Light Mode" : "Switch to Dark Amber Mode"}
+      className="h-8 w-8 rounded-lg text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
     >
       {isDark ? (
         <Sun className="h-4 w-4 text-primary" />
@@ -75,13 +76,16 @@ function AppSidebar() {
     <Sidebar collapsible="icon" className="border-r border-sidebar-border bg-sidebar">
       <SidebarHeader className="border-b border-sidebar-border/80 px-4 py-3.5">
         <Link to="/" className="flex items-center gap-2.5 overflow-hidden focus:outline-none">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-zinc-700 bg-zinc-900 font-heading text-xs font-bold text-zinc-100 shadow-sm">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-border bg-card font-heading text-xs font-bold text-foreground shadow-sm">
             PI
           </div>
           <div className="min-w-0 group-data-[collapsible=icon]:hidden">
-            <p className="truncate font-heading text-sm font-bold tracking-tight text-sidebar-foreground">
-              {APP_NAME}
-            </p>
+            <div className="flex items-center gap-1.5">
+              <p className="truncate font-heading text-sm font-bold tracking-tight text-sidebar-foreground">
+                {APP_NAME}
+              </p>
+              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+            </div>
             <p className="truncate text-[11px] font-medium text-muted-foreground">
               {COLLEGE_SHORT} Placement Hub
             </p>

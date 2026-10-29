@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="light-theme" style="color-scheme: light" data-theme="light">
+<html lang="en" class="dark" style="color-scheme: dark" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,11 +8,11 @@
       (function () {
         try {
           var stored =
-            localStorage.getItem("placeintel_theme") || localStorage.getItem("theme") || "light";
-          var isDark = stored === "dark";
+            localStorage.getItem("placeintel_theme") || localStorage.getItem("theme") || "dark";
+          var isDark = stored !== "light";
           document.documentElement.classList.toggle("dark", isDark);
           document.documentElement.classList.toggle("light-theme", !isDark);
-          document.documentElement.setAttribute("data-theme", stored);
+          document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
           document.documentElement.style.colorScheme = isDark ? "dark" : "light";
         } catch (e) {}
       })();

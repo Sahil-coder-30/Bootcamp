@@ -36,31 +36,32 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
     navigate({ to: "/" });
   };
 
-  const displayName = currentUser?.name || "Himanshu";
+  const displayName = currentUser?.name || "Ananya Rao";
   const displayRole = currentUser?.role || "B.Tech CSE '26";
-  const avatarText = currentUser?.avatarText || "H";
+  const avatarText = currentUser?.avatarText || "AR";
 
   return (
-    <aside className="w-64 shrink-0 flex flex-col justify-between border-r border-[#dfd5c5] dark:border-[#2b241e] bg-[#ede6db] dark:bg-[#0f0d0b] p-4 h-screen overflow-y-auto overflow-x-hidden select-none transition-colors sticky top-0">
+    <aside className="w-64 shrink-0 flex flex-col justify-between border-r border-sidebar-border bg-sidebar p-4 h-screen overflow-y-auto overflow-x-hidden select-none transition-colors sticky top-0">
       {/* 1. Top Brand Block */}
       <div>
         <Link
           to="/"
-          className="flex items-center gap-3 p-2 rounded-2xl hover:bg-[#dfd5c5]/50 dark:hover:bg-[#241e19] transition-colors"
+          className="flex items-center gap-3 p-2 rounded-2xl hover:bg-sidebar-accent/50 transition-colors"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1e1b18] text-white dark:bg-[#c8965a] dark:text-[#141210] font-heading text-xs font-bold shadow-xs">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-card border border-border text-foreground font-heading text-xs font-bold shadow-xs">
             PI
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="font-heading text-base font-bold tracking-tight text-[#1e1b18] dark:text-[#ede5db]">
+              <span className="font-heading text-base font-bold tracking-tight text-sidebar-foreground">
                 {APP_NAME}
               </span>
-              <span className="rounded-full border border-[#dfd5c5] dark:border-[#3d3328] bg-[#e6dcce] dark:bg-[#2a221a] px-1.5 py-0.2 text-[9px] font-bold text-[#5c5346] dark:text-[#c8965a]">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+              <span className="rounded-full border border-primary/40 bg-primary/10 px-1.5 py-0.2 text-[9px] font-bold text-primary">
                 PRO
               </span>
             </div>
-            <p className="text-[11px] text-[#7c7468] dark:text-[#8c8072] truncate">
+            <p className="text-[11px] text-muted-foreground truncate">
               {COLLEGE_SHORT} Placement Hub
             </p>
           </div>
@@ -68,7 +69,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
 
         {/* 2. Middle Navigation Items */}
         <nav className="mt-6 space-y-1">
-          <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-[#9c9182] dark:text-[#6e6355]">
+          <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">
             Core Modules
           </p>
 
@@ -76,13 +77,15 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
           <Link
             to="/"
             className={cn(
-              "flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-xs font-semibold transition-all",
+              "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all",
               activeItem === "dashboard"
-                ? "bg-[#c86432] dark:bg-gradient-to-r dark:from-[#c86432] dark:to-[#a85024] text-white shadow-sm font-bold"
-                : "text-[#5c5346] dark:text-[#9c9081] hover:bg-[#dfd5c5]/60 dark:hover:bg-[#241e19] hover:text-[#1e1b18] dark:hover:text-[#ede5db]",
+                ? "border-l-2 border-primary bg-primary/10 text-foreground font-bold shadow-xs"
+                : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground",
             )}
           >
-            <LayoutDashboard className="h-4 w-4" />
+            <LayoutDashboard
+              className={cn("h-4 w-4", activeItem === "dashboard" ? "text-primary" : "text-muted-foreground")}
+            />
             <span>Dashboard</span>
           </Link>
 
@@ -90,16 +93,18 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
           <Link
             to="/resume"
             className={cn(
-              "flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-xs font-semibold transition-all",
+              "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all",
               activeItem === "resume"
-                ? "bg-[#c86432] text-white shadow-sm font-bold"
-                : "text-[#5c5346] dark:text-[#9c9081] hover:bg-[#dfd5c5]/60 dark:hover:bg-[#241e19] hover:text-[#1e1b18] dark:hover:text-[#ede5db]",
+                ? "border-l-2 border-primary bg-primary/10 text-foreground font-bold shadow-xs"
+                : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground",
             )}
           >
-            <FileText className="h-4 w-4 text-[#7c7468] dark:text-[#8c8072]" />
+            <FileText
+              className={cn("h-4 w-4", activeItem === "resume" ? "text-primary" : "text-muted-foreground")}
+            />
             <span>Resume Parsing</span>
-            <span className="ml-auto text-[10px] font-mono rounded-full bg-[#dfd5c5] dark:bg-[#28211b] px-2 py-0.5 text-[#5c5346] dark:text-[#9c9081] font-semibold">
-              120
+            <span className="ml-auto text-[10px] font-mono rounded-full bg-muted border border-border px-2 py-0.5 text-muted-foreground font-semibold">
+              128
             </span>
           </Link>
 
@@ -107,11 +112,11 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
           <button
             type="button"
             onClick={onOpenJDMatcher}
-            className="w-full flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-xs font-semibold text-[#5c5346] dark:text-[#9c9081] hover:bg-[#dfd5c5]/60 dark:hover:bg-[#241e19] hover:text-[#1e1b18] dark:hover:text-[#ede5db] transition-all text-left cursor-pointer"
+            className="w-full flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground transition-all text-left cursor-pointer"
           >
-            <Target className="h-4 w-4 text-[#7c7468] dark:text-[#8c8072]" />
+            <Target className="h-4 w-4 text-muted-foreground" />
             <span>JD Matcher</span>
-            <span className="ml-auto text-[10px] font-semibold text-[#5c5346] dark:text-[#9c9081] bg-[#dfd5c5] dark:bg-[#28211b] px-2 py-0.5 rounded-full">
+            <span className="ml-auto text-[10px] font-semibold text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full">
               Beta
             </span>
           </button>
@@ -120,13 +125,15 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
           <Link
             to="/talent-check"
             className={cn(
-              "flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-xs font-semibold transition-all",
+              "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all",
               activeItem === "talent-check"
-                ? "bg-[#c86432] text-white shadow-sm font-bold"
-                : "text-[#5c5346] dark:text-[#9c9081] hover:bg-[#dfd5c5]/60 dark:hover:bg-[#241e19] hover:text-[#1e1b18] dark:hover:text-[#ede5db]",
+                ? "border-l-2 border-primary bg-primary/10 text-foreground font-bold shadow-xs"
+                : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground",
             )}
           >
-            <ShieldCheck className="h-4 w-4 text-[#7c7468] dark:text-[#8c8072]" />
+            <ShieldCheck
+              className={cn("h-4 w-4", activeItem === "talent-check" ? "text-primary" : "text-muted-foreground")}
+            />
             <span>Talent Check</span>
           </Link>
 
@@ -134,13 +141,15 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
           <Link
             to="/company/skills"
             className={cn(
-              "flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-xs font-semibold transition-all",
+              "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all",
               activeItem === "skills"
-                ? "bg-[#c86432] text-white shadow-sm font-bold"
-                : "text-[#5c5346] dark:text-[#9c9081] hover:bg-[#dfd5c5]/60 dark:hover:bg-[#241e19] hover:text-[#1e1b18] dark:hover:text-[#ede5db]",
+                ? "border-l-2 border-primary bg-primary/10 text-foreground font-bold shadow-xs"
+                : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground",
             )}
           >
-            <GraduationCap className="h-4 w-4 text-[#7c7468] dark:text-[#8c8072]" />
+            <GraduationCap
+              className={cn("h-4 w-4", activeItem === "skills" ? "text-primary" : "text-muted-foreground")}
+            />
             <span>Skill Matching</span>
           </Link>
 
@@ -148,11 +157,11 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
           <button
             type="button"
             onClick={onOpenATSModal}
-            className="w-full flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-xs font-semibold text-[#5c5346] dark:text-[#9c9081] hover:bg-[#dfd5c5]/60 dark:hover:bg-[#241e19] hover:text-[#1e1b18] dark:hover:text-[#ede5db] transition-all text-left cursor-pointer"
+            className="w-full flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground transition-all text-left cursor-pointer"
           >
-            <FileCheck2 className="h-4 w-4 text-[#7c7468] dark:text-[#8c8072]" />
+            <FileCheck2 className="h-4 w-4 text-muted-foreground" />
             <span>ATS Resume</span>
-            <span className="ml-auto text-[10px] font-mono font-bold text-[#5c5346] dark:text-[#9c9081] bg-[#dfd5c5] dark:bg-[#28211b] px-2 py-0.5 rounded-full">
+            <span className="ml-auto text-[10px] font-mono font-bold text-muted-foreground bg-muted border border-border px-2 py-0.5 rounded-full">
               91
             </span>
           </button>
@@ -161,15 +170,17 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
           <Link
             to="/companies"
             className={cn(
-              "flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-xs font-semibold transition-all",
+              "flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all",
               activeItem === "companies"
-                ? "bg-[#c86432] text-white shadow-sm font-bold"
-                : "text-[#5c5346] dark:text-[#9c9081] hover:bg-[#dfd5c5]/60 dark:hover:bg-[#241e19] hover:text-[#1e1b18] dark:hover:text-[#ede5db]",
+                ? "border-l-2 border-primary bg-primary/10 text-foreground font-bold shadow-xs"
+                : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground",
             )}
           >
-            <Building2 className="h-4 w-4 text-[#7c7468] dark:text-[#8c8072]" />
+            <Building2
+              className={cn("h-4 w-4", activeItem === "companies" ? "text-primary" : "text-muted-foreground")}
+            />
             <span>118 Company Data</span>
-            <span className="ml-auto text-[10px] font-mono rounded-full bg-[#dfd5c5] dark:bg-[#28211b] px-2 py-0.5 text-[#5c5346] dark:text-[#9c9081] font-semibold">
+            <span className="ml-auto text-[10px] font-mono rounded-full bg-muted border border-border px-2 py-0.5 text-muted-foreground font-semibold">
               115+
             </span>
           </Link>
@@ -177,17 +188,17 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
       </div>
 
       {/* 3. Bottom User Profile Block */}
-      <div className="pt-4 border-t border-[#dfd5c5] dark:border-[#2b241e]">
-        <div className="flex items-center justify-between gap-2 rounded-2xl bg-[#fdfbf7] dark:bg-[#181512] p-2.5 border border-[#dfd5c5] dark:border-[#2e2720] shadow-xs">
+      <div className="pt-4 border-t border-sidebar-border">
+        <div className="flex items-center justify-between gap-2 rounded-2xl bg-card p-2.5 border border-border shadow-xs">
           <div className="flex items-center gap-2.5 truncate">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1e1b18] text-white dark:bg-[#241e19] dark:text-[#ede5db] font-heading text-xs font-bold">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-muted text-foreground font-heading text-xs font-bold border border-border">
               {avatarText}
             </div>
             <div className="truncate text-left">
-              <p className="font-bold text-xs text-[#1e1b18] dark:text-[#ede5db] truncate">
+              <p className="font-bold text-xs text-foreground truncate">
                 {displayName}
               </p>
-              <p className="text-[10px] text-[#7c7468] dark:text-[#8c8072] truncate">
+              <p className="text-[10px] text-muted-foreground truncate">
                 {displayRole}
               </p>
             </div>
@@ -196,7 +207,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
           <button
             onClick={handleLogout}
             title="Log Out"
-            className="p-1.5 rounded-xl text-[#c86432] dark:text-[#d96e34] hover:bg-[#c86432]/10 transition-colors cursor-pointer"
+            className="p-1.5 rounded-xl text-primary hover:bg-primary/10 transition-colors cursor-pointer"
           >
             <LogOut className="h-4 w-4" />
           </button>

@@ -9,6 +9,8 @@ import {
   CheckCircle2,
   Building2,
   Award,
+  Trophy,
+  Clock,
 } from "lucide-react";
 import { DashboardSidebar } from "./DashboardSidebar";
 import { DashboardHeader } from "./DashboardHeader";
@@ -43,7 +45,7 @@ export const CandidateDashboard: React.FC = () => {
     return "Good evening";
   }, []);
 
-  const candidateName = currentUser?.name || "Himanshu";
+  const candidateName = currentUser?.name || "Ananya Rao";
 
   // Search results from 115 companies if user types in search
   const { data: companies = [] } = useCompanies();
@@ -134,32 +136,34 @@ export const CandidateDashboard: React.FC = () => {
         {/* Dashboard Main Content Body */}
         <main className="flex-1 px-4 sm:px-8 py-6 space-y-6 overflow-y-auto">
           {/* Greeting Banner */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl border border-border bg-[#f8f5ee] dark:bg-[#181512] p-5 sm:p-6 shadow-xs">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 rounded-3xl border border-border bg-card p-5 sm:p-6 shadow-xs">
             <div>
-              <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                <Sparkles className="h-3.5 w-3.5 text-primary" />
-                <span>Deterministic Placement Intelligence Hub</span>
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-semibold tracking-wider uppercase text-primary">
+                <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                <span>Campus Placement Intelligence Platform</span>
+                <span className="text-muted-foreground">•</span>
+                <span className="font-mono text-muted-foreground">&lt;280ms Match Engine</span>
               </div>
-              <h1 className="mt-1 font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+              <h1 className="mt-2.5 font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
                 {greeting}, {candidateName} 👋
               </h1>
               <p className="mt-1.5 text-xs sm:text-sm text-muted-foreground">
                 Candidate Profile: <strong className="text-foreground">B.Tech CSE &apos;26</strong>{" "}
                 · Targeting:{" "}
-                <span className="text-foreground font-semibold">Super Dream & Dream Bars</span> -
-                Zero LLM Drift
+                <span className="text-foreground font-semibold">Super Dream &amp; Dream Bars</span>{" "}
+                · Zero LLM Drift / Hard AST Calibrated
               </p>
             </div>
 
-            {/* Quick Readiness Score Circular Ring Pill */}
-            <div className="flex items-center gap-4 bg-card border border-border rounded-2xl px-5 py-3 shadow-xs shrink-0">
-              <div className="relative h-12 w-12 flex items-center justify-center">
-                <svg className="h-12 w-12 -rotate-90 transform" viewBox="0 0 36 36">
+            {/* Quick Readiness Score Circular Ring Card */}
+            <div className="flex items-center gap-4 bg-card-sub border border-border rounded-2xl px-5 py-3.5 shadow-xs shrink-0">
+              <div className="relative h-14 w-14 flex flex-col items-center justify-center">
+                <svg className="h-14 w-14 -rotate-90 transform" viewBox="0 0 36 36">
                   <circle
                     cx="18"
                     cy="18"
                     r="15"
-                    className="stroke-[#dfd6c6] dark:stroke-[#28211b]"
+                    className="stroke-border"
                     strokeWidth="3.2"
                     fill="none"
                   />
@@ -175,15 +179,102 @@ export const CandidateDashboard: React.FC = () => {
                     fill="none"
                   />
                 </svg>
-                <span className="absolute font-heading font-extrabold text-xs text-foreground">
-                  78%
-                </span>
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                  <span className="font-heading font-extrabold text-xs text-foreground leading-none">
+                    78%
+                  </span>
+                  <span className="text-[7px] font-bold uppercase tracking-wider text-primary leading-tight">
+                    RADIX
+                  </span>
+                </div>
               </div>
               <div className="text-left">
                 <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
                   Tier-1 Readiness
                 </p>
                 <p className="text-xs font-bold text-foreground">Ready for 74% Bars</p>
+                <p className="text-[10px] text-muted-foreground font-medium">Target: 30+ LPA Cohort</p>
+              </div>
+            </div>
+          </div>
+
+          {/* 3 Metric Cards Row (matching reference design) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Metric 1: RADIX Verification Score */}
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-xs flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  RADIX VERIFICATION SCORE
+                </span>
+                <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                  <Trophy className="h-3 w-3" /> Top 3% Cohort
+                </span>
+              </div>
+              <div className="my-3 flex items-baseline gap-1.5">
+                <span className="font-heading text-3xl font-extrabold text-foreground tracking-tight">
+                  9.4
+                </span>
+                <span className="text-sm font-semibold text-muted-foreground">/ 10</span>
+              </div>
+              <div className="flex items-center justify-between text-xs pt-2.5 border-t border-border/60 text-muted-foreground">
+                <span className="inline-flex items-center gap-1.5 text-[11px]">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
+                  Audited via AST Evaluation
+                </span>
+                <span className="font-mono text-[11px] font-medium text-primary">
+                  +0.6 vs L3
+                </span>
+              </div>
+            </div>
+
+            {/* Metric 2: Verified Corporate Bars */}
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-xs flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  VERIFIED CORPORATE BARS
+                </span>
+                <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                  <TrendingUp className="h-3 w-3" /> 73.9% Met
+                </span>
+              </div>
+              <div className="my-3 flex items-baseline gap-1.5">
+                <span className="font-heading text-3xl font-extrabold text-foreground tracking-tight">
+                  85
+                </span>
+                <span className="text-sm font-semibold text-muted-foreground">/ 115 Corporate</span>
+              </div>
+              <div className="flex items-center justify-between text-xs pt-2.5 border-t border-border/60 text-muted-foreground">
+                <span className="text-[11px]">
+                  <strong className="text-foreground">18</strong> Super Dream ·{" "}
+                  <strong className="text-foreground">67</strong> Dream
+                </span>
+                <span className="text-[11px]">30 Pending Rec</span>
+              </div>
+            </div>
+
+            {/* Metric 3: Scheduled Recruiter Lock */}
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-xs flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  SCHEDULED RECRUITER LOCK
+                </span>
+                <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary font-mono">
+                  <Clock className="h-3 w-3" /> 48h Countdown
+                </span>
+              </div>
+              <div className="my-3">
+                <span className="font-heading text-2xl font-extrabold text-foreground tracking-tight">
+                  Google L4 Tech
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-xs pt-2.5 border-t border-border/60 text-muted-foreground">
+                <span className="inline-flex items-center gap-1.5 text-[11px]">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                  Round 1: SysDesign &amp; Algorithmic Bar
+                </span>
+                <span className="rounded-md border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
+                  Eligible
+                </span>
               </div>
             </div>
           </div>

@@ -12,10 +12,10 @@ export function applyTheme(theme: ThemeMode): void {
 
 export function useTheme() {
   const [theme, setTheme] = useState<ThemeMode>(() => {
-    if (typeof window === "undefined") return "light";
+    if (typeof window === "undefined") return "dark";
     const stored = localStorage.getItem("placeintel_theme") || localStorage.getItem("theme");
     if (stored === "light" || stored === "dark") return stored;
-    return "light";
+    return "dark";
   });
 
   useEffect(() => {
