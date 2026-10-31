@@ -149,4 +149,29 @@ export const getCalibrationAPI = async (code: Code, level: number): Promise<Cali
   return res.data;
 };
 
+// ---- Telegram bot (backend/src/bot) ---------------------------------------------------------------
+
+export interface TelegramStatus {
+  enabled: boolean;
+  username: string | null;
+}
+
+/** Is the bot running? The page only offers "Connect Telegram" when it is. */
+export const getTelegramStatusAPI = async (): Promise<TelegramStatus> => {
+  const res = await apiClient.get<TelegramStatus>("/telegram/status");
+  return res.data;
+};
+
+export interface TelegramLink {
+  code: string;
+  /** https://t.me/<bot>?start=<code>: opens the bot and links the chat to this profile. */
+  url: string;
+  expires_at: string;
+}
+
+export const createTelegramLinkAPI = async (profileId: string): Promise<TelegramLink> => {
+  const res = await apiClient.post<TelegramLink>("/telegram/link-code", { profile_id: profileId });
+  return res.data;
+};
+
 export type { Code };
